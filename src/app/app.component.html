@@ -1,0 +1,40 @@
+<!--nav class="navbar navbar-light bg-light">
+  <div class="container-fluid">
+    <span class="navbar-brand mb-0 h1"><img src="https://mdbcdn.b-cdn.net/img/logo/mdb-transaprent-noshadows.webp"
+        height="16" alt="MDB Logo" loading="lazy" style="margin-top: -1px;" /></span>
+    <div class="d-flex align-items-left">
+      <button type="button" class="btn btn-link px-3 me-2">
+        Login
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div>
+  <div>
+    <mat-sidenav-container class="example-container">
+      <mat-sidenav #sidenav mode="side" [opened]="true">
+        <mat-grid-list cols="2" rowHeight="100px">
+          <mat-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows"
+            [style.background]="tile.color">
+            {{tile.text}}
+          </mat-grid-tile>
+        </mat-grid-list>
+        sidenav
+      </mat-sidenav>
+
+      <mat-sidenav-content>
+        <p>
+          <mat-checkbox [(ngModel)]="opened">sidenav.opened</mat-checkbox>
+        </p>
+        <p><button mat-button (click)="sidenav.toggle()">sidenav.toggle()</button></p>
+
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  </div>
+
+  <div>
+    <router-outlet></router-outlet>
+  </div>
+</div-->
+<router-outlet></router-outlet>

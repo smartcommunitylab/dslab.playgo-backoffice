@@ -1,0 +1,58 @@
+<div>
+  <button mat-raised-button color="primary">Login</button>
+  <mat-grid-list cols="3" rowHeight="5:2">
+    <mat-grid-tile></mat-grid-tile>
+    <mat-grid-tile>
+      <img src="../../../assets/images/pgLogo.png" style="max-width: 100%; max-height: 100%;">
+    </mat-grid-tile>
+    <mat-grid-tile></mat-grid-tile>
+  </mat-grid-list>
+  <mat-grid-list cols="3" rowHeight="2:1">
+    <mat-grid-tile>1</mat-grid-tile>
+    <mat-grid-tile>
+      <div>
+        <mat-form-field appearance="outline">
+          <!-- <mat-label>{{'username'| translate}}</mat-label> -->
+          <mat-label>Username</mat-label>
+          <input matInput [value]="username">
+        </mat-form-field>
+      </div>
+    </mat-grid-tile>
+    <mat-grid-tile>3</mat-grid-tile>
+  </mat-grid-list>
+  <form>
+    <mat-grid-list cols="1" rowHeight="2:1">
+      <mat-grid-tile>
+        <p>
+          <mat-form-field appearance="outline">
+            <!-- <mat-label>{{'username'| translate}}</mat-label> -->
+            <mat-label>Username</mat-label>
+            <input matInput [value]="username">
+          </mat-form-field>
+        </p>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <p>
+          <mat-form-field appearance="outline">
+            <!-- <mat-label>{{'password'| translate}}</mat-label> -->
+            <mat-label>Password</mat-label>
+            <input matInput [value]="password" [type]="hide ? 'password' : 'text'">
+            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hide">
+              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </mat-form-field>
+        </p>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-grid-list cols="2" rowHeight="2:1">
+          <mat-grid-tile>Ricordami</mat-grid-tile>
+          <mat-grid-tile>Password dimenticata</mat-grid-tile>
+        </mat-grid-list>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <button mat-raised-button color="primary">Login</button>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </form>
+</div>
