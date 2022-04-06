@@ -3,6 +3,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { MdbCheckboxModule } from 'mdb-angular-ui-kit/checkbox';
 import { MatSliderModule } from '@angular/material/slider';
+import { HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   imports:[
@@ -14,6 +15,7 @@ import { MatSliderModule } from '@angular/material/slider';
     ReactiveFormsModule,
     MdbCheckboxModule,
     MatSliderModule,
+    HttpClientModule
   ]
 })
 export class SharedLibsModule {}

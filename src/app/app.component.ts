@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 export interface Tile {
   color: string;
@@ -13,6 +14,7 @@ export interface Tile {
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+
   title = 'backOfficeConsolePlayGo';
   events: string[] = [];
   opened: boolean;
@@ -23,4 +25,11 @@ export class AppComponent {
     {text: 'Four', cols: 2, rows: 1, color: '#DDBDF1'},
   ];
   login: boolean = false;
+
+
+  constructor(
+    private translate: TranslateService){
+      this.translate.setDefaultLang('it');
+    }
+
 }

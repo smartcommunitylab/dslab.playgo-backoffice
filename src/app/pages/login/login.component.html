@@ -1,5 +1,4 @@
-<div>
-  <button mat-raised-button color="primary">Login</button>
+<div style="background-color:rgb(115, 115, 226); height: 100%;">
   <mat-grid-list cols="3" rowHeight="5:2">
     <mat-grid-tile></mat-grid-tile>
     <mat-grid-tile>
@@ -8,24 +7,53 @@
     <mat-grid-tile></mat-grid-tile>
   </mat-grid-list>
   <mat-grid-list cols="3" rowHeight="2:1">
-    <mat-grid-tile>1</mat-grid-tile>
+    <mat-grid-tile></mat-grid-tile>
     <mat-grid-tile>
-      <div>
-        <mat-form-field appearance="outline">
-          <!-- <mat-label>{{'username'| translate}}</mat-label> -->
-          <mat-label>Username</mat-label>
-          <input matInput [value]="username">
-        </mat-form-field>
+      <div class="card-contourn" style="width: 100%; height: 90%;">
+        <div class="input-class">
+          <mat-form-field appearance="outline" style="width: 100%; margin-top: 20px">
+            <!-- <mat-label>{{'username'| translate}}</mat-label> -->
+            <mat-label>Username</mat-label>
+            <input matInput [value]="username">
+          </mat-form-field>
+        </div>
+        <div class="input-class">
+          <mat-form-field appearance="outline" style="width: 100%;">
+            <!--mat-label>{{'password'| translate}}</mat-label> -->
+            <mat-label>Password</mat-label>
+            <input matInput [value]="password" [type]="hide ? 'password' : 'text'">
+            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hide">
+              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+        <div class="input-class" style="margin-bottom: 20px;">
+
+          <span style="text-align:left;">
+            <mat-checkbox class="example-margin">{{'remindMe' | translate}}</mat-checkbox>
+            <span style="float:right;">
+              <button mat-button style="height: 24px;">{{'forgottenPassword' | translate}}</button>
+            </span>
+          </span>
+
+
+
+        </div>
+        <div class="input-class">
+          <button mat-raised-button color="primary" style="width: 100%;">Login</button>
+        </div>
+
       </div>
     </mat-grid-tile>
-    <mat-grid-tile>3</mat-grid-tile>
+    <mat-grid-tile></mat-grid-tile>
   </mat-grid-list>
-  <form>
+  <!-- <form>
     <mat-grid-list cols="1" rowHeight="2:1">
       <mat-grid-tile>
         <p>
           <mat-form-field appearance="outline">
-            <!-- <mat-label>{{'username'| translate}}</mat-label> -->
+            < <mat-label>{{'username'| translate}}</mat-label> >
             <mat-label>Username</mat-label>
             <input matInput [value]="username">
           </mat-form-field>
@@ -34,7 +62,7 @@
       <mat-grid-tile>
         <p>
           <mat-form-field appearance="outline">
-            <!-- <mat-label>{{'password'| translate}}</mat-label> -->
+            < <mat-label>{{'password'| translate}}</mat-label> >
             <mat-label>Password</mat-label>
             <input matInput [value]="password" [type]="hide ? 'password' : 'text'">
             <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
@@ -54,5 +82,5 @@
         <button mat-raised-button color="primary">Login</button>
       </mat-grid-tile>
     </mat-grid-list>
-  </form>
+  </form> -->
 </div>
