@@ -1,0 +1,6 @@
+.angular/
+.angular/cache/13.3.1/
+.angular/cache/13.3.1/angular-webpack/
+.angular/cache/13.3.1/angular-webpack/3d8b2b8f9c1a1d37de3f2bde4e42c4e9a795c379/*.pack
+*.pack
+.angular/cache/13.3.1/angular-webpack/*.pack
