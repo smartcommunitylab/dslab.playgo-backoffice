@@ -13,7 +13,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSidenavModule} from '@angular/material/sidenav';
 
 export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+  return new TranslateHttpLoader(http);
 }
 @NgModule({
   declarations: [

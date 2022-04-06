@@ -1,3 +1,5 @@
 {
-"hello":"ciao"
+"hello":"ciao",
+"remindMe": "Ricordami",
+"forgottenPassword": " Password dimenticata?"
 }
