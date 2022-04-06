@@ -3,7 +3,15 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  serverAPIURL: 'https://backenddev.playngo.it:443/playandgo/api',
+  auth:{
+    aacUrl:'https://aac.platform.smartcommunitylab.it',
+    aacClientId:'c_5445634c-95d6-4c0e-a1ff-829b951b91b3',
+    redirectUrl:'http://localhost:4200/',
+    logout_redirect:'http://localhost:4200/',
+    scope:'openid email profile'
+  } 
 };
 
 /*
