@@ -2,6 +2,8 @@ import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import { TerritoryClass } from 'src/app/shared/classes/territory-class';
+import { MatDialog} from '@angular/material/dialog';
+import { TerritoryAddFormComponent } from '../territory-add-form/territory-add-form.component';
 
 @Component({
   selector: 'app-territory-page',
@@ -12,10 +14,11 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
   displayedColumns: string[] = ['name']; //, 'description', 'means'];
   dataSource = new MatTableDataSource<TerritoryClass>(ELEMENT_DATA);
   selectedTerritory?: TerritoryClass = null;
-
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(){
+
+
+  constructor( private dialog: MatDialog){// private dialog: MatDialog
 
   }
 
@@ -27,12 +30,20 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
   }
 
   showTerritory(row : TerritoryClass){
-    this.selectedTerritory = row;
+      this.selectedTerritory = row;
     console.log(this.selectedTerritory);
   }
 
   addTerritory(){
-    
+    const dialogRef = this.dialog.open(TerritoryAddFormComponent, {
+      width: '80%',
+      height: '90%',
+      data: {name: 'nome', animal: 'animale'},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
   }
 
 }
