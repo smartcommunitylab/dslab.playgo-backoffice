@@ -17,6 +17,8 @@ import { MatOptionModule } from "@angular/material/core";
 import { MatSelectModule } from "@angular/material/select";
 import { LeafletModule } from "@asymmetrik/ngx-leaflet";
 import { MapComponent } from "src/app/shared/components/map-with-selector/map.component";
+import { MatSliderModule } from '@angular/material/slider';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -34,7 +36,9 @@ import { MapComponent } from "src/app/shared/components/map-with-selector/map.co
     MatDialogModule,
     MatOptionModule,
     MatSelectModule,
-    LeafletModule
+    LeafletModule,
+    MatSliderModule,
+    ReactiveFormsModule
   ],
   declarations: [TerritoryPageComponent,TerritoryAddFormComponent,MapComponent],
 })

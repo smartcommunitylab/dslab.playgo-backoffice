@@ -1,38 +1,58 @@
 <div class="dialog-dimension">
-    <form>
         <h1>{{'addTerritory' | translate}}</h1>
         <div class="col-12">
-            <mat-form-field appearance="fill">
-                <mat-label>{{'name' | translate}}</mat-label>
-                <input matInput>
-            </mat-form-field>
-            <mat-form-field appearance="fill">
-                <mat-label>{{'description' | translate}}</mat-label>
-                <textarea matInput></textarea>
-            </mat-form-field>
-            <mat-form-field appearance="fill">
-                <mat-label>{{'means' | translate}}</mat-label>
-                <mat-select [formControl]="meansForm" multiple>
-                    <mat-option *ngFor="let mean of means" [value]="mean">{{mean}}</mat-option>
-                </mat-select>
-            </mat-form-field>
+            <form  [formGroup]="validatingForm" (ngSubmit)="validate()">
+                <mat-form-field appearance="fill" >
+                    <mat-label>{{'name' | translate}}</mat-label>
+                    <input matInput id="name" formControlName="name">
+                </mat-form-field>
+                <!--mat-form-field appearance="fill"  >
+                    <mat-label>{{'description' | translate}}</mat-label>
+                    <textarea matInput id="description" formControlName="description"></textarea>
+                </mat-form-field>
+                <mat-form-field appearance="fill"  >
+                    <mat-label>{{'means' | translate}}</mat-label>
+                    <mat-select id="means" formControlName="means" multiple>
+                        <mat-option  *ngFor="let mean of means" [value]="mean" [formControlName]="terrotyCreated.means">{{mean}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+    
+                <mat-form-field appearance="fill"  >
+                    <mat-label>{{'validationParameters' | translate}}</mat-label>
+                    <mat-select id="validation" formControlName="validation" multiple>
+                        <mat-option *ngFor="let val of validationParam" [value]="val" [formControlName]="terrotyCreated.validation">{{val}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <div class="example-label-container">
+                    <label id="example-name-label" class="example-name-label">{{'rayDimension' | translate}} km: </label>
+                    <label class="example-value-label"> {{raySelected}}</label>
+                  </div>
+                  <mat-form-field appearance="fill" >
+                    <mat-label>{{'latitude' | translate}}</mat-label>
+                    <input matInput id="lat" formControlName="lat">
+                </mat-form-field>
+                <mat-form-field appearance="fill"  >
+                    <mat-label>{{'longitude' | translate}}</mat-label>
+                    <input matInput id="long" formControlName="long">
+                </mat-form-field>
+                <mat-slider
+                    [displayWith]="formatLabel"
+                    tickInterval="5000"
+                    step="5000"
+                    min="0"
+                    max="500000"
+                    [(ngModel)]="raySelected"
+                    aria-label="units">
+                </mat-slider-->
+            
+                <jhi-app-map (mapPointOutput)="setSelectedPoint($event)"></jhi-app-map>
+    
+    
+                <button mat-raised-button color="primary" (click)="onNoClick($event)">{{'cancel' | translate}}</button>
+                <button mat-raised-button color="primary" type="submit">{{'save' | translate}}</button>
+            </form>
 
-            <mat-form-field appearance="fill">
-                <mat-label>{{'validationParameters' | translate}}</mat-label>
-                <mat-select [formControl]="validationParamForm" multiple>
-                    <mat-option *ngFor="let val of validationParam" [value]="val">{{val}}</mat-option>
-                </mat-select>
-            </mat-form-field>
-
-
-
-
-
-            <button mat-raised-button color="primary" (click)="onNoClick($event)">{{'cancel' | translate}}</button>
-            <button mat-raised-button color="primary" type="submit">{{'save' | translate}}</button>
         </div>
-    </form>
 
-    <jhi-app-map (mapPointOutput)="setSelectedPoint($event)"></jhi-app-map>
 
 </div>

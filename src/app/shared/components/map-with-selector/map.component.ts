@@ -58,6 +58,7 @@ export class MapComponent implements OnInit {
       longitude,
       name: name ? name : ''
     };
+    this.mapPointOutput.emit(this.mapPoint);
   }
 
   private createMarker(): void {
@@ -86,7 +87,7 @@ export class MapComponent implements OnInit {
       iconSize: [41, 41],
       iconAnchor: [21, 41],
       popupAnchor: [0, -30],
-      iconUrl: 'content/images/marker-icon.png'
+      iconUrl: 'assets/content/images/marker-icon.png'
     });
   }
 
