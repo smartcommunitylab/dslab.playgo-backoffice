@@ -1,0 +1,1 @@
+export const means = ['foot','bike','bus','car','train','ferry','bicycle'];

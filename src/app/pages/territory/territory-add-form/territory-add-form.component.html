@@ -1,0 +1,38 @@
+<div class="dialog-dimension">
+    <form>
+        <h1>{{'addTerritory' | translate}}</h1>
+        <div class="col-12">
+            <mat-form-field appearance="fill">
+                <mat-label>{{'name' | translate}}</mat-label>
+                <input matInput>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>{{'description' | translate}}</mat-label>
+                <textarea matInput></textarea>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>{{'means' | translate}}</mat-label>
+                <mat-select [formControl]="meansForm" multiple>
+                    <mat-option *ngFor="let mean of means" [value]="mean">{{mean}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>{{'validationParameters' | translate}}</mat-label>
+                <mat-select [formControl]="validationParamForm" multiple>
+                    <mat-option *ngFor="let val of validationParam" [value]="val">{{val}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+
+
+
+
+            <button mat-raised-button color="primary" (click)="onNoClick($event)">{{'cancel' | translate}}</button>
+            <button mat-raised-button color="primary" type="submit">{{'save' | translate}}</button>
+        </div>
+    </form>
+
+    <jhi-app-map (mapPointOutput)="setSelectedPoint($event)"></jhi-app-map>
+
+</div>

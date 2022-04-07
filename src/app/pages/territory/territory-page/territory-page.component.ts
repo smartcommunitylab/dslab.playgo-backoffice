@@ -3,8 +3,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import { TerritoryClass } from 'src/app/shared/classes/territory-class';
 import { MatDialog} from '@angular/material/dialog';
-import { TerritoryFormComponent } from '../territory-form/territory-form.component';
-
+import { TerritoryAddFormComponent } from '../territory-add-form/territory-add-form.component';
 
 @Component({
   selector: 'app-territory-page',
@@ -16,6 +15,8 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
   dataSource = new MatTableDataSource<TerritoryClass>(ELEMENT_DATA);
   selectedTerritory?: TerritoryClass = null;
   @ViewChild(MatPaginator) paginator: MatPaginator;
+
+
 
   constructor( private dialog: MatDialog){// private dialog: MatDialog
 
@@ -34,7 +35,7 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
   }
 
   addTerritory(){
-    const dialogRef = this.dialog.open(TerritoryFormComponent, {
+    const dialogRef = this.dialog.open(TerritoryAddFormComponent, {
       width: '80%',
       height: '90%',
       data: {name: 'nome', animal: 'animale'},

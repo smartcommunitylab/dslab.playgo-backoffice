@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TerritoryFormComponent } from './territory-form.component';
+import { TerritoryAddFormComponent } from './territory-add-form.component';
 
-describe('TerritoryFormComponent', () => {
-  let component: TerritoryFormComponent;
-  let fixture: ComponentFixture<TerritoryFormComponent>;
+describe('TerritoryAddFormComponent', () => {
+  let component: TerritoryAddFormComponent;
+  let fixture: ComponentFixture<TerritoryAddFormComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TerritoryFormComponent ]
+      declarations: [ TerritoryAddFormComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TerritoryFormComponent);
+    fixture = TestBed.createComponent(TerritoryAddFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
