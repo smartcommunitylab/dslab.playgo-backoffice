@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MdbCheckboxModule } from 'mdb-angular-ui-kit/checkbox';
 import { HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -15,6 +14,9 @@ import { AuthService } from './core/auth/auth.service';
 import { AppLoadService } from './app-load.service';
 import { AuthGuard } from './core/auth/auth.guard';
 import { AuthInterceptor } from './core/auth/auth.interceptor';
+import { MatToolbarModule } from "@angular/material/toolbar";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from '@angular/material/button';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -32,8 +34,10 @@ export function init_app(appLoadService: AppLoadService) {
     BrowserModule,
     AppRoutingModule,
     SharedModule,
-    MdbCheckboxModule,
     MatSidenavModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatButtonModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

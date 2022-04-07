@@ -1,27 +1,14 @@
-<mat-toolbar color="primary">
-    <div style="width: 100%; height: 100%;">
-        <img src="../../../assets/images/pgLogo.png" style="width: 84px; height: 60px; margin: 2px">
-    </div>
-    <span class="example-spacer"></span>
-    <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
-        <mat-icon>
-            <span class="material-icons-outlined">
-                manage_accounts
-            </span>
-        </mat-icon>
-    </button>
-</mat-toolbar>
 <div style="height: 100%;">
-    <div style="margin: 1%; height: 50px;">
+    <div class="add-button-div">
         <button mat-raised-button color="primary" class="add-button"(click)="addTerritory()" >+ {{'add' | translate}}</button>
     </div>
     <mat-grid-list cols="10" style="height: 100%;">
         <mat-grid-tile [colspan]="6" style="height: 100%;">
-            <div style="width: 100%; height: 100%;">
+            <div class="full-dimension">
                 <mat-card style="margin-left: 10px;">
                     <mat-grid-list cols="3" rowHeight="6:1">
                         <mat-grid-tile>
-                            <div style="text-align: left; width: 100%; height: 100%;">
+                            <div class="full-dimension" style="text-align: left;">
                                 <mat-card-title>
                                     {{'territory' | translate}}
                                 </mat-card-title>
@@ -70,7 +57,7 @@
             </div>
         </mat-grid-tile>
         <mat-grid-tile [colspan]="4" style="height: 100%;">
-            <div *ngIf="!!selectedTerritory" style="width: 100%; height: 100%;">
+            <div *ngIf="!!selectedTerritory" class="full-dimension">
                 <!--TODO not working this part correct to show whne clicked  -->
                 <mat-card style="margin-right: 10px;">
                     <mat-card-title>

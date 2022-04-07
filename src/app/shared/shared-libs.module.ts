@@ -1,21 +1,19 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { MdbCheckboxModule } from 'mdb-angular-ui-kit/checkbox';
-import { MatSliderModule } from '@angular/material/slider';
 import { HttpClientModule} from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   imports:[
-    TranslateModule
+    TranslateModule,CommonModule
   ],
   exports: [
     TranslateModule,
     FormsModule,
     ReactiveFormsModule,
-    MdbCheckboxModule,
-    MatSliderModule,
-    HttpClientModule
+    HttpClientModule,
+    CommonModule
   ]
 })
 export class SharedLibsModule {}
