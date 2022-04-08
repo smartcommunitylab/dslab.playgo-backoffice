@@ -68,5 +68,22 @@ export class TerritoryAddFormComponent implements OnInit {
  
 
 
-  validate(){}
+  validate(){
+    const p = this.validatingForm.get('name').value;
+    if(this.validatingForm.valid){
+      this.terrotyCreated.name = this.validatingForm.get('name').value;
+      this.terrotyCreated.description = this.validatingForm.get('description').value;
+      this.terrotyCreated.means = this.validatingForm.get('means').value;
+      this.terrotyCreated.validation = this.validatingForm.get('validation').value;
+      this.terrotyCreated.area.lat = this.validatingForm.get('lat').value;
+      this.terrotyCreated.area.long = this.validatingForm.get('long').value;
+      this.terrotyCreated.area.ray = this.validatingForm.get('ray').value;
+      console.log(this.terrotyCreated);
+      console.log("go to new page");
+    }else
+    {console.log("show errors");}
+    
+  }
+
+
 }

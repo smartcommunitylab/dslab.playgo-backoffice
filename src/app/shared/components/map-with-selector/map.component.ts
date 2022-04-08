@@ -37,7 +37,7 @@ export class MapComponent implements OnInit {
       center: latLng(DEFAULT_LATITUDE, DEFAULT_LONGITUDE),
       zoom: 12,
       layers: [
-        tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           maxZoom: 18,
           attribution: 'Map data © OpenStreetMap contributors'
         })
