@@ -38,8 +38,9 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
     const dialogRef = this.dialog.open(TerritoryAddFormComponent, {
       width: '80%',
       height: '90%',
-      data: {name: 'nome', animal: 'animale'},
     });
+    let instance = dialogRef.componentInstance;
+    instance.type = 'add';
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
@@ -49,21 +50,21 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
 }
 
 const ELEMENT_DATA: TerritoryClass[] = [
-  {'id':'isc1','name':'Territory1','description':'Desciption', 'means': ['bike','foot'],'area':{},'validation': null},
-  {'id':'isc2','name':'Territory2','description':'Desciption', 'means': ['bike','foot'],'area':{},'validation': null},
-  {'id':'isc3','name':'Territory3','description':'Desciption', 'means': ['bike','foot'],'area':{},'validation': null},
-  {'id':'isc4','name':'Territory4','description':'Desciption', 'means': ['bike','foot'],'area':{},'validation': null},
-  {'id':'isc5','name':'Territory5','description':'Desciption', 'means': ['bike','foot'],'area':{},'validation': null},
-  {'id':'isc6','name':'Territory6','description':'Desciption', 'means': ['bike','foot'],'area':{},'validation': null},
-  {'id':'isc7','name':'Territory7','description':'Desciption', 'means': ['bike','foot'],'area':{},'validation': null},
-  {'id':'isc8','name':'Territory8','description':'Desciption', 'means': ['bike','foot'],'area':{},'validation': null},
-  {'id':'isc9','name':'Territory9','description':'Desciption', 'means': ['bike','foot'],'area':{},'validation': null},
-  {'id':'isc10','name':'Territory10','description':'Desciption', 'means': ['bike','foot'],'area':{},'validation': null},
-  {'id':'isc11','name':'Territory11','description':'Desciption', 'means': ['bike','foot'],'area':{},'validation': null},
-  {'id':'isc12','name':'Territory12','description':'Desciption', 'means': ['bike','foot'],'area':{},'validation': null},
-  {'id':'isc13','name':'Territory13','description':'Desciption', 'means': ['bike','foot'],'area':{},'validation': null},
-  {'id':'isc14','name':'Territory14','description':'Desciption', 'means': ['bike','foot'],'area':{},'validation': null},
-  {'id':'isc15','name':'Territory15','description':'Desciption', 'means': ['bike','foot'],'area':{},'validation': null},
+  {'id':'isc1','name':'Territory1','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{},'validation': null}},
+  {'id':'isc2','name':'Territory2','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{},'validation': null}},
+  {'id':'isc3','name':'Territory3','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{},'validation': null}},
+  {'id':'isc4','name':'Territory4','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{},'validation': null}},
+  {'id':'isc5','name':'Territory5','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{},'validation': null}},
+  {'id':'isc6','name':'Territory6','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{},'validation': null}},
+  {'id':'isc7','name':'Territory7','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{},'validation': null}},
+  {'id':'isc8','name':'Territory8','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{},'validation': null}},
+  {'id':'isc9','name':'Territory9','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{},'validation': null}},
+  {'id':'isc10','name':'Territory10','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{},'validation': null}},
+  {'id':'isc11','name':'Territory11','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{},'validation': null}},
+  {'id':'isc12','name':'Territory12','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{},'validation': null}},
+  {'id':'isc13','name':'Territory13','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{},'validation': null}},
+  {'id':'isc14','name':'Territory14','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{},'validation': null}},
+  {'id':'isc15','name':'Territory15','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{},'validation': null}},
 ];
 
 

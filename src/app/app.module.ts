@@ -56,7 +56,7 @@ export function init_app(appLoadService: AppLoadService) {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
-    },],
+    }],
   bootstrap: [AppComponent],
   exports: []
 })

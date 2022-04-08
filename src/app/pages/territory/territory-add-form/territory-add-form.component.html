@@ -1,64 +1,90 @@
-<div class="dialog-dimension">
-        <h1>{{'addTerritory' | translate}}</h1>
-        <div class="col-12">
-            <form  [formGroup]="validatingForm">
-                <mat-form-field appearance="fill" >
-                    <mat-label>{{'name' | translate}}</mat-label>
-                    <input matInput id="name" formControlName="name">
-                </mat-form-field>
-                <mat-form-field appearance="fill"  >
-                    <mat-label>{{'description' | translate}}</mat-label>
-                    <textarea matInput id="description" formControlName="description"></textarea>
-                </mat-form-field>
-                <mat-form-field appearance="fill"  >
-                    <mat-label>{{'means' | translate}}</mat-label>
-                    <mat-select id="means" formControlName="means" multiple>
-                        <mat-option  *ngFor="let mean of means" [value]="mean">{{mean}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field appearance="fill"  >
-                    <mat-label>{{'validationParameters' | translate}}</mat-label>
-                    <mat-select id="validation" formControlName="validation" multiple>
-                        <mat-option *ngFor="let val of validationParam" [value]="val">{{val}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <div class="example-label-container">
-                    <label id="example-name-label" class="example-name-label">{{'rayDimension' | translate}} km: </label>
-                    <label class="example-value-label"> {{raySelected}}</label>
-                  </div>
-                  <mat-form-field appearance="fill">
-                    <mat-label>{{'ray' | translate}}</mat-label>
-                    <input matInput disabled id="ray" formControlName="ray">
-                </mat-form-field>
-                  <mat-form-field appearance="fill">
-                    <mat-label>{{'latitude' | translate}}</mat-label>
-                    <input matInput id="lat" formControlName="lat">
-                </mat-form-field>
-                <mat-form-field appearance="fill">
-                    <mat-label>{{'longitude' | translate}}</mat-label>
-                    <input matInput id="long" formControlName="long">
-                </mat-form-field>
+<div class="full-width">
+    <h1 *ngIf="type === 'add'">{{'addTerritory' | translate}}</h1>
+    <h1 *ngIf="type === 'modify'">{{'modifyTerritory' | translate}}</h1>
+    <div class="col-12 full-width">
+        <form [formGroup]="validatingForm">
+            <div style="height: 100%;">
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <mat-label>{{'id' | translate}}</mat-label>
+                        <input matInput id="territoryId" formControlName="territoryId">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                        <mat-label>{{'name' | translate}}</mat-label>
+                        <input matInput id="name" formControlName="name">
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <mat-label>{{'means' | translate}}</mat-label>
+                        <mat-select id="means" formControlName="means" multiple>
+                            <mat-option *ngFor="let mean of means" [value]="mean">{{mean}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                        <mat-label>{{'validationParameters' | translate}}</mat-label>
+                        <mat-select id="validation" formControlName="validation" multiple>
+                            <mat-option *ngFor="let val of validationParam" [value]="val">{{val}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <mat-label>{{'description' | translate}}</mat-label>
+                        <textarea matInput id="description" formControlName="description"></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="map-div">
+                <div class="input-custom-half-left" style="float:left;">
+                    <jhi-app-map (mapPointOutput)="setSelectedPoint($event)" [ray]="raySelected" [mapPoint]="myPoint" ></jhi-app-map>
+                </div>
+                <div class="input-custom-half-right" style="float:left;">
+                    <div class="full-width">
+                        <mat-form-field appearance="fill" class="full-width">
+                            <mat-label>{{'latitude' | translate}}</mat-label>
+                            <input matInput id="lat" formControlName="lat" value="{{myPoint.latitude}}">
+                        </mat-form-field>
+                    </div>
+                    <div class="full-width">
+                        <mat-form-field appearance="fill" class="full-width">
+                            <mat-label>{{'longitude' | translate}}</mat-label>
+                            <input matInput id="long" formControlName="long" value="{{myPoint.longitude}}">
+                        </mat-form-field>
+                    </div>
+                    <div class="full-width" *ngIf="unlockRaySelector">
+                        <div>
+                            <mat-label style="margin-right: 1%;">{{'selectRay' | translate}}</mat-label>
+                            <mat-slider
+                                class="full-width"
+                                [displayWith]="formatLabel"
+                                tickInterval="5000"
+                                step="5000"
+                                min="0"
+                                max="500000"
+                                (valueChange)="setRay($event)"
+                                aria-label="units">
+                            </mat-slider>
+                        </div>
+                        <div>
+                            <mat-form-field appearance="fill" class="full-width">
+                                <mat-label>{{'ray' | translate}}</mat-label>
+                                <input matInput disabled id="ray" formControlName="ray">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div>
 
-                <!--mat-slider
-                    [displayWith]="formatLabel"
-                    tickInterval="5000"
-                    step="5000"
-                    min="0"
-                    max="500000"
-                    [(ngModel)]="raySelected"
-                    aria-label="units">
-                </mat-slider-->
-            
+                    </div>
+                </div>
+            </div>
+            <div style="height:100%; margin-bottom: 10px;">
+                <button class="right-button green" mat-raised-button type="submit" (click)="validate()">{{'save' | translate}}</button>
+                <button class="right-button" mat-flat-button (click)="onNoClick($event)">{{'cancel' |translate}}</button>
+            </div>
+        </form>
 
-                <button mat-raised-button color="primary" (click)="onNoClick($event)">{{'cancel' | translate}}</button>
-                <button mat-raised-button color="primary" type="submit" (click)="validate()">{{'save' | translate}}</button>
-
-                <jhi-app-map (mapPointOutput)="setSelectedPoint($event)"></jhi-app-map>
-    
-    
-            </form>
-
-        </div>
+    </div>
 
 
 </div>

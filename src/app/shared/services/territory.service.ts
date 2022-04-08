@@ -17,14 +17,20 @@ export class TerritoryService {
     return this.http.get<TerritoryClass[]>(TERRITORY_BASE_PATH);
   }
 
-  put(){}
+  put(territory: TerritoryClass): Observable<any>{
+    return this.http.put<void>(TERRITORY_BASE_PATH,territory);
+  }
 
-  post(){}
+  post(territory: TerritoryClass): Observable<any>{
+    return this.http.post<void>(TERRITORY_BASE_PATH,territory);
+  }
 
-  getById(id : string){}
+  getById(id : string): Observable<TerritoryClass>{
+    return this.http.get<TerritoryClass>(TERRITORY_BASE_PATH+id);
+  }
 
-  delete(id : string){
-
+  delete(id : string): Observable<any>{
+    return this.http.delete<void>(TERRITORY_BASE_PATH+id);
   }
 
 
