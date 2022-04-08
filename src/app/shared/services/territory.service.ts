@@ -18,11 +18,11 @@ export class TerritoryService {
   }
 
   put(territory: TerritoryClass): Observable<any>{
-    return this.http.put<void>(TERRITORY_BASE_PATH,territory);
+    return this.http.put<any>(TERRITORY_BASE_PATH,territory);
   }
 
   post(territory: TerritoryClass): Observable<any>{
-    return this.http.post<void>(TERRITORY_BASE_PATH,territory);
+    return this.http.post<any>(TERRITORY_BASE_PATH,territory);
   }
 
   getById(id : string): Observable<TerritoryClass>{

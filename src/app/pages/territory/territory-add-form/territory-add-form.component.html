@@ -1,10 +1,13 @@
 <div class="full-width">
     <h1 *ngIf="type === 'add'">{{'addTerritory' | translate}}</h1>
-    <h1 *ngIf="type === 'modify'">{{'modifyTerritory' | translate}}</h1>
+    <span *ngIf="type === 'modify'">
+        <h1 >{{'modifyTerritory' | translate}} </h1>
+        <h3 >{{nameForUpdate}} </h3>
+    </span>
     <div class="col-12 full-width">
         <form [formGroup]="validatingForm">
             <div style="height: 100%;">
-                <div class="in-line-forms">
+                <div class="in-line-forms" *ngIf="type === 'add'">
                     <mat-form-field appearance="fill" class="input-custom-half-left">
                         <mat-label>{{'id' | translate}}</mat-label>
                         <input matInput id="territoryId" formControlName="territoryId">

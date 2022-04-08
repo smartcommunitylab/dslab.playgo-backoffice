@@ -27,6 +27,24 @@ export class TerritoryAddFormComponent implements OnInit {
   validationParam: string[] = ['param1','param2'];
   raySelected = 0;
   unlockRaySelector = false;
+  nameForUpdate: string;
+  @Input() set formTerritory(value : TerritoryClass){
+    //if(this.validatingForm===undefined){
+      this.initializaValidatingForm();
+    //}
+    console.log(value, "from dialog")
+    this.nameForUpdate = value.name;
+    this.validatingForm.get('name').setValue(value.name);
+    this.validatingForm.get('description').setValue(value.description);
+    this.validatingForm.get('means').setValue(value.territoryData.means);
+    this.validatingForm.get('validation').setValue(value.territoryData.validation);
+    this.validatingForm.get('lat').setValue(value.territoryData.area.lat);
+    this.validatingForm.get('long').setValue(value.territoryData.area.long);
+    this.validatingForm.get('ray').setValue(value.territoryData.area.ray);
+    this.myPoint = new MapPoint(value.territoryData.area.lat,value.territoryData.area.long);
+    this.raySelected = +value.territoryData.area.ray;
+    this.unlockRaySelector = true;
+  }
   terrotyCreated: TerritoryClass;
   settedLat = false;
   settedLong = false;
@@ -47,6 +65,11 @@ export class TerritoryAddFormComponent implements OnInit {
     this.terrotyCreated = new TerritoryClass();
     this.terrotyCreated.territoryData = new TerritoryData();
     this.terrotyCreated.territoryData.area = new TerritoryArea(); 
+    this.initializaValidatingForm();
+
+  }
+
+  initializaValidatingForm(){
     this.validatingForm = this.formBuilder.group({
       territoryId: new FormControl('', [Validators.required, Validators.maxLength(40)]), 
       name: new FormControl('', [Validators.required, Validators.maxLength(40)]),
@@ -85,7 +108,6 @@ export class TerritoryAddFormComponent implements OnInit {
     this.validatingForm.get('ray').valueChanges.subscribe(selectedValue => {
       this.raySelected = selectedValue;
     });
-
   }
 
   public myError = (controlName: string, errorName: string) =>{
