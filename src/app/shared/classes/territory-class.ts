@@ -3,7 +3,7 @@ import { TerritoryData } from "./territory-data";
 
 export class TerritoryClass {
 
-    id?: string;
+    territoryId?: string;
     name?: string;
     description?: string;
     messagingAppId?: string;

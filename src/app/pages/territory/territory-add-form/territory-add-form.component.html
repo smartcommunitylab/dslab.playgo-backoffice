@@ -2,7 +2,8 @@
     <h1 *ngIf="type === 'add'">{{'addTerritory' | translate}}</h1>
     <span *ngIf="type === 'modify'">
         <h1 >{{'modifyTerritory' | translate}} </h1>
-        <h3 >{{nameForUpdate}} </h3>
+        <h3 >Name: {{nameForUpdate}} </h3>
+        <h5>ID: {{idForUpdate}}</h5>
     </span>
     <div class="col-12 full-width">
         <form [formGroup]="validatingForm">
@@ -81,7 +82,7 @@
                     </div>
                 </div>
             </div>
-            <div style="height:100%; margin-bottom: 10px;">
+            <div style="height:40px;">
                 <button class="right-button green" mat-raised-button type="submit" (click)="validate()">{{'save' | translate}}</button>
                 <button class="right-button" mat-flat-button (click)="onNoClick($event)">{{'cancel' |translate}}</button>
             </div>

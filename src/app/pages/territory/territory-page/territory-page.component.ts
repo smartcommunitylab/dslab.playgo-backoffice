@@ -4,6 +4,9 @@ import {MatTableDataSource} from '@angular/material/table';
 import { TerritoryClass } from 'src/app/shared/classes/territory-class';
 import { MatDialog} from '@angular/material/dialog';
 import { TerritoryAddFormComponent } from '../territory-add-form/territory-add-form.component';
+import { TerritoryDeleteComponent } from '../territory-delete/territory-delete.component';
+import { TerritoryService } from 'src/app/shared/services/territory.service';
+import { FilterPipe } from 'src/app/shared/services/filter-pipe';
 
 @Component({
   selector: 'app-territory-page',
@@ -11,21 +14,36 @@ import { TerritoryAddFormComponent } from '../territory-add-form/territory-add-f
   styleUrls: ['./territory-page.component.scss']
 })
 export class TerritoryPageComponent implements OnInit,AfterViewInit {
-  displayedColumns: string[] = ['id','name']; //, 'description', 'means'];
-  dataSource = new MatTableDataSource<TerritoryClass>(ELEMENT_DATA);
+  displayedColumns: string[] = ['territoryId','name']; //, 'description', 'means'];
+  dataSource : MatTableDataSource<TerritoryClass>;
   selectedTerritory?: TerritoryClass = null;
+  listTerriotory: TerritoryClass[];
+  listAllTerriotory: TerritoryClass[];
+  searchString: string;
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
 
 
-  constructor( private dialogCreate: MatDialog,private dialogUpdate: MatDialog){// private dialog: MatDialog
+  constructor( private dialogCreate: MatDialog,private dialogUpdate: MatDialog, private dialogDelete: MatDialog, private territoryService: TerritoryService){// private dialog: MatDialog
 
   }
 
   ngOnInit() {
+    this.territoryService.get().subscribe(
+      listTerritory => {
+        this.listAllTerriotory = listTerritory.reverse();
+        this.listTerriotory = listTerritory;
+        this.setTableData();
+      }
+    );
   }
 
   ngAfterViewInit() {
+  }
+
+  setTableData(){
+    this.dataSource = new MatTableDataSource<TerritoryClass>(this.listTerriotory);
     this.dataSource.paginator = this.paginator;
   }
 
@@ -43,11 +61,36 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
     instance.type = 'add';
 
     dialogRef.afterClosed().subscribe(result => {
-      // console.log('The dialog was closed');
+      if(result !==undefined){
+        this.listTerriotory  = [result].concat(this.listTerriotory);
+        this.listAllTerriotory = this.listTerriotory;
+        this.setTableData();
+      }
     });
   }
 
-  deleteTerritory(){}
+  deleteTerritory(){
+    const dialogRef = this.dialogDelete.open(TerritoryDeleteComponent, {
+      width: '40%',
+      height: '30%',
+    });
+    let instance = dialogRef.componentInstance;
+    instance.territoryId = this.selectedTerritory.territoryId;
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result !==undefined){
+        let newList: TerritoryClass[] = [];
+        for(let i of this.listTerriotory){
+          if(i.territoryId!==result){
+            newList.push(i);
+          }
+        }
+        this.listTerriotory  = newList;
+        this.listAllTerriotory = newList;
+        this.setTableData();
+      }
+    });
+  }
 
   updateTerritory(){
     const dialogRef = this.dialogUpdate.open(TerritoryAddFormComponent, {
@@ -59,30 +102,41 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
     instance.formTerritory = this.selectedTerritory;
 
     dialogRef.afterClosed().subscribe(result => {
-      // console.log('The dialog was closed');
+      console.log('miao', result);
+      if(result !==undefined){
+        console.log('here');
+        this.selectedTerritory = result;
+        let newList: TerritoryClass[] = [];
+        for(let i of this.listTerriotory){
+          if(i.territoryId!==result.territoryId){
+            newList.push(i);
+          }else{
+            newList.push(result);
+          }
+        }
+        this.listTerriotory  = newList;
+        this.listAllTerriotory = newList;
+        this.setTableData();
+      }
     });
+  }
+
+  searchTerritory(event: any){
+    if(this.searchString===''){
+      this.listTerriotory = this.listAllTerriotory;
+      this.setTableData();
+    }else{
+      this.listTerriotory = this.listAllTerriotory.filter(item =>
+        item.name.includes(this.searchString)
+      );
+      this.setTableData();
+    }
   }
 
 
 }
 
-const ELEMENT_DATA: TerritoryClass[] = [
-  {'id':'isc1','name':'Territory1','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{'lat':'42','long':'11','ray':'50000'},'validation': null}},
-  {'id':'isc2','name':'Territory2','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{'lat':'42','long':'11','ray':'50000'},'validation': null}},
-  {'id':'isc3','name':'Territory3','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{'lat':'42','long':'11','ray':'50000'},'validation': null}},
-  {'id':'isc4','name':'Territory4','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{'lat':'42','long':'11','ray':'50000'},'validation': null}},
-  {'id':'isc5','name':'Territory5','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{'lat':'42','long':'11','ray':'50000'},'validation': null}},
-  {'id':'isc6','name':'Territory6','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{'lat':'42','long':'11','ray':'50000'},'validation': null}},
-  {'id':'isc7','name':'Territory7','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{'lat':'42','long':'11','ray':'50000'},'validation': null}},
-  {'id':'isc8','name':'Territory8','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{'lat':'42','long':'11','ray':'50000'},'validation': null}},
-  {'id':'isc9','name':'Territory9','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{'lat':'42','long':'11','ray':'50000'},'validation': null}},
-  {'id':'isc10','name':'Territory10','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{'lat':'42','long':'11','ray':'50000'},'validation': null}},
-  {'id':'isc11','name':'Territory11','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{'lat':'42','long':'11','ray':'50000'},'validation': null}},
-  {'id':'isc12','name':'Territory12','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{'lat':'42','long':'11','ray':'50000'},'validation': null}},
-  {'id':'isc13','name':'Territory13','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{'lat':'42','long':'11','ray':'50000'},'validation': null}},
-  {'id':'isc14','name':'Territory14','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{'lat':'42','long':'11','ray':'50000'},'validation': null}},
-  {'id':'isc15','name':'Territory15','description':'Desciption', "territoryData":{'means': ['bike','foot'],'area':{'lat':'42','long':'11','ray':'50000'},'validation': null}},
-];
+
 
 
 

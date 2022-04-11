@@ -3,6 +3,6 @@ import { TerritoryArea } from "./territory-area";
 export class TerritoryData {
 
     means?: string[];
-    area?: TerritoryArea;
+    area?: TerritoryArea[];
     validation?: any;
 }

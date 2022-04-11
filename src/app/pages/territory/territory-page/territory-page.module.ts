@@ -19,6 +19,8 @@ import { LeafletModule } from "@asymmetrik/ngx-leaflet";
 import { MapComponent } from "src/app/shared/components/map-with-selector/map.component";
 import { MatSliderModule } from '@angular/material/slider';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { TerritoryDeleteComponent } from "../territory-delete/territory-delete.component";
 
 @NgModule({
   imports: [
@@ -36,10 +38,11 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatDialogModule,
     MatOptionModule,
     MatSelectModule,
+    MatSnackBarModule,
     LeafletModule,
     MatSliderModule,
     ReactiveFormsModule
   ],
-  declarations: [TerritoryPageComponent,TerritoryAddFormComponent,MapComponent],
+  declarations: [TerritoryPageComponent,TerritoryAddFormComponent,TerritoryDeleteComponent,MapComponent],
 })
 export class TerritoryPageModule {}

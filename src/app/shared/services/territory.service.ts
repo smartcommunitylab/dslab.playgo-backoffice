@@ -26,11 +26,11 @@ export class TerritoryService {
   }
 
   getById(id : string): Observable<TerritoryClass>{
-    return this.http.get<TerritoryClass>(TERRITORY_BASE_PATH+id);
+    return this.http.get<TerritoryClass>(TERRITORY_BASE_PATH+'/'+id);
   }
 
   delete(id : string): Observable<any>{
-    return this.http.delete<void>(TERRITORY_BASE_PATH+id);
+    return this.http.delete<void>(TERRITORY_BASE_PATH+'/'+id);
   }
 
 
