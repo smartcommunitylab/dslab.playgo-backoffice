@@ -85,6 +85,7 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
         }
         this.listTerriotory  = newList;
         this.listAllTerriotory = newList;
+        this.selectedTerritory = undefined;
         this.setTableData();
       }
     });
