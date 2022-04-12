@@ -1,14 +1,21 @@
 <mat-toolbar color="primary">
-  <div class="full-dimension">
-      <img src="../../../assets/images/pgLogo.png" class="logo">
-  </div>
-  <span class="example-spacer"></span>
-  <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
-      <mat-icon>
-          <span class="material-icons-outlined">
-              manage_accounts
-          </span>
-      </mat-icon>
-  </button>
+    <div class="full-dimension">
+        <img src="../../../assets/images/pgLogo.png" class="logo">
+    </div>
+    <span class="example-spacer"></span>
+    <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+        <mat-icon>
+            <span class="material-icons-outlined">
+                manage_accounts
+            </span>
+        </mat-icon>
+    </button>
 </mat-toolbar>
-<router-outlet></router-outlet>
+<div class="full-size">
+    <div class="side-nav">
+        <app-side-nav></app-side-nav>
+    </div>
+    <div class="page">
+        <router-outlet></router-outlet>
+    </div>
+</div>

@@ -21,43 +21,23 @@ export class TerritoryAddFormComponent implements OnInit {
 
   validatingForm: FormGroup;
   controlName: string;
-  meansForm = new FormControl();
   means: string[] = means;
-  validationParamForm= new FormControl();
   validationParam: string[] = ['param1','param2'];
   raySelected = 0;
-  unlockRaySelector = false;
-  nameForUpdate: string;
-  idForUpdate: string;
-  @Input() set formTerritory(value : TerritoryClass){
-    //if(this.validatingForm===undefined){
-      this.initializaValidatingForm();
-    //}
-    this.idForUpdate = value.territoryId;
-    this.nameForUpdate = value.name;
-    this.validatingForm.get('description').setValue(value.description);
-    // (<HTMLInputElement>document.getElementById('means')).value = value.territoryData.means.toString();
-    // (<HTMLInputElement>document.getElementById('validation')).value = value.territoryData.validation;
-    // (<HTMLInputElement>document.getElementById('lat')).value = value.territoryData.area.lat;
-    // (<HTMLInputElement>document.getElementById('long')).value = value.territoryData.area.long;
-    // (<HTMLInputElement>document.getElementById('ray')).value = value.territoryData.area.ray;
-
-    console.log(value, "from dialog")
-
-    this.validatingForm.get('id').setValue(value.territoryId);
-    this.validatingForm.get('name').setValue(value.name);
-    this.validatingForm.get('description').setValue(value.description);
-    this.validatingForm.get('means').setValue(value.territoryData.means);
-    this.validatingForm.get('validation').setValue(value.territoryData.validation);
-    this.validatingForm.get('lat').setValue(value.territoryData.area[0].lat);
-    this.validatingForm.get('long').setValue(value.territoryData.area[0].long);
-    this.validatingForm.get('ray').setValue(value.territoryData.area[0].radius);
-    this.myPoint = new MapPoint(value.territoryData.area[0].lat,value.territoryData.area[0].long);
-    this.raySelected = +value.territoryData.area[0].radius;
-  }
   terrotyCreated: TerritoryClass;
   settedLat = false;
   settedLong = false;
+  unlockRaySelector = false;
+  terrytoryUpdate: TerritoryClass;
+  @Input() set formTerritory(value : TerritoryClass){
+    this.initializaValidatingForm();
+    this.terrytoryUpdate = value;
+    this.myPoint = new MapPoint(this.terrytoryUpdate.territoryData.area[0].lat,this.terrytoryUpdate.territoryData.area[0].long);
+    console.log("my point inside territory add form", this.myPoint);
+    this.raySelected = +this.terrytoryUpdate.territoryData.area[0].radius;
+    this.unlockRaySelector = true;
+    console.log("update territoryu", this.terrytoryUpdate);
+  }
 
 
   constructor(private territoryService: TerritoryService,private formBuilder: FormBuilder,
@@ -70,7 +50,6 @@ export class TerritoryAddFormComponent implements OnInit {
 
   onNoClick(event: any,territory?: TerritoryClass): void {
     this.dialogRef.close(territory);
-    console.log("closed",territory);
   }
 
   ngOnInit(): void {
@@ -175,8 +154,7 @@ export class TerritoryAddFormComponent implements OnInit {
       if(this.type==='add'){
         try{
           this.territoryService.post(this.terrotyCreated).subscribe(
-            () => {  
-              console.log("correct post");
+            () => {
               this.onNoClick('',this.terrotyCreated);
               this._snackBar.open("Dati salvati", "close");
           },
@@ -186,14 +164,12 @@ export class TerritoryAddFormComponent implements OnInit {
           }
           );
         }catch(e){
-          console.log(e);
           this._snackBar.open('error:' +e.errors, "close");
         }
       }
       if(this.type==='modify'){
-        this.terrotyCreated.name = this.nameForUpdate;
-        this.terrotyCreated.territoryId = this.idForUpdate;
-        console.log(this.terrotyCreated);
+        this.terrotyCreated.name = this.terrytoryUpdate.name;
+        this.terrotyCreated.territoryId = this.terrytoryUpdate.territoryId;
         try{
           this.territoryService.put(this.terrotyCreated).subscribe(
             () =>{
@@ -210,10 +186,7 @@ export class TerritoryAddFormComponent implements OnInit {
           this._snackBar.open('error:' +e.errors, "close");
         }
       } 
-      console.log(this.terrotyCreated);
-      console.log("go to new page"); // close page
-    }else
-    {console.log("show errors11");}
+    }
     
   }
 

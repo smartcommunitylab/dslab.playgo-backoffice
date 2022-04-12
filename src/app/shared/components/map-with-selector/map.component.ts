@@ -15,6 +15,7 @@ export class MapComponent implements OnInit,OnChanges {
   lastLayer: any;
   _mapPoint: MapPoint;
   @Input() set mapPoint(value : MapPoint){
+    console.log("My point inside map", value);
       if(this._mapPoint === undefined){
         // undefined
         this._mapPoint = new MapPoint();
@@ -30,6 +31,7 @@ export class MapComponent implements OnInit,OnChanges {
   layer: FeatureGroup;
   _ray: string;
   @Input() set ray(value: string) {
+    console.log("ray from map", value);
     this._ray = value;
     this.drawCircle();
  
@@ -49,7 +51,8 @@ export class MapComponent implements OnInit,OnChanges {
 
   drawCircle(){
     if(this.layer!==undefined){
-      this.map.removeLayer(this.layer);
+      if(!!this.map)
+        this.map.removeLayer(this.layer);
     }
     const numberRay = +this._ray;
     this.layer = L.featureGroup(); 
@@ -57,7 +60,9 @@ export class MapComponent implements OnInit,OnChanges {
       if(this._mapPoint.latitude)
       L.circle([this._mapPoint.latitude,this._mapPoint.longitude], numberRay).addTo(this.layer);
     }
-    this.map.addLayer(this.layer);
+    if(!!this.map){
+      this.map.addLayer(this.layer);
+    }
   }
 
 
@@ -112,20 +117,22 @@ export class MapComponent implements OnInit,OnChanges {
     this.clearMap();
     if (this._mapPoint) {
       const mapIcon = this.getDefaultIcon();
-      const coordinates = latLng([this._mapPoint.latitude, this._mapPoint.longitude]);
-      this.lastLayer = marker(coordinates)
-        .setIcon(mapIcon)
-        .addTo(this.map);
-      this.lastLayer
-        .bindPopup(
-          (this._mapPoint.name ? '<b>Indirizzo</b>: ' + this._mapPoint.name : '') +
-            '<br><b>lat</b>: ' +
-            this._mapPoint.latitude +
-            '<br><b>long:</b> ' +
-            this._mapPoint.longitude
-        )
-        .openPopup();
-      this.map.setView(coordinates, this.map.getZoom());
+      if(!!this._mapPoint.latitude && !!this._mapPoint.longitude){
+        const coordinates = latLng([this._mapPoint.latitude, this._mapPoint.longitude]);
+        this.lastLayer = marker(coordinates)
+          .setIcon(mapIcon)
+          .addTo(this.map);
+        this.lastLayer
+          .bindPopup(
+            (this._mapPoint.name ? '<b>Indirizzo</b>: ' + this._mapPoint.name : '') +
+              '<br><b>lat</b>: ' +
+              this._mapPoint.latitude +
+              '<br><b>long:</b> ' +
+              this._mapPoint.longitude
+          )
+          .openPopup();
+        this.map.setView(coordinates, this.map.getZoom());
+      }
     }
   }
 
@@ -139,7 +146,9 @@ export class MapComponent implements OnInit,OnChanges {
   }
 
   private clearMap(): void {
-    if (this.map.hasLayer(this.lastLayer)) this.map.removeLayer(this.lastLayer);
+    if(!!this.map){
+      if (this.map.hasLayer(this.lastLayer)) this.map.removeLayer(this.lastLayer);
+    }
   }
 
 }

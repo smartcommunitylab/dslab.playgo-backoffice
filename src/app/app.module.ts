@@ -17,6 +17,7 @@ import { AuthInterceptor } from './core/auth/auth.interceptor';
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from '@angular/material/button';
+import { SideNavComponent } from './shared/components/side-nav/side-nav';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -29,6 +30,7 @@ export function init_app(appLoadService: AppLoadService) {
 @NgModule({
   declarations: [
     AppComponent,
+    SideNavComponent,
   ],
   imports: [
     BrowserModule,

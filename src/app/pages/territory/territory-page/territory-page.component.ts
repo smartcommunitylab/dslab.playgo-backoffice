@@ -49,7 +49,6 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
 
   showTerritory(row : TerritoryClass){
       this.selectedTerritory = row;
-    console.log(this.selectedTerritory);
   }
 
   addTerritory(){
@@ -102,9 +101,7 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
     instance.formTerritory = this.selectedTerritory;
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('miao', result);
       if(result !==undefined){
-        console.log('here');
         this.selectedTerritory = result;
         let newList: TerritoryClass[] = [];
         for(let i of this.listTerriotory){
