@@ -6,7 +6,6 @@ import { MatDialog} from '@angular/material/dialog';
 import { TerritoryAddFormComponent } from '../territory-add-form/territory-add-form.component';
 import { TerritoryDeleteComponent } from '../territory-delete/territory-delete.component';
 import { TerritoryService } from 'src/app/shared/services/territory.service';
-import { FilterPipe } from 'src/app/shared/services/filter-pipe';
 
 @Component({
   selector: 'app-territory-page',
@@ -130,6 +129,8 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
     }
   }
 
+
+  handleManager(){}
 
 }
 

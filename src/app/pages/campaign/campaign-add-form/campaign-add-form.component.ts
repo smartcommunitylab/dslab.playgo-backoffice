@@ -8,40 +8,29 @@ import { means } from 'src/app/shared/constants/means';
 import { TerritoryService } from 'src/app/shared/services/territory.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import { TerritoryData } from 'src/app/shared/classes/territory-data';
+import { CampaignClass } from 'src/app/shared/classes/campaing-class';
 
 @Component({
-  selector: 'app-territory-add-form',
-  templateUrl: './territory-add-form.component.html',
-  styleUrls: ['./territory-add-form.component.scss']
+  selector: 'app-campaign-add-form',
+  templateUrl: './campaign-add-form.component.html',
+  styleUrls: ['./campaign-add-form.component.scss']
 })
-export class TerritoryAddFormComponent implements OnInit {
+export class CampaignAddFormComponent implements OnInit {
+
 
   @Input() type: string; // can be add or modify
-  myPoint?: MapPoint = new MapPoint();
 
   validatingForm: FormGroup;
-  controlName: string;
-  means: string[] = means;
-  validationParam: string[] = ['param1','param2'];
-  raySelected = 0;
-  terrotyCreated: TerritoryClass;
-  settedLat = false;
-  settedLong = false;
-  unlockRaySelector = false;
-  terrytoryUpdate: TerritoryClass;
-  @Input() set formTerritory(value : TerritoryClass){
+  campaignCreated: CampaignClass;
+  campaignUpdated:CampaignClass;
+  @Input() set formTerritory(value : CampaignClass){
     this.initializaValidatingForm();
-    this.terrytoryUpdate = value;
-    this.myPoint = new MapPoint(this.terrytoryUpdate.territoryData.area[0].lat,this.terrytoryUpdate.territoryData.area[0].long);
-    console.log("my point inside territory add form", this.myPoint);
-    this.raySelected = +this.terrytoryUpdate.territoryData.area[0].radius;
-    this.unlockRaySelector = true;
-    console.log("update territoryu", this.terrytoryUpdate);
+    this.campaignUpdated = value;
   }
 
 
   constructor(private territoryService: TerritoryService,private formBuilder: FormBuilder,
-    public dialogRef: MatDialogRef<TerritoryAddFormComponent>,
+    public dialogRef: MatDialogRef<CampaignAddFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _snackBar: MatSnackBar,
     ) {
@@ -53,10 +42,7 @@ export class TerritoryAddFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.myPoint = new MapPoint();
-    this.terrotyCreated = new TerritoryClass();
-    this.terrotyCreated.territoryData = new TerritoryData();
-    this.terrotyCreated.territoryData.area =[ new TerritoryArea()]; 
+    this.campaignCreated = new CampaignClass();
     this.initializaValidatingForm();
 
   }
@@ -64,14 +50,22 @@ export class TerritoryAddFormComponent implements OnInit {
   initializaValidatingForm(){
     if(this.type==='add'){
       this.validatingForm = this.formBuilder.group({
-        territoryId: new FormControl('', [Validators.required, Validators.maxLength(40)]), 
-        name: new FormControl('', [Validators.required, Validators.maxLength(40)]),
-        description: new FormControl(''),
+
+
+        territoryId: new FormControl('', [Validators.required]),
+        campaignId: new FormControl('', [Validators.required]),
+        name: new FormControl('', [Validators.required]),
+        logo: new FormControl('', [Validators.required]),
+        description: new FormControl('', [Validators.required]),
+        privacy: new FormControl('', [Validators.required]),
+        rules: new FormControl('', [Validators.required]),
         means: new FormControl('', [Validators.required]),
-        lat: new FormControl('', [Validators.required,Validators.pattern("^[0-9]+.?[0-9]*")]),
-        long: new FormControl('', [Validators.required,Validators.pattern("^[0-9]+.?[0-9]*")]),
-        ray: new FormControl('', [Validators.required, Validators.pattern("^[0-9]+.?[0-9]*")]),
-        validation: new FormControl('')
+        active: new FormControl('', [Validators.required]),
+        dateFrom: new FormControl('', [Validators.required]),
+        dateTo: new FormControl('', [Validators.required]),
+        gameId: new FormControl('', [Validators.required]),
+        type: new FormControl('', [Validators.required]),
+        typeFields: new FormControl('', [Validators.required])
       });
     }else{
     this.validatingForm = this.formBuilder.group({
@@ -85,34 +79,7 @@ export class TerritoryAddFormComponent implements OnInit {
       validation: new FormControl('')
     });
     }
-    this.validatingForm.get('lat').valueChanges.subscribe(selectedValue => {
-      if(!!selectedValue){
-        this.settedLat = true;
-        if(this.settedLong){
-          this.unlockRaySelector = true;
-          this.myPoint= new MapPoint(selectedValue,this.validatingForm.get('long').value);
-        }
-      }else{
-        this.settedLat = false;
-        this.unlockRaySelector = false;
-      }
 
-    });
-    this.validatingForm.get('long').valueChanges.subscribe(selectedValue => {
-      if(!!selectedValue){
-        this.settedLong = true;
-        if(this.settedLat){
-          this.unlockRaySelector = true;
-          this.myPoint = new MapPoint(this.validatingForm.get('lat').value,selectedValue);
-        }
-      }else{
-        this.settedLong = false;
-        this.unlockRaySelector = false;
-      }
-    });
-    this.validatingForm.get('ray').valueChanges.subscribe(selectedValue => {
-      this.raySelected = selectedValue;
-    });
   }
 
   public myError = (controlName: string, errorName: string) =>{
@@ -133,17 +100,13 @@ export class TerritoryAddFormComponent implements OnInit {
     return value;
   }
  
-  setRay(event : any){
-    this.validatingForm.get('ray').setValue(event);
-    this.raySelected = event;
-  }
 
 
   validate(){
     const p = this.validatingForm.get('name').value;
 
     if(this.validatingForm.valid){
-      this.terrotyCreated.territoryId = this.validatingForm.get('territoryId').value; 
+      /*this.terrotyCreated.territoryId = this.validatingForm.get('territoryId').value; 
       this.terrotyCreated.name = this.validatingForm.get('name').value;
       this.terrotyCreated.description = this.validatingForm.get('description').value;
       this.terrotyCreated.territoryData.means = this.validatingForm.get('means').value;
@@ -185,7 +148,7 @@ export class TerritoryAddFormComponent implements OnInit {
         }catch(e){
           this._snackBar.open('error:' +e.errors, "close");
         }
-      } 
+      } */
     }
     
   }

@@ -16,6 +16,11 @@ const routes: Routes = [
     path: 'territory',
     loadChildren: () =>
       import('./pages/territory/territory-page/territory-page.module').then((m) => m.TerritoryPageModule),
+  },
+  {
+    path: 'campaign',
+    loadChildren: () =>
+      import('./pages/campaign/campaign-page/campaign-page.module').then((m) => m.CampaignPageModule),
   }
   ,{
     path:'',

@@ -1,0 +1,104 @@
+<div class="full-width" *ngIf="type === 'add'">
+    <h1>{{'addTerritory' | translate}}</h1>
+    <div class="col-12 full-width">
+        <form [formGroup]="validatingForm">
+            <div style="height: 100%;">
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <mat-label>{{'territoryId' | translate}}</mat-label>
+                        <input matInput id="territoryId" formControlName="territoryId">
+                    </mat-form-field>
+                </div>
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <mat-label>{{'campaignId' | translate}}</mat-label>
+                        <input matInput id="campaignId" formControlName="campaignId">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                        <mat-label>{{'name' | translate}}</mat-label>
+                        <input matInput id="name" formControlName="name">
+                    </mat-form-field>
+                </div>
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <mat-label>{{'logo' | translate}}</mat-label>
+                        <input matInput id="logo" formControlName="logo">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                        <mat-label>{{'means' | translate}}</mat-label>
+                        <input matInput id="means" formControlName="means">
+                    </mat-form-field>
+                </div>
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <mat-label>{{'description' | translate}}</mat-label>
+                        <input matInput id="description" formControlName="description">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                        <mat-label>{{'privacy' | translate}}</mat-label>
+                        <input matInput id="privacy" formControlName="privacy">
+                    </mat-form-field>
+                </div>
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <mat-label>{{'rules' | translate}}</mat-label>
+                        <input matInput id="rules" formControlName="rules">
+                    </mat-form-field>
+                </div>
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <mat-label>{{'dateFrom' | translate}}</mat-label>
+                        <input matInput id="dateFrom" formControlName="dateFrom">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                        <mat-label>{{'dateTo' | translate}}</mat-label>
+                        <input matInput id="dateTo" formControlName="dateTo">
+                    </mat-form-field>
+                </div>
+                <div class="in-line-forms">
+
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <mat-label>{{'active' | translate}}</mat-label>
+                        <input matInput id="active" formControlName="active">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                        <mat-label>{{'gameId' | translate}}</mat-label>
+                        <input matInput id="gameId" formControlName="gameId">
+                    </mat-form-field>
+                </div>
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <mat-label>{{'type' | translate}}</mat-label>
+                        <input matInput id="type" formControlName="type">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                        <mat-label>{{'gameId' | translate}}</mat-label>
+                        <input matInput id="typeFields" formControlName="typeFields">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div style="height:40px;">
+                <button class="right-button green" mat-raised-button type="submit" (click)="validate()">{{'save' |
+                    translate}}</button>
+                <button class="right-button" mat-flat-button (click)="onNoClick($event)">{{'cancel'
+                    |translate}}</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="full-width" *ngIf="type === 'modify'">
+    <h1>{{'modifyTerritory' | translate}} </h1>
+    <h3>Name: {{campaignUpdated.name}} </h3>
+    <h5>ID: {{campaignUpdated.campaignId}}</h5>
+    <div class="col-12 full-width">
+        <form [formGroup]="validatingForm">
+                
+            <div style="height:40px;">
+                <button class="right-button green" mat-raised-button type="submit" (click)="validate()">{{'save' |
+                    translate}}</button>
+                <button class="right-button" mat-flat-button (click)="onNoClick($event)">{{'cancel'
+                    |translate}}</button>
+            </div>
+        </form>
+    </div>
+</div>
