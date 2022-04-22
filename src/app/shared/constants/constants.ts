@@ -3,3 +3,15 @@ export const DEFAULT_LONGITUDE = 10.612217051626212;
 export const BACKEND_BASE_PATH = 'backenddev.playngo.it';
 export const TERRITORY_BASE_PATH = 'https://backenddev.playngo.it/playandgo/api/territory';
 export const CAMPAIGN_BASE_PATH = 'https://backenddev.playngo.it/playandgo/api/campaign';
+export const TYPE_CAMPAIGN = ["personal","city","school","company"];
+export const MY_DATE_FORMATS = {
+    parse: {
+      dateInput: 'YYYY-MM-DD',
+    },
+    display: {
+      dateInput: 'YYYY-MM-DD',
+      monthYearLabel: 'MMM YYYY',
+      dateA11yLabel: 'LL',
+      monthYearA11yLabel: 'MMMM YYYY'
+    },
+};

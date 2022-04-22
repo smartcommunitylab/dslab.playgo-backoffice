@@ -11,6 +11,7 @@ import { TerritoryService } from 'src/app/shared/services/territory.service';
 export class TerritoryDeleteComponent implements OnInit {
 
   territoryId: string;
+  msgError: string;
   constructor(private territoryService: TerritoryService, public dialogRef: MatDialogRef<TerritoryDeleteComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _snackBar: MatSnackBar) { }
@@ -29,11 +30,13 @@ export class TerritoryDeleteComponent implements OnInit {
         this._snackBar.open("Territorio eliminato", "close");
       }, 
       (error) =>{
-        this._snackBar.open("Territorio cannot be delited because:"+ error.error.ex, "close");
+        this.msgError = 'cannotDeleteTerritory';
+        // this._snackBar.open("Territorio cannot be delited because:"+ error.error.ex, "close");
       }
       );
     }catch(e){
-      this._snackBar.open("Error durante cancellazione", "close");
+      this.msgError = 'cannotDeleteTerritory';
+      // this._snackBar.open("Error durante cancellazione", "close");
     }
   }
 

@@ -19,6 +19,11 @@ export class CampaignPGAClass implements CampaignTypeInterface{
     gameID?: string;
 }
 
+export class ValidationData {
+    means?: string[];
+}
+
+
 export class CampaignClass {
 
     active?: boolean;
@@ -28,12 +33,12 @@ export class CampaignClass {
     dateTo?: string;
     description?: string;
     gameId?: string;
-    logo?: {};
+    logo?: File;
     name?: string;
+    validationData?: ValidationData;
     privacy?: string;
     rules?: string;
     startDayOfWeek?: number;
     territoryId?: string;
     type?: string;
-    validationData?: {};
 }

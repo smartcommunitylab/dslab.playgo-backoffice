@@ -16,6 +16,10 @@ import { LeafletModule } from "@asymmetrik/ngx-leaflet";
 import { MatSliderModule } from "@angular/material/slider";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   imports: [
@@ -36,6 +40,10 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
     LeafletModule,
     MatSliderModule,
     ReactiveFormsModule,
+    MatProgressSpinnerModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSlideToggleModule
   ],
   declarations: [],
   entryComponents: [],
@@ -57,6 +65,10 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
     LeafletModule,
     MatSliderModule,
     ReactiveFormsModule,
+    MatProgressSpinnerModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSlideToggleModule
   ],
 })
 export class SharedModule {}

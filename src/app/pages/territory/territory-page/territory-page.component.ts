@@ -19,6 +19,7 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
   listTerriotory: TerritoryClass[];
   listAllTerriotory: TerritoryClass[];
   searchString: string;
+  selectedRowIndex = "";
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -47,6 +48,8 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
   }
 
   showTerritory(row : TerritoryClass){
+
+      this.selectedRowIndex = row.territoryId;
       this.selectedTerritory = row;
   }
 

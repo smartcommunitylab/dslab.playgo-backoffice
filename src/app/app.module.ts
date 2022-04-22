@@ -17,6 +17,9 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from '@angular/material/button';
 import { SideNavComponent } from './shared/components/side-nav/side-nav';
+import { MY_DATE_FORMATS } from './shared/constants/constants';
+import { MAT_DATE_FORMATS } from '@angular/material/core';
+// import { SpinnerInterceptor } from './core/loader/spinner.interceptor';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -57,7 +60,14 @@ export function init_app(appLoadService: AppLoadService) {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
-    }],
+    },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: SpinnerInterceptor,
+    //   multi: true
+    // },
+  ],
   bootstrap: [AppComponent],
   exports: []
 })

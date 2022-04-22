@@ -16,6 +16,15 @@
         <app-side-nav></app-side-nav>
     </div>
     <div class="page">
-        <router-outlet></router-outlet>
+        <div *ngIf="!loading" class="page">
+            <router-outlet></router-outlet>
+        </div>
+        <div *ngIf="loading" class="loading-container">
+            <mat-spinner
+              color="primary"
+              mode="indeterminate">
+            </mat-spinner>
+            <h2 style="margin-left: 20px;">{{'loading' | translate}}...</h2>
+          </div>
     </div>
 </div>

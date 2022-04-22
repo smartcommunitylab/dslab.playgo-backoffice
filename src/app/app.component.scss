@@ -17,9 +17,9 @@
   padding: 0px;
 }
 
-.logo{
-  width: 84px; 
-  height: 60px; 
+.logo {
+  width: 84px;
+  height: 60px;
   margin: 2px;
 }
 
@@ -27,19 +27,46 @@
   flex: 1 1 auto;
 }
 
-.full-size{
+.full-size {
   height: 100%;
   width: 100%;
 }
 
-.side-nav{
+.side-nav {
   height: 100%;
-  float:left;
+  float: left;
   width: 10%;
 }
 
-.page{
+.page {
   height: 100%;
-  float:right;
+  float: right;
   width: 90%;
+}
+
+.loading-container {
+  margin-top: 10%;
+  margin-left: 40%;
+  background-color: white;
+  width: 100vw;
+  height: 100vh;
+  z-index: 5;
+}
+
+.site-container {
+  font-size: 14px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  height: 100vh;
+  background: #f1f1f1;
+  overflow: hidden;
+
+  .site-header {
+    height: 64px;
+  }
+
+  .site-content {
+    height: calc(100vh - 65px);
+    padding: 0 15px;
+    overflow: auto;
+  }
 }

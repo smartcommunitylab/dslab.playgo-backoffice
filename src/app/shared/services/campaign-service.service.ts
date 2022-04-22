@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { __param } from 'tslib';
 import { CampaignClass } from '../classes/campaing-class';
 import { CAMPAIGN_BASE_PATH } from '../constants/constants';
 
@@ -11,8 +12,10 @@ export class CampaignService {
 
   constructor(private http: HttpClient) { }
 
-  get(): Observable<CampaignClass[]>{
-    return this.http.get<CampaignClass[]>(CAMPAIGN_BASE_PATH);
+  get(territoryId: string): Observable<CampaignClass[]>{
+
+    let params = new HttpParams().set('territoryId', territoryId);
+    return this.http.get<CampaignClass[]>(CAMPAIGN_BASE_PATH,{params: params});
   }
 
   put(campaign: CampaignClass): Observable<any>{
