@@ -92,6 +92,7 @@ export class CampaignPageComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== undefined) {
+        this.selectedCampaign =null;
         let newList: CampaignClass[] = [];
         for (let i of this.listCampaign) {
           if (i.campaignId !== result) {

@@ -11,18 +11,28 @@ import { TerritoryClass } from "src/app/shared/classes/territory-class";
 import { TerritoryService } from "src/app/shared/services/territory.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { CampaignClass, ValidationData } from "src/app/shared/classes/campaing-class";
-import { UploadFileService } from "src/app/shared/services/upload-file.service";
 import { TYPE_CAMPAIGN } from "src/app/shared/constants/constants";
 import { means } from "src/app/shared/constants/means";
 import { CampaignService } from "src/app/shared/services/campaign-service.service";
+import { trigger, state, style, transition, animate } from '@angular/animations';
+
 
 @Component({
   selector: "app-campaign-add-form",
   templateUrl: "./campaign-add-form.component.html",
   styleUrls: ["./campaign-add-form.component.scss"],
+  animations: [
+    trigger('bodyExpansion', [
+      state('collapsed, void', style({ height: '0px', visibility: 'hidden' })),
+      state('expanded', style({ height: '*', visibility: 'visible' })),
+      transition('expanded <=> collapsed, void => collapsed',
+        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ])
+  ]
 })
 export class CampaignAddFormComponent implements OnInit {
   @Input() type: string; // can be add or modify
+  quillContent = "";
 
   validatingForm: FormGroup;
   campaignCreated: CampaignClass;
@@ -32,6 +42,9 @@ export class CampaignAddFormComponent implements OnInit {
   typeCampaign = TYPE_CAMPAIGN;
   means: string[] = means;
   errorMsgValidation: string;
+  stateDescription: string="collapsed";
+  stateRules: string="collapsed";
+  statePrivacy:string="collapsed";
 
   @Input() set formTerritory(value: CampaignClass) {
     this.initializaValidatingForm();
@@ -67,9 +80,9 @@ export class CampaignAddFormComponent implements OnInit {
         campaignId: new FormControl("", [Validators.required]),
         name: new FormControl("", [Validators.required]),
         logo: new FormControl("", [Validators.required]),
-        description: new FormControl("", [Validators.required]),
-        privacy: new FormControl("", [Validators.required]),
-        rules: new FormControl("", [Validators.required]),
+        description: new FormControl(""),
+        privacy: new FormControl(""),
+        rules: new FormControl(""),
         means: new FormControl("", [Validators.required]),
         active: new FormControl("", [Validators.required]),
         dateFrom: new FormControl("", [Validators.required]),
@@ -81,9 +94,9 @@ export class CampaignAddFormComponent implements OnInit {
     } else {
       this.validatingForm = this.formBuilder.group({
         logo: new FormControl("", [Validators.required]),
-        description: new FormControl("", [Validators.required]),
-        privacy: new FormControl("", [Validators.required]),
-        rules: new FormControl("", [Validators.required]),
+        description: new FormControl(""),
+        privacy: new FormControl(""),
+        rules: new FormControl(""),
         means: new FormControl("", [Validators.required]),
         active: new FormControl("", [Validators.required]),
         dateFrom: new FormControl("", [Validators.required]),
@@ -114,9 +127,6 @@ export class CampaignAddFormComponent implements OnInit {
   }
 
   validate(): void {
-    this.errorMsgValidation = null;
-    const p = this.validatingForm.get("name").value;
-
     if (this.validatingForm.valid) {
       this.campaignCreated.active = this.validatingForm.get("active").value;
       this.campaignCreated.dateFrom = this.formatDate(
@@ -183,6 +193,7 @@ export class CampaignAddFormComponent implements OnInit {
           this._snackBar.open("error:" + e.errors, "close");
         }
       }
+    }else{
     }
   }
 
@@ -203,6 +214,31 @@ export class CampaignAddFormComponent implements OnInit {
     const year = res[2];
     console.log(year + "-" + month + "-" + day);
     return year + "-" + month + "-" + day;
+  }
+
+  get descriptionRichControl() {
+    return this.validatingForm.controls.description as FormControl;
+  }
+
+  get privacyRichControl() {
+    return this.validatingForm.controls.privacy as FormControl;
+  }
+
+  get rulesRichControl() {
+    return this.validatingForm.controls.rules as FormControl;
+  }
+
+  toggleDescription(){
+    this.stateDescription = this.stateDescription === 'collapsed' ? 'expanded' : 'collapsed';
+  }
+
+  togglePrivacy(){
+    this.statePrivacy = this.statePrivacy === 'collapsed' ? 'expanded' : 'collapsed';
+
+  }
+
+  toggleRules(){
+    this.stateRules = this.stateRules === 'collapsed' ? 'expanded' : 'collapsed';
   }
 
   checkValidDates(startt: string, endd: string): boolean {

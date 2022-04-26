@@ -2,7 +2,7 @@
     <h1>{{'addCampaign' | translate}}</h1>
     <div class="col-12 full-width">
         <form [formGroup]="validatingForm">
-            <div style="height: 100%;">
+            <div class="full-height">
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-custom-half-left">
                         <mat-label>{{'territoryId' | translate}}</mat-label>
@@ -30,22 +30,6 @@
                         <mat-select id="means" formControlName="means" multiple>
                             <mat-option *ngFor="let mean of means" [value]="mean">{{mean |translate}}</mat-option>
                         </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="in-line-forms">
-                    <mat-form-field appearance="fill" class="input-custom-half-left">
-                        <mat-label>{{'description' | translate}}</mat-label>
-                        <textarea matInput id="description" formControlName="description"></textarea>
-                    </mat-form-field>
-                    <mat-form-field appearance="fill" class="input-custom-half-right">
-                        <mat-label>{{'privacy' | translate}}</mat-label>
-                        <textarea matInput id="privacy" formControlName="privacy"></textarea>
-                    </mat-form-field>
-                </div>
-                <div class="in-line-forms">
-                    <mat-form-field appearance="fill" class="input-custom-half-left">
-                        <mat-label>{{'rules' | translate}}</mat-label>
-                        <textarea matInput id="rules" formControlName="rules"></textarea>
                     </mat-form-field>
                 </div>
                 <div class="in-line-forms">
@@ -92,12 +76,84 @@
                         <input matInput id="gameId" formControlName="gameId">
                     </mat-form-field>
                 </div>
+                <div class="in-line-forms">
+                    <mat-card class="card-expandable card-normal">
+                        <mat-card-title>
+                            {{'description' | translate}}
+                            <mat-card-actions class="right-button top-button">
+                                <button type="button" mat-button (click)="toggleDescription()" color="primary">
+                                    <mat-icon *ngIf="stateDescription==='collapsed'">
+                                        <span class="material-symbols-outlined">
+                                            expand_more
+                                            </span>
+                                    </mat-icon>
+                                    <mat-icon *ngIf="stateDescription==='expanded'">
+                                        <span class="material-symbols-outlined">
+                                            expand_less
+                                            </span>
+                                    </mat-icon>
+                                </button>
+                            </mat-card-actions>
+                        </mat-card-title>
+                        <mat-card-content [@bodyExpansion]="stateDescription" class="expandable-content">
+                            <rich-text-editor [control]="descriptionRichControl"></rich-text-editor>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div class="in-line-forms">
+                    <mat-card class="card-expandable card-normal">
+                        <mat-card-title>
+                            {{'privacy' | translate}}
+                            <mat-card-actions class="right-button top-button">
+                                <button type="button" mat-button (click)="togglePrivacy()" color="primary">
+                                    <mat-icon *ngIf="statePrivacy==='collapsed'">
+                                        <span class="material-symbols-outlined">
+                                            expand_more
+                                            </span>
+                                    </mat-icon>
+                                    <mat-icon *ngIf="statePrivacy==='expanded'">
+                                        <span class="material-symbols-outlined">
+                                            expand_less
+                                            </span>
+                                    </mat-icon>
+                                </button>
+                            </mat-card-actions>
+                        </mat-card-title>
+                        <mat-card-content [@bodyExpansion]="statePrivacy" class="expandable-content">
+                            <rich-text-editor [control]="privacyRichControl"></rich-text-editor>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div class="in-line-forms">
+                    <mat-card class="card-expandable card-normal">
+                        <mat-card-title>
+                            {{'rules' | translate}}
+                            <mat-card-actions class="right-button top-button">
+                                <button type="button" mat-button (click)="toggleRules()" color="primary">
+                                    <mat-icon *ngIf="stateRules==='collapsed'">
+                                        <span class="material-symbols-outlined">
+                                            expand_more
+                                            </span>
+                                    </mat-icon>
+                                    <mat-icon *ngIf="stateRules==='expanded'">
+                                        <span class="material-symbols-outlined">
+                                            expand_less
+                                            </span>
+                                    </mat-icon>
+                                </button>
+                            </mat-card-actions>
+                        </mat-card-title>
+                        <mat-card-content [@bodyExpansion]="stateRules" class="expandable-content">
+                            <rich-text-editor [control]="rulesRichControl"></rich-text-editor>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
             </div>
             <div style="height:60px;">
-                <div *ngIf="!!errorMsgValidation" style=" width:100%; height: 20px;">
-                    <p class="right-button" style="color:red">{{errorMsgValidation | translate}}</p>
+                <div *ngIf="!!errorMsgValidation" class="message-error-div">
+                    <p class="right-button red">{{errorMsgValidation | translate}}</p>
                 </div>
-                <button class="right-button green" mat-raised-button type="submit" (click)="validate()">{{'save' |
+                <button class="right-button back-green" mat-raised-button type="submit" (click)="validate()">{{'save' |
                     translate}}</button>
                 <button class="right-button" mat-flat-button (click)="onNoClick($event)">{{'cancel'
                     |translate}}</button>
@@ -107,12 +163,12 @@
 </div>
 <div class="full-width" *ngIf="type === 'modify'">
     <h1>{{'modifyCampaign' | translate}} </h1>
-    <h3>TerritoryId: {{campaignUpdated.territoryId}} </h3>
-    <h3>Name: {{campaignUpdated.name}} </h3>
-    <h5>ID: {{campaignUpdated.campaignId}}</h5>
+    <h3> {{'territoryId' | translate}}: {{campaignUpdated.territoryId}} </h3>
+    <h3>{{'name' | translate}}: {{campaignUpdated.name}} </h3>
+    <h5>{{'Id' | translate}}: {{campaignUpdated.campaignId}}</h5>
     <div class="col-12 full-width">
         <form [formGroup]="validatingForm">
-            <div style="height: 100%;">
+            <div class="full-height">
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-custom-half-left">
                         <input matInput formControlName="logo" type="file" (change)="upload($event.target.files)" />
@@ -122,22 +178,6 @@
                         <mat-select id="means" formControlName="means" multiple>
                             <mat-option *ngFor="let mean of means" [value]="mean">{{mean |translate}}</mat-option>
                         </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="in-line-forms">
-                    <mat-form-field appearance="fill" class="input-custom-half-left">
-                        <mat-label>{{'description' | translate}}</mat-label>
-                        <textarea matInput id="description" formControlName="description"></textarea>
-                    </mat-form-field>
-                    <mat-form-field appearance="fill" class="input-custom-half-right">
-                        <mat-label>{{'privacy' | translate}}</mat-label>
-                        <textarea matInput id="privacy" formControlName="privacy"></textarea>
-                    </mat-form-field>
-                </div>
-                <div class="in-line-forms">
-                    <mat-form-field appearance="fill" class="input-custom-half-left">
-                        <mat-label>{{'rules' | translate}}</mat-label>
-                        <textarea matInput id="rules" formControlName="rules"></textarea>
                     </mat-form-field>
                 </div>
                 <div class="in-line-forms">
@@ -184,12 +224,84 @@
                         <input matInput id="gameId" formControlName="gameId">
                     </mat-form-field>
                 </div>
+                <div class="in-line-forms">
+                    <mat-card class="card-expandable card-normal">
+                        <mat-card-title>
+                            {{'description' | translate}}
+                            <mat-card-actions class="right-button top-button">
+                                <button type="button" mat-button (click)="toggleDescription()" color="primary">
+                                    <mat-icon *ngIf="stateDescription==='collapsed'">
+                                        <span class="material-symbols-outlined">
+                                            expand_more
+                                            </span>
+                                    </mat-icon>
+                                    <mat-icon *ngIf="stateDescription==='expanded'">
+                                        <span class="material-symbols-outlined">
+                                            expand_less
+                                            </span>
+                                    </mat-icon>
+                                </button>
+                            </mat-card-actions>
+                        </mat-card-title>
+                        <mat-card-content [@bodyExpansion]="stateDescription" class="expandable-content">
+                            <rich-text-editor [control]="descriptionRichControl"></rich-text-editor>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div class="in-line-forms">
+                    <mat-card class="card-expandable card-normal">
+                        <mat-card-title>
+                            {{'privacy' | translate}}
+                            <mat-card-actions class="right-button top-button">
+                                <button type="button" mat-button (click)="togglePrivacy()" color="primary">
+                                    <mat-icon *ngIf="statePrivacy==='collapsed'">
+                                        <span class="material-symbols-outlined">
+                                            expand_more
+                                            </span>
+                                    </mat-icon>
+                                    <mat-icon *ngIf="statePrivacy==='expanded'">
+                                        <span class="material-symbols-outlined">
+                                            expand_less
+                                            </span>
+                                    </mat-icon>
+                                </button>
+                            </mat-card-actions>
+                        </mat-card-title>
+                        <mat-card-content [@bodyExpansion]="statePrivacy" class="expandable-content">
+                            <rich-text-editor [control]="privacyRichControl"></rich-text-editor>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div class="in-line-forms">
+                    <mat-card class="card-expandable card-normal">
+                        <mat-card-title>
+                            {{'rules' | translate}}
+                            <mat-card-actions class="right-button top-button">
+                                <button type="button" mat-button (click)="toggleRules()" color="primary">
+                                    <mat-icon *ngIf="stateRules==='collapsed'">
+                                        <span class="material-symbols-outlined">
+                                            expand_more
+                                            </span>
+                                    </mat-icon>
+                                    <mat-icon *ngIf="stateRules==='expanded'">
+                                        <span class="material-symbols-outlined">
+                                            expand_less
+                                            </span>
+                                    </mat-icon>
+                                </button>
+                            </mat-card-actions>
+                        </mat-card-title>
+                        <mat-card-content [@bodyExpansion]="stateRules" class="expandable-content">
+                            <rich-text-editor [control]="rulesRichControl"></rich-text-editor>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
             </div>
             <div style="height:60px;">
-                <div *ngIf="!!errorMsgValidation" class="right-button" style=" width:100%; height: 20px;">
-                    <p style="color:red">Error message</p>
+                <div *ngIf="!!errorMsgValidation" class="right-button message-error-div">
+                    <p class="red">Error message</p>
                 </div>
-                <button class="right-button green" mat-raised-button type="submit" (click)="validate()">{{'save' |
+                <button class="right-button back-green" mat-raised-button type="submit" (click)="validate()">{{'save' |
                     translate}}</button>
                 <button class="right-button" mat-flat-button (click)="onNoClick($event)">{{'cancel'
                     |translate}}</button>

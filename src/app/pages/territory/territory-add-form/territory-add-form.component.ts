@@ -8,11 +8,20 @@ import { means } from 'src/app/shared/constants/means';
 import { TerritoryService } from 'src/app/shared/services/territory.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import { TerritoryData } from 'src/app/shared/classes/territory-data';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-territory-add-form',
   templateUrl: './territory-add-form.component.html',
-  styleUrls: ['./territory-add-form.component.scss']
+  styleUrls: ['./territory-add-form.component.scss'],
+  animations: [
+    trigger('bodyExpansion', [
+      state('collapsed, void', style({ height: '0px', visibility: 'hidden' })),
+      state('expanded', style({ height: '*', visibility: 'visible' })),
+      transition('expanded <=> collapsed, void => collapsed',
+        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ])
+  ]
 })
 export class TerritoryAddFormComponent implements OnInit {
 
@@ -29,6 +38,7 @@ export class TerritoryAddFormComponent implements OnInit {
   settedLong = false;
   unlockRaySelector = false;
   terrytoryUpdate: TerritoryClass;
+  stateDescription: string="collapsed";
   @Input() set formTerritory(value : TerritoryClass){
     this.initializaValidatingForm();
     this.terrytoryUpdate = value;
@@ -188,6 +198,15 @@ export class TerritoryAddFormComponent implements OnInit {
       } 
     }
     
+  }
+
+  toggleDescription(){
+    this.stateDescription = this.stateDescription === 'collapsed' ? 'expanded' : 'collapsed';
+  }
+
+
+  get descriptionRichControl() {
+    return this.validatingForm.controls.description as FormControl;
   }
 
 

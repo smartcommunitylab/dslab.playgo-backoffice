@@ -28,10 +28,28 @@
                     </mat-form-field>
                 </div>
                 <div>
-                    <mat-form-field appearance="fill" class="input-custom-half-left">
-                        <mat-label>{{'description' | translate}}</mat-label>
-                        <textarea matInput id="description" formControlName="description"></textarea>
-                    </mat-form-field>
+                    <mat-card class="card-expandable card-normal">
+                        <mat-card-title>
+                            {{'description' | translate}}
+                            <mat-card-actions class="right-button top-button">
+                                <button type="button" mat-button (click)="toggleDescription()" color="primary">
+                                    <mat-icon *ngIf="stateDescription==='collapsed'">
+                                        <span class="material-symbols-outlined">
+                                            expand_more
+                                            </span>
+                                    </mat-icon>
+                                    <mat-icon *ngIf="stateDescription==='expanded'">
+                                        <span class="material-symbols-outlined">
+                                            expand_less
+                                            </span>
+                                    </mat-icon>
+                                </button>
+                            </mat-card-actions>
+                        </mat-card-title>
+                        <mat-card-content [@bodyExpansion]="stateDescription" class="expandable-content">
+                            <rich-text-editor [control]="descriptionRichControl"></rich-text-editor>
+                        </mat-card-content>
+                    </mat-card>
                 </div>
             </div>
             <div class="map-div">
@@ -81,8 +99,8 @@
 </div>
 <div class="full-width" *ngIf="type === 'modify'">
     <h1>{{'modifyTerritory' | translate}} </h1>
-    <h3>Name: {{terrytoryUpdate.name}} </h3>
-    <h5>ID: {{terrytoryUpdate.territoryId}}</h5>
+    <h3>{{'name' | translate}}: {{terrytoryUpdate.name}} </h3>
+    <h5>{{'Id' | translate}}: {{terrytoryUpdate.territoryId}}</h5>
     <div class="col-12 full-width">
         <form [formGroup]="validatingForm">
             <div style="height: 100%;">
@@ -101,10 +119,28 @@
                     </mat-form-field>
                 </div>
                 <div>
-                    <mat-form-field appearance="fill" class="input-custom-half-left">
-                        <mat-label>{{'description' | translate}}</mat-label>
-                        <textarea matInput id="description" formControlName="description" value="{{terrytoryUpdate.description}}"></textarea>
-                    </mat-form-field>
+                    <mat-card class="card-expandable card-normal">
+                        <mat-card-title>
+                            {{'description' | translate}}
+                            <mat-card-actions class="right-button top-button">
+                                <button type="button" mat-button (click)="toggleDescription()" color="primary">
+                                    <mat-icon *ngIf="stateDescription==='collapsed'">
+                                        <span class="material-symbols-outlined">
+                                            expand_more
+                                            </span>
+                                    </mat-icon>
+                                    <mat-icon *ngIf="stateDescription==='expanded'">
+                                        <span class="material-symbols-outlined">
+                                            expand_less
+                                            </span>
+                                    </mat-icon>
+                                </button>
+                            </mat-card-actions>
+                        </mat-card-title>
+                        <mat-card-content [@bodyExpansion]="stateDescription" class="expandable-content">
+                            <rich-text-editor [control]="descriptionRichControl"></rich-text-editor>
+                        </mat-card-content>
+                    </mat-card>
                 </div>
             </div>
             <div class="map-div">

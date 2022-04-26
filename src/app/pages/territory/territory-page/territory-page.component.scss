@@ -26,10 +26,7 @@
 
 .card{
   border: 1px solid black;
-}
-
-::ng-deep .mat-card{
   box-shadow: 33px gray;
   border-radius: 30px !important;
   margin-left: 10px;
- }
+}
