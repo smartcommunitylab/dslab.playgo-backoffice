@@ -21,6 +21,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { RichTextEditorModule } from "./components/rich-text-editor/rich-text-editor.module";
+import { DropDownCardInfoModule } from "./components/drop-down-card-info/drop-down-card-info.module";
 
 @NgModule({
   imports: [
@@ -45,7 +46,8 @@ import { RichTextEditorModule } from "./components/rich-text-editor/rich-text-ed
     MatDatepickerModule,
     MatNativeDateModule,
     MatSlideToggleModule,
-    RichTextEditorModule
+    RichTextEditorModule,
+    DropDownCardInfoModule
   ],
   declarations: [],
   entryComponents: [],
@@ -71,7 +73,8 @@ import { RichTextEditorModule } from "./components/rich-text-editor/rich-text-ed
     MatDatepickerModule,
     MatNativeDateModule,
     MatSlideToggleModule,
-    RichTextEditorModule
+    RichTextEditorModule,
+    DropDownCardInfoModule
   ],
 })
 export class SharedModule {}

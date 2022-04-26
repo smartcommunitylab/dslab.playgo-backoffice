@@ -1,10 +1,10 @@
-/*import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: "drop-down-card-info",
-  templateUrl: "./drop-down-card-info.html",
-  styleUrls: ["./drop-down-card-info.scss"],
+  templateUrl: "./drop-down-card-info.component.html",
+  styleUrls: ["./drop-down-card-info.component.scss"],
   animations: [
     trigger('bodyExpansion', [
       state('collapsed, void', style({ height: '0px', visibility: 'hidden' })),
@@ -27,4 +27,3 @@ export class DropDownCardInfoComponent implements OnInit {
     this.state = this.state === 'collapsed' ? 'expanded' : 'collapsed';
   }
 }
-*/
