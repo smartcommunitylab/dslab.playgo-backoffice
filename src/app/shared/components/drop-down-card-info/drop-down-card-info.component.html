@@ -1,5 +1,5 @@
-<mat-card class="card-expandable card-normal" id="full-card" (click)="toggle()">
-    <mat-card-title>
+<mat-card class="card-expandable card-normal" id="full-card" >
+    <mat-card-title class="cursor-pointer" (click)="toggle()">
         {{title}}
         <mat-card-actions class="right-button top-button">
                 <mat-icon *ngIf="state==='collapsed'">

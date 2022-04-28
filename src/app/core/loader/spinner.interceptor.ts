@@ -17,34 +17,34 @@ import { environment } from "../../../environments/environment";
  * property to false. If an error occurs while servicing the request, set the loadingSub property to false.
  * @class {HttpRequestInterceptor}
  */
-// @Injectable()
-// export class SpinnerInterceptor implements HttpInterceptor {
-//   constructor(private _loading: LoadingService) {}
+@Injectable()
+export class SpinnerInterceptor implements HttpInterceptor {
+  constructor(private _loading: LoadingService) {}
 
-//   intercept(
-//     request: HttpRequest<any>,
-//     next: HttpHandler
-//   ): Observable<HttpEvent<any>> {
-//     if (request.url.includes(environment.serverAPIURL)) {
-//       this._loading.setLoading(true, request.url);
-//       return next
-//         .handle(request)
-//         .pipe(
-//           catchError((err) => {
-//             this._loading.setLoading(false, request.url);
-//             return err;
-//           })
-//         )
-//         .pipe(
-//           map<HttpEvent<any>, any>((evt: HttpEvent<any>) => {
-//             if (evt instanceof HttpResponse) {
-//               this._loading.setLoading(false, request.url);
-//             }
-//             return evt;
-//           })
-//         );
-//     } else {
-//       return next.handle(request);
-//     }
-//   }
-// }
+  intercept(
+    request: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
+    if (request.url.includes(environment.serverAPIURL)) {
+      this._loading.setLoading(true, request.url);
+      return next
+        .handle(request)
+        .pipe(
+          catchError((err) => {
+            this._loading.setLoading(false, request.url);
+            return err;
+          })
+        )
+        .pipe(
+          map<HttpEvent<any>, any>((evt: HttpEvent<any>) => {
+            if (evt instanceof HttpResponse) {
+              this._loading.setLoading(false, request.url);
+            }
+            return evt;
+          })
+        );
+    } else {
+      return next.handle(request);
+    }
+  }
+}

@@ -22,6 +22,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { RichTextEditorModule } from "./components/rich-text-editor/rich-text-editor.module";
 import { DropDownCardInfoModule } from "./components/drop-down-card-info/drop-down-card-info.module";
+import { MatSortModule } from "@angular/material/sort";
 
 @NgModule({
   imports: [
@@ -46,6 +47,7 @@ import { DropDownCardInfoModule } from "./components/drop-down-card-info/drop-do
     MatDatepickerModule,
     MatNativeDateModule,
     MatSlideToggleModule,
+    MatSortModule,
     RichTextEditorModule,
     DropDownCardInfoModule
   ],
@@ -73,6 +75,7 @@ import { DropDownCardInfoModule } from "./components/drop-down-card-info/drop-do
     MatDatepickerModule,
     MatNativeDateModule,
     MatSlideToggleModule,
+    MatSortModule,
     RichTextEditorModule,
     DropDownCardInfoModule
   ],

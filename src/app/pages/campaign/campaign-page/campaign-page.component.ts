@@ -9,6 +9,8 @@ import { CampaignService } from "src/app/shared/services/campaign-service.servic
 import { TerritoryClass } from "src/app/shared/classes/territory-class";
 import { TerritoryService } from "src/app/shared/services/territory.service";
 import { BASE64_SRC_IMG, PREFIX_SRC_IMG } from "src/app/shared/constants/constants";
+import {MatSort, Sort} from '@angular/material/sort';
+import {LiveAnnouncer} from '@angular/cdk/a11y';
 
 @Component({
   selector: "app-campaign-page",
@@ -26,7 +28,7 @@ export class CampaignPageComponent implements OnInit {
   selectedRowIndex = "";
   PREFIX_SRC_IMG_C = PREFIX_SRC_IMG;
   BASE64_SRC_IMG_C =BASE64_SRC_IMG;
-
+  @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(
@@ -34,7 +36,8 @@ export class CampaignPageComponent implements OnInit {
     private dialogUpdate: MatDialog,
     private dialogDelete: MatDialog,
     private campaignService: CampaignService,
-    private territoryService: TerritoryService
+    private territoryService: TerritoryService,
+    private _liveAnnouncer: LiveAnnouncer
   ) {
     // private dialog: MatDialog
   }
@@ -45,9 +48,9 @@ export class CampaignPageComponent implements OnInit {
 
   ngAfterViewInit() {}
 
-  onSelectTerritory(territoryId: string){
+  async onSelectTerritory(territoryId: string){
     if(territoryId){
-      this.campaignService.get(territoryId).subscribe(
+      await this.campaignService.get(territoryId).subscribe(
         (listTerritory) => {
           if(!!listTerritory){
             this.listAllCampaign = listTerritory.reverse();
@@ -55,7 +58,9 @@ export class CampaignPageComponent implements OnInit {
             this.setTableData();
           }
         },
-        (error) => {}
+        (error) => {
+          console.log("error onSelectTerritory", error);
+        }
       );
     }
   }
@@ -63,6 +68,7 @@ export class CampaignPageComponent implements OnInit {
   setTableData() {
     this.dataSource = new MatTableDataSource<CampaignClass>(this.listCampaign);
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   showTerritory(row: CampaignClass) {
@@ -136,6 +142,14 @@ export class CampaignPageComponent implements OnInit {
         item.name.includes(this.searchString)
       );
       this.setTableData();
+    }
+  }
+
+  announceSortChange(sortState: Sort) {
+    if (sortState.direction) {
+      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+    } else {
+      this._liveAnnouncer.announce('Sorting cleared');
     }
   }
 

@@ -2,6 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { LoadingService } from "./shared/services/loading.service";
 import { delay } from "rxjs/operators";
+import { MatDialog} from '@angular/material/dialog';
+import { AccountDialogComponent } from "./shared/components/account-dialog/account-dialog.component";
 
 export interface Tile {
   color: string;
@@ -31,13 +33,26 @@ export class AppComponent implements OnInit{
 
   constructor(
     private translate: TranslateService,
-    private _loading: LoadingService
+    private _loading: LoadingService,
+    private dialogCreate: MatDialog
   ) {
     this.translate.setDefaultLang("it");
   }
 
   ngOnInit() {
     this.listenToLoading();
+  }
+
+  openDialogAccount(event: any){
+    const dialogRef = this.dialogCreate.open(AccountDialogComponent, {
+      width: '60%',
+      height: '40%',
+    });
+    let instance = dialogRef.componentInstance;
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result !==undefined){      }
+    });
   }
 
   listenToLoading(): void {

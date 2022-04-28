@@ -29,7 +29,7 @@
                 </div>
                 <div>
                     <mat-card class="card-expandable card-normal">
-                        <mat-card-title (click)="toggleDescription()">
+                        <mat-card-title class="cursor-pointer" (click)="toggleDescription()">
                             {{'description' | translate}}
                             <mat-card-actions class="right-button top-button">
                                 <mat-icon *ngIf="stateDescription==='collapsed'">
@@ -119,7 +119,7 @@
                 </div>
                 <div>
                     <mat-card class="card-expandable card-normal">
-                        <mat-card-title (click)="toggleDescription()">
+                        <mat-card-title class="cursor-pointer" (click)="toggleDescription()">
                             {{'description' | translate}}
                             <mat-card-actions class="right-button top-button">
                                 <mat-icon *ngIf="stateDescription==='collapsed'">

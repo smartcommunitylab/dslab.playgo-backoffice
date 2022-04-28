@@ -6,6 +6,8 @@ import { MatDialog} from '@angular/material/dialog';
 import { TerritoryAddFormComponent } from '../territory-add-form/territory-add-form.component';
 import { TerritoryDeleteComponent } from '../territory-delete/territory-delete.component';
 import { TerritoryService } from 'src/app/shared/services/territory.service';
+import {MatSort, Sort} from '@angular/material/sort';
+import {LiveAnnouncer} from '@angular/cdk/a11y';
 
 @Component({
   selector: 'app-territory-page',
@@ -20,12 +22,17 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
   listAllTerriotory: TerritoryClass[];
   searchString: string;
   selectedRowIndex = "";
+  @ViewChild(MatSort) sort: MatSort;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
 
 
-  constructor( private dialogCreate: MatDialog,private dialogUpdate: MatDialog, private dialogDelete: MatDialog, private territoryService: TerritoryService){// private dialog: MatDialog
+  constructor( private dialogCreate: MatDialog,
+    private dialogUpdate: MatDialog,
+     private dialogDelete: MatDialog,
+      private territoryService: TerritoryService,
+    private _liveAnnouncer: LiveAnnouncer){// private dialog: MatDialog
 
   }
 
@@ -39,12 +46,13 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
     );
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit() {    
   }
 
   setTableData(){
     this.dataSource = new MatTableDataSource<TerritoryClass>(this.listTerriotory);
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   showTerritory(row : TerritoryClass){
@@ -119,6 +127,14 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
         this.setTableData();
       }
     });
+  }
+
+  announceSortChange(sortState: Sort) {
+    if (sortState.direction) {
+      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+    } else {
+      this._liveAnnouncer.announce('Sorting cleared');
+    }
   }
 
   searchTerritory(event: any){

@@ -23,14 +23,27 @@ export class LoadingService {
    * @param url {string}
    */
   setLoading(loading: boolean, url: string): void {
+    //console.log("loading servic per url:", url, loading);
     // console.log("loading servic per url:", url, loading);
     // if (!url) {
     //   throw new Error('The request URL must be provided to the LoadingService.setLoading function');
     // }
-    // if (loading === true) {
-    //   this.loadingMap.set(url, loading);
-    //   this.loadingSub.next(true);
-    // } 
+    // if(this.loadingMap.has(url)){
+    //   if (loading === false) {
+    //     this.loadingMap.delete(url);
+    //     this.loadingSub.next(false);
+    //   }
+    //   if (loading === true) {
+    //     this.loadingMap.set(url, loading);
+    //     this.loadingSub.next(true);
+    //   } 
+    // }else{
+    //   if (loading === true) {
+    //     this.loadingMap.set(url, loading);
+    //     this.loadingSub.next(true);
+    //   } 
+    // }
+
     // else if (loading === false && this.loadingMap.has(url)) {
     //   this.loadingMap.delete(url);
     // }
