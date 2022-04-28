@@ -86,6 +86,7 @@
                     </div>
                 </div>
             </div>
+            <p *ngIf="!!errorMsgValidation" class="full-dimension red">{{errorMsgValidation | translate}}</p>
             <div style="height:40px;">
                 <button class="right-button green" mat-raised-button type="submit" (click)="validate()">{{'save' |
                     translate}}</button>
@@ -175,6 +176,7 @@
                     </div>
                 </div>
             </div>
+            <p *ngIf="!!errorMsgValidation" class="full-dimension red">{{errorMsgValidation | translate}}</p>
             <div style="height:40px;">
                 <button class="right-button green" mat-raised-button type="submit" (click)="validate()">{{'save' |
                     translate}}</button>

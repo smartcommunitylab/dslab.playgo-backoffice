@@ -146,9 +146,7 @@
                     </mat-card>
                 </div>
             </div>
-            <div *ngIf="!!errorMsgValidation" class="message-error-div">
-                <p class="red">{{errorMsgValidation | translate}}</p>
-            </div>
+            <p *ngIf="!!errorMsgValidation" class="full-dimension red">{{errorMsgValidation | translate}}</p>
             <div class="full-width" style="height: 40px">
                 <button class="right-button back-green" mat-raised-button type="submit" (click)="validate()">{{'save' |
                     translate}}</button>
@@ -166,7 +164,9 @@
     <div class="col-12 full-width">
         <form [formGroup]="validatingForm">
             <div class="full-height">
-                <div class="in-line-forms">
+                <div class="in-line-forms" style="margin-bottom: 10px; margin-top: 50px;">
+                    <p *ngIf="!uploadImageForModify">{{"currentLogo" | translate}}</p>
+                    <p *ngIf="uploadImageForModify">{{"newLogo" | translate}}</p>
                     <img *ngIf="selectedLogo" src="{{ PREFIX_SRC_IMG_C + selectedLogo.contentType + BASE64_SRC_IMG_C + selectedLogo.image}}" style="width: 100px;height: 100px;">
                 </div>
                 <div class="in-line-forms">
@@ -291,10 +291,8 @@
                     </mat-card>
                 </div>
             </div>
-            <div *ngIf="!!errorMsgValidation" class="message-error-div">
-                <p class="red">{{errorMsgValidation | translate}}</p>
-            </div>
-            <div class="full-width">
+            <p *ngIf="!!errorMsgValidation" class="full-dimension red">{{errorMsgValidation | translate}}</p>
+            <div class="full-width" style="height: 40px">
                 <button class="right-button back-green" mat-raised-button type="submit" (click)="validate()">{{'save' |
                     translate}}</button>
                 <button class="right-button" mat-flat-button (click)="onNoClick($event)">{{'cancel'

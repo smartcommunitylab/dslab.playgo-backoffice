@@ -67,8 +67,8 @@ export class CampaignPageComponent implements OnInit {
 
   showTerritory(row: CampaignClass) {
     this.selectedRowIndex = row.campaignId;
-    this.selectedCampaign = row;
-    console.log(this.selectedCampaign);
+    this.selectedCampaign = new CampaignClass();
+    this.selectedCampaign.setClassWithourError(row);
   }
 
   addCampaign() {
@@ -120,9 +120,7 @@ export class CampaignPageComponent implements OnInit {
     instance.formTerritory = this.selectedCampaign;
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log("here 1");
       if (result !== undefined) {
-        console.log("here 2");
         this.onSelectTerritory(result.territoryId);
         this.selectedCampaign =result;
       }

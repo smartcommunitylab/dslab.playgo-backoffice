@@ -82,6 +82,8 @@ export class CampaignAddFormComponent implements OnInit {
   statePrivacy: string = "collapsed";
   PREFIX_SRC_IMG_C = PREFIX_SRC_IMG;
   BASE64_SRC_IMG_C =BASE64_SRC_IMG;
+  uploadImageForModify: boolean = false;
+  blobImageUpload: Blob;
 
   @Input() set formTerritory(value: CampaignClass) {
     this.campaignUpdated = new CampaignClass();
@@ -198,6 +200,7 @@ export class CampaignAddFormComponent implements OnInit {
   }
 
   validate(): void {
+    this.errorMsgValidation = "";
     if (this.validatingForm.valid) {
       this.campaignCreated.active = this.validatingForm.get("active").value;
       const dataFrom: Moment =this.validatingForm.get("dateFrom").value;
@@ -227,15 +230,13 @@ export class CampaignAddFormComponent implements OnInit {
         this.campaignCreated.territoryId = this.validatingForm.get("territoryId").value.territoryId;
         this.campaignCreated.name = this.validatingForm.get("name").value;
         try {
-          console.log(this.campaignCreated);
           this.campaignService.post(this.campaignCreated).subscribe(
             () => {
               this.onNoClick("", this.campaignCreated);
               this._snackBar.open("Dati salvati", "close");
             },
             (error) => {
-              this.errorMsgValidation =
-                "Dati non salvati per errore in post: " + error.error.ex;
+              this.errorMsgValidation = "Dati non salvati per errore in post: " + error.error.ex;
               //this._snackBar.open('Dati non salvati per errore: ' +error.error.ex, "close");
             }
           );
@@ -245,25 +246,35 @@ export class CampaignAddFormComponent implements OnInit {
         }
       }
       if (this.type === "modify") {
-        console.log(this.campaignCreated);
         this.campaignCreated.name = this.campaignUpdated.name;
         this.campaignCreated.territoryId = this.campaignUpdated.territoryId;
         this.campaignCreated.campaignId = this.campaignUpdated.campaignId;
         try {
-          this.territoryService.put(this.campaignCreated).subscribe(
+          this.campaignService.put(this.campaignCreated).subscribe(
             () => {
-              this.onNoClick("", this.campaignCreated);
-              this._snackBar.open("Dati modificati", "close");
+              if(this.uploadImageForModify){
+                this.campaignService.postLogo(this.campaignCreated.campaignId,this.blobImageUpload).subscribe(
+                  () => {
+                    this.onNoClick("", this.campaignCreated);
+                    this._snackBar.open("Dati modificati", "close");
+                  },
+                  (error) => {
+                    // console.log(error);
+                     this.errorMsgValidation = "Tutti i dati sono stati modificati tranne il logo. Per errore: " + error.error.ex +"\n";
+                  }
+                )
+              }else{
+                this.onNoClick("", this.campaignCreated);
+                this._snackBar.open("Dati modificati", "close");
+              }
             },
             (error) => {
-              this._snackBar.open(
-                "Modifica dati non avvenuta per errore: " + error.error.ex,
-                "close"
-              );
+              this.errorMsgValidation = "Modifica dati non avvenuta per errore: " + error.error.ex;
             }
           );
+
         } catch (e) {
-          this._snackBar.open("error:" + e.errors, "close");
+          this.errorMsgValidation = "error:" + e.errors;
         }
       }
     } else {
@@ -271,18 +282,18 @@ export class CampaignAddFormComponent implements OnInit {
   }
 
   upload(event: any): void {
-    console.log(event);
     if (event.target.files && event.target.files[0]) {
       var reader = new FileReader();
       const eev = event;
+      this.blobImageUpload = event.target.files[0];
       reader.readAsDataURL(event.target.files[0]);
-      reader.onload = (event) => { // called once readAsText is completed
+      reader.onload = (event) => { 
         this.selectedLogo = new Logo();
         this.selectedLogo.contentType = eev.target.files[0].type;
         const prefix = this.PREFIX_SRC_IMG_C + this.selectedLogo.contentType + this.BASE64_SRC_IMG_C;
         const base64string = event.target.result.slice(prefix.length);
         this.selectedLogo.image = base64string;
-        console.log(this.selectedLogo);
+        this.uploadImageForModify = true;
       };
     }
   }
@@ -339,7 +350,6 @@ export class CampaignAddFormComponent implements OnInit {
     const endDay = +end[2];
     const endMonth = +end[1];
     const endYear = +end[0];
-    console.log(startYear, startMonth, startDay, endYear, endMonth, endDay);
     if (startYear > endYear) {
       return false;
     } else if (startYear < endYear) {

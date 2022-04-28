@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { __param } from 'tslib';
@@ -27,8 +27,10 @@ export class CampaignService {
     return this.http.post<any>(CAMPAIGN_BASE_PATH,campaign);
   }
 
-  postLogo(campaignId:string, logo: Logo): Observable<any>{
-    return this.http.post<any>(CAMPAIGN_BASE_PATH+'/'+campaignId+'/'+'logo',logo);
+  postLogo(campaignId:string, logo: any): Observable<any>{
+    const formData = new FormData();
+    formData.append('data', logo);
+    return this.http.post<any>(CAMPAIGN_BASE_PATH+'/'+campaignId+'/'+'logo',formData);
   }
 
   getById(id : string): Observable<CampaignClass>{

@@ -31,7 +31,6 @@ export class AuthService {
 
   constructor(private _injector: Injector)
   {
-    // console.log('here');
   }
 
   private get router() { return this._injector.get(Router); }

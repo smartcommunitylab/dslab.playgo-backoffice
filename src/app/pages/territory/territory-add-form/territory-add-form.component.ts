@@ -39,6 +39,7 @@ export class TerritoryAddFormComponent implements OnInit {
   unlockRaySelector = false;
   terrytoryUpdate: TerritoryClass;
   stateDescription: string="collapsed";
+  errorMsgValidation: string;
   @Input() set formTerritory(value : TerritoryClass){
     this.terrytoryUpdate = new TerritoryClass();
     this.terrytoryUpdate.name = value.name;
@@ -175,7 +176,7 @@ export class TerritoryAddFormComponent implements OnInit {
 
 
   validate(){
-    console.log(this.validatingForm);
+    this.errorMsgValidation = "";
     const p = this.validatingForm.get('name').value;
 
     if(this.validatingForm.valid){
@@ -195,12 +196,14 @@ export class TerritoryAddFormComponent implements OnInit {
               this._snackBar.open("Dati salvati", "close");
           },
           (error) =>{
-            this._snackBar.open('Dati non salvati per errore: ' +error.error.ex, "close");
+            this.errorMsgValidation ='Dati non salvati per errore: ' +error.error.ex, "close";
+            //this._snackBar.open('Dati non salvati per errore: ' +error.error.ex, "close");
 
           }
           );
         }catch(e){
-          this._snackBar.open('error:' +e.errors, "close");
+          this.errorMsgValidation ='error:' +e.errors;
+          //this._snackBar.open('error:' +e.errors, "close");
         }
       }
       if(this.type==='modify'){
@@ -213,13 +216,12 @@ export class TerritoryAddFormComponent implements OnInit {
               this._snackBar.open("Dati modificati", "close");
             },
             (error) =>{
-              this._snackBar.open('Modifica dati non avvenuta per errore: ' +error.error.ex, "close");
-  
+              this.errorMsgValidation ='Modifica dati non avvenuta per errore: ' +error.error.ex;
             }
           );
 
         }catch(e){
-          this._snackBar.open('error:' +e.errors, "close");
+          this.errorMsgValidation = 'error:' +e.errors;
         }
       } 
     }
