@@ -2,7 +2,7 @@
     <h1>{{'addTerritory' | translate}}</h1>
     <div class="col-12 full-width">
         <form [formGroup]="validatingForm">
-            <div style="height: 100%;">
+            <div class=full-height>
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-custom-half-left">
                         <mat-label>{{'id' | translate}}</mat-label>
@@ -17,7 +17,7 @@
                     <mat-form-field appearance="fill" class="input-custom-half-left">
                         <mat-label>{{'means' | translate}}</mat-label>
                         <mat-select id="means" formControlName="means" multiple>
-                            <mat-option *ngFor="let mean of means" [value]="mean">{{mean}}</mat-option>
+                            <mat-option *ngFor="let mean of means" [value]="mean">{{mean | translate}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="input-custom-half-right">
@@ -29,21 +29,19 @@
                 </div>
                 <div>
                     <mat-card class="card-expandable card-normal">
-                        <mat-card-title>
+                        <mat-card-title (click)="toggleDescription()">
                             {{'description' | translate}}
                             <mat-card-actions class="right-button top-button">
-                                <button type="button" mat-button (click)="toggleDescription()" color="primary">
-                                    <mat-icon *ngIf="stateDescription==='collapsed'">
-                                        <span class="material-symbols-outlined">
-                                            expand_more
-                                            </span>
-                                    </mat-icon>
-                                    <mat-icon *ngIf="stateDescription==='expanded'">
-                                        <span class="material-symbols-outlined">
-                                            expand_less
-                                            </span>
-                                    </mat-icon>
-                                </button>
+                                <mat-icon *ngIf="stateDescription==='collapsed'">
+                                    <span class="material-symbols-outlined">
+                                        expand_more
+                                    </span>
+                                </mat-icon>
+                                <mat-icon *ngIf="stateDescription==='expanded'">
+                                    <span class="material-symbols-outlined">
+                                        expand_less
+                                    </span>
+                                </mat-icon>
                             </mat-card-actions>
                         </mat-card-title>
                         <mat-card-content [@bodyExpansion]="stateDescription" class="expandable-content">
@@ -53,11 +51,11 @@
                 </div>
             </div>
             <div class="map-div">
-                <div class="input-custom-half-left" style="float:left;">
+                <div class="input-custom-half-left float-left">
                     <jhi-app-map (mapPointOutput)="setSelectedPoint($event)" [ray]="raySelected" [mapPoint]="myPoint">
                     </jhi-app-map>
                 </div>
-                <div class="input-custom-half-right" style="float:left;">
+                <div class="input-custom-half-right float-left">
                     <div class="full-width">
                         <mat-form-field appearance="fill" class="full-width">
                             <mat-label>{{'latitude' | translate}}</mat-label>
@@ -103,12 +101,12 @@
     <h5>{{'Id' | translate}}: {{terrytoryUpdate.territoryId}}</h5>
     <div class="col-12 full-width">
         <form [formGroup]="validatingForm">
-            <div style="height: 100%;">
+            <div class=full-height>
                 <div>
                     <mat-form-field appearance="fill" class="input-custom-half-left">
                         <mat-label>{{'means' | translate}}</mat-label>
                         <mat-select id="means" formControlName="means" multiple>
-                            <mat-option *ngFor="let mean of means" [value]="mean">{{mean}}</mat-option>
+                            <mat-option *ngFor="let mean of means" [value]="mean">{{mean | translate}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="input-custom-half-right">
@@ -120,21 +118,19 @@
                 </div>
                 <div>
                     <mat-card class="card-expandable card-normal">
-                        <mat-card-title>
+                        <mat-card-title (click)="toggleDescription()">
                             {{'description' | translate}}
                             <mat-card-actions class="right-button top-button">
-                                <button type="button" mat-button (click)="toggleDescription()" color="primary">
-                                    <mat-icon *ngIf="stateDescription==='collapsed'">
-                                        <span class="material-symbols-outlined">
-                                            expand_more
-                                            </span>
-                                    </mat-icon>
-                                    <mat-icon *ngIf="stateDescription==='expanded'">
-                                        <span class="material-symbols-outlined">
-                                            expand_less
-                                            </span>
-                                    </mat-icon>
-                                </button>
+                                <mat-icon *ngIf="stateDescription==='collapsed'">
+                                    <span class="material-symbols-outlined">
+                                        expand_more
+                                    </span>
+                                </mat-icon>
+                                <mat-icon *ngIf="stateDescription==='expanded'">
+                                    <span class="material-symbols-outlined">
+                                        expand_less
+                                    </span>
+                                </mat-icon>
                             </mat-card-actions>
                         </mat-card-title>
                         <mat-card-content [@bodyExpansion]="stateDescription" class="expandable-content">
@@ -144,21 +140,21 @@
                 </div>
             </div>
             <div class="map-div">
-                <div class="input-custom-half-left" style="float:left;">
+                <div class="input-custom-half-left float-left">
                     <jhi-app-map (mapPointOutput)="setSelectedPoint($event)" [ray]="raySelected" [mapPoint]="myPoint">
                     </jhi-app-map>
                 </div>
-                <div class="input-custom-half-right" style="float:left;">
+                <div class="input-custom-half-right float-left">
                     <div class="full-width">
                         <mat-form-field appearance="fill" class="full-width">
                             <mat-label>{{'latitude' | translate}}</mat-label>
-                            <input matInput id="lat" formControlName="lat" value="{{myPoint.latitude}}">
+                            <input matInput id="lat" formControlName="lat">
                         </mat-form-field>
                     </div>
                     <div class="full-width">
                         <mat-form-field appearance="fill" class="full-width">
                             <mat-label>{{'longitude' | translate}}</mat-label>
-                            <input matInput id="long" formControlName="long" value="{{myPoint.longitude}}">
+                            <input matInput id="long" formControlName="long">
                         </mat-form-field>
                     </div>
                     <div class="full-width" *ngIf="unlockRaySelector">

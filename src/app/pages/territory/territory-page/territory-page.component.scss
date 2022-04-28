@@ -19,7 +19,6 @@
   margin-right: 20px;
 }
 
-
 .highlight{
   background: #979797b4; /* green */
 }
@@ -29,4 +28,24 @@
   box-shadow: 33px gray;
   border-radius: 30px !important;
   margin-left: 10px;
+}
+
+.full-height{
+  height: 100%;
+}
+
+.full-width{
+  width: 100%;
+}
+
+.modify-button{
+  background-color: rgb(234, 245, 80);
+}
+
+.delete-button{
+  background-color: red;
+}
+
+.manager-button{
+  background-color: rgb(99, 245, 80);
 }

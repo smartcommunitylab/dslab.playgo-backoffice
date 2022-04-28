@@ -23,6 +23,7 @@
 }
 
 .right-button{
+  position: relative;
   float:right;
   margin-right: 20px;
 }
@@ -60,4 +61,8 @@
 .card-expandable{
   margin-right: 8%;
   margin-bottom: 30px;
+}
+
+.button-div-height{
+  height:60px;
 }

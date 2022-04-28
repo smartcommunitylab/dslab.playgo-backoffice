@@ -1,5 +1,4 @@
-import { TerritoryClass } from "./territory-class";
-
+import { Logo } from "./logo-class";
 
 export interface CampaignTypeInterface{
     weekStart?: string;
@@ -33,7 +32,7 @@ export class CampaignClass {
     dateTo?: string;
     description?: string;
     gameId?: string;
-    logo?: File;
+    logo?: Logo;
     name?: string;
     validationData?: ValidationData;
     privacy?: string;

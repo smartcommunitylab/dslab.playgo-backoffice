@@ -10,25 +10,60 @@ import { MapPoint } from "src/app/shared/classes/map-point";
 import { TerritoryClass } from "src/app/shared/classes/territory-class";
 import { TerritoryService } from "src/app/shared/services/territory.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { CampaignClass, ValidationData } from "src/app/shared/classes/campaing-class";
-import { TYPE_CAMPAIGN } from "src/app/shared/constants/constants";
+import {
+  CampaignClass,
+  ValidationData,
+} from "src/app/shared/classes/campaing-class";
+import {
+  BASE64_SRC_IMG,
+  MY_DATE_FORMATS,
+  PREFIX_SRC_IMG,
+  TYPE_CAMPAIGN,
+} from "src/app/shared/constants/constants";
 import { means } from "src/app/shared/constants/means";
 import { CampaignService } from "src/app/shared/services/campaign-service.service";
-import { trigger, state, style, transition, animate } from '@angular/animations';
+import {
+  trigger,
+  state,
+  style,
+  transition,
+  animate,
+} from "@angular/animations";
+import { MomentDateAdapter } from "@angular/material-moment-adapter";
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+} from "@angular/material/core";
+import * as _moment from "moment";
+import { Moment } from "moment";
+import { Logo } from "src/app/shared/classes/logo-class";
 
+const moment = _moment;
 
 @Component({
   selector: "app-campaign-add-form",
   templateUrl: "./campaign-add-form.component.html",
   styleUrls: ["./campaign-add-form.component.scss"],
   animations: [
-    trigger('bodyExpansion', [
-      state('collapsed, void', style({ height: '0px', visibility: 'hidden' })),
-      state('expanded', style({ height: '*', visibility: 'visible' })),
-      transition('expanded <=> collapsed, void => collapsed',
-        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ])
-  ]
+    trigger("bodyExpansion", [
+      state("collapsed, void", style({ height: "0px", visibility: "hidden" })),
+      state("expanded", style({ height: "*", visibility: "visible" })),
+      transition(
+        "expanded <=> collapsed, void => collapsed",
+        animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")
+      ),
+    ]),
+  ],
+  providers: [
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE],
+    },
+
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+  ],
 })
 export class CampaignAddFormComponent implements OnInit {
   @Input() type: string; // can be add or modify
@@ -38,17 +73,40 @@ export class CampaignAddFormComponent implements OnInit {
   campaignCreated: CampaignClass;
   campaignUpdated: CampaignClass;
   territoryList: TerritoryClass[];
-  selectedFile: File;
+  selectedLogo: Logo;
   typeCampaign = TYPE_CAMPAIGN;
   means: string[] = means;
   errorMsgValidation: string;
-  stateDescription: string="collapsed";
-  stateRules: string="collapsed";
-  statePrivacy:string="collapsed";
+  stateDescription: string = "collapsed";
+  stateRules: string = "collapsed";
+  statePrivacy: string = "collapsed";
+  PREFIX_SRC_IMG_C = PREFIX_SRC_IMG;
+  BASE64_SRC_IMG_C =BASE64_SRC_IMG;
 
   @Input() set formTerritory(value: CampaignClass) {
+    this.campaignUpdated = new CampaignClass();
+    this.campaignUpdated.territoryId = value.territoryId;
+    this.campaignUpdated.communications = value.communications;
+    this.campaignUpdated.name = value.name;
+    this.campaignUpdated.campaignId = value.campaignId;
+    this.campaignUpdated.logo = new Logo();
+    this.campaignUpdated.logo.contentType = value.logo.contentType;
+    this.campaignUpdated.logo.image = value.logo.image;
+    this.selectedLogo = new Logo();
+    this.selectedLogo.contentType = value.logo.contentType;
+    this.selectedLogo.image = value.logo.image;
+    this.campaignUpdated.description = value.description;
+    this.campaignUpdated.privacy = value.privacy;
+    this.campaignUpdated.rules = value.rules;
+    this.campaignUpdated.validationData = new ValidationData();
+    this.campaignUpdated.validationData.means = value.validationData.means;
+    this.campaignUpdated.active = value.active;
+    this.campaignUpdated.dateFrom = value.dateFrom;
+    this.campaignUpdated.dateTo = value.dateTo;
+    this.campaignUpdated.type = value.type;
+    this.campaignUpdated.gameId = value.gameId;
+    this.campaignUpdated.startDayOfWeek = value.startDayOfWeek;
     this.initializaValidatingForm();
-    this.campaignUpdated = value;
   }
 
   constructor(
@@ -89,11 +147,11 @@ export class CampaignAddFormComponent implements OnInit {
         dateTo: new FormControl("", [Validators.required]),
         type: new FormControl("", [Validators.required]),
         gameId: new FormControl(""),
-        startDayOfWeek: new FormControl("",[Validators.pattern("^[1-7]")]),
+        startDayOfWeek: new FormControl("", [Validators.pattern("^[1-7]")]),
       });
     } else {
       this.validatingForm = this.formBuilder.group({
-        logo: new FormControl("", [Validators.required]),
+        logo: new FormControl(""),
         description: new FormControl(""),
         privacy: new FormControl(""),
         rules: new FormControl(""),
@@ -104,6 +162,19 @@ export class CampaignAddFormComponent implements OnInit {
         type: new FormControl("", [Validators.required]),
         gameId: new FormControl(""),
         startDayOfWeek: new FormControl(""),
+      });
+      this.validatingForm.patchValue({
+        logo: this.campaignUpdated.logo,
+        description: this.campaignUpdated.description,
+        privacy: this.campaignUpdated.privacy,
+        rules: this.campaignUpdated.rules,
+        means: this.campaignUpdated.validationData.means,
+        active: this.campaignUpdated.active,
+        dateFrom: moment(this.campaignUpdated.dateFrom, "YYYY-MM-DD"),
+        dateTo: moment(this.campaignUpdated.dateTo, "YYYY-MM-DD"),
+        type: this.campaignUpdated.type,
+        gameId: this.campaignUpdated.gameId,
+        startDayOfWeek: this.campaignUpdated.startDayOfWeek,
       });
     }
   }
@@ -129,13 +200,13 @@ export class CampaignAddFormComponent implements OnInit {
   validate(): void {
     if (this.validatingForm.valid) {
       this.campaignCreated.active = this.validatingForm.get("active").value;
-      this.campaignCreated.dateFrom = this.formatDate(
-        this.validatingForm.get("dateFrom").value
-      );
-      this.campaignCreated.dateTo = this.formatDate(
-        this.validatingForm.get("dateTo").value
-      );
-      this.campaignCreated.logo = this.selectedFile;
+      const dataFrom: Moment =this.validatingForm.get("dateFrom").value;
+      this.campaignCreated.dateFrom = this.formatDate(dataFrom);
+      const dataTo: Moment = this.validatingForm.get("dateTo").value;
+      this.campaignCreated.dateTo = this.formatDate(dataTo);
+      this.campaignCreated.logo = new Logo();
+      this.campaignCreated.logo.contentType = this.selectedLogo.contentType;
+      this.campaignCreated.logo.image = this.selectedLogo.image;
       this.campaignCreated.privacy = this.validatingForm.get("privacy").value;
       this.campaignCreated.rules = this.validatingForm.get("rules").value;
       this.campaignCreated.type = this.validatingForm.get("type").value;
@@ -146,16 +217,17 @@ export class CampaignAddFormComponent implements OnInit {
         this.campaignCreated.startDayOfWeek =
           this.validatingForm.get("startDayOfWeek").value;
       }
-      // if(this.checkValidDates(this.campaignCreated.dateFrom,this.campaignCreated.dateTo)){
-      //   console.log("date non valide");
-      //   this.errorMsgValidation = 'DateNotValid';
-      //   return;
-      // }
+      if (
+        !this.validDates(this.campaignCreated.dateFrom,this.campaignCreated.dateTo)) {
+        this.errorMsgValidation = "dateNotValid";
+        return;
+      }
       if (this.type === "add") {
         this.campaignCreated.campaignId = this.validatingForm.get("campaignId").value;
         this.campaignCreated.territoryId = this.validatingForm.get("territoryId").value.territoryId;
         this.campaignCreated.name = this.validatingForm.get("name").value;
         try {
+          console.log(this.campaignCreated);
           this.campaignService.post(this.campaignCreated).subscribe(
             () => {
               this.onNoClick("", this.campaignCreated);
@@ -163,7 +235,7 @@ export class CampaignAddFormComponent implements OnInit {
             },
             (error) => {
               this.errorMsgValidation =
-                "Dati non salvati per errore: " + error.error.ex;
+                "Dati non salvati per errore in post: " + error.error.ex;
               //this._snackBar.open('Dati non salvati per errore: ' +error.error.ex, "close");
             }
           );
@@ -173,6 +245,7 @@ export class CampaignAddFormComponent implements OnInit {
         }
       }
       if (this.type === "modify") {
+        console.log(this.campaignCreated);
         this.campaignCreated.name = this.campaignUpdated.name;
         this.campaignCreated.territoryId = this.campaignUpdated.territoryId;
         this.campaignCreated.campaignId = this.campaignUpdated.campaignId;
@@ -193,26 +266,37 @@ export class CampaignAddFormComponent implements OnInit {
           this._snackBar.open("error:" + e.errors, "close");
         }
       }
-    }else{
+    } else {
     }
   }
 
-  upload(file: File): void {
-    if (file) {
-      this.selectedFile = file;
+  upload(event: any): void {
+    console.log(event);
+    if (event.target.files && event.target.files[0]) {
+      var reader = new FileReader();
+      const eev = event;
+      reader.readAsDataURL(event.target.files[0]);
+      reader.onload = (event) => { // called once readAsText is completed
+        this.selectedLogo = new Logo();
+        this.selectedLogo.contentType = eev.target.files[0].type;
+        const prefix = this.PREFIX_SRC_IMG_C + this.selectedLogo.contentType + this.BASE64_SRC_IMG_C;
+        const base64string = event.target.result.slice(prefix.length);
+        this.selectedLogo.image = base64string;
+        console.log(this.selectedLogo);
+      };
     }
   }
 
-  formatDate(date: any): string {
-    return "2020-01-01";
-    console.log(typeof date);
-    console.log(date);
-    var datee = date + "";
-    const res = datee.split("/");
-    const day = res[1];
-    const month = res[0];
-    const year = res[2];
-    console.log(year + "-" + month + "-" + day);
+  formatDate(datee: Moment): string {
+    var day = (+datee.toObject().date.toString()).toString();
+    if(day.length===1){
+      day = "0"+day;
+    }
+    var month = (+datee.toObject().months.toString() + 1).toString();
+    if(month.length===1){
+      month = "0"+month;
+    }
+    const year = datee.toObject().years.toString();
     return year + "-" + month + "-" + day;
   }
 
@@ -228,22 +312,25 @@ export class CampaignAddFormComponent implements OnInit {
     return this.validatingForm.controls.rules as FormControl;
   }
 
-  toggleDescription(){
-    this.stateDescription = this.stateDescription === 'collapsed' ? 'expanded' : 'collapsed';
+  toggleDescription() {
+    this.stateDescription =
+      this.stateDescription === "collapsed" ? "expanded" : "collapsed";
   }
 
-  togglePrivacy(){
-    this.statePrivacy = this.statePrivacy === 'collapsed' ? 'expanded' : 'collapsed';
-
+  togglePrivacy() {
+    this.statePrivacy =
+      this.statePrivacy === "collapsed" ? "expanded" : "collapsed";
   }
 
-  toggleRules(){
-    this.stateRules = this.stateRules === 'collapsed' ? 'expanded' : 'collapsed';
+  toggleRules() {
+    this.stateRules =
+      this.stateRules === "collapsed" ? "expanded" : "collapsed";
   }
 
-  checkValidDates(startt: string, endd: string): boolean {
-    var dateStart = startt + "";
-    var dateEnd = endd + "";
+  validDates(startt: string, endd: string): boolean {
+    this.errorMsgValidation = "";
+    const dateStart = startt + "";
+    const dateEnd = endd + "";
     const start = dateStart.split("-");
     const startDay = +start[2];
     const startMonth = +start[1];
@@ -258,7 +345,7 @@ export class CampaignAddFormComponent implements OnInit {
     } else if (startYear < endYear) {
       return true;
     } else {
-      //startMonth===endYear
+      //startYear===endYear
       if (startMonth > endMonth) {
         return false;
       } else if (startMonth < endMonth) {

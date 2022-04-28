@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, Output,EventEmitter } from "@angular/core";
 import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
@@ -17,6 +17,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 export class DropDownCardInfoComponent implements OnInit {
   @Input() title:string;
   @Input() content:string;
+  @Output() heightAugment= new EventEmitter();
   state: string="collapsed";
   constructor() {}
 
@@ -24,6 +25,25 @@ export class DropDownCardInfoComponent implements OnInit {
   }
 
   toggle(){
-    this.state = this.state === 'collapsed' ? 'expanded' : 'collapsed';
+    if(this.state==='collapsed'){
+      this.state = 'expanded';
+      setTimeout( ()=>{
+        if(this.state==='collapsed'){
+          const height =document.getElementById('content').offsetHeight;
+          this.heightAugment.emit("-"+height);
+        }else{
+          const height =document.getElementById('content').offsetHeight;
+          this.heightAugment.emit(height+"");
+        }
+      },1);
+    }else{
+      this.state = 'collapsed';
+      const height = document.getElementById('content').offsetHeight;
+      const res = height=== 0? height+'' : "-"+height;
+      this.heightAugment.emit(res);
+    }
+
   }
+
+
 }

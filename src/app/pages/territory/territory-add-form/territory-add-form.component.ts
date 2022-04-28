@@ -40,13 +40,26 @@ export class TerritoryAddFormComponent implements OnInit {
   terrytoryUpdate: TerritoryClass;
   stateDescription: string="collapsed";
   @Input() set formTerritory(value : TerritoryClass){
-    this.initializaValidatingForm();
-    this.terrytoryUpdate = value;
-    this.myPoint = new MapPoint(this.terrytoryUpdate.territoryData.area[0].lat,this.terrytoryUpdate.territoryData.area[0].long);
-    console.log("my point inside territory add form", this.myPoint);
-    this.raySelected = +this.terrytoryUpdate.territoryData.area[0].radius;
-    this.unlockRaySelector = true;
-    console.log("update territoryu", this.terrytoryUpdate);
+    this.terrytoryUpdate = new TerritoryClass();
+    this.terrytoryUpdate.name = value.name;
+    this.terrytoryUpdate.territoryId = value.territoryId
+    this.terrytoryUpdate.description = value.description
+    this.terrytoryUpdate.messagingAppId = value.messagingAppId
+    this.terrytoryUpdate.territoryData = new TerritoryData();
+    this.terrytoryUpdate.territoryData.means = value.territoryData.means;
+    this.terrytoryUpdate.territoryData.validation = value.territoryData.validation;
+    this.terrytoryUpdate.territoryData.area = [];
+    if(!!value.territoryData.area){
+      for(let area_i of value.territoryData.area){
+        let newArea = new TerritoryArea();
+        if(!!area_i){
+          newArea.lat = area_i.lat;
+          newArea.long = area_i.long;
+          newArea.radius = area_i.radius;
+          this.terrytoryUpdate.territoryData.area.push(newArea);
+        }
+      }
+    }
   }
 
 
@@ -66,9 +79,8 @@ export class TerritoryAddFormComponent implements OnInit {
     this.myPoint = new MapPoint();
     this.terrotyCreated = new TerritoryClass();
     this.terrotyCreated.territoryData = new TerritoryData();
-    this.terrotyCreated.territoryData.area =[ new TerritoryArea()]; 
+    this.terrotyCreated.territoryData.area =[ new TerritoryArea()];
     this.initializaValidatingForm();
-
   }
 
   initializaValidatingForm(){
@@ -85,8 +97,8 @@ export class TerritoryAddFormComponent implements OnInit {
       });
     }else{
     this.validatingForm = this.formBuilder.group({
-      territoryId: new FormControl('', []), 
-      name: new FormControl('', []),
+      territoryId: new FormControl(''), 
+      name: new FormControl(''),
       description: new FormControl(''),
       means: new FormControl('', [Validators.required]),
       lat: new FormControl('', [Validators.required,Validators.pattern("^[0-9]+.?[0-9]*")]),
@@ -121,8 +133,22 @@ export class TerritoryAddFormComponent implements OnInit {
       }
     });
     this.validatingForm.get('ray').valueChanges.subscribe(selectedValue => {
-      this.raySelected = selectedValue;
+      setTimeout(()=>{
+        this.raySelected = selectedValue;
+      },1);
     });
+    if(this.type==='modify'){
+    this.validatingForm.patchValue({
+      territoryId: this.terrytoryUpdate.territoryId, 
+      name: this.terrytoryUpdate.name,
+      description: this.terrytoryUpdate.description,
+      means: this.terrytoryUpdate.territoryData.means,
+      lat: this.terrytoryUpdate.territoryData.area[0].lat,
+      long: this.terrytoryUpdate.territoryData.area[0].long,
+      ray: this.terrytoryUpdate.territoryData.area[0].radius,
+      validation: this.terrytoryUpdate.territoryData.validation
+    });
+    }
   }
 
   public myError = (controlName: string, errorName: string) =>{
@@ -132,7 +158,6 @@ export class TerritoryAddFormComponent implements OnInit {
   setSelectedPoint(event: MapPoint): void{
     this.validatingForm.get('lat').setValue(event.latitude);
     this.validatingForm.get('long').setValue(event.longitude);
-    //this.unlockRaySelector = true;
   }
 
   formatLabel(value: number) {
@@ -150,6 +175,7 @@ export class TerritoryAddFormComponent implements OnInit {
 
 
   validate(){
+    console.log(this.validatingForm);
     const p = this.validatingForm.get('name').value;
 
     if(this.validatingForm.valid){

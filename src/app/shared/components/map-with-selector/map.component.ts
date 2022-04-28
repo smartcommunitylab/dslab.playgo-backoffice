@@ -15,7 +15,7 @@ export class MapComponent implements OnInit,OnChanges {
   lastLayer: any;
   _mapPoint: MapPoint;
   @Input() set mapPoint(value : MapPoint){
-    console.log("My point inside map", value);
+    // console.log("My point inside map", value);
       if(this._mapPoint === undefined){
         // undefined
         this._mapPoint = new MapPoint();
@@ -31,7 +31,7 @@ export class MapComponent implements OnInit,OnChanges {
   layer: FeatureGroup;
   _ray: string;
   @Input() set ray(value: string) {
-    console.log("ray from map", value);
+    // console.log("ray from map", value);
     this._ray = value;
     this.drawCircle();
  
@@ -50,6 +50,9 @@ export class MapComponent implements OnInit,OnChanges {
   }
 
   drawCircle(){
+    if(!this._mapPoint || !this._mapPoint.latitude || !this._mapPoint.longitude){
+      return;
+    }
     if(this.layer!==undefined){
       if(!!this.map)
         this.map.removeLayer(this.layer);
@@ -57,8 +60,9 @@ export class MapComponent implements OnInit,OnChanges {
     const numberRay = +this._ray;
     this.layer = L.featureGroup(); 
     if( numberRay >0){
-      if(this._mapPoint.latitude)
-      L.circle([this._mapPoint.latitude,this._mapPoint.longitude], numberRay).addTo(this.layer);
+      if(this._mapPoint.latitude){
+        L.circle([this._mapPoint.latitude,this._mapPoint.longitude], numberRay).addTo(this.layer);
+      }
     }
     if(!!this.map){
       this.map.addLayer(this.layer);
@@ -119,7 +123,8 @@ export class MapComponent implements OnInit,OnChanges {
       const mapIcon = this.getDefaultIcon();
       if(!!this._mapPoint.latitude && !!this._mapPoint.longitude){
         const coordinates = latLng([this._mapPoint.latitude, this._mapPoint.longitude]);
-        this.lastLayer = marker(coordinates)
+        if(!!this.map){
+          this.lastLayer = marker(coordinates)
           .setIcon(mapIcon)
           .addTo(this.map);
         this.lastLayer
@@ -132,6 +137,7 @@ export class MapComponent implements OnInit,OnChanges {
           )
           .openPopup();
         this.map.setView(coordinates, this.map.getZoom());
+        }
       }
     }
   }

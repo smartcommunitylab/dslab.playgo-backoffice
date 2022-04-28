@@ -6,12 +6,15 @@ export const CAMPAIGN_BASE_PATH = 'https://backenddev.playngo.it/playandgo/api/c
 export const TYPE_CAMPAIGN = ["personal","city","school","company"];
 export const MY_DATE_FORMATS = {
     parse: {
-      dateInput: 'YYYY-MM-DD',
+      dateInput: 'LL',
     },
     display: {
-      dateInput: 'YYYY-MM-DD',
-      monthYearLabel: 'MMM YYYY',
+      dateInput: 'DD-MM-YYYY',
+      monthYearLabel: 'YYYY',
       dateA11yLabel: 'LL',
-      monthYearA11yLabel: 'MMMM YYYY'
+      monthYearA11yLabel: 'YYYY',
     },
-};
+  };
+
+export const PREFIX_SRC_IMG = "data:"
+export const BASE64_SRC_IMG = ";base64,"

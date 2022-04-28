@@ -8,6 +8,7 @@ import { CampaignClass } from "src/app/shared/classes/campaing-class";
 import { CampaignService } from "src/app/shared/services/campaign-service.service";
 import { TerritoryClass } from "src/app/shared/classes/territory-class";
 import { TerritoryService } from "src/app/shared/services/territory.service";
+import { BASE64_SRC_IMG, PREFIX_SRC_IMG } from "src/app/shared/constants/constants";
 
 @Component({
   selector: "app-campaign-page",
@@ -23,6 +24,8 @@ export class CampaignPageComponent implements OnInit {
   searchString: string;
   listTerritories: TerritoryClass[];
   selectedRowIndex = "";
+  PREFIX_SRC_IMG_C = PREFIX_SRC_IMG;
+  BASE64_SRC_IMG_C =BASE64_SRC_IMG;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -65,6 +68,7 @@ export class CampaignPageComponent implements OnInit {
   showTerritory(row: CampaignClass) {
     this.selectedRowIndex = row.campaignId;
     this.selectedCampaign = row;
+    console.log(this.selectedCampaign);
   }
 
   addCampaign() {
@@ -116,8 +120,11 @@ export class CampaignPageComponent implements OnInit {
     instance.formTerritory = this.selectedCampaign;
 
     dialogRef.afterClosed().subscribe((result) => {
+      console.log("here 1");
       if (result !== undefined) {
+        console.log("here 2");
         this.onSelectTerritory(result.territoryId);
+        this.selectedCampaign =result;
       }
     });
   }
@@ -134,5 +141,14 @@ export class CampaignPageComponent implements OnInit {
     }
   }
 
+  changeHeight(height : string){
+    const h = +height;
+    console.log(h);
+    window.innerHeight += h;
+    console.log(window.innerHeight);
+  }
+
   handleManager() {}
+
+
 }

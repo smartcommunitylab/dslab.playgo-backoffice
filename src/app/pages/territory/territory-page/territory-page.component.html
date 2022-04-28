@@ -1,11 +1,11 @@
-<div style="height: 100%;">
+<div class="full-height">
     <div class="add-button-div">
         <button mat-raised-button color="primary" class="add-button" (click)="addTerritory()">+ {{'add' |
             translate}}</button>
     </div>
-    <div style="height: 100%;">
-        <mat-grid-list cols="10" style="height: 100%;">
-            <mat-grid-tile [colspan]="6" style="height: 100%;">
+    <div class="full-height">
+        <mat-grid-list cols="10" class="full-height">
+            <mat-grid-tile [colspan]="6" class="full-height">
                 <div class="full-dimension">
                     <mat-card class="card" style="margin-left: 10px;">
                         <mat-grid-list cols="3" rowHeight="6:1">
@@ -28,8 +28,8 @@
                             </mat-grid-tile>
                         </mat-grid-list>
                         <mat-card-content>
-                            <div style="width: 100%">
-                                <table mat-table [dataSource]="dataSource" style="width: 100%">
+                            <div class="full-width">
+                                <table mat-table [dataSource]="dataSource" class="full-width">
 
                                     <ng-container matColumnDef="territoryId">
                                         <th mat-header-cell *matHeaderCellDef> {{ 'territoryId'| translate}} </th>
@@ -66,7 +66,7 @@
                     </mat-card>
                 </div>
             </mat-grid-tile>
-            <mat-grid-tile [colspan]="4" style="height: 100%;">
+            <mat-grid-tile [colspan]="4" class="full-height">
                 <div *ngIf="!!selectedTerritory" class="full-dimension">
                     <mat-card class="card" style="margin-right: 10px;">
                         <mat-card-title>
@@ -88,8 +88,8 @@
                             </div>
                         </mat-card-content>
                         <div style="height:40px;">
-                            <button class='right-button' style="background-color: rgb(99, 245, 80)" mat-raised-button
-                                type="submit" (click)="handleManager()">
+                            <button class='right-button manager-button' mat-raised-button
+                                type="button" (click)="handleManager()">
                                 {{'handleManager' | translate}}
                                 <mat-icon>
                                     <span class="material-icons-outlined">
@@ -97,8 +97,8 @@
                                     </span>
                                 </mat-icon>
                             </button>
-                            <button class='right-button' style="background-color: rgb(234, 245, 80)" mat-raised-button
-                                type="submit" (click)="updateTerritory()">
+                            <button class='right-button modify-button' mat-raised-button
+                                type="button" (click)="updateTerritory()">
                                 {{'modify' | translate}}
                                 <mat-icon>
                                     <span class="material-icons-outlined">
@@ -106,8 +106,8 @@
                                     </span>
                                 </mat-icon>
                             </button>
-                            <button class='right-button' style="background-color: red" mat-raised-button
-                                (click)="deleteTerritory()">
+                            <button class='right-button delete-button' mat-raised-button
+                                type="button" (click)="deleteTerritory()">
                                 {{'delete' |translate}}
                                 <mat-icon>
                                     <span class="material-icons-outlined">

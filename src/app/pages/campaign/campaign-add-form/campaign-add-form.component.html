@@ -22,8 +22,11 @@
                     </mat-form-field>
                 </div>
                 <div class="in-line-forms">
+                    <img *ngIf="selectedLogo" src="{{PREFIX_SRC_IMG_C + selectedLogo.contentType + BASE64_SRC_IMG_C + selectedLogo.image}}" style="width: 100px;height: 100px;">
+                </div>
+                <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-custom-half-left">
-                        <input matInput formControlName="logo" type="file" (change)="upload($event.target.files)" />
+                        <input matInput formControlName="logo" type="file" accept="image/png, image/jpeg" (change)="upload($event)" />
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="input-custom-half-right">
                         <mat-label>{{'means' | translate}}</mat-label>
@@ -78,21 +81,19 @@
                 </div>
                 <div class="in-line-forms">
                     <mat-card class="card-expandable card-normal">
-                        <mat-card-title>
+                        <mat-card-title (click)="toggleDescription()">
                             {{'description' | translate}}
                             <mat-card-actions class="right-button top-button">
-                                <button type="button" mat-button (click)="toggleDescription()" color="primary">
-                                    <mat-icon *ngIf="stateDescription==='collapsed'">
-                                        <span class="material-symbols-outlined">
-                                            expand_more
-                                            </span>
-                                    </mat-icon>
-                                    <mat-icon *ngIf="stateDescription==='expanded'">
-                                        <span class="material-symbols-outlined">
-                                            expand_less
-                                            </span>
-                                    </mat-icon>
-                                </button>
+                                <mat-icon *ngIf="stateDescription==='collapsed'">
+                                    <span class="material-symbols-outlined">
+                                        expand_more
+                                    </span>
+                                </mat-icon>
+                                <mat-icon *ngIf="stateDescription==='expanded'">
+                                    <span class="material-symbols-outlined">
+                                        expand_less
+                                    </span>
+                                </mat-icon>
                             </mat-card-actions>
                         </mat-card-title>
                         <mat-card-content [@bodyExpansion]="stateDescription" class="expandable-content">
@@ -102,21 +103,19 @@
                 </div>
                 <div class="in-line-forms">
                     <mat-card class="card-expandable card-normal">
-                        <mat-card-title>
+                        <mat-card-title (click)="togglePrivacy()">
                             {{'privacy' | translate}}
                             <mat-card-actions class="right-button top-button">
-                                <button type="button" mat-button (click)="togglePrivacy()" color="primary">
-                                    <mat-icon *ngIf="statePrivacy==='collapsed'">
-                                        <span class="material-symbols-outlined">
-                                            expand_more
-                                            </span>
-                                    </mat-icon>
-                                    <mat-icon *ngIf="statePrivacy==='expanded'">
-                                        <span class="material-symbols-outlined">
-                                            expand_less
-                                            </span>
-                                    </mat-icon>
-                                </button>
+                                <mat-icon *ngIf="statePrivacy==='collapsed'">
+                                    <span class="material-symbols-outlined">
+                                        expand_more
+                                    </span>
+                                </mat-icon>
+                                <mat-icon *ngIf="statePrivacy==='expanded'">
+                                    <span class="material-symbols-outlined">
+                                        expand_less
+                                    </span>
+                                </mat-icon>
                             </mat-card-actions>
                         </mat-card-title>
                         <mat-card-content [@bodyExpansion]="statePrivacy" class="expandable-content">
@@ -126,21 +125,19 @@
                 </div>
                 <div class="in-line-forms">
                     <mat-card class="card-expandable card-normal">
-                        <mat-card-title>
+                        <mat-card-title (click)="toggleRules()">
                             {{'rules' | translate}}
                             <mat-card-actions class="right-button top-button">
-                                <button type="button" mat-button (click)="toggleRules()" color="primary">
-                                    <mat-icon *ngIf="stateRules==='collapsed'">
-                                        <span class="material-symbols-outlined">
-                                            expand_more
-                                            </span>
-                                    </mat-icon>
-                                    <mat-icon *ngIf="stateRules==='expanded'">
-                                        <span class="material-symbols-outlined">
-                                            expand_less
-                                            </span>
-                                    </mat-icon>
-                                </button>
+                                <mat-icon *ngIf="stateRules==='collapsed'">
+                                    <span class="material-symbols-outlined">
+                                        expand_more
+                                    </span>
+                                </mat-icon>
+                                <mat-icon *ngIf="stateRules==='expanded'">
+                                    <span class="material-symbols-outlined">
+                                        expand_less
+                                    </span>
+                                </mat-icon>
                             </mat-card-actions>
                         </mat-card-title>
                         <mat-card-content [@bodyExpansion]="stateRules" class="expandable-content">
@@ -149,10 +146,10 @@
                     </mat-card>
                 </div>
             </div>
-            <div style="height:60px;">
-                <div *ngIf="!!errorMsgValidation" class="message-error-div">
-                    <p class="right-button red">{{errorMsgValidation | translate}}</p>
-                </div>
+            <div *ngIf="!!errorMsgValidation" class="message-error-div">
+                <p class="red">{{errorMsgValidation | translate}}</p>
+            </div>
+            <div class="full-width" style="height: 40px">
                 <button class="right-button back-green" mat-raised-button type="submit" (click)="validate()">{{'save' |
                     translate}}</button>
                 <button class="right-button" mat-flat-button (click)="onNoClick($event)">{{'cancel'
@@ -170,8 +167,11 @@
         <form [formGroup]="validatingForm">
             <div class="full-height">
                 <div class="in-line-forms">
+                    <img *ngIf="selectedLogo" src="{{ PREFIX_SRC_IMG_C + selectedLogo.contentType + BASE64_SRC_IMG_C + selectedLogo.image}}" style="width: 100px;height: 100px;">
+                </div>
+                <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-custom-half-left">
-                        <input matInput formControlName="logo" type="file" (change)="upload($event.target.files)" />
+                        <input matInput formControlName="logo"  type="file" accept="image/png, image/jpeg" (change)="upload($event)" />
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="input-custom-half-right">
                         <mat-label>{{'means' | translate}}</mat-label>
@@ -226,21 +226,19 @@
                 </div>
                 <div class="in-line-forms">
                     <mat-card class="card-expandable card-normal">
-                        <mat-card-title>
+                        <mat-card-title (click)="toggleDescription()">
                             {{'description' | translate}}
                             <mat-card-actions class="right-button top-button">
-                                <button type="button" mat-button (click)="toggleDescription()" color="primary">
-                                    <mat-icon *ngIf="stateDescription==='collapsed'">
-                                        <span class="material-symbols-outlined">
-                                            expand_more
-                                            </span>
-                                    </mat-icon>
-                                    <mat-icon *ngIf="stateDescription==='expanded'">
-                                        <span class="material-symbols-outlined">
-                                            expand_less
-                                            </span>
-                                    </mat-icon>
-                                </button>
+                                <mat-icon *ngIf="stateDescription==='collapsed'">
+                                    <span class="material-symbols-outlined">
+                                        expand_more
+                                    </span>
+                                </mat-icon>
+                                <mat-icon *ngIf="stateDescription==='expanded'">
+                                    <span class="material-symbols-outlined">
+                                        expand_less
+                                    </span>
+                                </mat-icon>
                             </mat-card-actions>
                         </mat-card-title>
                         <mat-card-content [@bodyExpansion]="stateDescription" class="expandable-content">
@@ -250,21 +248,19 @@
                 </div>
                 <div class="in-line-forms">
                     <mat-card class="card-expandable card-normal">
-                        <mat-card-title>
+                        <mat-card-title (click)="togglePrivacy()">
                             {{'privacy' | translate}}
                             <mat-card-actions class="right-button top-button">
-                                <button type="button" mat-button (click)="togglePrivacy()" color="primary">
-                                    <mat-icon *ngIf="statePrivacy==='collapsed'">
-                                        <span class="material-symbols-outlined">
-                                            expand_more
-                                            </span>
-                                    </mat-icon>
-                                    <mat-icon *ngIf="statePrivacy==='expanded'">
-                                        <span class="material-symbols-outlined">
-                                            expand_less
-                                            </span>
-                                    </mat-icon>
-                                </button>
+                                <mat-icon *ngIf="statePrivacy==='collapsed'">
+                                    <span class="material-symbols-outlined">
+                                        expand_more
+                                    </span>
+                                </mat-icon>
+                                <mat-icon *ngIf="statePrivacy==='expanded'">
+                                    <span class="material-symbols-outlined">
+                                        expand_less
+                                    </span>
+                                </mat-icon>
                             </mat-card-actions>
                         </mat-card-title>
                         <mat-card-content [@bodyExpansion]="statePrivacy" class="expandable-content">
@@ -274,21 +270,19 @@
                 </div>
                 <div class="in-line-forms">
                     <mat-card class="card-expandable card-normal">
-                        <mat-card-title>
+                        <mat-card-title (click)="toggleRules()">
                             {{'rules' | translate}}
                             <mat-card-actions class="right-button top-button">
-                                <button type="button" mat-button (click)="toggleRules()" color="primary">
-                                    <mat-icon *ngIf="stateRules==='collapsed'">
-                                        <span class="material-symbols-outlined">
-                                            expand_more
-                                            </span>
-                                    </mat-icon>
-                                    <mat-icon *ngIf="stateRules==='expanded'">
-                                        <span class="material-symbols-outlined">
-                                            expand_less
-                                            </span>
-                                    </mat-icon>
-                                </button>
+                                <mat-icon *ngIf="stateRules==='collapsed'">
+                                    <span class="material-symbols-outlined">
+                                        expand_more
+                                    </span>
+                                </mat-icon>
+                                <mat-icon *ngIf="stateRules==='expanded'">
+                                    <span class="material-symbols-outlined">
+                                        expand_less
+                                    </span>
+                                </mat-icon>
                             </mat-card-actions>
                         </mat-card-title>
                         <mat-card-content [@bodyExpansion]="stateRules" class="expandable-content">
@@ -297,10 +291,10 @@
                     </mat-card>
                 </div>
             </div>
-            <div style="height:60px;">
-                <div *ngIf="!!errorMsgValidation" class="right-button message-error-div">
-                    <p class="red">Error message</p>
-                </div>
+            <div *ngIf="!!errorMsgValidation" class="message-error-div">
+                <p class="red">{{errorMsgValidation | translate}}</p>
+            </div>
+            <div class="full-width">
                 <button class="right-button back-green" mat-raised-button type="submit" (click)="validate()">{{'save' |
                     translate}}</button>
                 <button class="right-button" mat-flat-button (click)="onNoClick($event)">{{'cancel'

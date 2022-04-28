@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { __param } from 'tslib';
 import { CampaignClass } from '../classes/campaing-class';
+import { Logo } from '../classes/logo-class';
 import { CAMPAIGN_BASE_PATH } from '../constants/constants';
 
 @Injectable({
@@ -24,6 +25,10 @@ export class CampaignService {
 
   post(campaign: CampaignClass): Observable<any>{
     return this.http.post<any>(CAMPAIGN_BASE_PATH,campaign);
+  }
+
+  postLogo(campaignId:string, logo: Logo): Observable<any>{
+    return this.http.post<any>(CAMPAIGN_BASE_PATH+'/'+campaignId+'/'+'logo',logo);
   }
 
   getById(id : string): Observable<CampaignClass>{
