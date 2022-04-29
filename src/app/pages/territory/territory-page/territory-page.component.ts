@@ -8,6 +8,7 @@ import { TerritoryDeleteComponent } from '../territory-delete/territory-delete.c
 import { TerritoryService } from 'src/app/shared/services/territory.service';
 import {MatSort, Sort} from '@angular/material/sort';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
+import { ManagerHandlerTerritoryComponent } from '../manager-handler/manager-handler.component';
 
 @Component({
   selector: 'app-territory-page',
@@ -150,7 +151,20 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
   }
 
 
-  handleManager(){}
+  handleManager(){
+    const dialogRef = this.dialogUpdate.open(ManagerHandlerTerritoryComponent, {
+      width: "80%",
+      height: "90%",
+    });
+    let instance = dialogRef.componentInstance;
+    instance.name = this.selectedTerritory.name;
+    instance.territoryId = this.selectedTerritory.territoryId;
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result !== undefined) {
+      }
+    });
+
+  }
 
 }
 

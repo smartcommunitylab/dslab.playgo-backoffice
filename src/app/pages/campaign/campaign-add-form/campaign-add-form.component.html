@@ -157,10 +157,9 @@
     </div>
 </div>
 <div class="full-width" *ngIf="type === 'modify'">
-    <h1>{{'modifyCampaign' | translate}} </h1>
+    <h1>{{'modifyCampaign' | translate}} - {{campaignUpdated.name}} </h1>
     <h3> {{'territoryId' | translate}}: {{campaignUpdated.territoryId}} </h3>
-    <h3>{{'name' | translate}}: {{campaignUpdated.name}} </h3>
-    <h5>{{'Id' | translate}}: {{campaignUpdated.campaignId}}</h5>
+    <h3>{{'campaignId' | translate}}: {{campaignUpdated.campaignId}}</h3>
     <div class="col-12 full-width">
         <form [formGroup]="validatingForm">
             <div class="full-height">

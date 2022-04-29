@@ -1,7 +1,9 @@
 <div class="full-height">
     <div class="add-button-div">
-        <button mat-raised-button color="primary" class="add-button" (click)="addCampaign()">+ {{'add' |
-            translate}}</button>
+        <button mat-raised-button color="primary" class="add-button" (click)="addCampaign()">
+            <mat-icon>add</mat-icon>
+            {{'add' | translate}}
+        </button>
     </div>
     <div class="add-button-div">
         <mat-form-field>
@@ -87,7 +89,10 @@
                             {{selectedCampaign.name}}
                         </mat-card-title>
                         <mat-card-subtitle>
-                            {{selectedCampaign.campaignId}}
+                            {{'territoryId' | translate}} : {{selectedCampaign.territoryId}}
+                        </mat-card-subtitle>
+                        <mat-card-subtitle>
+                            {{'campaignId' | translate}} :{{selectedCampaign.campaignId}}
                         </mat-card-subtitle>
                         <mat-card-subtitle>
                             {{'type' | translate}}: {{selectedCampaign.type}}

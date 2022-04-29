@@ -11,6 +11,7 @@ import { TerritoryService } from "src/app/shared/services/territory.service";
 import { BASE64_SRC_IMG, PREFIX_SRC_IMG } from "src/app/shared/constants/constants";
 import {MatSort, Sort} from '@angular/material/sort';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
+import { ManagerHandlerComponent } from "../manager-handler/manager-handler.component";
 
 @Component({
   selector: "app-campaign-page",
@@ -160,7 +161,19 @@ export class CampaignPageComponent implements OnInit {
     console.log(window.innerHeight);
   }
 
-  handleManager() {}
+  handleManager() {
+    const dialogRef = this.dialogUpdate.open(ManagerHandlerComponent, {
+      width: "80%",
+      height: "90%",
+    });
+    let instance = dialogRef.componentInstance;
+    instance.name = this.selectedCampaign.name;
+    instance.campaignId = this.selectedCampaign.campaignId;
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result !== undefined) {
+      }
+    });
+  }
 
 
 }
