@@ -84,6 +84,7 @@ export class CampaignAddFormComponent implements OnInit {
   BASE64_SRC_IMG_C =BASE64_SRC_IMG;
   uploadImageForModify: boolean = false;
   blobImageUpload: Blob;
+  activeValue = false;
 
   @Input() set formTerritory(value: CampaignClass) {
     this.campaignUpdated = new CampaignClass();
@@ -201,6 +202,7 @@ export class CampaignAddFormComponent implements OnInit {
 
   validate(): void {
     this.errorMsgValidation = "";
+    console.log(this.validatingForm);
     if (this.validatingForm.valid) {
       this.campaignCreated.active = this.validatingForm.get("active").value;
       const dataFrom: Moment =this.validatingForm.get("dateFrom").value;

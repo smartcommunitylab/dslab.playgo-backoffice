@@ -20,3 +20,6 @@ export const MY_DATE_FORMATS = {
 
 export const PREFIX_SRC_IMG = "data:"
 export const BASE64_SRC_IMG = ";base64,"
+export const ADMIN = "ADMIN";
+export const TERRITORY_ADMIN = "TERRITORY_ADMIN";
+export const CAMPAIGN_ADMIN = "CAMPAIGN_ADMIN";

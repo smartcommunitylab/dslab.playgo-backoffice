@@ -140,7 +140,7 @@ export class CampaignPageComponent implements OnInit {
       this.setTableData();
     } else {
       this.listCampaign = this.listAllCampaign.filter((item) =>
-        item.name.includes(this.searchString)
+        item.name.toLocaleLowerCase().includes(this.searchString.toLocaleLowerCase())
       );
       this.setTableData();
     }

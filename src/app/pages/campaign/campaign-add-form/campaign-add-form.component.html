@@ -60,6 +60,12 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
+                <!-- <div class="in-line-forms" style="margin-top: 50px;margin-bottom: 50px;">
+                    <mat-slide-toggle formControlName="active">
+                        <span *ngIf="!validatingForm.get('active')">{{"inactiveCampaign"| translate}}</span>
+                        <span *ngIf="validatingForm.get('active')">{{"activeCampaign"| translate}}</span>
+                    </mat-slide-toggle>
+                </div> -->
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-custom-half-left">
                         <mat-label>{{'type' | translate}}</mat-label>

@@ -144,7 +144,7 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
       this.setTableData();
     }else{
       this.listTerriotory = this.listAllTerriotory.filter(item =>
-        item.name.includes(this.searchString)
+        item.name.toLocaleLowerCase().includes(this.searchString.toLocaleLowerCase())
       );
       this.setTableData();
     }
