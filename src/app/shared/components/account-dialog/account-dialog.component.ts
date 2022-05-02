@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AuthService } from 'src/app/core/auth/auth.service';
+import { Account } from '../../user/account.model';
 
 @Component({
   selector: 'app-account-dialog',
@@ -15,6 +16,7 @@ export class AccountDialogComponent implements OnInit {
   hidePassword: boolean = true;
   hideNewPassword: boolean = true;
   hideConfirmPassword: boolean = true;
+  account: Account;
   
   constructor(    public dialogRef: MatDialogRef<AccountDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -22,7 +24,9 @@ export class AccountDialogComponent implements OnInit {
     private authService: AuthService) { }
 
   ngOnInit(): void {
-
+    this.account = this.authService.getAccount();
+    console.log(this.account);
+    
   }
 
   onNoClick(event: any): void {

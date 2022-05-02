@@ -23,6 +23,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { RichTextEditorModule } from "./components/rich-text-editor/rich-text-editor.module";
 import { DropDownCardInfoModule } from "./components/drop-down-card-info/drop-down-card-info.module";
 import { MatSortModule } from "@angular/material/sort";
+import { ManagerHandlerTerritoryComponent } from "../pages/territory/manager-handler/manager-handler.component";
+import { ManagerDeleteTerritoryComponent } from "../pages/territory/manager-handler/manager-delete/manager-delete.component";
+import {MatTreeModule} from '@angular/material/tree';
 
 @NgModule({
   imports: [
@@ -48,10 +51,12 @@ import { MatSortModule } from "@angular/material/sort";
     MatNativeDateModule,
     MatSlideToggleModule,
     MatSortModule,
+    MatTreeModule,
     RichTextEditorModule,
-    DropDownCardInfoModule
+    DropDownCardInfoModule,
+
   ],
-  declarations: [],
+  declarations: [ManagerHandlerTerritoryComponent,ManagerDeleteTerritoryComponent],
   entryComponents: [],
   exports: [
     SharedLibsModule,
@@ -76,8 +81,9 @@ import { MatSortModule } from "@angular/material/sort";
     MatNativeDateModule,
     MatSlideToggleModule,
     MatSortModule,
+    MatTreeModule,
     RichTextEditorModule,
-    DropDownCardInfoModule
+    DropDownCardInfoModule,
   ],
 })
 export class SharedModule {}

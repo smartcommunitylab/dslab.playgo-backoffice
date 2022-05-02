@@ -12,11 +12,11 @@
     </button>
 </mat-toolbar>
 <div class="full-size">
-    <div class="side-nav">
+    <div class="side-nav border-right">
         <app-side-nav></app-side-nav>
     </div>
     <div class="page">
-        <div *ngIf="!loading" class="page">
+        <div *ngIf="!loading" class="full-size">
             <router-outlet></router-outlet>
         </div>
         <div *ngIf="loading" class="loading-container">

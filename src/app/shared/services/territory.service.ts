@@ -30,7 +30,7 @@ export class TerritoryService {
   }
 
   delete(id : string): Observable<any>{
-    return this.http.delete<void>(TERRITORY_BASE_PATH+'/'+id);
+    return this.http.delete<any>(TERRITORY_BASE_PATH+'/'+id);
   }
 
 

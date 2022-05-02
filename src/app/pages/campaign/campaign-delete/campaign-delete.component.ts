@@ -32,7 +32,11 @@ export class CampaignDeleteComponent implements OnInit {
       }, 
       (error) =>{
         this.msgError = 'cannotDeleteCampaign';
-        this.recivedError = error.error.ex;
+        if(!!error.error && !!error.error.ex){
+          this.recivedError = error.error.ex;
+        }else{
+          this.recivedError = error;
+        }
         // this._snackBar.open("Territorio cannot be delited because:"+ error.error.ex, "close");
       }
       );

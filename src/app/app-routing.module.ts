@@ -21,8 +21,13 @@ const routes: Routes = [
     path: 'campaign',
     loadChildren: () =>
       import('./pages/campaign/campaign-page/campaign-page.module').then((m) => m.CampaignPageModule),
-  }
-  ,{
+  },
+  {
+    path: 'track',
+    loadChildren: () =>
+      import('./pages/track/validation-track/validation-track.module').then((m) => m.TerritoryPageModule),
+  },
+  {
     path:'',
     redirectTo: 'home'
   }

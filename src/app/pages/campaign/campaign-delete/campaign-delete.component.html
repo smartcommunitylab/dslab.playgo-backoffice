@@ -1,6 +1,6 @@
 <div>
-    <h1>{{'confirmDelete' |translate}}</h1>
-    <h2 *ngIf="!!msgError" class="red-text"> {{ msgError | translate}} </h2>
+    <h1>{{'confirmDelete' |translate}} - {{"campaign" | translate}}: {{campaignId}}</h1>
+    <h2 *ngIf="!!msgError" class="red-text"> {{ msgError | translate}} ;{{recivedError}} </h2>
     <h6 *ngIf="!!recivedError">{{recivedError}}</h6>
         <div style="height:100%; margin-bottom: 10px;">
             <button class="right-button red" mat-raised-button (click)="delete()">{{'delete' | translate}}</button>

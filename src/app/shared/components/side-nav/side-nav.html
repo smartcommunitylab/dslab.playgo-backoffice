@@ -3,7 +3,7 @@
     <mat-drawer-content>
         <div class="full-size">
             <div class="full-size">
-                <button mat-flat-button routerLink="/territory">
+                <button   class="full-size button-hover" mat-flat-button routerLink="/territory">
                     <mat-icon>
                         <span class="material-icons-outlined">
                             group_work
@@ -13,25 +13,34 @@
                 </button>
             </div>
             <div class="full-size">
-                <button mat-flat-button routerLink="/campaign">
-                    <mat-icon>
+                <div class="full-size">
+                    <button class="full-size button-hover"  mat-flat-button routerLink="/campaign">
+                        <mat-icon>
+                            <span class="material-icons-outlined">
+                                class
+                            </span>
+                        </mat-icon>
+                        {{'campaignSideNav' | translate}}
+                    </button>
+                </div>
+                <!-- <div class="right-button">
+                    <mat-icon style="margin-top:10px;">
                         <span class="material-icons-outlined">
-                            class
+                            expand_more
                         </span>
                     </mat-icon>
-                    {{'campaignSideNav' | translate}}
-                </button>
+                </div> -->
             </div>
             <div class="full-size">
-                <button mat-flat-button routerLink="/home">
+                <button class="full-size button-hover" mat-flat-button routerLink="/track">
                     <mat-icon>
                         <span class="material-icons-outlined">
-                            question_mark
+                            route
                         </span>
                     </mat-icon>
-                    TODO
+                    {{"validateTrack" | translate}}
                 </button>
             </div>
-        </div>       
+        </div>
     </mat-drawer-content>
 </mat-drawer-container>

@@ -24,9 +24,9 @@
 }
 
 .card{
-  border: 1px solid black;
-  box-shadow: 33px gray;
-  border-radius: 30px !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.075);
+  border-right: 1px solid rgba(0, 0, 0, 0.075);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),0 4px 8px 0 rgba(0, 0, 0, 0.2);
   margin-left: 10px;
 }
 

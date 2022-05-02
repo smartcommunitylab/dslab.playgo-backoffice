@@ -13,6 +13,7 @@ export class ManagerDeleteTerritoryComponent implements OnInit {
   @Input() territoryId:string;
   @Input() email:string;
   msgErrorDelete:string;
+  error:string;
 
   constructor(    public dialogRef: MatDialogRef<ManagerDeleteTerritoryComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -35,11 +36,21 @@ export class ManagerDeleteTerritoryComponent implements OnInit {
           this._snackBar.open("Manager "+this.email+" eliminato", "close");
         },
         (error) =>{
-          this.msgErrorDelete = "There was an error while deliting the menager: " + error;
+          if(!!error.error && !!error.error.ex){
+            this.error = error.error.ex.toString();
+          }else{
+            this.error = error.toString();
+          }
+          this.msgErrorDelete = "cannotDeleteTerritory";
         }
       );
     }catch(error){
-      this.msgErrorDelete = "There was an error while deliting the menager: " + error;
+      if(!!error.error && !!error.error.ex){
+        this.error = error.error.ex.toString();
+      }else{
+        this.error = error.toString();
+      }
+      this.msgErrorDelete = "cannotDeleteTerritory";
     }
   }
 

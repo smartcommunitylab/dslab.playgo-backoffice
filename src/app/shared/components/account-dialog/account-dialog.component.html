@@ -1,11 +1,11 @@
 <div *ngIf="!changePasswordVar">
     <h1>{{"account" | translate}}</h1>
-    <h3>{{"name" | translate}}:</h3>
-    <h3>{{"username" | translate}}:</h3>
-    <h3>{{"roles" | translate}}:</h3>
-    <button (click)="changePassword($event)">{{"changePassword" | translate}}</button>
-    <button (click)="onNoClick($event)">{{"close" | translate}}</button>
-    <button (click)="logout($event)">{{"logout" | translate}}</button>
+    <h3>{{"name" | translate}}: {{account.firstName}} {{account.lastName}}</h3>
+    <h3>{{"username" | translate}}: {{account.email}}</h3>
+    <h3>{{"roles" | translate}}: {{account.authorities}}</h3>
+    <button class="button-margin" mat-flat-button (click)="onNoClick($event)">{{"cancel" | translate}}</button>
+    <!-- <button class="button-margin" mat-raised-button color="primary" (click)="changePassword($event)">{{"changePassword" | translate}}</button> -->
+    <button class="button-margin" mat-raised-button color="primary" (click)="logout($event)">{{"logout" | translate}}</button>
 </div>
 <div *ngIf="changePasswordVar">
     <button (click)="changePasswordVar = ! changePasswordVar">{{"back" | translate}}</button>
