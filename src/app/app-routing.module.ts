@@ -55,6 +55,15 @@ const routes: Routes = [
       import('./pages/track/validation-track/validation-track.module').then((m) => m.TerritoryPageModule),
   },
   {
+    path: 'communication',
+    canActivate: [AuthGuardService], 
+    data: { 
+      expectedRoles: [ADMIN,TERRITORY_ADMIN]
+    },
+    loadChildren: () =>
+      import('./pages/communication/communication.module').then((m) => m.CommunicationModule),
+  },
+  {
     path: '404',
     loadChildren: () =>
       import('./pages/page-not-found/page-not-found.module').then((m) => m.PageNotFoundModule),
