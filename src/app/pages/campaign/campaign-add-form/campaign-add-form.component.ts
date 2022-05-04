@@ -18,6 +18,7 @@ import {
   BASE64_SRC_IMG,
   MY_DATE_FORMATS,
   PREFIX_SRC_IMG,
+  TERRITORY_ID_LOCAL_STORAGE_KEY,
   TYPE_CAMPAIGN,
 } from "src/app/shared/constants/constants";
 import { means } from "src/app/shared/constants/means";
@@ -73,9 +74,10 @@ export class CampaignAddFormComponent implements OnInit {
   campaignCreated: CampaignClass;
   campaignUpdated: CampaignClass;
   territoryList: TerritoryClass[];
+  territorySelected: TerritoryClass;
   selectedLogo: Logo;
   typeCampaign = TYPE_CAMPAIGN;
-  means: string[] = means;
+  means: string[];
   errorMsgValidation: string;
   stateDescription: string = "collapsed";
   stateRules: string = "collapsed";
@@ -132,6 +134,10 @@ export class CampaignAddFormComponent implements OnInit {
     this.territoryService
       .get()
       .subscribe((result) => (this.territoryList = result));
+    this.territoryService
+      .getById(localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY))
+      .subscribe((result) => {this.territorySelected = result;
+      this.means = this.territorySelected.territoryData.means});
   }
 
   initializaValidatingForm() {
@@ -151,6 +157,10 @@ export class CampaignAddFormComponent implements OnInit {
         type: new FormControl("", [Validators.required]),
         gameId: new FormControl(""),
         startDayOfWeek: new FormControl("", [Validators.pattern("^[1-7]")]),
+      });
+      this.validatingForm.patchValue({
+        territoryId: localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY),
+        active: false
       });
     } else {
       this.validatingForm = this.formBuilder.group({
@@ -218,9 +228,19 @@ export class CampaignAddFormComponent implements OnInit {
       this.campaignCreated.validationData.means = this.validatingForm.get("means").value;
       this.campaignCreated.description = this.validatingForm.get("description").value;
       if (this.validatingForm.get("type").value !== "company") {
-        this.campaignCreated.gameId = this.validatingForm.get("gameId").value;
-        this.campaignCreated.startDayOfWeek =
-          this.validatingForm.get("startDayOfWeek").value;
+        if(!!this.validatingForm.get("gameId").value){
+          this.campaignCreated.gameId = this.validatingForm.get("gameId").value;
+        }else{
+          const currentDate = new Date();
+          const timestamp = currentDate.getTime().toString();
+          this.campaignCreated.gameId = timestamp; //timestamp as ID
+        }
+        if(!!this.validatingForm.get("startDayOfWeek").value){
+          this.campaignCreated.startDayOfWeek = this.validatingForm.get("startDayOfWeek").value;
+        }else{
+          this.campaignCreated.startDayOfWeek = 1; //default value
+        }
+        
       }
       if (
         !this.validDates(this.campaignCreated.dateFrom,this.campaignCreated.dateTo)) {
@@ -229,7 +249,7 @@ export class CampaignAddFormComponent implements OnInit {
       }
       if (this.type === "add") {
         this.campaignCreated.campaignId = this.validatingForm.get("campaignId").value;
-        this.campaignCreated.territoryId = this.validatingForm.get("territoryId").value.territoryId;
+        this.campaignCreated.territoryId = this.validatingForm.get("territoryId").value;
         this.campaignCreated.name = this.validatingForm.get("name").value;
         try {
           this.campaignService.post(this.campaignCreated).subscribe(

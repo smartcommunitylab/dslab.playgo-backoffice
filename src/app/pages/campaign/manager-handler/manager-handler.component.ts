@@ -4,7 +4,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dial
 import { MatPaginator } from '@angular/material/paginator';
 import {MatSort, Sort} from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ManagerClass } from 'src/app/shared/classes/manager-class';
+import { UserClass } from 'src/app/shared/classes/user-class';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import { ManagerHandlerService } from 'src/app/shared/services/manager-handler.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -47,15 +47,15 @@ export class ManagerHandlerComponent implements OnInit {
   @Input()name: string;
   @Input()campaignId: string;
   displayedColumns: string[] = ["email", "role","delete"];
-  dataSource: MatTableDataSource<ExtendedManagerClass>;
-  listManagers: ExtendedManagerClass[];
-  selectedManager: ExtendedManagerClass;
+  dataSource: MatTableDataSource<ExtendedUserClass>;
+  listManagers: ExtendedUserClass[];
+  selectedManager: ExtendedUserClass;
   selectedRowIndex = "";
   addNewManager = false;
   newManagerForm: FormGroup;
   errorMsgNewManager: string;
   msgErrorDelete:string;
-  newManager: ExtendedManagerClass;
+  newManager: ExtendedUserClass;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -69,7 +69,7 @@ export class ManagerHandlerComponent implements OnInit {
 
   ngOnInit(): void {
     this.managerService.getManagerCampaign(this.campaignId).subscribe((result)=>{
-      this.listManagers = this.createExtendedManagerClassList(result);
+      this.listManagers = this.createExtendedUserClassList(result);
       this.setTableData();
     });
     this.newManagerForm = this.formBuilder.group({
@@ -79,7 +79,7 @@ export class ManagerHandlerComponent implements OnInit {
 
 
   setTableData() {
-    this.dataSource = new MatTableDataSource<ExtendedManagerClass>(this.listManagers);
+    this.dataSource = new MatTableDataSource<ExtendedUserClass>(this.listManagers);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
@@ -92,10 +92,10 @@ export class ManagerHandlerComponent implements OnInit {
     }
   }
 
-  selectManager(row : ExtendedManagerClass){
+  selectManager(row : ExtendedUserClass){
     this.selectedRowIndex = row.manager.id;
     this.selectedManager = row;
-    this.newManager = new ExtendedManagerClass();
+    this.newManager = new ExtendedUserClass();
   }
 
   addManager(){
@@ -106,8 +106,8 @@ export class ManagerHandlerComponent implements OnInit {
     if(this.newManagerForm.valid){
       this.errorMsgNewManager= "";
     try{
-      this.newManager = new ExtendedManagerClass();
-      this.newManager.manager = new ManagerClass();
+      this.newManager = new ExtendedUserClass();
+      this.newManager.manager = new UserClass();
       this.newManager.manager.preferredUsername = this.newManagerForm.get("email").value;
       this.managerService.postManagerCampaign(this.campaignId,this.newManager.manager.preferredUsername).subscribe((res)=>{
         this.listManagers.push(this.newManager);
@@ -124,7 +124,7 @@ export class ManagerHandlerComponent implements OnInit {
   }
   }
 
-  deleteManager(manager: ExtendedManagerClass){
+  deleteManager(manager: ExtendedUserClass){
     const dialogRef = this.dialogDelete.open(ManagerDeleteComponent, {
       width: "40%",
       height: "30%",
@@ -151,10 +151,10 @@ export class ManagerHandlerComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  createExtendedManagerClassList(listManager: ManagerClass[]): ExtendedManagerClass[]{
-    var result: ExtendedManagerClass[] = [];
+  createExtendedUserClassList(listManager: UserClass[]): ExtendedUserClass[]{
+    var result: ExtendedUserClass[] = [];
     for(let manager of listManager){
-      const exMan = new ExtendedManagerClass();
+      const exMan = new ExtendedUserClass();
       exMan.isExpanded = false;
       exMan.manager = manager;
       result.push(exMan);
@@ -169,7 +169,7 @@ export class ManagerHandlerComponent implements OnInit {
 }
 
 
-class ExtendedManagerClass {
+class ExtendedUserClass {
   isExpanded: boolean = false;
-  manager?: ManagerClass;
+  manager?: UserClass;
 }

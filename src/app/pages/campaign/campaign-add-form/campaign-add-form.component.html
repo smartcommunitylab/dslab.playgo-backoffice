@@ -6,12 +6,13 @@
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-custom-half-left">
                         <mat-label>{{'territoryId' | translate}}</mat-label>
-                        <mat-select id="territoryId" formControlName="territoryId">
-                            <mat-option *ngFor="let val of territoryList" [value]="val">{{val.territoryId}}</mat-option>
+                        <mat-select id="territoryId" formControlName="territoryId" [disabled]="true">
+                            <mat-option *ngFor="let val of territoryList" [value]="val.territoryId">{{val.territoryId}}</mat-option>
                         </mat-select>
+                        <mat-hint>{{"hintIdTerritoryAddCampaign" | translate}}</mat-hint>
                     </mat-form-field>
                 </div>
-                <div class="in-line-forms">
+                <div class="in-line-forms" style="margin-top: 20px;">
                     <mat-form-field appearance="fill" class="input-custom-half-left">
                         <mat-label>{{'campaignId' | translate}}</mat-label>
                         <input matInput id="campaignId" formControlName="campaignId">
@@ -52,7 +53,6 @@
                     </mat-form-field>
                 </div>
                 <div class="in-line-forms">
-
                     <mat-form-field appearance="fill" class="input-custom-half-left">
                         <mat-label>{{'active' | translate}}</mat-label>
                         <mat-select id="active" formControlName="active">
@@ -62,9 +62,10 @@
                 </div>
                 <!-- <div class="in-line-forms" style="margin-top: 50px;margin-bottom: 50px;">
                     <mat-slide-toggle formControlName="active">
-                        <span *ngIf="!validatingForm.get('active')">{{"inactiveCampaign"| translate}}</span>
-                        <span *ngIf="validatingForm.get('active')">{{"activeCampaign"| translate}}</span>
+                        <mat-label>{{'active' | translate}}</mat-label>
                     </mat-slide-toggle>
+                    <span *ngIf="!validatingForm.get('active')">{{"inactiveCampaign"| translate}}</span>
+                    <span *ngIf="validatingForm.get('active')">{{"activeCampaign"| translate}}</span>
                 </div> -->
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-custom-half-left">
@@ -79,6 +80,7 @@
                     <mat-form-field appearance="fill" class="input-custom-half-left">
                         <mat-label>{{'startDayOfWeek' | translate}}</mat-label>
                         <input matInput id="startDayOfWeek" formControlName="startDayOfWeek">
+                        <mat-hint>{{"hintStartDayOfWeek" | translate}}</mat-hint>
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="input-custom-half-right">
                         <mat-label>{{'gameId' | translate}}</mat-label>

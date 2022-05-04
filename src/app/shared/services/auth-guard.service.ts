@@ -1,13 +1,14 @@
 import { Injectable } from "@angular/core";
 import { Router, CanActivate, ActivatedRouteSnapshot } from "@angular/router";
 import { AuthService } from "src/app/core/auth/auth.service";
-import decode from "jwt-decode";
+import { ADMIN } from "../constants/constants";
+import { RoleService } from "./role.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthGuardService implements CanActivate {
-  constructor(public auth: AuthService, public router: Router) {}
+  constructor(public auth: AuthService, public router: Router,private roleService: RoleService) {}
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
     if (!this.auth.isLoggedIn()) {
@@ -16,17 +17,24 @@ export class AuthGuardService implements CanActivate {
       return false;
     } else {
       const expectedRoles = route.data.expectedRoles;
-      const role = this.auth.getRole(); // TODO call API authority
-      return this.isInside(role,expectedRoles);
+      const foundRoles = this.roleService.getRoles();
+      const res = this.isInside(foundRoles,expectedRoles);
+      if(!res){
+        this.router.navigate(['404']);
       }
+      return res;
+    }
   }
 
-  isInside(value: string, list: string[]): boolean {
-    const res = list.filter((x) => x === value);
-    if (res.length >0) {
-      return true;
-    } else {
-      return false;
+  isInside(values: string[], list: string[]): boolean {
+    const res = false;
+    for(let item of values){
+      for(let listItem of list){
+        if(item === listItem){
+          return true;
+        }
+      }
     }
+    return false;
   }
 }

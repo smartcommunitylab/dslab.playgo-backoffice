@@ -4,6 +4,10 @@ import { LoadingService } from "./shared/services/loading.service";
 import { delay } from "rxjs/operators";
 import { MatDialog} from '@angular/material/dialog';
 import { AccountDialogComponent } from "./shared/components/account-dialog/account-dialog.component";
+import { TerritoryClass } from "./shared/classes/territory-class";
+import { TerritoryService } from "./shared/services/territory.service";
+import { TERRITORY_ID_LOCAL_STORAGE_KEY } from "./shared/constants/constants";
+import { RoleService } from "./shared/services/role.service";
 
 export interface Tile {
   color: string;
@@ -30,17 +34,33 @@ export class AppComponent implements OnInit{
     { text: "Four", cols: 2, rows: 1, color: "#DDBDF1" },
   ];
   login: boolean = false;
+  territories: TerritoryClass[];
+  globalSelectedTerritory: string;
 
   constructor(
     private translate: TranslateService,
     private _loading: LoadingService,
-    private dialogCreate: MatDialog
+    private dialogCreate: MatDialog,
+    private territoryService: TerritoryService,
+    private roleService: RoleService
   ) {
     this.translate.setDefaultLang("it");
   }
 
   ngOnInit() {
     this.listenToLoading();
+    this.territoryService.get().subscribe((res)=>{
+      this.territories = res;
+      try{
+        //if present in local storage take it
+        this.globalSelectedTerritory = localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY);
+      }catch(error){
+        //if not present take first
+        this.globalSelectedTerritory = res[0].territoryId;
+        localStorage.setItem(TERRITORY_ID_LOCAL_STORAGE_KEY,this.globalSelectedTerritory);
+      }
+    });
+    this.roleService.getInitializedJustOncePerUser();
   }
 
   openDialogAccount(event: any){
@@ -62,4 +82,16 @@ export class AppComponent implements OnInit{
         this.loading = loading;
       });
   }
+
+  onGlobalSelectTerritory(value: string){
+    try{
+      localStorage.removeItem(TERRITORY_ID_LOCAL_STORAGE_KEY);
+    }catch(error){
+      //there was no item to remove
+    }
+    localStorage.setItem(TERRITORY_ID_LOCAL_STORAGE_KEY,value);
+    this.globalSelectedTerritory = value;
+    window.location.reload();
+  }
+
 }

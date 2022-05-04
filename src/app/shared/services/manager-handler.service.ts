@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { ManagerClass } from "../classes/manager-class";
+import { UserClass } from "../classes/user-class";
 import {
   MANAGER_CAMPAIGN_BASE_PATH,
   MANAGER_TERRITORY_BASE_PATH,
@@ -13,9 +13,9 @@ import {
 export class ManagerHandlerService {
   constructor(private http: HttpClient) {}
 
-  getManagerCampaign(campaignId: string): Observable<ManagerClass[]> {
+  getManagerCampaign(campaignId: string): Observable<UserClass[]> {
     const body = {params:{campaignId: campaignId}};
-    return this.http.get<ManagerClass[]>(MANAGER_CAMPAIGN_BASE_PATH,body);
+    return this.http.get<UserClass[]>(MANAGER_CAMPAIGN_BASE_PATH,body);
   }
 
   postManagerCampaign(campaignId: string,userName:string): Observable<any> {
@@ -38,13 +38,13 @@ export class ManagerHandlerService {
     return this.http.delete<void>(MANAGER_CAMPAIGN_BASE_PATH,body);
   }
 
-  getManagerTerritory(territoryId: string): Observable<ManagerClass[]> {
+  getManagerTerritory(territoryId: string): Observable<UserClass[]> {
     const body = {
       params: {
         territoryId: territoryId,
       }
     };
-    return this.http.get<ManagerClass[]>(MANAGER_TERRITORY_BASE_PATH,body);
+    return this.http.get<UserClass[]>(MANAGER_TERRITORY_BASE_PATH,body);
   }
 
   postManagerTerritory(territoryId: string, userName: string): Observable<any> {

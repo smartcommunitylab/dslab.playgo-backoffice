@@ -24,7 +24,9 @@
 }
 
 .example-spacer {
-  flex: 1 1 auto;
+  height: 100%;
+  width: 67%;
+  //flex: 1 1 auto;
 }
 
 .full-size {
@@ -73,4 +75,14 @@
 
 .border-right{
   border-right: solid rgba(0, 0, 0, 0.205) 1px;
+}
+
+.right-toolbar{
+  height: 100%;
+  width: 20%;
+}
+
+.manage-user-button{
+  height: 100%;
+  width: 10%;
 }

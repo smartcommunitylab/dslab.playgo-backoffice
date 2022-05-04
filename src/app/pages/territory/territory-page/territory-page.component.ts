@@ -9,6 +9,7 @@ import { TerritoryService } from 'src/app/shared/services/territory.service';
 import {MatSort, Sort} from '@angular/material/sort';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import { ManagerHandlerTerritoryComponent } from '../manager-handler/manager-handler.component';
+import { TERRITORY_ID_LOCAL_STORAGE_KEY } from 'src/app/shared/constants/constants';
 
 @Component({
   selector: 'app-territory-page',
@@ -23,6 +24,7 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
   listAllTerriotory: TerritoryClass[];
   searchString: string;
   selectedRowIndex = "";
+  newTerritory: TerritoryClass;
   @ViewChild(MatSort) sort: MatSort;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -43,6 +45,8 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
         this.listAllTerriotory = listTerritory.reverse();
         this.listTerriotory = listTerritory;
         this.setTableData();
+        this.newTerritory = new TerritoryClass();
+        this.newTerritory.territoryId = "";
       }
     );
   }
@@ -72,6 +76,8 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result !==undefined){
+        this.newTerritory = new TerritoryClass();
+        this.newTerritory.territoryId = result.territoryId;
         this.listTerriotory  = [result].concat(this.listTerriotory);
         this.listAllTerriotory = this.listTerriotory;
         this.setTableData();
@@ -99,6 +105,13 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
         this.listAllTerriotory = newList;
         this.selectedTerritory = undefined;
         this.setTableData();
+      }
+      if(result === localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY)){
+        //deleted the territory that was selected
+        this.territoryService.get().subscribe((res)=>{
+          localStorage.removeItem(TERRITORY_ID_LOCAL_STORAGE_KEY);
+          localStorage.setItem(TERRITORY_ID_LOCAL_STORAGE_KEY,res[0].territoryId);
+        });
       }
     });
   }

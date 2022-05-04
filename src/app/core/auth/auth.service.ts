@@ -5,7 +5,7 @@ import { UserManager, UserManagerSettings, User } from 'oidc-client';
 import { Account } from '../../shared/user/account.model';
 import { StateStorageService } from './state-storage.service';
 import { environment } from '../../../environments/environment';
-import { ADMIN } from 'src/app/shared/constants/constants';
+import { RoleService } from 'src/app/shared/services/role.service';
 
 export function getClientSettings(): UserManagerSettings {
   const url =  window.location.protocol + '//' + window.location.host + '/';
@@ -104,12 +104,6 @@ export class AuthService {
         });
       });
     });
-  }
-
-  getRole() : string{
-    // TODO call the api to get the right role with the email
-    // return this.roleApi.get(this.account.email).subscribe((res)=>return res); 
-    return ADMIN;
   }
 
   private navigateToStoredUrl(): void {

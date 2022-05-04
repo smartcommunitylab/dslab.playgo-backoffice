@@ -5,6 +5,8 @@ export const TERRITORY_BASE_PATH = BACKEND_BASE_PATH+ 'playandgo/api/territory';
 export const CAMPAIGN_BASE_PATH = BACKEND_BASE_PATH+'playandgo/api/campaign';
 export const MANAGER_CAMPAIGN_BASE_PATH = BACKEND_BASE_PATH+'playandgo/api/console/role/campaign';
 export const MANAGER_TERRITORY_BASE_PATH = BACKEND_BASE_PATH+'playandgo/api/console/role/territory';
+export const ROLE_BASE_PATH = BACKEND_BASE_PATH+'playandgo/api/console/role/my';
+
 export const TYPE_CAMPAIGN = ["personal","city","school","company"];
 export const MY_DATE_FORMATS = {
     parse: {
@@ -20,6 +22,8 @@ export const MY_DATE_FORMATS = {
 
 export const PREFIX_SRC_IMG = "data:"
 export const BASE64_SRC_IMG = ";base64,"
-export const ADMIN = "ADMIN";
-export const TERRITORY_ADMIN = "TERRITORY_ADMIN";
-export const CAMPAIGN_ADMIN = "CAMPAIGN_ADMIN";
+export const ADMIN = "admin";
+export const TERRITORY_ADMIN = "territory";
+export const CAMPAIGN_ADMIN = "campaign";
+export const TERRITORY_ID_LOCAL_STORAGE_KEY = "TERRITORY_ID";
+export const ROLES_LOCAL_STORAGE_KEY = "ROLES";

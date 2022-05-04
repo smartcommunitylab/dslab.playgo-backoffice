@@ -8,7 +8,7 @@ import { CampaignClass } from "src/app/shared/classes/campaing-class";
 import { CampaignService } from "src/app/shared/services/campaign-service.service";
 import { TerritoryClass } from "src/app/shared/classes/territory-class";
 import { TerritoryService } from "src/app/shared/services/territory.service";
-import { BASE64_SRC_IMG, PREFIX_SRC_IMG } from "src/app/shared/constants/constants";
+import { BASE64_SRC_IMG, PREFIX_SRC_IMG, TERRITORY_ID_LOCAL_STORAGE_KEY } from "src/app/shared/constants/constants";
 import {MatSort, Sort} from '@angular/material/sort';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import { ManagerHandlerComponent } from "../manager-handler/manager-handler.component";
@@ -29,6 +29,7 @@ export class CampaignPageComponent implements OnInit {
   selectedRowIndex = "";
   PREFIX_SRC_IMG_C = PREFIX_SRC_IMG;
   BASE64_SRC_IMG_C =BASE64_SRC_IMG;
+  highlightCampaign: CampaignClass
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -45,6 +46,9 @@ export class CampaignPageComponent implements OnInit {
 
   ngOnInit() {
     this.territoryService.get().subscribe(result => this.listTerritories = result);
+    this.highlightCampaign = new CampaignClass();
+    this.highlightCampaign.campaignId = "";
+    this.onSelectTerritory(localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY));
   }
 
   ngAfterViewInit() {}
@@ -73,6 +77,8 @@ export class CampaignPageComponent implements OnInit {
   }
 
   showTerritory(row: CampaignClass) {
+    this.highlightCampaign = new CampaignClass();
+    this.highlightCampaign.campaignId = "";
     this.selectedRowIndex = row.campaignId;
     this.selectedCampaign = new CampaignClass();
     this.selectedCampaign.setClassWithourError(row);
@@ -88,6 +94,7 @@ export class CampaignPageComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== undefined) {
+        this.highlightCampaign = result;
          this.onSelectTerritory(result.territoryId);
       }
     });

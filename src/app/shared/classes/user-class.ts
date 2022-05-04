@@ -1,4 +1,4 @@
-export class ManagerClass{
+export class UserClass{
     id?: string;
     entityId?: string;
     playerId?: string;
