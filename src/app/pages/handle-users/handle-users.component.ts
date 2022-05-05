@@ -16,16 +16,17 @@ import { MatSnackBar } from "@angular/material/snack-bar";
   styleUrls: ["./handle-users.component.scss"],
 })
 export class HandleUsersComponent implements OnInit {
-  pageSizesOnTable = [2];
+  pageSizesOnTable = [100];
   territoryId: string;
-  searchString: string;
-  displayedColumns: string[] = ["email", "nickname", "userId"];
+  searchString: string ="";
+  displayedColumns: string[] = ["mail", "nickname", "playerId"];
   dataSource: MatTableDataSource<PlayerCampaign>;
   selectedRowIndex = "";
   selectedUser: PlayerCampaign;
   currentPageNumber: number;
-  query: string = "";
   sorting: string = "";
+  ordering:string = "desc";
+  fieldOrdering:string = "";
   listAllUserCampaign: PlayerCampaign[];
   listUserCampaign: PlayerCampaign[];
   paginatorData: Paginator<PlayerCampaign>;
@@ -57,7 +58,7 @@ export class HandleUsersComponent implements OnInit {
           this.pageSizesOnTable[0],
           this.sorting,
           this.territoryId,
-          this.query
+          this.searchString
         )
         .subscribe(
           (res) => {
@@ -111,8 +112,26 @@ export class HandleUsersComponent implements OnInit {
 
   }
 
-  searchUser(item: any) {
-    this.query = "";
+  searchUser(item: any){
+    if (this.searchString === "") {
+      this.listUserCampaign = this.mapUserCampaignRecieved.get(
+        this.currentPageNumber
+      );
+      this.setTableData();
+    } else {
+      this.playerService.getPlayers<PlayerCampaign>(
+        this.currentPageNumber,
+        this.pageSizesOnTable[0],
+        this.sorting,
+        this.territoryId,
+        this.searchString).subscribe((res) =>{
+        this.listUserCampaign = res.content;
+        this.setTableData();
+      });
+    }
+  }
+
+  searchUserWithLocalMapSearch(item: any) {
     if (this.searchString === "") {
       this.listUserCampaign = this.mapUserCampaignRecieved.get(
         this.currentPageNumber
@@ -142,25 +161,45 @@ export class HandleUsersComponent implements OnInit {
         partialListNickName,
         partialListUserID
       );
-      if(this.listUserCampaign.length===0){
-        //search on db;
-        this.query = this.createQuery();
-        this.playerService.getPlayers<PlayerCampaign>(
-          this.currentPageNumber,
-          this.pageSizesOnTable[0],
-          this.sorting,
-          this.territoryId,
-          this.query).subscribe((res) =>{
-          this.listUserCampaign = res.content;
-        });
+      if(!this.isMapFull()){
+        console.log("Map not full");
+        // if I loaded all the elements on the map doen't make sense to query
+        if(this.listUserCampaign.length===0){
+          //search on db if didn't find on local storage
+          this.playerService.getPlayers<PlayerCampaign>(
+            this.currentPageNumber,
+            this.pageSizesOnTable[0],
+            this.sorting,
+            this.territoryId,
+            this.searchString).subscribe((res) =>{
+            this.listUserCampaign = res.content;
+            this.setTableData();
+          });
+        }
+      }else{
+        console.log("map full data not found");
       }
       this.setTableData();
     }
   }
 
-  createQuery(): string{
-    console.log("made Query");
-    return "";
+
+
+  isMapFull():boolean{
+    const totalPages = this.paginatorData.totalPages;
+    let iteratePages = 0;
+    for(let [key,value] of  this.mapUserCampaignRecieved){
+      if(key === iteratePages){
+        iteratePages++;
+      }else{
+        return false;
+      }
+    }
+    if(iteratePages ===totalPages){
+      return true;
+    }else{
+      return false;
+    }
   }
 
   sumPartialListAvoidRepetitions(
@@ -175,6 +214,49 @@ export class HandleUsersComponent implements OnInit {
         return JSON.stringify(obj) === _value;
       });
     });
+  }
+
+  modifyOrdering(){
+    if(this.ordering === "asc"){
+      this.ordering = "desc";
+    }else {
+      this.ordering = "asc";
+    }
+    if(this.fieldOrdering){
+        if(this.fieldOrdering==='notSelected'){
+          this.sorting = "";
+        }else{
+          this.sorting = this.fieldOrdering + "," + this.ordering;
+        }
+      this.playerService.getPlayers<PlayerCampaign>(
+        this.currentPageNumber,
+        this.pageSizesOnTable[0],
+        this.sorting,
+        this.territoryId,
+        this.searchString).subscribe((res) =>{
+        this.listUserCampaign = res.content;
+        this.setTableData();
+      });
+    }
+    
+  }
+
+  selectedOrderingField(){
+    if(this.fieldOrdering==='notSelected'){
+      this.sorting = "";
+    }else{
+      this.sorting = this.fieldOrdering + "," + this.ordering;
+    }
+    this.playerService.getPlayers<PlayerCampaign>(
+      this.currentPageNumber,
+      this.pageSizesOnTable[0],
+      this.sorting,
+      this.territoryId,
+      this.searchString).subscribe((res) =>{
+      this.listUserCampaign = res.content;
+      this.setTableData();
+    });
+
   }
 
   announceSortChange(sortState: Sort) {
@@ -207,7 +289,7 @@ export class HandleUsersComponent implements OnInit {
               this.pageSizesOnTable[0],
               this.sorting,
               this.territoryId,
-              this.query
+              this.searchString
             )
             .subscribe((res) => {
               this.setMapUserCampaign(res);

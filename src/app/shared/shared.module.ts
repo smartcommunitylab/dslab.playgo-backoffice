@@ -26,6 +26,7 @@ import { MatSortModule } from "@angular/material/sort";
 import { ManagerHandlerTerritoryComponent } from "../pages/territory/manager-handler/manager-handler.component";
 import { ManagerDeleteTerritoryComponent } from "../pages/territory/manager-handler/manager-delete/manager-delete.component";
 import {MatTreeModule} from '@angular/material/tree';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   imports: [
@@ -52,6 +53,7 @@ import {MatTreeModule} from '@angular/material/tree';
     MatSlideToggleModule,
     MatSortModule,
     MatTreeModule,
+    MatTooltipModule,
     RichTextEditorModule,
     DropDownCardInfoModule,
 
@@ -82,6 +84,7 @@ import {MatTreeModule} from '@angular/material/tree';
     MatSlideToggleModule,
     MatSortModule,
     MatTreeModule,
+    MatTooltipModule,
     RichTextEditorModule,
     DropDownCardInfoModule,
   ],

@@ -4,14 +4,31 @@
             <div class="full-dimension">
                 <mat-card class="card" style="margin-left: 10px;">
                     <mat-grid-list cols="3" rowHeight="6:1">
-                        <mat-grid-tile>
+                        <mat-grid-tile style="width: 150px;">
                             <div class="full-dimension" style="text-align: left;">
                                 <mat-card-title>
                                     {{'users' | translate}}
                                 </mat-card-title>
                             </div>
                         </mat-grid-tile>
-                        <mat-grid-tile></mat-grid-tile>
+                        <mat-grid-tile>
+                            <form class="example-form">
+                                <mat-label>{{'orderingField' | translate}}</mat-label>
+                                <mat-select id="territoryId" [(ngModel)]="fieldOrdering" class="full-width" (selectionChange)="selectedOrderingField()">
+                                    <mat-option *ngFor="let val of ['notSelected'].concat(displayedColumns)" [value]="val">{{val | translate}}</mat-option>
+                                </mat-select>
+                            </form>
+                            <button style="margin-left: 5px" mat-flat-button color="primary" (click)="modifyOrdering()" matTooltip=" {{ 'orderingButton' | translate}} {{ (ordering ==='un'? 'noOrdering' : ordering ==='asc'? 'ascending' : 'descending') | translate }}">
+                                <mat-icon>
+                                    <span *ngIf="ordering === 'asc'" class="material-symbols-outlined">
+                                        arrow_upward
+                                    </span>
+                                    <span *ngIf="ordering === 'desc'" class="material-symbols-outlined">
+                                        arrow_downward
+                                    </span>
+                                </mat-icon>
+                            </button>
+                        </mat-grid-tile>
                         <mat-grid-tile>
                             <form class="example-form">
                                 <mat-form-field class="example-full-width" appearance="fill">
@@ -27,11 +44,12 @@
                             <table mat-table [dataSource]="dataSource" class="full-width" matSort
                                 (matSortChange)="announceSortChange($event)">
 
-                                <ng-container matColumnDef="email">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header
-                                        sortActionDescription="Sort by email"> {{ 'email'| translate}} </th>
+                                <ng-container matColumnDef="mail">
+                                    <th mat-header-cell *matHeaderCellDef
+                                        sortActionDescription="Sort by mail"> {{ 'mail'| translate}} </th>
                                     <td mat-cell *matCellDef="let element">
-                                        <mat-icon class="cursor-pointer" (click)="copy(element.player.mail)">
+                                        <mat-icon class="cursor-pointer hover-copy-icon"
+                                            (click)="copy(element.player.mail)">
                                             <span class="material-symbols-outlined">
                                                 content_copy
                                             </span>
@@ -41,10 +59,11 @@
                                 </ng-container>
 
                                 <ng-container matColumnDef="nickname">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    <th mat-header-cell *matHeaderCellDef
                                         sortActionDescription="Sort by nickname"> {{ 'nickname'| translate}} </th>
                                     <td mat-cell *matCellDef="let element">
-                                        <mat-icon class="cursor-pointer" (click)="copy(element.player.nickname)">
+                                        <mat-icon class="cursor-pointer hover-copy-icon"
+                                            (click)="copy(element.player.nickname)">
                                             <span class="material-symbols-outlined">
                                                 content_copy
                                             </span>
@@ -53,11 +72,12 @@
                                     </td>
                                 </ng-container>
 
-                                <ng-container matColumnDef="userId">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header
-                                        sortActionDescription="Sort by userID"> {{ 'userId'| translate}} </th>
+                                <ng-container matColumnDef="playerId">
+                                    <th mat-header-cell *matHeaderCellDef
+                                        sortActionDescription="Sort by playerId"> {{ 'playerId'| translate}} </th>
                                     <td mat-cell *matCellDef="let element">
-                                        <mat-icon class="cursor-pointer" (click)="copy(element.player.playerId)">
+                                        <mat-icon class="cursor-pointer hover-copy-icon"
+                                            (click)="copy(element.player.playerId)">
                                             <span class="material-symbols-outlined">
                                                 content_copy
                                             </span>
@@ -71,8 +91,8 @@
                                     [ngClass]="{'highlight': selectedRowIndex === row.player.playerId}"
                                     *matRowDef="let row; columns: displayedColumns;"></tr>
                             </table>
-                            <mat-paginator [pageSizeOptions]="pageSizesOnTable" showFirstLastButtons [length]="paginatorData.totalElements"
-                                (page)="selectedPageSize($event)">
+                            <mat-paginator [pageSizeOptions]="pageSizesOnTable" showFirstLastButtons
+                                [length]="paginatorData.totalElements" (page)="selectedPageSize($event)">
                             </mat-paginator>
                         </div>
                     </mat-card-content>
@@ -100,9 +120,9 @@
                         <mat-icon>
                             <span class="material-symbols-outlined">
                                 construction
-                                </span>
+                            </span>
                         </mat-icon>
-                            Ban Hammer
+                        Ban Hammer
                     </button>
                 </mat-card>
             </div>
