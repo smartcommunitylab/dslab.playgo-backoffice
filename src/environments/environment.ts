@@ -5,6 +5,9 @@
 export const environment = {
   production: false,
   serverAPIURL: 'https://backenddev.playngo.it/playandgo/api',
+  serverUrl:{
+    api: 'https://backenddev.playngo.it:443'
+  },
   auth:{
     aacUrl:'https://aac.platform.smartcommunitylab.it',
     aacClientId:'c_5445634c-95d6-4c0e-a1ff-829b951b91b3',
