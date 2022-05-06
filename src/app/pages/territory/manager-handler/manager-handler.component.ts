@@ -6,10 +6,10 @@ import {MatSort, Sort} from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { UserClass } from 'src/app/shared/classes/user-class';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
-import { ManagerHandlerService } from 'src/app/shared/services/manager-handler.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {  trigger,  state,  style,  transition,  animate,} from "@angular/animations";
 import { ManagerDeleteTerritoryComponent } from './manager-delete/manager-delete.component';
+import { ConsoleControllerService } from 'src/app/core/api/generated/controllers/consoleController.service';
 
 const LIST_MANAGERS = [
   {
@@ -63,12 +63,12 @@ export class ManagerHandlerTerritoryComponent implements OnInit {
     public dialogRef: MatDialogRef<ManagerHandlerTerritoryComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _liveAnnouncer: LiveAnnouncer,
-    private managerService: ManagerHandlerService,
+    private managerService: ConsoleControllerService,
     private formBuilder: FormBuilder,
     private dialogDelete: MatDialog,) { }
 
   ngOnInit(): void {
-    this.managerService.getManagerTerritory(this.territoryId).subscribe((result)=>{
+    this.managerService.getTerritoryManagerUsingGET(this.territoryId).subscribe((result)=>{
       this.listManagers = this.createExtendedUserClassList(result);
       this.setTableData();
     });
@@ -109,7 +109,7 @@ export class ManagerHandlerTerritoryComponent implements OnInit {
       this.newManager = new ExtendedUserClass();
       this.newManager.manager = new UserClass();
       this.newManager.manager.preferredUsername = this.newManagerForm.get("email").value;
-      this.managerService.postManagerTerritory(this.territoryId,this.newManager.manager.preferredUsername).subscribe((res)=>{
+      this.managerService.addTerritoryManagerUsingPOST(this.newManager.manager.preferredUsername,this.territoryId).subscribe((res)=>{
         this.listManagers.push(this.newManager);
         this.setTableData();
         //this.addNewManager = false;

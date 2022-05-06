@@ -25,7 +25,7 @@ export class SpinnerInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    if (request.url.includes(environment.serverAPIURL)) {
+    if (request.url.includes(environment.serverUrl.apiUrl)) {
       this._loading.setLoading(true, request.url);
       return next
         .handle(request)

@@ -2,7 +2,7 @@ import { Component, OnInit, Inject, Input } from '@angular/core';
 
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ManagerHandlerService } from 'src/app/shared/services/manager-handler.service';
+import { ConsoleControllerService } from 'src/app/core/api/generated/controllers/consoleController.service';
 @Component({
   selector: 'app-manager-delete',
   templateUrl: './manager-delete.component.html',
@@ -17,7 +17,7 @@ export class ManagerDeleteTerritoryComponent implements OnInit {
 
   constructor(    public dialogRef: MatDialogRef<ManagerDeleteTerritoryComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private managerService: ManagerHandlerService,
+    private managerService: ConsoleControllerService,
     private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
@@ -30,7 +30,7 @@ export class ManagerDeleteTerritoryComponent implements OnInit {
   delete(){
     this.msgErrorDelete= "";
     try{
-      this.managerService.deleteManagerTerritory(this.territoryId,this.email).subscribe(
+      this.managerService.removeTerritoryManagerUsingDELETE(this.email,this.territoryId).subscribe(
         () =>{
           this.dialogRef.close(true);
           this._snackBar.open("Manager "+this.email+" eliminato", "close");

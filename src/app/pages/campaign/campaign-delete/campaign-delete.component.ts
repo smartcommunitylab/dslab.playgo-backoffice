@@ -1,7 +1,7 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CampaignService } from 'src/app/shared/services/campaign-service.service';
+import { CampaignControllerService } from 'src/app/core/api/generated/controllers/campaignController.service';
 
 @Component({
   selector: 'app-campaign-delete',
@@ -13,7 +13,9 @@ export class CampaignDeleteComponent implements OnInit {
   campaignId: string;
   msgError: string;
   recivedError: string;
-  constructor(private campaignService: CampaignService, public dialogRef: MatDialogRef<CampaignDeleteComponent>,
+  constructor(
+    private campaignService: CampaignControllerService,
+     public dialogRef: MatDialogRef<CampaignDeleteComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _snackBar: MatSnackBar) { }
 
@@ -26,7 +28,7 @@ export class CampaignDeleteComponent implements OnInit {
 
   delete(){
     try{
-      this.campaignService.delete(this.campaignId).subscribe(()=>{
+      this.campaignService.deleteCampaignUsingDELETE(this.campaignId).subscribe(()=>{
         this.onNoClick('',this.campaignId);
         this._snackBar.open("Campagna eliminata", "close");
       }, 

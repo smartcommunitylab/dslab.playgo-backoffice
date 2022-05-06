@@ -4,9 +4,17 @@
 
 export const environment = {
   production: false,
-  serverAPIURL: 'https://backenddev.playngo.it/playandgo/api',
   serverUrl:{
-    api: 'https://backenddev.playngo.it:443'
+    api: 'https://backenddev.playngo.it:443',
+    apiUrl: 'https://backenddev.playngo.it:443/playandgo/api/',
+    profile: 'player/profile',
+    register: 'player/register',
+    player: 'player',
+    territory: 'territory',
+    avatar: 'player/avatar',
+    status: '/report/player/status',
+    transportStats: 'report/player/transport/stats',
+    avatarSmall: 'player/avatar/small',
   },
   auth:{
     aacUrl:'https://aac.platform.smartcommunitylab.it',

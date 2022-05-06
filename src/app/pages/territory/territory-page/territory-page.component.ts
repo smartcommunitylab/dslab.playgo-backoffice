@@ -5,11 +5,11 @@ import { TerritoryClass } from 'src/app/shared/classes/territory-class';
 import { MatDialog} from '@angular/material/dialog';
 import { TerritoryAddFormComponent } from '../territory-add-form/territory-add-form.component';
 import { TerritoryDeleteComponent } from '../territory-delete/territory-delete.component';
-import { TerritoryService } from 'src/app/shared/services/territory.service';
 import {MatSort, Sort} from '@angular/material/sort';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import { ManagerHandlerTerritoryComponent } from '../manager-handler/manager-handler.component';
 import { TERRITORY_ID_LOCAL_STORAGE_KEY } from 'src/app/shared/constants/constants';
+import { TerritoryControllerService } from 'src/app/core/api/generated/controllers/territoryController.service';
 
 @Component({
   selector: 'app-territory-page',
@@ -34,13 +34,13 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
   constructor( private dialogCreate: MatDialog,
     private dialogUpdate: MatDialog,
      private dialogDelete: MatDialog,
-      private territoryService: TerritoryService,
+      private territoryService: TerritoryControllerService,
     private _liveAnnouncer: LiveAnnouncer){// private dialog: MatDialog
 
   }
 
   ngOnInit() {
-    this.territoryService.get().subscribe(
+    this.territoryService.getTerritoriesUsingGET().subscribe(
       listTerritory => {
         this.listAllTerriotory = listTerritory.reverse();
         this.listTerriotory = listTerritory;
@@ -108,7 +108,7 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
       }
       if(result === localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY)){
         //deleted the territory that was selected
-        this.territoryService.get().subscribe((res)=>{
+        this.territoryService.getTerritoriesUsingGET().subscribe((res)=>{
           localStorage.removeItem(TERRITORY_ID_LOCAL_STORAGE_KEY);
           localStorage.setItem(TERRITORY_ID_LOCAL_STORAGE_KEY,res[0].territoryId);
         });

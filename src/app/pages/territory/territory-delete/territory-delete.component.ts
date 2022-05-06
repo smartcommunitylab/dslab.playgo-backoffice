@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { TerritoryService } from "src/app/shared/services/territory.service";
+import { TerritoryControllerService } from "src/app/core/api/generated/controllers/territoryController.service";
 
 @Component({
   selector: "app-territory-delete",
@@ -13,7 +13,7 @@ export class TerritoryDeleteComponent implements OnInit {
   msgError: string;
   error: string;
   constructor(
-    private territoryService: TerritoryService,
+    private territoryService: TerritoryControllerService,
     public dialogRef: MatDialogRef<TerritoryDeleteComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _snackBar: MatSnackBar
@@ -27,7 +27,7 @@ export class TerritoryDeleteComponent implements OnInit {
 
   delete() {
     try {
-      this.territoryService.delete(this.territoryId).subscribe(
+      this.territoryService.deleteTerritoryUsingDELETE(this.territoryId).subscribe(
         () => {
           this.onNoClick("", this.territoryId);
           this._snackBar.open("Territorio eliminato", "close");

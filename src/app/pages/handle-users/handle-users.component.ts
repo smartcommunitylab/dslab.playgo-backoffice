@@ -3,12 +3,12 @@ import { MatTableDataSource } from "@angular/material/table";
 import { MatSort, Sort } from "@angular/material/sort";
 import { MatPaginator } from "@angular/material/paginator";
 import { LiveAnnouncer } from "@angular/cdk/a11y";
-import { PlayerHandlerService } from "src/app/shared/services/player-handler.service";
 import { TERRITORY_ID_LOCAL_STORAGE_KEY } from "src/app/shared/constants/constants";
-import { PlayerCampaign } from "src/app/shared/classes/player-campaing-class";
-import { Paginator } from "src/app/shared/classes/paginator-class";
+import { PlayerCampaignClass } from "src/app/shared/classes/player-campaing-class";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { ConsoleControllerService } from "src/app/core/api/generated/controllers/consoleController.service";
+import { PagePlayer } from "src/app/shared/classes/PagePlayerInfoConsole-class";
 
 @Component({
   selector: "app-handle-users",
@@ -16,49 +16,47 @@ import { MatSnackBar } from "@angular/material/snack-bar";
   styleUrls: ["./handle-users.component.scss"],
 })
 export class HandleUsersComponent implements OnInit {
-  pageSizesOnTable = [100];
+  pageSizesOnTable = [30];
   territoryId: string;
   searchString: string ="";
   displayedColumns: string[] = ["mail", "nickname", "playerId"];
-  dataSource: MatTableDataSource<PlayerCampaign>;
+  dataSource: MatTableDataSource<PlayerCampaignClass>;
   selectedRowIndex = "";
-  selectedUser: PlayerCampaign;
+  selectedUser: PlayerCampaignClass;
   currentPageNumber: number;
   sorting: string = "";
   ordering:string = "desc";
   fieldOrdering:string = "";
-  listAllUserCampaign: PlayerCampaign[];
-  listUserCampaign: PlayerCampaign[];
-  paginatorData: Paginator<PlayerCampaign>;
-  mapUserCampaignRecieved: Map<number, PlayerCampaign[]>;
+  listAllUserCampaign: PlayerCampaignClass[];
+  listUserCampaign: PlayerCampaignClass[];
+  paginatorData: PagePlayer;
+  mapUserCampaignRecieved: Map<number, PlayerCampaignClass[]>;
   @ViewChild(MatSort) sort: MatSort;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
-    private playerService: PlayerHandlerService,
+    private playerService: ConsoleControllerService,
     private clipboard: Clipboard,
     private _snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.territoryId = localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY);
-    this.paginatorData = new Paginator<PlayerCampaign>();
+    this.paginatorData = new PagePlayer();
     this.paginatorData.totalElements = 0; //avoid errors shown
-    this.mapUserCampaignRecieved = new Map<number, PlayerCampaign[]>();
-    this.dataSource = new MatTableDataSource<PlayerCampaign>();
+    this.mapUserCampaignRecieved = new Map<number, PlayerCampaignClass[]>();
+    this.dataSource = new MatTableDataSource<PlayerCampaignClass>();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.currentPageNumber = 0;
     try {
-      this.playerService
-        .getPlayers<PlayerCampaign>(
+      this.playerService.
+      searchPlayersByTerritoryUsingGET(
           0,
           this.pageSizesOnTable[0],
-          this.sorting,
-          this.territoryId,
-          this.searchString
+          this.territoryId
         )
         .subscribe(
           (res) => {
@@ -79,7 +77,7 @@ export class HandleUsersComponent implements OnInit {
     this.dataSource.data = this.listUserCampaign;
   }
 
-  setMapUserCampaign(paginator: Paginator<PlayerCampaign>) {
+  setMapUserCampaign(paginator: PagePlayer) {
     const size = this.pageSizesOnTable[0];
     // assert(size === paginator.size);
     this.mapUserCampaignRecieved.set(paginator.number, paginator.content);
@@ -87,7 +85,7 @@ export class HandleUsersComponent implements OnInit {
     this.listAllUserCampaign = [];
     for (let i = 0; i < paginator.totalPages; i++) {
       try {
-        const itemList: PlayerCampaign[] = this.mapUserCampaignRecieved.get(i);
+        const itemList: PlayerCampaignClass[] = this.mapUserCampaignRecieved.get(i);
         if (!!itemList) {
           this.listAllUserCampaign = this.listAllUserCampaign.concat(itemList);
         }
@@ -119,11 +117,11 @@ export class HandleUsersComponent implements OnInit {
       );
       this.setTableData();
     } else {
-      this.playerService.getPlayers<PlayerCampaign>(
+      this.playerService.searchPlayersByTerritoryUsingGET(
         this.currentPageNumber,
         this.pageSizesOnTable[0],
-        this.sorting,
         this.territoryId,
+        this.sorting,
         this.searchString).subscribe((res) =>{
         this.listUserCampaign = res.content;
         this.setTableData();
@@ -166,11 +164,11 @@ export class HandleUsersComponent implements OnInit {
         // if I loaded all the elements on the map doen't make sense to query
         if(this.listUserCampaign.length===0){
           //search on db if didn't find on local storage
-          this.playerService.getPlayers<PlayerCampaign>(
+          this.playerService.searchPlayersByTerritoryUsingGET(
             this.currentPageNumber,
             this.pageSizesOnTable[0],
-            this.sorting,
             this.territoryId,
+            this.sorting,
             this.searchString).subscribe((res) =>{
             this.listUserCampaign = res.content;
             this.setTableData();
@@ -203,10 +201,10 @@ export class HandleUsersComponent implements OnInit {
   }
 
   sumPartialListAvoidRepetitions(
-    listA: PlayerCampaign[],
-    listB: PlayerCampaign[],
-    listC: PlayerCampaign[]
-  ): PlayerCampaign[] {
+    listA: PlayerCampaignClass[],
+    listB: PlayerCampaignClass[],
+    listC: PlayerCampaignClass[]
+  ): PlayerCampaignClass[] {
     let result = listA.concat(listB).concat(listC);
     return result.filter((value, index)=> {
       const _value = JSON.stringify(value);
@@ -228,11 +226,11 @@ export class HandleUsersComponent implements OnInit {
         }else{
           this.sorting = this.fieldOrdering + "," + this.ordering;
         }
-      this.playerService.getPlayers<PlayerCampaign>(
+      this.playerService.searchPlayersByTerritoryUsingGET(
         this.currentPageNumber,
         this.pageSizesOnTable[0],
-        this.sorting,
         this.territoryId,
+        this.sorting,
         this.searchString).subscribe((res) =>{
         this.listUserCampaign = res.content;
         this.setTableData();
@@ -247,11 +245,11 @@ export class HandleUsersComponent implements OnInit {
     }else{
       this.sorting = this.fieldOrdering + "," + this.ordering;
     }
-    this.playerService.getPlayers<PlayerCampaign>(
+    this.playerService.searchPlayersByTerritoryUsingGET(
       this.currentPageNumber,
       this.pageSizesOnTable[0],
-      this.sorting,
       this.territoryId,
+      this.sorting,
       this.searchString).subscribe((res) =>{
       this.listUserCampaign = res.content;
       this.setTableData();
@@ -267,7 +265,7 @@ export class HandleUsersComponent implements OnInit {
     }
   }
 
-  showUser(row: PlayerCampaign) {
+  showUser(row: PlayerCampaignClass) {
     this.selectedRowIndex = row.player.playerId;
     this.selectedUser = row;
   }
@@ -277,20 +275,19 @@ export class HandleUsersComponent implements OnInit {
       const pageIndex = event.pageIndex;
       this.currentPageNumber = pageIndex;
       try {
-        const list: PlayerCampaign[] =
+        const list: PlayerCampaignClass[] =
           this.mapUserCampaignRecieved.get(pageIndex);
         if (!!list && list.length > 0) {
           this.listUserCampaign = list;
           this.setTableData();
         } else {
           this.playerService
-            .getPlayers(
-              pageIndex,
-              this.pageSizesOnTable[0],
-              this.sorting,
-              this.territoryId,
-              this.searchString
-            )
+          .searchPlayersByTerritoryUsingGET(
+            this.currentPageNumber,
+            this.pageSizesOnTable[0],
+            this.territoryId,
+            this.sorting,
+            this.searchString)
             .subscribe((res) => {
               this.setMapUserCampaign(res);
               this.setTableData();

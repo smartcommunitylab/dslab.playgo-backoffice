@@ -57,11 +57,6 @@
   border: solid 1px black;
 }
 
-.card-expandable {
-  margin-right: 8%;
-  margin-bottom: 30px;
-}
-
 .button-div-height {
   height: 60px;
 }
@@ -74,3 +69,24 @@
 .margin-form{
     margin: 5px;
 }
+
+.maring-20{
+    margin: 20px;
+}
+
+.table{
+    width: 30%;
+    height: 100%;
+    float: left;
+}
+
+.map{
+    margin-left: 2%;
+    width: 68%;
+    height: 87%;
+    float: right;
+}
+
+.highlight {
+    background: #979797b4; /* green */
+  }

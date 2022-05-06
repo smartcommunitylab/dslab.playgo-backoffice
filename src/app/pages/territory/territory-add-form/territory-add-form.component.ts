@@ -5,10 +5,10 @@ import { MapPoint } from 'src/app/shared/classes/map-point';
 import { TerritoryArea } from 'src/app/shared/classes/territory-area';
 import { TerritoryClass } from 'src/app/shared/classes/territory-class';
 import { means } from 'src/app/shared/constants/means';
-import { TerritoryService } from 'src/app/shared/services/territory.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import { TerritoryData } from 'src/app/shared/classes/territory-data';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { TerritoryControllerService } from 'src/app/core/api/generated/controllers/territoryController.service';
 
 @Component({
   selector: 'app-territory-add-form',
@@ -64,7 +64,9 @@ export class TerritoryAddFormComponent implements OnInit {
   }
 
 
-  constructor(private territoryService: TerritoryService,private formBuilder: FormBuilder,
+  constructor(
+    private territoryService: TerritoryControllerService,
+    private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<TerritoryAddFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _snackBar: MatSnackBar,
@@ -190,7 +192,7 @@ export class TerritoryAddFormComponent implements OnInit {
       this.terrotyCreated.territoryData.area[0].radius = this.validatingForm.get('ray').value;
       if(this.type==='add'){
         try{
-          this.territoryService.post(this.terrotyCreated).subscribe(
+          this.territoryService.saveTerritoryUsingPOST(this.terrotyCreated).subscribe(
             () => {
               this.onNoClick('',this.terrotyCreated);
               this._snackBar.open("Dati salvati", "close");
@@ -210,7 +212,7 @@ export class TerritoryAddFormComponent implements OnInit {
         this.terrotyCreated.name = this.terrytoryUpdate.name;
         this.terrotyCreated.territoryId = this.terrytoryUpdate.territoryId;
         try{
-          this.territoryService.put(this.terrotyCreated).subscribe(
+          this.territoryService.updateTerritoryUsingPUT(this.terrotyCreated).subscribe(
             () =>{
               this.onNoClick('',this.terrotyCreated);
               this._snackBar.open("Dati modificati", "close");

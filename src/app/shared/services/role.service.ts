@@ -1,6 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
+import { ConsoleControllerService } from "src/app/core/api/generated/controllers/consoleController.service";
 import { UserClass } from "../classes/user-class";
 import {
   ADMIN,
@@ -18,11 +19,11 @@ export class RoleService {
   private rolesSubject = new Subject<string[]>();
   private simpleRoles: string[] = [];
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,
+    private roleService: ConsoleControllerService) {}
 
   getInitializedJustOncePerUser(): void {
-    const result = this.http.get<UserClass[]>(ROLE_BASE_PATH);
-    result.subscribe((res) => {
+    this.roleService.getMyRolesUsingGET().subscribe((res) => {
       var listRoles: string[] = [];
       res.map((item) => {
         listRoles.push(item.role);

@@ -9,7 +9,7 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService) {}
   
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (req.url.includes(environment.serverAPIURL)) {
+    if (req.url.includes(environment.serverUrl.apiUrl)) {
       const token = this.authService.getAuthorizationHeaderValue();
       // console.log('token: '+token);
       if (token) {

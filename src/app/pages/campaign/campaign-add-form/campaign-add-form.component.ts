@@ -8,7 +8,6 @@ import {
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MapPoint } from "src/app/shared/classes/map-point";
 import { TerritoryClass } from "src/app/shared/classes/territory-class";
-import { TerritoryService } from "src/app/shared/services/territory.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import {
   CampaignClass,
@@ -21,8 +20,6 @@ import {
   TERRITORY_ID_LOCAL_STORAGE_KEY,
   TYPE_CAMPAIGN,
 } from "src/app/shared/constants/constants";
-import { means } from "src/app/shared/constants/means";
-import { CampaignService } from "src/app/shared/services/campaign-service.service";
 import {
   trigger,
   state,
@@ -39,6 +36,8 @@ import {
 import * as _moment from "moment";
 import { Moment } from "moment";
 import { Logo } from "src/app/shared/classes/logo-class";
+import { TerritoryControllerService } from "src/app/core/api/generated/controllers/territoryController.service";
+import { CampaignControllerService } from "src/app/core/api/generated/controllers/campaignController.service";
 
 const moment = _moment;
 
@@ -115,8 +114,8 @@ export class CampaignAddFormComponent implements OnInit {
   }
 
   constructor(
-    private territoryService: TerritoryService,
-    private campaignService: CampaignService,
+    private territoryService: TerritoryControllerService,
+    private campaignService: CampaignControllerService,
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<CampaignAddFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -132,10 +131,10 @@ export class CampaignAddFormComponent implements OnInit {
     this.campaignCreated.validationData = new ValidationData();
     this.initializaValidatingForm();
     this.territoryService
-      .get()
+      .getTerritoriesUsingGET()
       .subscribe((result) => (this.territoryList = result));
     this.territoryService
-      .getById(localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY))
+      .getTerritoryUsingGET(localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY))
       .subscribe((result) => {this.territorySelected = result;
       this.means = this.territorySelected.territoryData.means});
   }
@@ -252,7 +251,7 @@ export class CampaignAddFormComponent implements OnInit {
         this.campaignCreated.territoryId = this.validatingForm.get("territoryId").value;
         this.campaignCreated.name = this.validatingForm.get("name").value;
         try {
-          this.campaignService.post(this.campaignCreated).subscribe(
+          this.campaignService.addCampaignUsingPOST(this.campaignCreated).subscribe(
             () => {
               this.onNoClick("", this.campaignCreated);
               this._snackBar.open("Dati salvati", "close");
@@ -272,17 +271,24 @@ export class CampaignAddFormComponent implements OnInit {
         this.campaignCreated.territoryId = this.campaignUpdated.territoryId;
         this.campaignCreated.campaignId = this.campaignUpdated.campaignId;
         try {
-          this.campaignService.put(this.campaignCreated).subscribe(
+          this.campaignService.updateCampaignUsingPUT(this.campaignCreated).subscribe(
             () => {
               if(this.uploadImageForModify){
-                this.campaignService.postLogo(this.campaignCreated.campaignId,this.blobImageUpload).subscribe(
+                const formData = new FormData();
+                formData.append('data', this.blobImageUpload);
+                this.campaignService.uploadCampaignLogoUsingPOST(this.campaignCreated.campaignId,formData).subscribe(
                   () => {
                     this.onNoClick("", this.campaignCreated);
                     this._snackBar.open("Dati modificati", "close");
                   },
                   (error) => {
                     // console.log(error);
+                    if(error.error && error.error.ex)
                      this.errorMsgValidation = "Tutti i dati sono stati modificati tranne il logo. Per errore: " + error.error.ex +"\n";
+                     else if(error.error)
+                     this.errorMsgValidation = "Tutti i dati sono stati modificati tranne il logo. Per errore: " + error.error +"\n";
+                     else
+                     this.errorMsgValidation = "Tutti i dati sono stati modificati tranne il logo. Per errore: " + error +"\n";
                   }
                 )
               }else{
@@ -314,7 +320,9 @@ export class CampaignAddFormComponent implements OnInit {
         this.selectedLogo.contentType = eev.target.files[0].type;
         const prefix = this.PREFIX_SRC_IMG_C + this.selectedLogo.contentType + this.BASE64_SRC_IMG_C;
         const base64string = event.target.result.slice(prefix.length);
-        this.selectedLogo.image = base64string;
+        if(typeof base64string === 'string'){
+          this.selectedLogo.image = base64string;
+        }
         this.uploadImageForModify = true;
       };
     }

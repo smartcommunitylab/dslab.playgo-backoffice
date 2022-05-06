@@ -5,9 +5,9 @@ import { delay } from "rxjs/operators";
 import { MatDialog} from '@angular/material/dialog';
 import { AccountDialogComponent } from "./shared/components/account-dialog/account-dialog.component";
 import { TerritoryClass } from "./shared/classes/territory-class";
-import { TerritoryService } from "./shared/services/territory.service";
 import { TERRITORY_ID_LOCAL_STORAGE_KEY } from "./shared/constants/constants";
 import { RoleService } from "./shared/services/role.service";
+import { TerritoryControllerService } from "./core/api/generated/controllers/territoryController.service";
 
 export interface Tile {
   color: string;
@@ -41,7 +41,7 @@ export class AppComponent implements OnInit{
     private translate: TranslateService,
     private _loading: LoadingService,
     private dialogCreate: MatDialog,
-    private territoryService: TerritoryService,
+    private territoryService: TerritoryControllerService,
     private roleService: RoleService
   ) {
     this.translate.setDefaultLang("it");
@@ -49,7 +49,7 @@ export class AppComponent implements OnInit{
 
   ngOnInit() {
     this.listenToLoading();
-    this.territoryService.get().subscribe((res)=>{
+    this.territoryService.getTerritoriesUsingGET().subscribe((res)=>{
       this.territories = res;
       try{
         //if present in local storage take it
