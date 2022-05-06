@@ -11,10 +11,10 @@
  */
 import { Sort } from "./sort";
 import { SwaggerPageable } from "./swaggerPageable";
-import { TrackedInstance } from "./trackedInstance";
+import { TrackedInstanceConsole } from "./trackedInstanceConsole";
 
-export interface PageTrackedInstance {
-  content?: Array<TrackedInstance>;
+export interface PageTrackedInstanceConsole {
+  content?: Array<TrackedInstanceConsole>;
   empty?: boolean;
   first?: boolean;
   last?: boolean;

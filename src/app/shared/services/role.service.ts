@@ -22,8 +22,8 @@ export class RoleService {
   constructor(private http: HttpClient,
     private roleService: ConsoleControllerService) {}
 
-  getInitializedJustOncePerUser(): void {
-    this.roleService.getMyRolesUsingGET().subscribe((res) => {
+  async getInitializedJustOncePerUser(): Promise<void> {
+    await this.roleService.getMyRolesUsingGET().subscribe((res) => {
       var listRoles: string[] = [];
       res.map((item) => {
         listRoles.push(item.role);
@@ -31,6 +31,7 @@ export class RoleService {
       //listRoles = ["campaign"]; // used for testing different roles 
       this.rolesSubject.next(listRoles);
       this.simpleRoles = listRoles;
+      console.log("QUante volte qua");
     });
   }
 

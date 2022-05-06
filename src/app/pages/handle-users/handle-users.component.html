@@ -18,7 +18,7 @@
                                     <mat-option *ngFor="let val of ['notSelected'].concat(displayedColumns)" [value]="val">{{val | translate}}</mat-option>
                                 </mat-select>
                             </form>
-                            <button style="margin-left: 5px" mat-flat-button color="primary" (click)="modifyOrdering()" matTooltip=" {{ 'orderingButton' | translate}} {{ (ordering ==='un'? 'noOrdering' : ordering ==='asc'? 'ascending' : 'descending') | translate }}">
+                            <button *ngIf="fieldOrdering!== 'notSelected'" style="margin-left: 5px" mat-flat-button color="primary" (click)="modifyOrdering()" matTooltip=" {{ 'orderingButton' | translate}} {{ (ordering ==='un'? 'noOrdering' : ordering ==='asc'? 'ascending' : 'descending') | translate }}">
                                 <mat-icon>
                                     <span *ngIf="ordering === 'asc'" class="material-symbols-outlined">
                                         arrow_upward

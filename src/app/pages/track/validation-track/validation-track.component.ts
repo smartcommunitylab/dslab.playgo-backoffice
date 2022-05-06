@@ -1,13 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Paginator } from 'src/app/shared/classes/paginator-class';
 import { Track } from 'src/app/shared/classes/track-class';
 import { TERRITORY_ID_LOCAL_STORAGE_KEY } from 'src/app/shared/constants/constants';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { ConsoleControllerService } from 'src/app/core/api/generated/controllers/consoleController.service';
-import { PageTrackedInstanceClass, TrackedInstanceClass } from 'src/app/shared/classes/PageTrackedInstance-class';
+import { PageTrackedInstanceClass, TrackedInstanceClass, TrackedInstanceConsoleClass } from 'src/app/shared/classes/PageTrackedInstance-class';
 import { PlayerControllerService } from 'src/app/core/api/generated/controllers/playerController.service';
 
 @Component({
@@ -30,13 +29,13 @@ export class ValidationTrackComponent implements OnInit {
   size: number[] = [15];
   pageNumber: number = 0;
   paginatorData: PageTrackedInstanceClass = new PageTrackedInstanceClass();
-  dataSource: MatTableDataSource<TrackedInstanceClass>;
+  dataSource: MatTableDataSource<TrackedInstanceConsoleClass>;
   displayedColumns: string[] = ["trackId", "playerId"];
-  selectedTrack: TrackedInstanceClass;
+  selectedTrack: TrackedInstanceConsoleClass;
   selectedRowIndex: string;
   currentPageNumber:number =0;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  listTrack: TrackedInstanceClass[];
+  listTrack: TrackedInstanceConsoleClass[];
   stringall: string;
 
   validatingForm: FormGroup;
@@ -57,13 +56,6 @@ export class ValidationTrackComponent implements OnInit {
       console.log(res);
       this.paginatorData = res;
       this.listTrack = res.content;
-      for(let track of this.listTrack){
-        track.userValues
-        this.playerService.getPlayerUsingGET(track.userId).subscribe((res)=>{
-          track.userValues = res;
-        })
-
-      }
       this.setTableData();
     });
   }
@@ -114,10 +106,23 @@ export class ValidationTrackComponent implements OnInit {
     }
   }
 
-  showTrack(row : TrackedInstanceClass){
+  showTrack(row : TrackedInstanceConsoleClass){
     this.selectedTrack = row;
-    this.selectedRowIndex = row.id;
+    this.selectedRowIndex = row.trackedInstance.id;
     this.stringall = JSON.stringify(this.selectedTrack).replace(",","\n");
+  }
+
+  resetSearchFields(){
+    this.validatingForm = this.formBuilder.group({
+      sort: new FormControl(""),
+      trackId: new FormControl(""),
+      playerId: new FormControl(""),
+      modelType: new FormControl(""),
+      dateFrom: new FormControl(""),
+      dateTo: new FormControl(""),
+      campaignId: new FormControl(""),
+      status: new FormControl(""),
+    });
   }
 
   selectedPageSize(event: any) {

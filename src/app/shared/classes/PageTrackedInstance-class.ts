@@ -1,13 +1,15 @@
-import { PageTrackedInstance } from "src/app/core/api/generated/model/pageTrackedInstance";
+
 import { Sort } from "src/app/core/api/generated/model/sort";
 import { SwaggerPageable } from "src/app/core/api/generated/model/swaggerPageable";
 import { TrackedInstance } from "src/app/core/api/generated/model/trackedInstance";
 import { Geolocation } from "src/app/core/api/generated/model/geolocation";
 import { ValidationResult } from "src/app/core/api/generated/model/validationResult";
 import { PlayerClass } from "./PagePlayerInfoConsole-class";
+import { PageTrackedInstanceConsole } from "src/app/core/api/generated/model/pageTrackedInstanceConsole";
+import { TrackedInstanceConsole } from "src/app/core/api/generated/model/trackedInstanceConsole";
 
-export class  PageTrackedInstanceClass implements PageTrackedInstance {
-    content?: Array<TrackedInstanceClass>;
+export class  PageTrackedInstanceClass implements PageTrackedInstanceConsole {
+    content?: Array<TrackedInstanceConsoleClass>;
     empty?: boolean;
     first?: boolean;
     last?: boolean;
@@ -19,6 +21,11 @@ export class  PageTrackedInstanceClass implements PageTrackedInstance {
     totalElements?: number;
     totalPages?: number;
   }
+
+export class TrackedInstanceConsoleClass implements TrackedInstanceConsole{
+    playerInfo?: PlayerClass;
+    trackedInstance?: TrackedInstance;
+}
 
 export class TrackedInstanceClass implements TrackedInstance{
     approved?: boolean;
@@ -43,7 +50,6 @@ export class TrackedInstanceClass implements TrackedInstance{
     userId?: string;
     validating?: boolean;
     validationResult?: ValidationResult;
-    userValues?: PlayerClass;
 }
 
 export class GeolocationClass implements Geolocation{

@@ -16,7 +16,7 @@ import { PagePlayer } from "src/app/shared/classes/PagePlayerInfoConsole-class";
   styleUrls: ["./handle-users.component.scss"],
 })
 export class HandleUsersComponent implements OnInit {
-  pageSizesOnTable = [30];
+  pageSizesOnTable = [15];
   territoryId: string;
   searchString: string ="";
   displayedColumns: string[] = ["mail", "nickname", "playerId"];
@@ -26,7 +26,7 @@ export class HandleUsersComponent implements OnInit {
   currentPageNumber: number;
   sorting: string = "";
   ordering:string = "desc";
-  fieldOrdering:string = "";
+  fieldOrdering:string = "notSelected";
   listAllUserCampaign: PlayerCampaignClass[];
   listUserCampaign: PlayerCampaignClass[];
   paginatorData: PagePlayer;

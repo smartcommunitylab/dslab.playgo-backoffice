@@ -16,7 +16,7 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 import { PagePlayerInfoConsole } from "../model/pagePlayerInfoConsole";
-import { PageTrackedInstance } from "../model/pageTrackedInstance";
+import { PageTrackedInstanceConsole } from "../model/pageTrackedInstanceConsole";
 import { PlayerRole } from "../model/playerRole";
 import { TrackedInstancePoly } from "../model/trackedInstancePoly";
 
@@ -243,8 +243,8 @@ export class ConsoleControllerService {
     dateTo?: Date,
     campaignId?: string,
     status?: string
-  ): Observable<PageTrackedInstance> {
-    return this.http.request<PageTrackedInstance>(
+  ): Observable<PageTrackedInstanceConsole> {
+    return this.http.request<PageTrackedInstanceConsole>(
       "get",
       environment.serverUrl.api + `/playandgo/api/console/track/search`,
       {
