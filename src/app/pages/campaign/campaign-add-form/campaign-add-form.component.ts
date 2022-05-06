@@ -215,9 +215,9 @@ export class CampaignAddFormComponent implements OnInit {
     if (this.validatingForm.valid) {
       this.campaignCreated.active = this.validatingForm.get("active").value;
       const dataFrom: Moment =this.validatingForm.get("dateFrom").value;
-      this.campaignCreated.dateFrom = this.formatDate(dataFrom);
+      this.campaignCreated.dateFrom = this.formatDate(dataFrom); // dataFrom.toDate();//
       const dataTo: Moment = this.validatingForm.get("dateTo").value;
-      this.campaignCreated.dateTo = this.formatDate(dataTo);
+      this.campaignCreated.dateTo = this.formatDate(dataTo); //dataTo.toDate();//
       this.campaignCreated.logo = new Logo();
       this.campaignCreated.logo.contentType = this.selectedLogo.contentType;
       this.campaignCreated.logo.image = this.selectedLogo.image;

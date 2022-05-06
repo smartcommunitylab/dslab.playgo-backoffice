@@ -19,12 +19,14 @@
         <mat-card-content id="content" [@bodyExpansion]="state" class="expandable-content">
             <form [formGroup]="validatingForm">
                 <mat-grid-list cols="3" rowHeight="14:2" style="margin: 20px;">
+ 
                     <mat-grid-tile>
                         <mat-form-field appearance="fill" class="full-width margin-form">
-                            <mat-label>{{'sort' | translate}}</mat-label>
-                            <input matInput id="sort" formControlName="sort">
+                            <mat-label>{{'campaignId' | translate}}</mat-label>
+                            <input matInput id="campaignId" formControlName="campaignId">
                         </mat-form-field>
                     </mat-grid-tile>
+
                     <mat-grid-tile>
                         <mat-form-field appearance="fill" class="full-width margin-form">
                             <mat-label>{{'trackId' | translate}}</mat-label>
@@ -39,37 +41,49 @@
                     </mat-grid-tile>
                     <mat-grid-tile>
                         <mat-form-field appearance="fill" class="full-width margin-form">
+                            <mat-label>{{'sort' | translate}}</mat-label>
+                            <mat-select id="sort" formControlName="sort">
+                                <mat-option *ngFor="let val of listSorting" [value]="val">{{val | translate}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="full-width margin-form">
                             <mat-label>{{'modelType' | translate}}</mat-label>
-                            <input matInput id="modelType" formControlName="modelType">
-                        </mat-form-field>
-                    </mat-grid-tile>
-                    <mat-grid-tile>
-                        <mat-form-field appearance="fill" class="full-width margin-form">
-                            <mat-label>{{'dateFrom' | translate}}</mat-label>
-                            <input matInput id="dateFrom" formControlName="dateFrom">
-                        </mat-form-field>
-                    </mat-grid-tile>
-                    <mat-grid-tile>
-                        <mat-form-field appearance="fill" class="full-width margin-form">
-                            <mat-label>{{'dateTo' | translate}}</mat-label>
-                            <input matInput id="dateTo" formControlName="dateTo">
-                        </mat-form-field>
-                    </mat-grid-tile>
-                    <mat-grid-tile>
-                        <mat-form-field appearance="fill" class="full-width margin-form">
-                            <mat-label>{{'campaignId' | translate}}</mat-label>
-                            <input matInput id="campaignId" formControlName="campaignId">
+                            <mat-select id="modelType" formControlName="modelType">
+                                <mat-option *ngFor="let val of listModelType" [value]="val">{{val | translate}}</mat-option>
+                            </mat-select>
                         </mat-form-field>
                     </mat-grid-tile>
                     <mat-grid-tile>
                         <mat-form-field appearance="fill" class="full-width margin-form">
                             <mat-label>{{'status' | translate}}</mat-label>
-                            <input matInput id="status" formControlName="status">
+                            <mat-select id="status" formControlName="status">
+                                <mat-option *ngFor="let val of listStates" [value]="val">{{val | translate}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="full-width margin-form">
+                            <mat-label>{{'dateFrom' | translate}}</mat-label>
+                            <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1">
+                            <mat-hint>{{'dateFormat' |translate}}</mat-hint>
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="full-width margin-form">
+                            <mat-label>{{'dateTo' | translate}}</mat-label>
+                            <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker">
+                            <mat-hint>{{'dateFormat' |translate}}</mat-hint>
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
                         </mat-form-field>
                     </mat-grid-tile>
                     <mat-grid-tile></mat-grid-tile>
                     <mat-grid-tile>
-                        <button class="full-width" mat-flat-button type="submit" (click)="searchSubmit()"
+                        <button class="full-width margin-form" mat-flat-button type="submit" (click)="searchSubmit()"
                             color="primary">
                             <mat-icon>
                                 <span class="material-symbols-outlined">
@@ -81,7 +95,7 @@
                     </mat-grid-tile>
                     <mat-grid-tile>
 
-                        <button class="full-width" mat-flat-button type="button" mat-flat-button color="primary" (click)="resetSearchFields()">
+                        <button class="full-width margin-form" mat-flat-button type="button" mat-flat-button color="primary" (click)="resetSearchFields()">
                             <mat-icon>
                                 <span class="material-symbols-outlined">
                                     delete_forever

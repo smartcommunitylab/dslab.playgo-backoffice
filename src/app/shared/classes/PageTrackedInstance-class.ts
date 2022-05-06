@@ -24,7 +24,7 @@ export class  PageTrackedInstanceClass implements PageTrackedInstanceConsole {
 
 export class TrackedInstanceConsoleClass implements TrackedInstanceConsole{
     playerInfo?: PlayerClass;
-    trackedInstance?: TrackedInstance;
+    trackedInstance?: TrackedInstanceClass;
 }
 
 export class TrackedInstanceClass implements TrackedInstance{

@@ -1,13 +1,20 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Track } from 'src/app/shared/classes/track-class';
-import { TERRITORY_ID_LOCAL_STORAGE_KEY } from 'src/app/shared/constants/constants';
+import { MY_DATE_FORMATS, TERRITORY_ID_LOCAL_STORAGE_KEY } from 'src/app/shared/constants/constants';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { ConsoleControllerService } from 'src/app/core/api/generated/controllers/consoleController.service';
-import { PageTrackedInstanceClass, TrackedInstanceClass, TrackedInstanceConsoleClass } from 'src/app/shared/classes/PageTrackedInstance-class';
+import { PageTrackedInstanceClass, TrackedInstanceConsoleClass } from 'src/app/shared/classes/PageTrackedInstance-class';
 import { PlayerControllerService } from 'src/app/core/api/generated/controllers/playerController.service';
+import { Moment } from 'moment';
+import { MomentDateAdapter } from "@angular/material-moment-adapter";
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+} from "@angular/material/core";
 
 @Component({
   selector: 'app-validation-track',
@@ -20,14 +27,22 @@ import { PlayerControllerService } from 'src/app/core/api/generated/controllers/
       transition('expanded <=> collapsed, void => collapsed',
         animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ])
-  ]
+  ],
+  providers: [
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE],
+    },
+
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+  ],
 })
 export class ValidationTrackComponent implements OnInit {
 
   territoryId:string;
   state: string="collapsed";
   size: number[] = [15];
-  pageNumber: number = 0;
   paginatorData: PageTrackedInstanceClass = new PageTrackedInstanceClass();
   dataSource: MatTableDataSource<TrackedInstanceConsoleClass>;
   displayedColumns: string[] = ["trackId", "playerId"];
@@ -37,6 +52,9 @@ export class ValidationTrackComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   listTrack: TrackedInstanceConsoleClass[];
   stringall: string;
+  listSorting = ['ascending','descending'];
+  listModelType = ['notSureYEt','notSureYEtt'];
+  listStates =['valid', 'invalid'];
 
   validatingForm: FormGroup;
   constructor(
@@ -49,14 +67,14 @@ export class ValidationTrackComponent implements OnInit {
     this.territoryId = localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY);
     this.initializaValidatingForm();
     this.trackingService.searchTrackedInstanceUsingGET(
-      this.pageNumber,
+      this.currentPageNumber,
       this.size[0],
       this.territoryId
     ).subscribe((res)=>{
-      console.log(res);
       this.paginatorData = res;
       this.listTrack = res.content;
       this.setTableData();
+      this.dataSource.paginator = this.paginator;
     });
   }
 
@@ -75,25 +93,32 @@ export class ValidationTrackComponent implements OnInit {
 
   setTableData() {
     this.dataSource = new MatTableDataSource<any>(this.listTrack);
-    this.dataSource.paginator = this.paginator;
   }
 
   searchSubmit(){
     if(this.validatingForm.valid){
+      const dateFromMom: Moment =this.validatingForm.get("dateFrom").value;
+      const dateFrom = dateFromMom ? dateFromMom.toDate() : undefined;
+      const dateToMom: Moment = this.validatingForm.get("dateTo").value;
+      const dateTo = dateToMom ? dateFromMom.toDate() : undefined;
+      console.log(dateFrom,dateTo);
       this.trackingService.searchTrackedInstanceUsingGET(
-        this.pageNumber,
+        this.currentPageNumber,
         this.size[0],
         this.territoryId,
         this.validatingForm.get("sort").value,
         this.validatingForm.get("trackId").value,
         this.validatingForm.get("playerId").value,
         this.validatingForm.get("modelType").value,
-        this.validatingForm.get("dateFrom").value,
-        this.validatingForm.get("dateTo").value,
+        dateFrom,
+        dateTo,
         this.validatingForm.get("campaignId").value,
         this.validatingForm.get("status").value,
-      ).subscribe(() =>{
-
+      ).subscribe((res) =>{
+        this.paginatorData = res;
+        this.listTrack = res.content;
+        this.setTableData();
+        this.dataSource.paginator = this.paginator;
       });
     }
   }
@@ -131,28 +156,44 @@ export class ValidationTrackComponent implements OnInit {
       this.currentPageNumber = pageIndex;
       try {
         const list: Track[] = [];
-        //   this.mapUserCampaignRecieved.get(pageIndex);
-        // if (!!list && list.length > 0) {
-        //   this.listUserCampaign = list;
-        //   this.setTableData();
-        // } else {
-        //   this.playerService
-        //     .getPlayers(
-        //       pageIndex,
-        //       this.pageSizesOnTable[0],
-        //       this.sorting,
-        //       this.territoryId,
-        //       this.searchString
-        //     )
-        //     .subscribe((res) => {
-        //       this.setMapUserCampaign(res);
-        //       this.setTableData();
-        //     });
-        // }
+        const dateFromMom: Moment =this.validatingForm.get("dateFrom").value;
+        const dateFrom : Date = dateFromMom ? dateFromMom.toDate() : undefined;
+        const dateToMom: Moment = this.validatingForm.get("dateTo").value;
+        const dateTo : Date = dateToMom ? dateFromMom.toDate() : undefined;
+        this.trackingService.searchTrackedInstanceUsingGET(
+          this.currentPageNumber,
+          this.size[0],
+          this.territoryId,
+          this.validatingForm.get("sort").value,
+          this.validatingForm.get("trackId").value,
+          this.validatingForm.get("playerId").value,
+          this.validatingForm.get("modelType").value,
+          dateFrom,
+          dateTo,
+          this.validatingForm.get("campaignId").value,
+          this.validatingForm.get("status").value,
+        ).subscribe((res)=>{
+          //this.paginatorData = res;
+          this.listTrack = res.content;
+          this.setTableData();
+        });
       } catch (error) {
         console.error(error);
       }
     }
+  }
+
+  formatDate(datee: Moment): string {
+    var day = (+datee.toObject().date.toString()).toString();
+    if(day.length===1){
+      day = "0"+day;
+    }
+    var month = (+datee.toObject().months.toString() + 1).toString();
+    if(month.length===1){
+      month = "0"+month;
+    }
+    const year = datee.toObject().years.toString();
+    return year + "-" + month + "-" + day;
   }
 
 }

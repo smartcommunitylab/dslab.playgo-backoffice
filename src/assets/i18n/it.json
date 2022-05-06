@@ -46,7 +46,7 @@
 "bus":"Bus",
 "boat":"Barca",
 "bicycle":"Bici",
-"dateFormat":"GG/MM/AAAA",
+"dateFormat":"GG-MM-AAAA",
 "startDayOfWeek":"Giorno inizio settimana di gioco",
 "gameId":"ID del gioco",
 "true":"Vero",
