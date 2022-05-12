@@ -90,3 +90,75 @@
 .highlight {
     background: #979797b4; /* green */
   }
+
+.map-height{
+  height: 400px;
+}
+
+.filter-class{
+  width: 40%;
+  height: 100%;
+  float: left;
+}
+
+
+.map-class{
+  margin-left: 2%;
+  width: 58%;
+  height: 100%;
+  float: right;
+}
+
+.bold{
+  font-weight: bold;
+}
+
+
+.main-data{
+  width: 60%;
+  height: 100%;
+  float: left;
+}
+
+.validation{
+  margin-left: 2%;
+  width: 38%;
+  height: 100%;
+  float: right;
+}
+
+.header-detatils{
+  width: 96%;
+  height: 200px;
+  margin: 2%;
+}
+
+.devaice-details{
+  width: 96%;
+  height: 100px;
+  margin: 2%;
+}
+
+.actions-details{
+  width: 96%;
+  height: 100px;
+  margin: 2%;
+}
+
+.table-details{
+  width: 96%;
+  margin: 2%;
+}
+
+.margin-5{
+  margin: 5px;
+
+}
+
+.wrapper {
+  display: flex;
+  text-align: left;
+}
+
+.info-title {
+}

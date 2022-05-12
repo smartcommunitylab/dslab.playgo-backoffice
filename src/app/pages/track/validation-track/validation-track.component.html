@@ -1,142 +1,338 @@
 <div class="full-height maring-20">
+    <div class="full-width map-height">
+        <div class="filter-class">
+            <mat-card class="card-normal" id="search-card">
+                <mat-card-title>
+                    {{'searchFilter' | translate}}
+                </mat-card-title>
+                <mat-card-content id="content" class="expandable-content">
+                    <form [formGroup]="validatingForm">
+                        <mat-grid-list cols="2" rowHeight="9:2" style="margin: 5px;">
+
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="full-width margin-form">
+                                    <mat-label>{{'dateFrom' | translate}}</mat-label>
+                                    <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1">
+                                    <mat-hint>{{'dateFormat' |translate}}</mat-hint>
+                                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker1></mat-datepicker>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="full-width margin-form">
+                                    <mat-label>{{'dateTo' | translate}}</mat-label>
+                                    <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker">
+                                    <mat-hint>{{'dateFormat' |translate}}</mat-hint>
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+                            </mat-grid-tile>
+
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="full-width margin-form">
+                                    <mat-label>{{'means' | translate}}</mat-label>
+                                    <mat-select id="modeType" formControlName="modeType">
+                                        <mat-option *ngFor="let val of listModelType" [value]="val">{{val | translate}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="full-width margin-form">
+                                    <mat-label>{{'status' | translate}}</mat-label>
+                                    <mat-select id="status" formControlName="status">
+                                        <mat-option *ngFor="let val of listStates" [value]="val">{{val | translate}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </mat-grid-tile>
+
+
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="full-width margin-form">
+                                    <mat-label>{{'playerId' | translate}}</mat-label>
+                                    <input matInput id="playerId" formControlName="playerId">
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="full-width margin-form">
+                                    <mat-label>{{'trackId' | translate}}</mat-label>
+                                    <input matInput id="trackId" formControlName="trackId">
+                                </mat-form-field>
+                            </mat-grid-tile>
+
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="full-width margin-form">
+                                    <mat-label>{{'campaignId' | translate}}</mat-label>
+                                    <input matInput id="campaignId" formControlName="campaignId">
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile></mat-grid-tile>
+                            <mat-grid-tile>
+                                <button class="full-width margin-form" mat-flat-button type="submit"
+                                    (click)="searchSubmit()" color="primary">
+                                    <mat-icon>
+                                        <span class="material-symbols-outlined">
+                                            search
+                                        </span>
+                                    </mat-icon>
+                                    {{"search" | translate}}
+                                </button>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <button class="full-width margin-form" mat-flat-button type="button" mat-flat-button
+                                    color="primary" (click)="resetSearchFields()">
+                                    <mat-icon>
+                                        <span class="material-symbols-outlined">
+                                            delete_forever
+                                        </span>
+                                    </mat-icon>
+                                    {{"resetSearchFields" | translate}}
+                                </button>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </form>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="map-class" style="border: solid 1px black;" id="map" leaflet [leafletOptions]="mapOptions"
+            (leafletMapReady)="initializeMap($event)">
+            ></div>
+    </div>
     <!-- casa -->
-    <mat-card class="card-normal" id="search-card">
-        <mat-card-title class="cursor-pointer" (click)="toggle()">
-            {{'searchFilter' | translate}}
-            <mat-card-actions class="right-button top-button">
-                <mat-icon *ngIf="state==='collapsed'">
-                    <span class="material-symbols-outlined">
-                        expand_more
-                    </span>
-                </mat-icon>
-                <mat-icon *ngIf="state==='expanded'">
-                    <span class="material-symbols-outlined">
-                        expand_less
-                    </span>
-                </mat-icon>
-            </mat-card-actions>
-        </mat-card-title>
-        <mat-card-content id="content" [@bodyExpansion]="state" class="expandable-content">
-            <form [formGroup]="validatingForm">
-                <mat-grid-list cols="3" rowHeight="14:2" style="margin: 20px;">
- 
-                    <mat-grid-tile>
-                        <mat-form-field appearance="fill" class="full-width margin-form">
-                            <mat-label>{{'campaignId' | translate}}</mat-label>
-                            <input matInput id="campaignId" formControlName="campaignId">
-                        </mat-form-field>
-                    </mat-grid-tile>
-
-                    <mat-grid-tile>
-                        <mat-form-field appearance="fill" class="full-width margin-form">
-                            <mat-label>{{'trackId' | translate}}</mat-label>
-                            <input matInput id="trackId" formControlName="trackId">
-                        </mat-form-field>
-                    </mat-grid-tile>
-                    <mat-grid-tile>
-                        <mat-form-field appearance="fill" class="full-width margin-form">
-                            <mat-label>{{'playerId' | translate}}</mat-label>
-                            <input matInput id="playerId" formControlName="playerId">
-                        </mat-form-field>
-                    </mat-grid-tile>
-                    <mat-grid-tile>
-                        <mat-form-field appearance="fill" class="full-width margin-form">
-                            <mat-label>{{'sort' | translate}}</mat-label>
-                            <mat-select id="sort" formControlName="sort">
-                                <mat-option *ngFor="let val of listSorting" [value]="val">{{val | translate}}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </mat-grid-tile>
-                    <mat-grid-tile>
-                        <mat-form-field appearance="fill" class="full-width margin-form">
-                            <mat-label>{{'modelType' | translate}}</mat-label>
-                            <mat-select id="modelType" formControlName="modelType">
-                                <mat-option *ngFor="let val of listModelType" [value]="val">{{val | translate}}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </mat-grid-tile>
-                    <mat-grid-tile>
-                        <mat-form-field appearance="fill" class="full-width margin-form">
-                            <mat-label>{{'status' | translate}}</mat-label>
-                            <mat-select id="status" formControlName="status">
-                                <mat-option *ngFor="let val of listStates" [value]="val">{{val | translate}}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </mat-grid-tile>
-                    <mat-grid-tile>
-                        <mat-form-field appearance="fill" class="full-width margin-form">
-                            <mat-label>{{'dateFrom' | translate}}</mat-label>
-                            <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1">
-                            <mat-hint>{{'dateFormat' |translate}}</mat-hint>
-                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                            <mat-datepicker #picker1></mat-datepicker>
-                        </mat-form-field>
-                    </mat-grid-tile>
-                    <mat-grid-tile>
-                        <mat-form-field appearance="fill" class="full-width margin-form">
-                            <mat-label>{{'dateTo' | translate}}</mat-label>
-                            <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker">
-                            <mat-hint>{{'dateFormat' |translate}}</mat-hint>
-                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                            <mat-datepicker #picker></mat-datepicker>
-                        </mat-form-field>
-                    </mat-grid-tile>
-                    <mat-grid-tile></mat-grid-tile>
-                    <mat-grid-tile>
-                        <button class="full-width margin-form" mat-flat-button type="submit" (click)="searchSubmit()"
-                            color="primary">
-                            <mat-icon>
-                                <span class="material-symbols-outlined">
-                                    search
-                                </span>
-                            </mat-icon>
-                            {{"search" | translate}}
-                        </button>
-                    </mat-grid-tile>
-                    <mat-grid-tile>
-
-                        <button class="full-width margin-form" mat-flat-button type="button" mat-flat-button color="primary" (click)="resetSearchFields()">
-                            <mat-icon>
-                                <span class="material-symbols-outlined">
-                                    delete_forever
-                                </span>
-                            </mat-icon>
-                            {{"resetSearchFields" | translate}} 
-                        </button>
-                    </mat-grid-tile>
-                </mat-grid-list>
-            </form>
-        </mat-card-content>
-    </mat-card>
     <div class="full-dimension" style="margin-top: 20px;">
-        <div class="table">
+        <div class="filter-class">
             <table mat-table [dataSource]="dataSource" class="full-width">
 
-                <ng-container matColumnDef="playerId">
-                    <th mat-header-cell *matHeaderCellDef> {{ 'nickname'| translate}} </th>
-                    <td mat-cell *matCellDef="let element"> {{element.playerInfo ? element.playerInfo.nickname :
-                        'null'}} </td>
+                <ng-container matColumnDef="tracks">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td class="margin-20" mat-cell *matCellDef="let element">
+                        <mat-card class="cursor-pointer card-normal full-dimension " (click)="showTrack(element)"
+                            [ngClass]="{'highlight': selectedRowIndex === element.trackedInstance.id}">
+                            <mat-grid-list cols="2" rowHeight="9:2" style="margin: 5px;">
+                                <mat-grid-tile>
+                                    <div class="wrapper">
+                                        <span class="info-title">
+                                           <span class="bold"> {{'trackId' | translate}}: </span>  <br/>
+                                                <span>
+                                                    {{element.trackedInstance.id}}
+                                                </span>
+                                        </span>
+                                      </div>
+                                </mat-grid-tile>
+                                <mat-grid-tile>
+                                    <div class="wrapper">
+                                        <span class="info-title">
+                                           <span class="bold"> {{'date' | translate}}: </span>  <br/>
+                                                <span>
+                                                    {{getDateFromTimeStamp(element.trackedInstance.startTime)}}
+                                                </span>
+                                        </span>
+                                      </div>                              
+                                </mat-grid-tile>
+                                <mat-grid-tile>
+                                    <div class="wrapper">
+                                        <span class="info-title">
+                                           <span class="bold"> {{'validation' | translate}}: </span>  <br/>
+                                                <span>
+                                                    {{element.trackedInstance.approved}}
+                                                </span>
+                                        </span>
+                                      </div>               
+                                </mat-grid-tile>
+                                <mat-grid-tile>
+                                    <div class="wrapper">
+                                        <span class="info-title">
+                                           <span class="bold"> {{'mean' | translate}}: </span>  <br/>
+                                                <span>
+                                                    mezzo?
+                                                </span>
+                                        </span>
+                                      </div>  
+                                </mat-grid-tile>
+                                <mat-grid-tile>
+                                    <div class="wrapper">
+                                        <span class="info-title">
+                                           <span class="bold">{{'playerId' | translate}}:</span>  <br/>
+                                                <span>
+                                                    {{element.playerInfo.playerId}}
+                                                </span>
+                                        </span>
+                                      </div>
+                                </mat-grid-tile>
+                                <mat-grid-tile>
+                                    <div class="wrapper">
+                                        <span class="info-title">
+                                           <span class="bold">{{'nickname' | translate}}:</span>  <br/>
+                                                <span>
+                                                    {{element.playerInfo.nickname}}
+                                                </span>
+                                        </span>
+                                      </div>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                        </mat-card>
+                    </td>
                 </ng-container>
-
-                <ng-container matColumnDef="trackId">
-                    <th mat-header-cell *matHeaderCellDef> {{ 'trackId'| translate}} </th>
-                    <td mat-cell *matCellDef="let element"> {{element.trackedInstance.id}} </td>
-                </ng-container>
-
-
-
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr class="cursor-pointer" mat-row (click)="showTrack(row)"
-                    [ngClass]="{'highlight': selectedRowIndex === row.trackedInstance.id}"
-                    *matRowDef="let row; columns: displayedColumns;"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
             <mat-paginator [pageSizeOptions]="size" showFirstLastButtons [length]="paginatorData.totalElements"
                 (page)="selectedPageSize($event)">
             </mat-paginator>
         </div>
-        <div class="map" style="border: solid 1px black;">
-            {{stringall ? stringall : ''}}
-        </div>
+        <mat-card class="map-class card-normal" *ngIf="!!selectedTrack">
+            <div class="header-detatils">
+                <mat-card class="card-normal main-data">
+                    <mat-card-content>
+                        <mat-grid-list cols="2" rowHeight="9:2" style="margin: 5px;">
+                            <mat-grid-tile>
+                                <div class="wrapper">
+                                    <span class="info-title">
+                                       <span class="bold"> {{'trackId' | translate}}: </span>  <br/>
+                                            <span>
+                                                {{selectedTrack.trackedInstance.id}}
+                                            </span>
+                                    </span>
+                                  </div>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <div class="wrapper">
+                                    <span class="info-title">
+                                       <span class="bold"> {{'date' | translate}}: </span>  <br/>
+                                            <span>
+                                                {{getDateFromTimeStamp(selectedTrack.trackedInstance.startTime)}}
+                                            </span>
+                                    </span>
+                                  </div>                              
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <div class="wrapper">
+                                    <span class="info-title">
+                                       <span class="bold"> {{'validation' | translate}}: </span>  <br/>
+                                            <span>
+                                                {{selectedTrack.trackedInstance.approved}}
+                                            </span>
+                                    </span>
+                                  </div>               
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <div class="wrapper">
+                                    <span class="info-title">
+                                       <span class="bold"> {{'mean' | translate}}: </span>  <br/>
+                                            <span>
+                                                mezzo?
+                                            </span>
+                                    </span>
+                                  </div>  
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <div class="wrapper">
+                                    <span class="info-title">
+                                       <span class="bold">{{'playerId' | translate}}:</span>  <br/>
+                                            <span>
+                                                {{selectedTrack.playerInfo.playerId}}
+                                            </span>
+                                    </span>
+                                  </div>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <div class="wrapper">
+                                    <span class="info-title">
+                                       <span class="bold">{{'nickname' | translate}}:</span>  <br/>
+                                            <span>
+                                                {{selectedTrack.playerInfo.nickname}}
+                                            </span>
+                                    </span>
+                                  </div>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </mat-card-content>
+                </mat-card>
+
+                <mat-card class="validation card-normal">
+                    <mat-card-title class="cursor-pointer" (click)="toggle()">
+                        {{'validation' | translate}}
+                        <mat-card-actions class="right-button top-button">
+                            <mat-icon *ngIf="stateValidationTrack==='collapsed'">
+                                <span class="material-symbols-outlined">
+                                    expand_more
+                                </span>
+                            </mat-icon>
+                            <mat-icon *ngIf="stateValidationTrack==='expanded'">
+                                <span class="material-symbols-outlined">
+                                    expand_less
+                                </span>
+                            </mat-icon>
+                        </mat-card-actions>
+                    </mat-card-title>
+                    <mat-card-content [@bodyExpansion]="stateValidationTrack" class="expandable-content">
+                        {{validationJson}}
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            <div class="devaice-details">
+                <mat-card class="full-dimension card-normal">
+                    <mat-card-title>{{'device' | translate}}</mat-card-title>
+                    <mat-card-content *ngIf="!!selectedTrack.trackedInstance.deviceInfo">
+                        {{selectedTrack.trackedInstance.deviceInfo}}
+                    </mat-card-content>
+
+                </mat-card>
+            </div>
+            <div class="actions-details">
+                <mat-card class="full-dimension card-normal">
+                    <mat-card-title>{{'actions' | translate}}</mat-card-title>
+                    <mat-card-content>
+                        <button mat-flat-button color="primary"> azione </button>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            <mat-card class="table-details card-normal">
+                <mat-card-content>
+                    <table mat-table [dataSource]="dataSourceInfoTrack" class="full-dimension">
+
+                        <ng-container matColumnDef="pos">
+                            <th mat-header-cell *matHeaderCellDef>
+                                {{ 'pos'| translate}} </th>
+                            <td mat-cell *matCellDef="let element">
+                                {{element.latitude}} - {{element.longitude}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="ts">
+                            <th mat-header-cell *matHeaderCellDef>
+                                {{ 'ts'| translate}} </th>
+                            <td mat-cell *matCellDef="let element">
+                                {{element.recordedAt}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="accuracy">
+                            <th mat-header-cell *matHeaderCellDef>
+                                {{ 'accuracy'| translate}} </th>
+                            <td mat-cell *matCellDef="let element">
+                                {{element.accuracy}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="activity">
+                            <th mat-header-cell *matHeaderCellDef>
+                                {{ 'activity'| translate}} </th>
+                            <td mat-cell *matCellDef="let element">
+                                {{element.activityConfidence}}
+                            </td>
+                        </ng-container>
+
+
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsTrack"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsTrack;"></tr>
+                    </table>
+                </mat-card-content>
+            </mat-card>
+
+        </mat-card>
     </div>
 
 </div>

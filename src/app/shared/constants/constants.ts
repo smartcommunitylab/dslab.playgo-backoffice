@@ -30,3 +30,4 @@ export const TERRITORY_ADMIN = "territory";
 export const CAMPAIGN_ADMIN = "campaign";
 export const TERRITORY_ID_LOCAL_STORAGE_KEY = "TERRITORY_ID";
 export const ROLES_LOCAL_STORAGE_KEY = "ROLES";
+export const VALIDATIONJSON = "{}";

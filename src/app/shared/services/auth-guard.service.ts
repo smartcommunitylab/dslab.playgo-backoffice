@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Router, CanActivate, ActivatedRouteSnapshot } from "@angular/router";
 import { AuthService } from "src/app/core/auth/auth.service";
-import { ADMIN } from "../constants/constants";
 import { RoleService } from "./role.service";
 
 @Injectable({
@@ -16,12 +15,11 @@ export class AuthGuardService implements CanActivate {
       //this.router.navigate(['login']);
       return false;
     } else {
-
       const expectedRoles = route.data.expectedRoles;
       const foundRoles = this.roleService.getRoles();
       const res = this.isInside(foundRoles,expectedRoles);
       if(!res){
-        console.log("here not found ", foundRoles,expectedRoles)
+        console.log("here not found ", foundRoles,expectedRoles);
         this.router.navigate(['404']);
       }
       return res;

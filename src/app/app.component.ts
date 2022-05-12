@@ -48,6 +48,7 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit() {
+    this.roleService.getInitializedJustOncePerUser();
     this.listenToLoading();
     this.territoryService.getTerritoriesUsingGET().subscribe((res)=>{
       this.territories = res;
@@ -60,7 +61,6 @@ export class AppComponent implements OnInit{
         localStorage.setItem(TERRITORY_ID_LOCAL_STORAGE_KEY,this.globalSelectedTerritory);
       }
     });
-    this.roleService.getInitializedJustOncePerUser();
   }
 
   openDialogAccount(event: any){

@@ -2,14 +2,6 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import { ConsoleControllerService } from "src/app/core/api/generated/controllers/consoleController.service";
-import { UserClass } from "../classes/user-class";
-import {
-  ADMIN,
-  TERRITORY_ADMIN,
-  CAMPAIGN_ADMIN,
-  ROLE_BASE_PATH,
-  ROLES_LOCAL_STORAGE_KEY,
-} from "../constants/constants";
 
 @Injectable({
   providedIn: "root",
@@ -25,6 +17,7 @@ export class RoleService {
   async getInitializedJustOncePerUser(): Promise<void> {
     await this.roleService.getMyRolesUsingGET().subscribe((res) => {
       var listRoles: string[] = [];
+      console.log(res);
       res.map((item) => {
         listRoles.push(item.role);
       });
