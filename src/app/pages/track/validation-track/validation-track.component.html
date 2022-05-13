@@ -99,8 +99,7 @@
             (leafletMapReady)="initializeMap($event)">
             ></div>
     </div>
-    <!-- casa -->
-    <div class="full-dimension" style="margin-top: 20px;">
+    <div class="bottom-div" style="margin-top: 20px;">
         <div class="filter-class">
             <table mat-table [dataSource]="dataSource" class="full-width">
 
@@ -181,7 +180,7 @@
                 (page)="selectedPageSize($event)">
             </mat-paginator>
         </div>
-        <mat-card class="map-class card-normal" *ngIf="!!selectedTrack">
+        <mat-card class="map-class card-normal" style="height: auto;" *ngIf="!!selectedTrack">
             <div class="header-detatils">
                 <mat-card class="card-normal main-data">
                     <mat-card-content>
@@ -327,7 +326,9 @@
 
 
                         <tr mat-header-row *matHeaderRowDef="displayedColumnsTrack"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumnsTrack;"></tr>
+                        <tr mat-row class="cursor-pointer" (click)="showPoint(row)"
+                        [ngClass]="{'highlight': selectedRowIndexPointOnTrack === row.uuid}"
+                         *matRowDef="let row; columns: displayedColumnsTrack;"></tr>
                     </table>
                 </mat-card-content>
             </mat-card>

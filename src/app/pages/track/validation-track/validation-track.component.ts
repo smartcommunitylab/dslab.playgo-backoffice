@@ -3,7 +3,6 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
-  Validators,
 } from "@angular/forms";
 import { Track } from "src/app/shared/classes/track-class";
 import {
@@ -26,7 +25,6 @@ import {
   PageTrackedInstanceClass,
   TrackedInstanceConsoleClass,
 } from "src/app/shared/classes/PageTrackedInstance-class";
-import { PlayerControllerService } from "src/app/core/api/generated/controllers/playerController.service";
 import { Moment } from "moment";
 import { MomentDateAdapter } from "@angular/material-moment-adapter";
 import {
@@ -39,15 +37,12 @@ import {
   DEFAULT_LONGITUDE,
 } from "../../../shared/constants/constants";
 import {
-  FeatureGroup,
-  icon,
   latLng,
-  LeafletMouseEvent,
   Map,
   MapOptions,
-  marker,
   tileLayer,
 } from "leaflet"; // Draw
+import * as L from "leaflet";
 import { means } from "src/app/shared/constants/means";
 import * as moment from "moment";
 
@@ -87,6 +82,8 @@ export class ValidationTrackComponent implements OnInit {
   dataSource: MatTableDataSource<TrackedInstanceConsoleClass>;
   displayedColumns: string[] = ["tracks"];
   selectedTrack: TrackedInstanceConsoleClass;
+  selectedPositionOnTrack: GeolocationClass;
+  selectedRowIndexPointOnTrack: string;
   selectedRowIndex: string;
   currentPageNumber: number = 0;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -96,12 +93,13 @@ export class ValidationTrackComponent implements OnInit {
   listModelType = means;
   listStates = ["valid", "invalid"];
   validationJson = VALIDATIONJSON;
+  layerGroup : L.Layer;
+  markerLayer: L.Layer;
 
   validatingForm: FormGroup;
   constructor(
     private formBuilder: FormBuilder,
-    private trackingService: ConsoleControllerService,
-    private playerService: PlayerControllerService
+    private trackingService: ConsoleControllerService
   ) {}
 
   ngOnInit(): void {
@@ -198,7 +196,7 @@ export class ValidationTrackComponent implements OnInit {
       const dateFromMom: Moment = this.validatingForm.get("dateFrom").value;
       const dateFrom = dateFromMom ? dateFromMom.toDate() : undefined;
       const dateToMom: Moment = this.validatingForm.get("dateTo").value;
-      const dateTo : Date = dateToMom ? dateFromMom.toDate() : undefined;
+      const dateTo : Date = dateToMom ? dateToMom.toDate() : undefined;
       console.log(this.validatingForm,dateFrom, dateTo,this.currentPageNumber,this.size);
       this.trackingService
         .searchTrackedInstanceUsingGET(
@@ -302,15 +300,47 @@ export class ValidationTrackComponent implements OnInit {
   }
 
   drawPolyline(arrayPoints: GeolocationClass[]) {
-    console.log(arrayPoints);
-    // var polylineDrawer = new Draw.Polyline(this.map, {})
-    // polylineDrawer.enable();
+    var latlngs = [];
+    try{
+      if(this.layerGroup){
+        this.map.removeLayer(this.layerGroup);
+        this.layerGroup = undefined;
+        this.map.removeLayer(this.markerLayer);
+        this.markerLayer = undefined;
+      }
+    }catch(error){
 
-    // var latlng = L.latLng(48.8583736, 2.2922926);
-    // polylineDrawer.addVertex(latlng);
+    }
+    for(let element of arrayPoints){
+      latlngs.push([element.geocoding[1],element.geocoding[0]]);
+    }
+    var polyline = L.polyline(latlngs, {color: 'blue'});
+    this.layerGroup = new L.LayerGroup([polyline]);
+    this.layerGroup.addTo(this.map);
+    this.map.setView(latlngs[0], 15);
   }
 
   public initializeMap(map: Map): void {
     this.map = map;
   }
+
+  showPoint(row: GeolocationClass ){
+    this.selectedRowIndexPointOnTrack = row.uuid;
+    try{
+      this.map.removeLayer(this.markerLayer);
+    }catch{
+
+    }
+    var icon = L.icon({
+      iconUrl: '../../../assets/images/marker-icon.png',
+  
+      iconSize: [41, 41],
+      iconAnchor: [21, 41],
+      popupAnchor: [0, -30],
+  });
+     var marker = L.marker([row.geocoding[1],row.geocoding[0]],{icon: icon});
+     this.markerLayer =new L.LayerGroup([marker]);
+     this.markerLayer.addTo(this.map);
+  }
+
 }
