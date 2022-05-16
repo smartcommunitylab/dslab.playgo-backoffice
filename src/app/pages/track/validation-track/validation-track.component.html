@@ -249,7 +249,7 @@
                     </mat-card-content>
                 </mat-card>
 
-                <mat-card class="validation card-normal">
+                <mat-card class="validation card-normal expandable-content">
                     <mat-card-title class="cursor-pointer" (click)="toggle()">
                         {{'validation' | translate}}
                         <mat-card-actions class="right-button top-button">
@@ -326,9 +326,9 @@
 
 
                         <tr mat-header-row *matHeaderRowDef="displayedColumnsTrack"></tr>
-                        <tr mat-row class="cursor-pointer" (click)="showPoint(row)"
-                        [ngClass]="{'highlight': selectedRowIndexPointOnTrack === row.uuid}"
-                         *matRowDef="let row; columns: displayedColumnsTrack;"></tr>
+                        <tr mat-row class="cursor-pointer" (click)="showPoint(i,row)"
+                        [ngClass]="{'highlight': selectedRowOnTrack(i)}"
+                         *matRowDef="let row;let i=index; columns: displayedColumnsTrack;"></tr>
                     </table>
                 </mat-card-content>
             </mat-card>
