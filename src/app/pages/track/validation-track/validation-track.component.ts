@@ -36,6 +36,8 @@ import { latLng, Map, MapOptions, tileLayer } from "leaflet"; // Draw
 import * as L from "leaflet";
 import { means } from "src/app/shared/constants/means";
 import * as moment from "moment";
+import { TerritoryControllerService } from "src/app/core/api/generated/controllers/territoryController.service";
+import { ConsoleControllerInternalService } from "src/app/shared/services/console-controller.service";
 
 @Component({
   selector: "app-validation-track",
@@ -69,7 +71,7 @@ export class ValidationTrackComponent implements OnInit {
   size: number[] = [15];
   paginatorData: PageTrackedInstanceClass = new PageTrackedInstanceClass();
   dataSourceInfoTrack: MatTableDataSource<GeolocationClass[]>;
-  displayedColumnsTrack: string[] = ["pos", "ts", "accuracy", "activity"];
+  displayedColumnsTrack: string[] = ["index","lat","long", "ts", "accuracy", "activity"];
   dataSource: MatTableDataSource<TrackedInstanceConsoleClass>;
   displayedColumns: string[] = ["tracks"];
   selectedTrack: TrackedInstanceConsoleClass;
@@ -79,25 +81,40 @@ export class ValidationTrackComponent implements OnInit {
   listTrack: TrackedInstanceConsoleClass[];
   listSorting = ["ascending", "descending"];
   listModelType = means;
-  listStates = ["valid", "invalid"];
+  listStates = ["valid", "invalid","pending"];
   validationJson = VALIDATIONJSON;
   layerGroup: L.Layer;
   markerLayers: any[];
+  displayedColumnsDevice: string[] = ["available","platform","version","manufacturer","isVirtual","appVersion"];//];
+  dataSourceInfoDevice: MatTableDataSource<any[]>;
 
   validatingForm: FormGroup;
   constructor(
     private formBuilder: FormBuilder,
-    private trackingService: ConsoleControllerService
+    private trackingService: ConsoleControllerService,
+    private territoryService: TerritoryControllerService,
+    private trackingServiceInternal: ConsoleControllerInternalService
   ) {}
 
   ngOnInit(): void {
     this.territoryId = localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY);
     this.initializaValidatingForm();
-    this.trackingService
+    var dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value, true); 
+    var dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value, true); 
+    console.log(dateFromString, dateToString);
+    this.trackingServiceInternal
       .searchTrackedInstanceUsingGET(
         this.currentPageNumber,
         this.size[0],
-        this.territoryId
+        this.territoryId,
+        this.validatingForm.get("sort").value ? this.validatingForm.get("sort").value : undefined,
+        this.validatingForm.get("trackId").value ? this.validatingForm.get("trackId").value : undefined ,
+        this.validatingForm.get("playerId").value ? this.validatingForm.get("playerId").value : undefined,
+        this.validatingForm.get("modeType").value ? this.validatingForm.get("modeType").value : undefined,
+        dateFromString,
+        dateToString,
+        this.validatingForm.get("campaignId").value ? this.validatingForm.get("campaignId").value : undefined,
+        this.validatingForm.get("status").value ? this.validatingForm.get("status").value.toUpperCase() : undefined
       )
       .subscribe((res) => {
         this.paginatorData = res;
@@ -106,6 +123,9 @@ export class ValidationTrackComponent implements OnInit {
         this.dataSource.paginator = this.paginator;
       });
     this.initializeMapOptions();
+    this.territoryService.getTerritoryUsingGET(this.territoryId).subscribe((territory)=>{
+      this.listModelType = territory.territoryData.means;
+    });
   }
 
   initializaValidatingForm() {
@@ -124,6 +144,7 @@ export class ValidationTrackComponent implements OnInit {
     this.validatingForm.patchValue({
       dateFrom: moment(monday, "YYYY-MM-DD"),
       dateTo: moment(sunday, "YYYY-MM-DD"),
+      sort: 'asc'
     });
   }
 
@@ -187,33 +208,23 @@ export class ValidationTrackComponent implements OnInit {
 
   searchSubmit() {
     if (this.validatingForm.valid) {
-      const dateFromMom: Moment = this.validatingForm.get("dateFrom").value;
-      const dateFrom = dateFromMom ? dateFromMom.toDate() : undefined;
-      const dateToMom: Moment = this.validatingForm.get("dateTo").value;
-      const dateTo: Date = dateToMom ? dateToMom.toDate() : undefined;
-      console.log(
-        this.validatingForm,
-        dateFrom,
-        dateTo,
-        this.currentPageNumber,
-        this.size
-      );
-      this.trackingService
+      var dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value); 
+      var dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value); 
+      this.trackingServiceInternal
         .searchTrackedInstanceUsingGET(
           this.currentPageNumber,
           this.size[0],
           this.territoryId,
-          this.validatingForm.get("sort").value,
-          this.validatingForm.get("trackId").value,
-          this.validatingForm.get("playerId").value,
-          this.validatingForm.get("modeType").value,
-          dateFrom,
-          dateTo,
-          this.validatingForm.get("campaignId").value,
-          this.validatingForm.get("status").value
+          this.validatingForm.get("sort").value ? this.validatingForm.get("sort").value : undefined,
+          this.validatingForm.get("trackId").value ? this.validatingForm.get("trackId").value : undefined ,
+          this.validatingForm.get("playerId").value ? this.validatingForm.get("playerId").value : undefined,
+          this.validatingForm.get("modeType").value ? this.validatingForm.get("modeType").value : undefined,
+          dateFromString,
+          dateToString,
+          this.validatingForm.get("campaignId").value ? this.validatingForm.get("campaignId").value : undefined,
+          this.validatingForm.get("status").value ? this.validatingForm.get("status").value.toUpperCase() : undefined
         )
         .subscribe((res) => {
-          console.log("111");
           this.paginatorData = res;
           this.listTrack = res.content;
           this.setTableData();
@@ -236,6 +247,8 @@ export class ValidationTrackComponent implements OnInit {
     this.dataSourceInfoTrack = new MatTableDataSource<any>(
       row.trackedInstance.geolocationEvents
     );
+    const deviceInfo = this.obejectFromString(row.trackedInstance.deviceInfo);
+    this.dataSourceInfoDevice = new MatTableDataSource<any>([deviceInfo]);
     this.drawPolyline(this.selectedTrack.trackedInstance.geolocationEvents);
     // this.validationJson = JSON.stringify(this.selectedTrack).replace(",", "\n");
     this.markerLayers = [];
@@ -263,26 +276,23 @@ export class ValidationTrackComponent implements OnInit {
       this.currentPageNumber = pageIndex;
       try {
         const list: Track[] = [];
-        const dateFromMom: Moment = this.validatingForm.get("dateFrom").value;
-        const dateFrom: Date = dateFromMom ? dateFromMom.toDate() : undefined;
-        const dateToMom: Moment = this.validatingForm.get("dateTo").value;
-        const dateTo: Date = dateToMom ? dateFromMom.toDate() : undefined;
-        this.trackingService
+        var dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value); 
+        var dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value);
+        this.trackingServiceInternal
           .searchTrackedInstanceUsingGET(
             this.currentPageNumber,
             this.size[0],
             this.territoryId,
-            this.validatingForm.get("sort").value,
-            this.validatingForm.get("trackId").value,
-            this.validatingForm.get("playerId").value,
-            this.validatingForm.get("modeType").value,
-            dateFrom,
-            dateTo,
-            this.validatingForm.get("campaignId").value,
-            this.validatingForm.get("status").value
+            this.validatingForm.get("sort").value ? this.validatingForm.get("sort").value : undefined,
+            this.validatingForm.get("trackId").value ? this.validatingForm.get("trackId").value : undefined ,
+            this.validatingForm.get("playerId").value ? this.validatingForm.get("playerId").value : undefined,
+            this.validatingForm.get("modeType").value ? this.validatingForm.get("modeType").value : undefined,
+            dateFromString,
+            dateToString,
+            this.validatingForm.get("campaignId").value ? this.validatingForm.get("campaignId").value : undefined,
+            this.validatingForm.get("status").value ? this.validatingForm.get("status").value.toUpperCase() : undefined
           )
           .subscribe((res) => {
-            //this.paginatorData = res;
             this.listTrack = res.content;
             this.setTableData();
           });
@@ -345,7 +355,7 @@ export class ValidationTrackComponent implements OnInit {
       } catch {}
     } else {
       //undefined
-      const popup = "lat: " + row.geocoding[1] + ", long: " + row.geocoding[0];
+      const popup = "point number: "+ (index+1)+ ", lat: " + row.geocoding[1] + ", long: " + row.geocoding[0];
       var marker = L.marker([row.geocoding[1], row.geocoding[0]], { icon: icon }).bindPopup(popup);
       const markers = this.markerLayers[index] ? this.markerLayers[index]["markers"].push(marker) : [marker];
       this.markerLayers[index] = {"layer": new L.LayerGroup(markers),"markers": markers, "popup": popup  };
@@ -362,4 +372,34 @@ export class ValidationTrackComponent implements OnInit {
     }
     return false;
   }
+
+  obejectFromString(s: string) :any{
+    if(s==='null'){
+      return {'available':false,'platform':'-','version':'-','uuid':'-','cordova':'-','model':'-','manufacturer':'-','isVirtual':false,'serial':'-','appVersion':'-'};
+    }
+
+    try{
+      if(!!s && s!== null)
+        return JSON.parse(s);
+    }
+    catch{}
+    return {'available':true,'platform':'-','version':'-','uuid':'-','cordova':'-','model':'-','manufacturer':'-','isVirtual':false,'serial':'-','appVersion':'-'};
+  }
+
+  transformDateToString(date: Moment,startDay? :boolean): string{
+    const dateFormat: Date = date ? date.toDate() : undefined;
+    var dateString = dateFormat?  dateFormat.toISOString().replace('Z','').replace('T', ' ') : undefined;
+    if(startDay){
+      if(dateString)
+        return dateString.substring(0,dateString.length-'00:00:00.000'.length) + '00:00:00'
+      else
+        return undefined;
+      }
+      if(dateString)
+        return dateString.substring(0,dateString.length-'00:00:00.000'.length) + '23:59:59';
+      else
+        return undefined;
+  }
+
+
 }

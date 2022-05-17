@@ -226,8 +226,8 @@ export class ConsoleControllerService {
    * @param trackId trackId
    * @param playerId playerId
    * @param modeType modeType
-   * @param dateFrom dateFrom
-   * @param dateTo dateTo
+   * @param dateFrom yyyy-MM-dd HH:mm:ss
+   * @param dateTo yyyy-MM-dd HH:mm:ss
    * @param campaignId campaignId
    * @param status status
    */
