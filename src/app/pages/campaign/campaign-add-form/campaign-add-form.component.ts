@@ -211,7 +211,6 @@ export class CampaignAddFormComponent implements OnInit {
 
   validate(): void {
     this.errorMsgValidation = "";
-    console.log(this.validatingForm);
     if (this.validatingForm.valid) {
       this.campaignCreated.active = this.validatingForm.get("active").value;
       const dataFrom: Moment =this.validatingForm.get("dateFrom").value;

@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { Track } from "src/app/shared/classes/track-class";
 import {
+  LIST_STATES_TRACK,
   MY_DATE_FORMATS,
   TERRITORY_ID_LOCAL_STORAGE_KEY,
   VALIDATIONJSON,
@@ -38,6 +39,9 @@ import { means } from "src/app/shared/constants/means";
 import * as moment from "moment";
 import { TerritoryControllerService } from "src/app/core/api/generated/controllers/territoryController.service";
 import { ConsoleControllerInternalService } from "src/app/shared/services/console-controller.service";
+import { MatDialog } from "@angular/material/dialog";
+import { DistanceDialogComponent } from "../distance-dialog/distance-dialog.component";
+import { StatusDialogComponent } from "../status-dialog/status-dialog.component";
 
 @Component({
   selector: "app-validation-track",
@@ -70,8 +74,8 @@ export class ValidationTrackComponent implements OnInit {
   stateValidationTrack: string = "collapsed";
   size: number[] = [15];
   paginatorData: PageTrackedInstanceClass = new PageTrackedInstanceClass();
-  dataSourceInfoTrack: MatTableDataSource<GeolocationClass[]>;
-  displayedColumnsTrack: string[] = ["index","lat","long", "ts", "accuracy", "activity"];
+  dataSourceInfoTrack: MatTableDataSource<any[]>; //GeolocationClass 
+  displayedColumnsTrack: string[] = ["index","lat","long", "date", "accuracy", "activity","activityConfidence","isMoving","speed"];
   dataSource: MatTableDataSource<TrackedInstanceConsoleClass>;
   displayedColumns: string[] = ["tracks"];
   selectedTrack: TrackedInstanceConsoleClass;
@@ -81,7 +85,7 @@ export class ValidationTrackComponent implements OnInit {
   listTrack: TrackedInstanceConsoleClass[];
   listSorting = ["ascending", "descending"];
   listModelType = means;
-  listStates = ["valid", "invalid","pending"];
+  listStates = LIST_STATES_TRACK;
   validationJson = VALIDATIONJSON;
   layerGroup: L.Layer;
   markerLayers: any[];
@@ -93,7 +97,9 @@ export class ValidationTrackComponent implements OnInit {
     private formBuilder: FormBuilder,
     private trackingService: ConsoleControllerService,
     private territoryService: TerritoryControllerService,
-    private trackingServiceInternal: ConsoleControllerInternalService
+    private trackingServiceInternal: ConsoleControllerInternalService,
+    private dialogStatus: MatDialog,
+    private dialogDistance: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -101,7 +107,6 @@ export class ValidationTrackComponent implements OnInit {
     this.initializaValidatingForm();
     var dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value, true); 
     var dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value, true); 
-    console.log(dateFromString, dateToString);
     this.trackingServiceInternal
       .searchTrackedInstanceUsingGET(
         this.currentPageNumber,
@@ -209,7 +214,8 @@ export class ValidationTrackComponent implements OnInit {
   searchSubmit() {
     if (this.validatingForm.valid) {
       var dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value); 
-      var dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value); 
+      var dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value);
+      dateToString = dateToString ? dateToString :this.transformDateToString(moment());  
       this.trackingServiceInternal
         .searchTrackedInstanceUsingGET(
           this.currentPageNumber,
@@ -268,6 +274,16 @@ export class ValidationTrackComponent implements OnInit {
       campaignId: new FormControl(""),
       status: new FormControl(""),
     });
+    this.validatingForm.patchValue({
+      sort: '',
+      trackId: '',
+      playerId: '',
+      modeType: '',
+      dateFrom: '',
+      dateTo: '',
+      campaignId: '',
+      status: '',
+    });
   }
 
   selectedPageSize(event: any) {
@@ -278,6 +294,7 @@ export class ValidationTrackComponent implements OnInit {
         const list: Track[] = [];
         var dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value); 
         var dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value);
+        dateToString = dateToString ? dateToString :this.transformDateToString(moment());  
         this.trackingServiceInternal
           .searchTrackedInstanceUsingGET(
             this.currentPageNumber,
@@ -315,7 +332,7 @@ export class ValidationTrackComponent implements OnInit {
     return year + "-" + month + "-" + day;
   }
 
-  drawPolyline(arrayPoints: GeolocationClass[]) {
+  drawPolyline(arrayPoints: any[]) { // any[] = GeolocationClass
     var latlngs = [];
     try {
       if (this.layerGroup) {
@@ -339,7 +356,7 @@ export class ValidationTrackComponent implements OnInit {
     this.map = map;
   }
 
-  showPoint(index: number, row: GeolocationClass) {
+  showPoint(index: number, row: any) { //row => GeolocationClass
     var icon = L.icon({
       iconUrl: "../../../assets/images/marker-icon.png",
 
@@ -355,13 +372,40 @@ export class ValidationTrackComponent implements OnInit {
       } catch {}
     } else {
       //undefined
-      const popup = "point number: "+ (index+1)+ ", lat: " + row.geocoding[1] + ", long: " + row.geocoding[0];
+      const popup = "<h3>point number: "+ (index+1)+ "</h3></br><h4>lat: " + row.geocoding[1] + " - long: " + row.geocoding[0]+"</h4>";
       var marker = L.marker([row.geocoding[1], row.geocoding[0]], { icon: icon }).bindPopup(popup);
       const markers = this.markerLayers[index] ? this.markerLayers[index]["markers"].push(marker) : [marker];
       this.markerLayers[index] = {"layer": new L.LayerGroup(markers),"markers": markers, "popup": popup  };
       this.markerLayers[index]["layer"].addTo(this.map);
     }
 
+  }
+
+  changeDistance(){
+      const dialogRef = this.dialogDistance.open(DistanceDialogComponent, {
+        width: "60%",
+        height: "50%",
+      });
+      let instance = dialogRef.componentInstance;
+      instance.selectedTrack = this.selectedTrack;
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result !== undefined) {
+        }
+      });
+  }
+
+  changeStatus(){
+      const dialogRef = this.dialogStatus.open(StatusDialogComponent, {
+        width: "60%",
+        height: "50%",
+      });
+      let instance = dialogRef.componentInstance;
+      instance.selectedTrack = this.selectedTrack;
+  
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result !== undefined) {
+        }
+      });
   }
 
   selectedRowOnTrack(index: number): boolean {
@@ -399,6 +443,12 @@ export class ValidationTrackComponent implements OnInit {
         return dateString.substring(0,dateString.length-'00:00:00.000'.length) + '23:59:59';
       else
         return undefined;
+  }
+
+  createDate(timestamp : number) : string{
+    const date = new Date(timestamp);
+    const midDate = date.toISOString().replace('Z','').replace('T', ' ')
+    return midDate.substring(0,midDate.length-4);
   }
 
 

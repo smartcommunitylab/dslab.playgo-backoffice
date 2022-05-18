@@ -53,6 +53,9 @@ export class TrackedInstanceClass implements TrackedInstance{
 }
 
 export class GeolocationClass implements Geolocation{
+    // geolocation is created with wrong parameters for example 
+    // activiryConfidence should be activity_confidence (from the data recived)
+    // the generator for Geolocation interface not correct??
     accuracy?: number;
     activityConfidence?: number;
     activityType?: string;

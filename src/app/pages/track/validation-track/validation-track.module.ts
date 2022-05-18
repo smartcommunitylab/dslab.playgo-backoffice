@@ -1,6 +1,8 @@
 
 import { NgModule } from '@angular/core';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { DistanceDialogComponent } from '../distance-dialog/distance-dialog.component';
+import { StatusDialogComponent } from '../status-dialog/status-dialog.component';
 import { ValidationTrackComponent } from './validation-track.component';
 import { ValidationTrackPageRouting } from './validation-track.routing';
 
@@ -9,6 +11,6 @@ import { ValidationTrackPageRouting } from './validation-track.routing';
       SharedModule,
       ValidationTrackPageRouting,
     ],
-    declarations: [ValidationTrackComponent],
+    declarations: [ValidationTrackComponent,DistanceDialogComponent,StatusDialogComponent],
   })
   export class TerritoryPageModule {}

@@ -165,9 +165,7 @@ export class CampaignPageComponent implements OnInit {
 
   changeHeight(height : string){
     const h = +height;
-    console.log(h);
     window.innerHeight += h;
-    console.log(window.innerHeight);
   }
 
   handleManager() {

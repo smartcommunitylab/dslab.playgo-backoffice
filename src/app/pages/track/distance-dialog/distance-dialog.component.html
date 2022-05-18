@@ -1,0 +1,15 @@
+<h1>{{'distanceChange' | translate}}</h1>
+<p>{{'currentDistance' | translate}}: {{selectedTrack.trackedInstance.validationResult.distance}}</p>
+<form [formGroup]="validatingForm">
+    <mat-form-field appearance="fill" class="input-custom-half-left">
+        <mat-label>{{'newDistance' | translate}}</mat-label>
+        <input matInput  type="number" id="distance" formControlName="distance">
+    </mat-form-field>
+    <p *ngIf="!!errorMsgValidation" class="full-dimension red">{{errorMsgValidation | translate}}</p>
+    <div class="full-width" style="height: 40px">
+        <button class="right-button back-green" mat-raised-button type="submit" (click)="validate()">
+            {{'save' | translate}}</button>
+        <button class="right-button" mat-flat-button (click)="onNoClick($event)">
+            {{'cancel'|translate}}</button>
+    </div>
+</form>

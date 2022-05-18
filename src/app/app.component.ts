@@ -48,19 +48,22 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit() {
-    this.roleService.getInitializedJustOncePerUser();
-    this.listenToLoading();
-    this.territoryService.getTerritoriesUsingGET().subscribe((res)=>{
-      this.territories = res;
-      try{
-        //if present in local storage take it
-        this.globalSelectedTerritory = localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY);
-      }catch(error){
-        //if not present take first
-        this.globalSelectedTerritory = res[0].territoryId;
-        localStorage.setItem(TERRITORY_ID_LOCAL_STORAGE_KEY,this.globalSelectedTerritory);
-      }
+    
+    this.roleService.getInitializedJustOncePerUser().then(()=>{
+      this.listenToLoading();
+      this.territoryService.getTerritoriesUsingGET().subscribe((res)=>{
+        this.territories = res;
+        try{
+          //if present in local storage take it
+          this.globalSelectedTerritory = localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY);
+        }catch(error){
+          //if not present take first
+          this.globalSelectedTerritory = res[0].territoryId;
+          localStorage.setItem(TERRITORY_ID_LOCAL_STORAGE_KEY,this.globalSelectedTerritory);
+        }
+      });
     });
+
   }
 
   openDialogAccount(event: any){

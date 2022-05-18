@@ -161,11 +161,6 @@ export class ManagerHandlerTerritoryComponent implements OnInit {
     }
     return result;
   }
-
-  log(aa : any){
-    console.log(aa);
-  }
-
 }
 
 
