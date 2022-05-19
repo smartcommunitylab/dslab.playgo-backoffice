@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import { ConsoleControllerService } from "src/app/core/api/generated/controllers/consoleController.service";
+import { PlayerRole } from "src/app/core/api/generated/model/playerRole";
 
 @Injectable({
   providedIn: "root",
@@ -20,10 +21,13 @@ export class RoleService {
       res.map((item) => {
         listRoles.push(item.role);
       });
-      //listRoles = ["campaign"]; // used for testing different roles 
       this.rolesSubject.next(listRoles);
       this.simpleRoles = listRoles;
     });
+  }
+
+  getInitializedJustOncePerUserSecond(): Observable<PlayerRole[]> {
+    return this.roleService.getMyRolesUsingGET();
   }
 
   getObservableRoles(): Observable<string[]> {
@@ -35,6 +39,14 @@ export class RoleService {
   getRoles(): string[]{
     // used in the components where the roles are already intitialized
     return this.simpleRoles;
+  }
+
+  setRolesSubcejt(obj){
+    this.rolesSubject.next(obj);
+  }
+
+  setSimpleRoles(obj){
+    this.simpleRoles = obj;
   }
 
 }

@@ -48,8 +48,14 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit() {
-    
-    this.roleService.getInitializedJustOncePerUser().then(()=>{
+    this.roleService.getInitializedJustOncePerUserSecond().subscribe((roles)=>{
+      var listRoles: string[] = [];
+      roles.map((item) => {
+        listRoles.push(item.role);
+      });
+      //listRoles = ["campaign"]; // used for testing different roles 
+      this.roleService.setRolesSubcejt(listRoles);
+      this.roleService.setSimpleRoles(listRoles);
       this.listenToLoading();
       this.territoryService.getTerritoriesUsingGET().subscribe((res)=>{
         this.territories = res;
@@ -60,6 +66,7 @@ export class AppComponent implements OnInit{
           //if not present take first
           this.globalSelectedTerritory = res[0].territoryId;
           localStorage.setItem(TERRITORY_ID_LOCAL_STORAGE_KEY,this.globalSelectedTerritory);
+          console.log("finished saving in local storage");
         }
       });
     });

@@ -1,7 +1,10 @@
 import { Injectable } from "@angular/core";
 import { Router, CanActivate, ActivatedRouteSnapshot } from "@angular/router";
+import { Observable } from "rxjs";
 import { AuthService } from "src/app/core/auth/auth.service";
 import { RoleService } from "./role.service";
+import { map } from 'rxjs/operators';
+import { PlayerRole } from "src/app/core/api/generated/model/playerRole";
 
 @Injectable({
   providedIn: "root",
@@ -9,21 +12,20 @@ import { RoleService } from "./role.service";
 export class AuthGuardService implements CanActivate {
   constructor(public auth: AuthService, public router: Router,private roleService: RoleService) {}
 
-  canActivate(route: ActivatedRouteSnapshot): boolean {
-    if (!this.auth.isLoggedIn()) {
-      this.auth.logout();
-      //this.router.navigate(['login']);
-      return false;
-    } else {
-      const expectedRoles = route.data.expectedRoles;
-      const foundRoles = this.roleService.getRoles();
-      const res = this.isInside(foundRoles,expectedRoles);
-      if(!res){
-        console.log("here not found ", foundRoles,expectedRoles);
-        this.router.navigate(['404']);
-      }
-      return res;
-    }
+  canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
+    const expectedRoles = route.data.expectedRoles;
+    return this.checkLogin(expectedRoles);
+  }
+
+  checkLogin(expectedRoles: string[]): Observable<boolean> {
+    return this.roleService.getInitializedJustOncePerUserSecond().pipe(map((res : PlayerRole[])=>{
+      var listRoles: string[] = [];
+      res.map((item) => {
+        listRoles.push(item.role);
+      });
+      return this.isInside(listRoles,expectedRoles);
+    })
+    );
   }
 
   isInside(values: string[], list: string[]): boolean {
