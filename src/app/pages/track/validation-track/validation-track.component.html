@@ -13,7 +13,6 @@
                                 <mat-form-field appearance="fill" class="full-width margin-form">
                                     <mat-label>{{'dateFrom' | translate}}</mat-label>
                                     <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1">
-                                    <mat-hint>{{'dateFormat' |translate}}</mat-hint>
                                     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                                     <mat-datepicker #picker1></mat-datepicker>
                                 </mat-form-field>
@@ -22,7 +21,6 @@
                                 <mat-form-field appearance="fill" class="full-width margin-form">
                                     <mat-label>{{'dateTo' | translate}}</mat-label>
                                     <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker">
-                                    <mat-hint>{{'dateFormat' |translate}}</mat-hint>
                                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                     <mat-datepicker #picker></mat-datepicker>
                                 </mat-form-field>
@@ -64,7 +62,10 @@
                             <mat-grid-tile>
                                 <mat-form-field appearance="fill" class="full-width margin-form">
                                     <mat-label>{{'campaignId' | translate}}</mat-label>
-                                    <input matInput id="campaignId" formControlName="campaignId">
+                                    <mat-select id="campaignId" formControlName="campaignId">
+                                        <mat-option *ngFor="let val of listCampaings" [value]="val">{{val}}
+                                        </mat-option>
+                                    </mat-select>
                                 </mat-form-field>
                             </mat-grid-tile>
                             <mat-grid-tile></mat-grid-tile>
@@ -106,84 +107,43 @@
                 <ng-container matColumnDef="tracks">
                     <th mat-header-cell *matHeaderCellDef></th>
                     <td class="margin-20" mat-cell *matCellDef="let element">
-                        <mat-card class="cursor-pointer card-normal full-dimension " (click)="showTrack(element)"
-                            [ngClass]="{'highlight': selectedRowIndex === element.trackedInstance.id}">
-                            <mat-grid-list cols="2" rowHeight="9:2" style="margin: 5px;">
+                        <mat-card class="cursor-pointer card-normal full-dimension  " (click)="showTrack(element)"
+                            [ngClass]="{'highlight': selectedRowIndex === element.trackedInstance.id,
+                            'yellow-background' : element.trackedInstance.validationResult.travelValidity==='PENDING',
+                            'red-background' : element.trackedInstance.validationResult.travelValidity==='INVALID',
+                            'green-background' : element.trackedInstance.validationResult.travelValidity==='VALID'  }">
+                            <mat-grid-list cols="3" rowHeight="15:2">
                                 <mat-grid-tile>
-                                    <div class="wrapper">
-                                        <span class="info-title">
-                                           <span class="bold"> {{'trackId' | translate}}: </span>  <br/>
-                                                <span>
-                                                    {{element.trackedInstance.id}}
-                                                </span>
-                                        </span>
-                                      </div>
+                                    <span class="full-width">
+                                        {{getDateFromTimeStamp(element.trackedInstance.startTime)}}
+                                    </span>
+                                </mat-grid-tile>
+                                <mat-grid-tile style="width: 70%;">
+                                    <span class="bold full-width center-text">
+                                        {{element.trackedInstance.validationResult.validationStatus.modeType |
+                                        translate}}
+                                    </span>
                                 </mat-grid-tile>
                                 <mat-grid-tile>
-                                    <div class="wrapper">
-                                        <span class="info-title">
-                                           <span class="bold"> {{'date' | translate}}: </span>  <br/>
-                                                <span>
-                                                    {{getDateFromTimeStamp(element.trackedInstance.startTime)}}
-                                                </span>
+                                    <span class="full-width text-ellips">
+                                        {{element.trackedInstance.id}}
+                                    </span>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                            <mat-grid-list cols="1" rowHeight="45:2">
+                                <mat-grid-tile>
+                                    <span class="left-text full-width">
+                                        {{'player' | translate}}: {{element.playerInfo.nickname}}
+                                        <span class="text-center full-width">
+                                            ({{element.playerInfo.playerId}})
                                         </span>
-                                      </div>                              
+                                    </span>
                                 </mat-grid-tile>
                                 <mat-grid-tile>
-                                    <div *ngIf="element.trackedInstance.validationResult.travelValidity==='VALID'" class="wrapper">
-                                        <span class="info-title green-background">
-                                           <span class="bold"> {{'validation' | translate}}: </span>  <br/>
-                                                <span>
-                                                  {{element.trackedInstance.validationResult.travelValidity | translate}}
-                                                </span>
-                                        </span>
-                                      </div>               
-                                    <div *ngIf="element.trackedInstance.validationResult.travelValidity==='PENDING'" class="wrapper">
-                                        <span class="info-title  yellow-background">
-                                           <span class="bold"> {{'validation' | translate}}: </span>  <br/>
-                                                <span>
-                                                   {{element.trackedInstance.validationResult.travelValidity | translate}}
-                                                </span>
-                                        </span>
-                                      </div>               
-                                    <div *ngIf="element.trackedInstance.validationResult.travelValidity==='INVALID' || !element.trackedInstance.validationResult.travelValidity" class="wrapper ">
-                                        <span class="info-title red-background">
-                                           <span class="bold"> {{'validation' | translate}}: </span>  <br/>
-                                                <span>
-                                                    {{element.trackedInstance.validationResult.travelValidity | translate}}
-                                                </span>
-                                        </span>
-                                      </div>                 
-                                </mat-grid-tile>
-                                <mat-grid-tile>
-                                    <div class="wrapper">
-                                        <span class="info-title">
-                                           <span class="bold"> {{'mean' | translate}}: </span>  <br/>
-                                                <span>
-                                                    {{element.trackedInstance.validationResult.validationStatus.modeType | translate}}
-                                                </span>
-                                        </span>
-                                      </div>  
-                                </mat-grid-tile>
-                                <mat-grid-tile>
-                                    <div class="wrapper">
-                                        <span class="info-title">
-                                           <span class="bold">{{'playerId' | translate}}:</span>  <br/>
-                                                <span>
-                                                    {{element.playerInfo.playerId}}
-                                                </span>
-                                        </span>
-                                      </div>
-                                </mat-grid-tile>
-                                <mat-grid-tile>
-                                    <div class="wrapper">
-                                        <span class="info-title">
-                                           <span class="bold">{{'nickname' | translate}}:</span>  <br/>
-                                                <span>
-                                                    {{element.playerInfo.nickname}}
-                                                </span>
-                                        </span>
-                                      </div>
+                                    <span class="bold left-text full-width">
+                                        {{'state' | translate}}:
+                                        {{element.trackedInstance.validationResult.travelValidity | translate}}
+                                    </span>
                                 </mat-grid-tile>
                             </mat-grid-list>
                         </mat-card>
@@ -198,88 +158,109 @@
         </div>
         <mat-card class="map-class card-normal" style="height: auto;" *ngIf="!!selectedTrack">
             <div class="header-detatils">
-                <mat-card class="card-normal main-data">
-                    <mat-card-content>
-                        <mat-grid-list cols="2" rowHeight="9:2" style="margin: 5px;">
-                            <mat-grid-tile>
-                                <div class="wrapper">
-                                    <span class="info-title">
-                                       <span class="bold"> {{'trackId' | translate}}: </span>  <br/>
+                <div class="left-header">
+                    <mat-card class="card-normal"
+                        [ngClass]="{
+                            'yellow-background' : selectedTrack.trackedInstance.validationResult.travelValidity==='PENDING',
+                            'red-background' : selectedTrack.trackedInstance.validationResult.travelValidity==='INVALID',
+                            'green-background' : selectedTrack.trackedInstance.validationResult.travelValidity==='VALID'  }">
+                        <mat-card-content>
+                            <mat-grid-list cols="2" rowHeight="9:2" style="margin: 5px;">
+                                <mat-grid-tile>
+                                    <div class="wrapper">
+                                        <span class="info-title">
+                                            <span class="bold"> {{'trackId' | translate}}: </span> <br />
                                             <span>
                                                 {{selectedTrack.trackedInstance.id}}
                                             </span>
-                                    </span>
-                                  </div>
-                            </mat-grid-tile>
-                            <mat-grid-tile>
-                                <div class="wrapper">
-                                    <span class="info-title">
-                                       <span class="bold"> {{'date' | translate}}: </span>  <br/>
+                                        </span>
+                                    </div>
+                                </mat-grid-tile>
+                                <mat-grid-tile>
+                                    <div class="wrapper">
+                                        <span class="info-title">
+                                            <span class="bold"> {{'date' | translate}}: </span> <br />
                                             <span>
                                                 {{getDateFromTimeStamp(selectedTrack.trackedInstance.startTime)}}
                                             </span>
-                                    </span>
-                                  </div>                              
-                            </mat-grid-tile>
-                            <mat-grid-tile>
-                                <div *ngIf="selectedTrack.trackedInstance.validationResult.travelValidity==='VALID'" class="wrapper">
-                                    <span class="info-title green-background">
-                                       <span class="bold"> {{'validation' | translate}}: </span>  <br/>
+                                        </span>
+                                    </div>
+                                </mat-grid-tile>
+                                <mat-grid-tile>
+                                    <div class="wrapper">
+                                        <span class="info-title">
+                                            <span class="bold"> {{'validation' | translate}}: </span> <br />
                                             <span>
-                                              {{selectedTrack.trackedInstance.validationResult.travelValidity | translate}}
+                                                {{selectedTrack.trackedInstance.validationResult.travelValidity |
+                                                translate}}
                                             </span>
-                                    </span>
-                                  </div>               
-                                <div *ngIf="selectedTrack.trackedInstance.validationResult.travelValidity==='PENDING'" class="wrapper">
-                                    <span class="info-title yellow-background">
-                                       <span class="bold"> {{'validation' | translate}}: </span>  <br/>
+                                        </span>
+                                    </div>
+                                </mat-grid-tile>
+                                <mat-grid-tile>
+                                    <div class="wrapper">
+                                        <span class="info-title">
+                                            <span class="bold"> {{'mean' | translate}}: </span> <br />
                                             <span>
-                                               {{selectedTrack.trackedInstance.validationResult.travelValidity | translate}}
+                                                {{selectedTrack.trackedInstance.validationResult.validationStatus.modeType
+                                                |
+                                                translate}}
                                             </span>
-                                    </span>
-                                  </div>               
-                                <div *ngIf="selectedTrack.trackedInstance.validationResult.travelValidity==='INVALID' || !selectedTrack.trackedInstance.validationResult.travelValidity" class="wrapper">
-                                    <span class="info-title red-background">
-                                       <span class="bold"> {{'validation' | translate}}: </span>  <br/>
-                                            <span>
-                                                {{selectedTrack.trackedInstance.validationResult.travelValidity | translate}}
-                                            </span>
-                                    </span>
-                                  </div>               
-                            </mat-grid-tile>
-                            <mat-grid-tile>
-                                <div class="wrapper">
-                                    <span class="info-title">
-                                       <span class="bold"> {{'mean' | translate}}: </span>  <br/>
-                                            <span>
-                                                {{selectedTrack.trackedInstance.validationResult.validationStatus.modeType | translate}}
-                                            </span>
-                                    </span>
-                                  </div>  
-                            </mat-grid-tile>
-                            <mat-grid-tile>
-                                <div class="wrapper">
-                                    <span class="info-title">
-                                       <span class="bold">{{'playerId' | translate}}:</span>  <br/>
+                                        </span>
+                                    </div>
+                                </mat-grid-tile>
+                                <mat-grid-tile>
+                                    <div class="wrapper">
+                                        <span class="info-title">
+                                            <span class="bold">{{'playerId' | translate}}:</span> <br />
                                             <span>
                                                 {{selectedTrack.playerInfo.playerId}}
                                             </span>
-                                    </span>
-                                  </div>
-                            </mat-grid-tile>
-                            <mat-grid-tile>
-                                <div class="wrapper">
-                                    <span class="info-title">
-                                       <span class="bold">{{'nickname' | translate}}:</span>  <br/>
+                                        </span>
+                                    </div>
+                                </mat-grid-tile>
+                                <mat-grid-tile>
+                                    <div class="wrapper">
+                                        <span class="info-title">
+                                            <span class="bold">{{'nickname' | translate}}:</span> <br />
                                             <span>
                                                 {{selectedTrack.playerInfo.nickname}}
                                             </span>
+                                        </span>
+                                    </div>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                            <button class="margin-5" mat-flat-button color="primary" (click)="changeStatus()">
+                                {{'statusChange' | translate}} </button>
+                            <button class="margin-5" mat-flat-button color="primary" (click)="changeDistance()">
+                                {{'distanceChange' | translate}} </button>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="card-normal devaice-details">
+                        <mat-card-title>{{'device' | translate}}</mat-card-title>
+                        <mat-card-content *ngIf="!!selectedTrack.trackedInstance.deviceInfo">
+                            <mat-grid-list cols="1" rowHeight="45:2">
+                                <mat-grid-tile>
+                                    <span class="full-width left-text">
+                                        {{deviceInfo.platform}} {{deviceInfo.version}}
                                     </span>
-                                  </div>
-                            </mat-grid-tile>
-                        </mat-grid-list>
-                    </mat-card-content>
-                </mat-card>
+                                </mat-grid-tile>
+                                <mat-grid-tile>
+                                    <span class="full-width left-text"> 
+                                        {{deviceInfo.manufacturer}} <span *ngIf="deviceInfo.isVirtual" class="red">({{deviceInfo.isVirtual | translate}})</span>
+                                    </span>
+                                   
+                                </mat-grid-tile>
+                                <mat-grid-tile>
+                                    <span class="full-width left-text">
+                                        {{deviceInfo.appVersion}}
+                                    </span>                                    
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
 
                 <mat-card class="validation card-normal expandable-content">
                     <mat-card-title class="cursor-pointer" (click)="toggle()">
@@ -298,79 +279,7 @@
                         </mat-card-actions>
                     </mat-card-title>
                     <mat-card-content [@bodyExpansion]="stateValidationTrack" class="expandable-content">
-                        {{validationJson}}
-                    </mat-card-content>
-                </mat-card>
-            </div>
-            <div class="devaice-details">
-                <mat-card class="full-dimension card-normal">
-                    <mat-card-title>{{'device' | translate}}</mat-card-title>
-                    <mat-card-content *ngIf="!!selectedTrack.trackedInstance.deviceInfo">
-                        <table mat-table [dataSource]="dataSourceInfoDevice" class="full-dimension">
-
-                            <ng-container matColumnDef="available">
-                                <th mat-header-cell *matHeaderCellDef class="center-text">
-                                    {{ 'available'| translate}} </th>
-                                <td mat-cell *matCellDef="let element" class="center-text">
-                                    {{element.available | translate}}
-                                </td>
-                            </ng-container>
-    
-                             <ng-container matColumnDef="platform">
-                                <th mat-header-cell *matHeaderCellDef class="center-text">
-                                    {{ 'platform'| translate}} </th>
-                                <td mat-cell *matCellDef="let element" class="center-text">
-                                    {{element.platform}}
-                                </td>
-                            </ng-container>
-        
-                            <ng-container matColumnDef="version">
-                                <th mat-header-cell *matHeaderCellDef class="center-text">
-                                    {{ 'version'| translate}} </th>
-                                <td mat-cell *matCellDef="let element" class="center-text">
-                                    {{element.version}}
-                                </td>
-                            </ng-container>
-    
-                            <ng-container matColumnDef="manufacturer">
-                                <th mat-header-cell *matHeaderCellDef class="center-text">
-                                    {{ 'manufacturer'| translate}} </th>
-                                <td mat-cell *matCellDef="let element" class="center-text">
-                                    {{element.manufacturer}}
-                                </td>
-                            </ng-container>
-    
-                            <ng-container matColumnDef="isVirtual">
-                                <th mat-header-cell *matHeaderCellDef class="center-text">
-                                    {{ 'isVirtual'| translate}} </th>
-                                <td mat-cell *matCellDef="let element" class="center-text">
-                                    {{element.isVirtual | translate}}
-                                </td>
-                            </ng-container>
-    
-                            <ng-container matColumnDef="appVersion">
-                                <th mat-header-cell *matHeaderCellDef class="center-text">
-                                    {{ 'appVersion'| translate}} </th>
-                                <td mat-cell *matCellDef="let element" class="center-text">
-                                    {{element.appVersion}}
-                                </td>
-                            </ng-container>
-    
-    
-    
-                            <tr mat-header-row *matHeaderRowDef="displayedColumnsDevice"></tr>
-                            <tr mat-row *matRowDef="let row; columns: displayedColumnsDevice;"></tr>
-                        </table>
-                    </mat-card-content>
-
-                </mat-card>
-            </div>
-            <div class="actions-details">
-                <mat-card class="full-dimension card-normal">
-                    <mat-card-title>{{'actions' | translate}}</mat-card-title>
-                    <mat-card-content>
-                        <button class="margin-5" mat-flat-button color="primary" (click)="changeStatus()"> {{'statusChange' | translate}} </button>
-                        <button class="margin-5" mat-flat-button color="primary" (click)="changeDistance()"> {{'distanceChange' | translate}} </button>
+                        {{selectedTrack.trackedInstance.validationResult.validationStatus | json}}
                     </mat-card-content>
                 </mat-card>
             </div>
@@ -450,14 +359,14 @@
                                 {{element.speed}}
                             </td>
                         </ng-container>
-                        
+
 
 
 
                         <tr mat-header-row *matHeaderRowDef="displayedColumnsTrack"></tr>
                         <tr mat-row class="cursor-pointer" (click)="showPoint(i,row)"
-                        [ngClass]="{'highlight': selectedRowOnTrack(i)}"
-                         *matRowDef="let row;let i=index; columns: displayedColumnsTrack;"></tr>
+                            [ngClass]="{'highlight-table': selectedRowOnTrack(i)}"
+                            *matRowDef="let row;let i=index; columns: displayedColumnsTrack;"></tr>
                     </table>
                 </mat-card-content>
             </mat-card>

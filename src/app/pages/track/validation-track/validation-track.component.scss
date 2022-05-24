@@ -88,7 +88,11 @@
 }
 
 .highlight {
-    background: #979797b4; /* green */
+  border: 5px solid black;
+  }
+
+  .highlight-table{
+    background: #979797b4;
   }
 
 .map-height{
@@ -116,7 +120,7 @@
 
 .main-data{
   width: 60%;
-  height: 100%;
+  height: 70%;
   float: left;
 }
 
@@ -129,14 +133,13 @@
 
 .header-detatils{
   width: 96%;
-  height: 200px;
+  height: 500px;
   margin: 2%;
 }
 
 .devaice-details{
-  width: 96%;
-  height: 170px;
-  margin: 2%;
+  width: 100%;
+  margin-top: 2%;
 }
 
 .actions-details{
@@ -171,21 +174,36 @@
 }
 
 .green-background{
-  background-color: rgba(0, 128, 0, 0.808);
+  background-color: rgba(0, 128, 0, 0.39);
   border-radius: 4px;
 }
 
 .yellow-background{
-  background-color: rgba(255, 255, 0, 0.808);
+  background-color: rgba(255, 255, 0, 0.452);
   border-radius: 4px;
 }
 
 
 .red-background{
-  background-color: rgba(255, 0, 0, 0.801);
+  background-color: rgba(255, 0, 0, 0.397);
   border-radius: 4px;
 }
 
 .center-text{
   text-align: center;
 }
+
+.left-text{
+  text-align: left;
+}
+
+.left-header{
+  width: 60%;
+  height: 100%;
+  float: left;
+}
+
+.text-ellips{
+  text-overflow: ellipsis;
+}
+

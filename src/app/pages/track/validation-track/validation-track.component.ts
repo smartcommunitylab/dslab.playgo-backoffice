@@ -42,6 +42,7 @@ import { ConsoleControllerInternalService } from "src/app/shared/services/consol
 import { MatDialog } from "@angular/material/dialog";
 import { DistanceDialogComponent } from "../distance-dialog/distance-dialog.component";
 import { StatusDialogComponent } from "../status-dialog/status-dialog.component";
+import { CampaignControllerService } from "src/app/core/api/generated/controllers/campaignController.service";
 
 @Component({
   selector: "app-validation-track",
@@ -90,7 +91,8 @@ export class ValidationTrackComponent implements OnInit {
   layerGroup: L.Layer;
   markerLayers: any[];
   displayedColumnsDevice: string[] = ["available","platform","version","manufacturer","isVirtual","appVersion"];//];
-  dataSourceInfoDevice: MatTableDataSource<any[]>;
+  deviceInfo: any;
+  listCampaings: string[] = [];
 
   validatingForm: FormGroup;
   constructor(
@@ -98,6 +100,7 @@ export class ValidationTrackComponent implements OnInit {
     private trackingService: ConsoleControllerService,
     private territoryService: TerritoryControllerService,
     private trackingServiceInternal: ConsoleControllerInternalService,
+    private campaignService: CampaignControllerService,
     private dialogStatus: MatDialog,
     private dialogDistance: MatDialog,
   ) {}
@@ -106,7 +109,9 @@ export class ValidationTrackComponent implements OnInit {
     this.territoryId = localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY);
     this.initializaValidatingForm();
     var dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value, true); 
-    var dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value, true); 
+    console.log("ng init from: ",dateFromString);
+    var dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value, true);
+    console.log("ng init to: ",dateToString); 
     this.trackingServiceInternal
       .searchTrackedInstanceUsingGET(
         this.currentPageNumber,
@@ -131,6 +136,9 @@ export class ValidationTrackComponent implements OnInit {
     this.territoryService.getTerritoryUsingGET(this.territoryId).subscribe((territory)=>{
       this.listModelType = territory.territoryData.means;
     });
+    this.campaignService.getCampaignsUsingGET(this.territoryId).subscribe((campaigns)=>{
+      campaigns.forEach((item)=>{this.listCampaings.push(item.campaignId)});
+    })
   }
 
   initializaValidatingForm() {
@@ -213,8 +221,8 @@ export class ValidationTrackComponent implements OnInit {
 
   searchSubmit() {
     if (this.validatingForm.valid) {
-      var dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value); 
-      var dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value);
+      var dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value,true); 
+      var dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value,true);
       dateToString = dateToString ? dateToString :this.transformDateToString(moment());  
       this.trackingServiceInternal
         .searchTrackedInstanceUsingGET(
@@ -253,10 +261,8 @@ export class ValidationTrackComponent implements OnInit {
     this.dataSourceInfoTrack = new MatTableDataSource<any>(
       row.trackedInstance.geolocationEvents
     );
-    const deviceInfo = this.obejectFromString(row.trackedInstance.deviceInfo);
-    this.dataSourceInfoDevice = new MatTableDataSource<any>([deviceInfo]);
+    this.deviceInfo = this.obejectFromString(row.trackedInstance.deviceInfo);
     this.drawPolyline(this.selectedTrack.trackedInstance.geolocationEvents);
-    // this.validationJson = JSON.stringify(this.selectedTrack).replace(",", "\n");
     this.markerLayers = [];
     for (let i = 0; i < row.trackedInstance.geolocationEvents.length; i++) {
       this.markerLayers.push(undefined);
@@ -357,13 +363,13 @@ export class ValidationTrackComponent implements OnInit {
   }
 
   showPoint(index: number, row: any) { //row => GeolocationClass
-    var icon = L.icon({
-      iconUrl: "../../../assets/images/marker-icon.png",
+    var icon = L.divIcon({
+      className: "number-icon",
+      iconSize: [25, 41],
+      iconAnchor: [12, 43],
+      html: (index+1).toString()
+    });  
 
-      iconSize: [41, 41],
-      iconAnchor: [21, 41],
-      popupAnchor: [0, -30],
-    });
     if (!!this.markerLayers[index]){
       //defined
       try {
@@ -373,7 +379,7 @@ export class ValidationTrackComponent implements OnInit {
     } else {
       //undefined
       const popup = "<h3>point number: "+ (index+1)+ "</h3></br><h4>lat: " + row.geocoding[1] + " - long: " + row.geocoding[0]+"</h4>";
-      var marker = L.marker([row.geocoding[1], row.geocoding[0]], { icon: icon }).bindPopup(popup);
+      var marker = L.marker([row.geocoding[1], row.geocoding[0]], { icon: icon });
       const markers = this.markerLayers[index] ? this.markerLayers[index]["markers"].push(marker) : [marker];
       this.markerLayers[index] = {"layer": new L.LayerGroup(markers),"markers": markers, "popup": popup  };
       this.markerLayers[index]["layer"].addTo(this.map);
@@ -384,7 +390,7 @@ export class ValidationTrackComponent implements OnInit {
   changeDistance(){
       const dialogRef = this.dialogDistance.open(DistanceDialogComponent, {
         width: "60%",
-        height: "50%",
+        height: "30%",
       });
       let instance = dialogRef.componentInstance;
       instance.selectedTrack = this.selectedTrack;
@@ -397,7 +403,7 @@ export class ValidationTrackComponent implements OnInit {
   changeStatus(){
       const dialogRef = this.dialogStatus.open(StatusDialogComponent, {
         width: "60%",
-        height: "50%",
+        height: "30%",
       });
       let instance = dialogRef.componentInstance;
       instance.selectedTrack = this.selectedTrack;
@@ -433,6 +439,7 @@ export class ValidationTrackComponent implements OnInit {
   transformDateToString(date: Moment,startDay? :boolean): string{
     const dateFormat: Date = date ? date.toDate() : undefined;
     var dateString = dateFormat?  dateFormat.toISOString().replace('Z','').replace('T', ' ') : undefined;
+    console.log(dateString);
     if(startDay){
       if(dateString)
         return dateString.substring(0,dateString.length-'00:00:00.000'.length) + '00:00:00'

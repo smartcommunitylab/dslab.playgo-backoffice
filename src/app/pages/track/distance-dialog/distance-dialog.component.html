@@ -3,7 +3,7 @@
 <form [formGroup]="validatingForm">
     <mat-form-field appearance="fill" class="input-custom-half-left">
         <mat-label>{{'newDistance' | translate}}</mat-label>
-        <input matInput  type="number" id="distance" formControlName="distance">
+        <input matInput  type="number" min="0" id="distance" formControlName="distance">
     </mat-form-field>
     <p *ngIf="!!errorMsgValidation" class="full-dimension red">{{errorMsgValidation | translate}}</p>
     <div class="full-width" style="height: 40px">

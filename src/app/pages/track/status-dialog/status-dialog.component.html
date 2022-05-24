@@ -1,5 +1,5 @@
 <h1>{{'statusChange' | translate}}</h1>
-<p>{{'currentStatus' | translate}}: {{selectedTrack.trackedInstance.validationResult.travelValidity}}</p>
+<p>{{'currentStatus' | translate}}: {{selectedTrack.trackedInstance.validationResult.travelValidity | translate}}</p>
 <form [formGroup]="validatingForm">
     <mat-form-field appearance="fill" class="input-custom-half-left">
         <mat-label>{{'newStatus' | translate}}</mat-label>

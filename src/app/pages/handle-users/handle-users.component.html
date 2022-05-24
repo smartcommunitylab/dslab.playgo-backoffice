@@ -89,10 +89,8 @@
                             <th mat-header-cell *matHeaderCellDef sortActionDescription="Sort by campaigns"> {{
                                 'campaigns'| translate}} </th>
                             <td mat-cell *matCellDef="let element">
-                                <div class="full-dimension" style="margin: 3px;">
-                                    <ul *ngFor="let campaignEl of element.campaigns">
-                                        <li>{{campaignEl.campaign.campaignId}}</li>
-                                    </ul>
+                                <div class="full-dimension" style="margin: 3px;" *ngFor="let campaignEl of element.campaigns">
+                                    {{campaignEl.campaign.campaignId}}
                                 </div>
                             </td>
                         </ng-container>
