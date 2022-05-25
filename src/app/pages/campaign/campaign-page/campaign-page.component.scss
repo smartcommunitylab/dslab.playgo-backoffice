@@ -50,10 +50,15 @@
   background-color: rgb(99, 245, 80);
 }
 
-.img-logo {
+.img-banner {
   object-fit: cover;
   width: 100%;
   height: 250px;
+}
+
+.img-logo {
+  width: 85%;
+  height: 85%;
 }
 
 .newItem{
@@ -70,4 +75,22 @@
   width: 45%;
   height: 100%;
   float: right;
+}
+
+
+.title{
+  float: left;
+  width: 65%;
+  height: 100%;
+}
+
+.logo{
+  float: right;
+  width: 35%;
+  height: 100%;
+}
+
+.header-card{
+  width: 100%;
+  height: 250px;
 }

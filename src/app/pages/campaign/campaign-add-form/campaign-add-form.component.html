@@ -204,11 +204,13 @@
     <div class="col-12 full-width">
         <form [formGroup]="validatingForm">
             <div class="full-height">
-                <div class="in-line-forms" style="margin-bottom: 10px; margin-top: 50px;">
-                    <p *ngIf="!uploadImageForModifyLogo">{{"currentLogo" | translate}}</p>
-                    <p *ngIf="uploadImageForModifyLogo">{{"newLogo" | translate}}</p>
-                    <img *ngIf="selectedLogo" src="{{selectedLogo.url}}" style="width: 100px;height: 100px;">
-                    <!-- <img *ngIf="selectedLogo" src="{{ PREFIX_SRC_IMG_C + selectedLogo.contentType + BASE64_SRC_IMG_C + selectedLogo.image}}" style="width: 100px;height: 100px;"> -->
+                <div *ngIf="!uploadImageForModifyLogo" class="in-line-forms" style="margin-bottom: 10px; margin-top: 50px;">
+                    <p >{{"currentLogo" | translate}}</p>
+                    <img *ngIf="selectedLogo" src="{{!!selectedLogo.url ? selectedLogo.url : '' }}" style="width: 100px;height: 100px;">
+                </div>
+                <div *ngIf="uploadImageForModifyLogo" class="in-line-forms" style="margin-bottom: 10px; margin-top: 50px;">
+                    <p >{{"newLogo" | translate}}</p>
+                    <img *ngIf="selectedLogo" src="{{ PREFIX_SRC_IMG_C + selectedLogo.contentType + BASE64_SRC_IMG_C + selectedLogo.image}}" style="width: 100px;height: 100px;">
                 </div>
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-custom-half-left">
@@ -238,11 +240,13 @@
                         <mat-datepicker #picker></mat-datepicker>
                     </mat-form-field>
                 </div>
-                <div class="in-line-forms" style="margin-bottom: 10px; margin-top: 50px;">
-                    <p *ngIf="!uploadImageForModifyBanner">{{"currentBanner" | translate}}</p>
-                    <p *ngIf="uploadImageForModifyBanner">{{"newBanner" | translate}}</p>
-                    <img *ngIf="selectedBanner" src="{{selectedBanner.url}}" style="width: 100px;height: 100px;">
-                    <!-- <img *ngIf="selectedLogo" src="{{ PREFIX_SRC_IMG_C + selectedLogo.contentType + BASE64_SRC_IMG_C + selectedLogo.image}}" style="width: 100px;height: 100px;"> -->
+                <div *ngIf="!uploadImageForModifyBanner" class="in-line-forms" style="margin-bottom: 10px; margin-top: 50px;">
+                    <p >{{"currentBanner" | translate}}</p>
+                    <img *ngIf="selectedBanner" src="{{!!selectedBanner.url ? selectedBanner.url : ''}}" style="width: 100px;height: 100px;">
+                </div>
+                <div *ngIf="uploadImageForModifyBanner" class="in-line-forms" style="margin-bottom: 10px; margin-top: 50px;">
+                    <p >{{"newBanner" | translate}}</p>
+                    <img *ngIf="selectedBanner" src="{{ PREFIX_SRC_IMG_C + selectedBanner.contentType + BASE64_SRC_IMG_C + selectedBanner.image}}" style="width: 100px;height: 100px;">
                 </div>
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-custom-half-left">
