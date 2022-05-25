@@ -4,7 +4,7 @@ import { MatTableDataSource } from "@angular/material/table";
 import { MatDialog } from "@angular/material/dialog";
 import { CampaignAddFormComponent } from "../campaign-add-form/campaign-add-form.component";
 import { CampaignDeleteComponent } from "../campaign-delete/campaign-delete.component";
-import { CampaignClass, ValidationData,  } from "src/app/shared/classes/campaing-class";
+import { CampaignClass, ImageClass, ValidationData,  } from "src/app/shared/classes/campaing-class";
 import { TerritoryClass } from "src/app/shared/classes/territory-class";
 import { BASE64_SRC_IMG, PREFIX_SRC_IMG, TERRITORY_ID_LOCAL_STORAGE_KEY } from "src/app/shared/constants/constants";
 import {MatSort, Sort} from '@angular/material/sort';
@@ -79,6 +79,7 @@ export class CampaignPageComponent implements OnInit {
   }
 
   showTerritory(row: CampaignClass) {
+    console.log(row);
     this.highlightCampaign = new CampaignClass();
     this.highlightCampaign.campaignId = "";
     this.selectedRowIndex = row.campaignId;
@@ -224,8 +225,13 @@ export class CampaignPageComponent implements OnInit {
     if(element.logo){
         resultCampaign.logo = element.logo;
     }else{
-        resultCampaign.logo = new Logo();
+        resultCampaign.logo = new ImageClass();
     }
+    if(element.banner){
+      resultCampaign.banner = element.banner;
+  }else{
+      resultCampaign.banner = new ImageClass();
+  }
     if(element.name){
         resultCampaign.name = element.name;
     }else{
@@ -236,15 +242,10 @@ export class CampaignPageComponent implements OnInit {
     }else{
         resultCampaign.validationData = new ValidationData();
     }
-    if(element.privacy){
-        resultCampaign.privacy = element.privacy;
+    if(element.details){
+        resultCampaign.details = element.details;
     }else{
-        resultCampaign.privacy = "";
-    }
-    if(element.rules){
-        resultCampaign.rules = element.rules;
-    }else{
-        resultCampaign.rules = "";
+        resultCampaign.details = [];
     }
     if(element.startDayOfWeek){
         resultCampaign.startDayOfWeek = element.startDayOfWeek;
@@ -263,5 +264,7 @@ export class CampaignPageComponent implements OnInit {
     }
     return resultCampaign;
 }
+
+
 
 }

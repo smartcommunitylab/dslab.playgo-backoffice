@@ -11,6 +11,7 @@ import { TerritoryClass } from "src/app/shared/classes/territory-class";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import {
   CampaignClass,
+  ImageClass,
   ValidationData,
 } from "src/app/shared/classes/campaing-class";
 import {
@@ -38,6 +39,9 @@ import { Moment } from "moment";
 import { Logo } from "src/app/shared/classes/logo-class";
 import { TerritoryControllerService } from "src/app/core/api/generated/controllers/territoryController.service";
 import { CampaignControllerService } from "src/app/core/api/generated/controllers/campaignController.service";
+import { CampaignDetailClass, DetailsForAddModifyModule } from "src/app/shared/classes/campaign-details-class";
+import { CampaignDetail } from "src/app/core/api/generated/model/campaignDetail";
+import { Image } from "src/app/core/api/generated/model/image";
 
 const moment = _moment;
 
@@ -74,17 +78,22 @@ export class CampaignAddFormComponent implements OnInit {
   campaignUpdated: CampaignClass;
   territoryList: TerritoryClass[];
   territorySelected: TerritoryClass;
-  selectedLogo: Logo;
+  selectedLogo: Image;
+  selectedBanner: Image;
   typeCampaign = TYPE_CAMPAIGN;
   means: string[];
   errorMsgValidation: string;
   stateDescription: string = "collapsed";
-  stateRules: string = "collapsed";
-  statePrivacy: string = "collapsed";
+  details: DetailsForAddModifyModule[] = [];
+  detailsType: any[];
+  // stateRules: string = "collapsed";
+  // statePrivacy: string = "collapsed";
   PREFIX_SRC_IMG_C = PREFIX_SRC_IMG;
   BASE64_SRC_IMG_C =BASE64_SRC_IMG;
-  uploadImageForModify: boolean = false;
-  blobImageUpload: Blob;
+  uploadImageForModifyLogo: boolean = false;
+  blobImageUploadLogo: Blob;
+  uploadImageForModifyBanner: boolean = false;
+  blobImageUploadBanner: Blob;
   activeValue = false;
 
   @Input() set formTerritory(value: CampaignClass) {
@@ -93,15 +102,21 @@ export class CampaignAddFormComponent implements OnInit {
     this.campaignUpdated.communications = value.communications;
     this.campaignUpdated.name = value.name;
     this.campaignUpdated.campaignId = value.campaignId;
-    this.campaignUpdated.logo = new Logo();
+    this.campaignUpdated.logo = new ImageClass();
     this.campaignUpdated.logo.contentType = value.logo.contentType;
     this.campaignUpdated.logo.image = value.logo.image;
-    this.selectedLogo = new Logo();
+    this.selectedLogo = new ImageClass();
     this.selectedLogo.contentType = value.logo.contentType;
     this.selectedLogo.image = value.logo.image;
+    this.selectedLogo.url = value.logo.url;
+    this.selectedLogo.contentType = value.logo.contentType;
+    this.selectedBanner = new ImageClass();
+    this.selectedBanner.contentType = value.banner.contentType;
+    this.selectedBanner.image = value.banner.image;
+    this.selectedBanner.url = value.banner.url;
+    this.details = this.setDetails(value.details);
     this.campaignUpdated.description = value.description;
-    this.campaignUpdated.privacy = value.privacy;
-    this.campaignUpdated.rules = value.rules;
+    this.campaignUpdated.details = value.details;
     this.campaignUpdated.validationData = new ValidationData();
     this.campaignUpdated.validationData.means = value.validationData.means;
     this.campaignUpdated.active = value.active;
@@ -137,6 +152,7 @@ export class CampaignAddFormComponent implements OnInit {
       .getTerritoryUsingGET(localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY))
       .subscribe((result) => {this.territorySelected = result;
       this.means = this.territorySelected.territoryData.means});
+    this.initDetailsType();
   }
 
   initializaValidatingForm() {
@@ -146,9 +162,8 @@ export class CampaignAddFormComponent implements OnInit {
         campaignId: new FormControl("", [Validators.required]),
         name: new FormControl("", [Validators.required]),
         logo: new FormControl("", [Validators.required]),
+        banner: new FormControl("", [Validators.required]),
         description: new FormControl(""),
-        privacy: new FormControl(""),
-        rules: new FormControl(""),
         means: new FormControl("", [Validators.required]),
         active: new FormControl("", [Validators.required]),
         dateFrom: new FormControl("", [Validators.required]),
@@ -164,9 +179,8 @@ export class CampaignAddFormComponent implements OnInit {
     } else {
       this.validatingForm = this.formBuilder.group({
         logo: new FormControl(""),
+        banner: new FormControl(""),
         description: new FormControl(""),
-        privacy: new FormControl(""),
-        rules: new FormControl(""),
         means: new FormControl("", [Validators.required]),
         active: new FormControl("", [Validators.required]),
         dateFrom: new FormControl("", [Validators.required]),
@@ -177,9 +191,8 @@ export class CampaignAddFormComponent implements OnInit {
       });
       this.validatingForm.patchValue({
         logo: this.campaignUpdated.logo,
+        banner: this.campaignUpdated.banner,
         description: this.campaignUpdated.description,
-        privacy: this.campaignUpdated.privacy,
-        rules: this.campaignUpdated.rules,
         means: this.campaignUpdated.validationData.means,
         active: this.campaignUpdated.active,
         dateFrom: moment(this.campaignUpdated.dateFrom, "YYYY-MM-DD"),
@@ -211,17 +224,41 @@ export class CampaignAddFormComponent implements OnInit {
 
   validate(): void {
     this.errorMsgValidation = "";
+    var validDetails = true;
+    this.details.forEach((item)=>{
+      if(!item.form.valid){
+        item.collapsed = false;
+        item.form.markAllAsTouched();
+        validDetails = false;
+        return;
+      }
+    });
+    if(!validDetails){
+      return;
+    }
     if (this.validatingForm.valid) {
       this.campaignCreated.active = this.validatingForm.get("active").value;
       const dataFrom: Moment =this.validatingForm.get("dateFrom").value;
       this.campaignCreated.dateFrom = this.formatDate(dataFrom); // dataFrom.toDate();//
       const dataTo: Moment = this.validatingForm.get("dateTo").value;
       this.campaignCreated.dateTo = this.formatDate(dataTo); //dataTo.toDate();//
-      this.campaignCreated.logo = new Logo();
+      this.campaignCreated.logo = new ImageClass();
       this.campaignCreated.logo.contentType = this.selectedLogo.contentType;
       this.campaignCreated.logo.image = this.selectedLogo.image;
-      this.campaignCreated.privacy = this.validatingForm.get("privacy").value;
-      this.campaignCreated.rules = this.validatingForm.get("rules").value;
+      this.campaignCreated.logo.url = this.selectedLogo.url;
+      this.campaignCreated.banner = new ImageClass();
+      this.campaignCreated.banner.contentType = this.selectedBanner.contentType;
+      this.campaignCreated.banner.image = this.selectedBanner.image;
+      this.campaignCreated.banner.url = this.selectedBanner.url;
+      this.campaignCreated.details =[];
+       this.details.forEach((item)=>{
+         var detail = new CampaignDetailClass();
+         detail.content = item.form.get("content").value;
+         detail.extUrl = item.form.get("url").value;
+         detail.name = item.form.get("name").value;
+         detail.type =  item.form.get("type").value;
+         this.campaignCreated.details.push(detail);
+       });
       this.campaignCreated.type = this.validatingForm.get("type").value;
       this.campaignCreated.validationData.means = this.validatingForm.get("means").value;
       this.campaignCreated.description = this.validatingForm.get("description").value;
@@ -272,9 +309,9 @@ export class CampaignAddFormComponent implements OnInit {
         try {
           this.campaignService.updateCampaignUsingPUT(this.campaignCreated).subscribe(
             () => {
-              if(this.uploadImageForModify){
+              if(this.uploadImageForModifyLogo){
                 const formData = new FormData();
-                formData.append('data', this.blobImageUpload);
+                formData.append('data', this.blobImageUploadLogo);//this.blobImageUploadLogo
                 this.campaignService.uploadCampaignLogoUsingPOST(this.campaignCreated.campaignId,formData).subscribe(
                   () => {
                     this.onNoClick("", this.campaignCreated);
@@ -290,6 +327,27 @@ export class CampaignAddFormComponent implements OnInit {
                      this.errorMsgValidation = "Tutti i dati sono stati modificati tranne il logo. Per errore: " + error +"\n";
                   }
                 )
+              if(this.uploadImageForModifyBanner){
+                const formData = new FormData();
+                formData.append('data', this.blobImageUploadBanner); //this.blobImageUploadBanner
+                this.campaignService.uploadCampaignBannerUsingPOST(this.campaignCreated.campaignId,{'body':this.campaignCreated.banner}).subscribe(
+                  () => {
+                    this.onNoClick("", this.campaignCreated);
+                    this._snackBar.open("Dati modificati", "close");
+                  },
+                  (error) => {
+                    // console.log(error);
+                    if(error.error && error.error.ex)
+                     this.errorMsgValidation = "Tutti i dati sono stati modificati tranne il banner. Per errore: " + error.error.ex +"\n";
+                     else if(error.error)
+                     this.errorMsgValidation = "Tutti i dati sono stati modificati tranne il banner. Per errore: " + error.error +"\n";
+                     else
+                     this.errorMsgValidation = "Tutti i dati sono stati modificati tranne il banner. Per errore: " + error +"\n";
+                  });
+              }else{
+                this.onNoClick("", this.campaignCreated);
+                this._snackBar.open("Dati modificati", "close");
+              }
               }else{
                 this.onNoClick("", this.campaignCreated);
                 this._snackBar.open("Dati modificati", "close");
@@ -312,17 +370,36 @@ export class CampaignAddFormComponent implements OnInit {
     if (event.target.files && event.target.files[0]) {
       var reader = new FileReader();
       const eev = event;
-      this.blobImageUpload = event.target.files[0];
+      this.blobImageUploadLogo = event.target.files[0];
       reader.readAsDataURL(event.target.files[0]);
       reader.onload = (event) => { 
-        this.selectedLogo = new Logo();
+        this.selectedLogo = new ImageClass();
         this.selectedLogo.contentType = eev.target.files[0].type;
         const prefix = this.PREFIX_SRC_IMG_C + this.selectedLogo.contentType + this.BASE64_SRC_IMG_C;
         const base64string = event.target.result.slice(prefix.length);
         if(typeof base64string === 'string'){
           this.selectedLogo.image = base64string;
         }
-        this.uploadImageForModify = true;
+        this.uploadImageForModifyLogo = true;
+      };
+    }
+  }
+
+  uploadBanner(event: any): void {
+    if (event.target.files && event.target.files[0]) {
+      var reader = new FileReader();
+      const eev = event;
+      this.blobImageUploadBanner = event.target.files[0];
+      reader.readAsDataURL(event.target.files[0]);
+      reader.onload = (event) => { 
+        this.selectedBanner = new ImageClass();
+        this.selectedBanner.contentType = eev.target.files[0].type;
+        const prefix = this.PREFIX_SRC_IMG_C + this.selectedBanner.contentType + this.BASE64_SRC_IMG_C;
+        const base64string = event.target.result.slice(prefix.length);
+        if(typeof base64string === 'string'){
+          this.selectedBanner.image = base64string;
+        }
+        this.uploadImageForModifyBanner = true;
       };
     }
   }
@@ -357,15 +434,16 @@ export class CampaignAddFormComponent implements OnInit {
       this.stateDescription === "collapsed" ? "expanded" : "collapsed";
   }
 
-  togglePrivacy() {
-    this.statePrivacy =
-      this.statePrivacy === "collapsed" ? "expanded" : "collapsed";
-  }
+  // togglePrivacy() {
+  //   this.
+  //   this.statePrivacy =
+  //     this.statePrivacy === "collapsed" ? "expanded" : "collapsed";
+  // }
 
-  toggleRules() {
-    this.stateRules =
-      this.stateRules === "collapsed" ? "expanded" : "collapsed";
-  }
+  // toggleRules() {
+  //   this.stateRules =
+  //     this.stateRules === "collapsed" ? "expanded" : "collapsed";
+  // }
 
   validDates(startt: string, endd: string): boolean {
     this.errorMsgValidation = "";
@@ -399,4 +477,64 @@ export class CampaignAddFormComponent implements OnInit {
       }
     }
   }
+
+  setDetails(details: CampaignDetail[]) :DetailsForAddModifyModule[]{
+    var result = [];
+    for(let el of details){
+      let item = new DetailsForAddModifyModule();
+      item.collapsed = true;
+      item.created = true;
+      item.detail = el;
+      item.form = this.formBuilder.group({
+        name: new FormControl("", [Validators.required]),
+        type: new FormControl("", [Validators.required]),
+        url: new FormControl(""),
+        content:new FormControl(""),
+      });
+      item.form.patchValue({
+        name: el.name,
+        type: el.type,
+        url: el.extUrl,
+        content: el.content
+      });
+      result.push(item);
+    }
+    console.log('result:',result);
+    return result;
+  }
+
+  addDetail(){
+    var item = new DetailsForAddModifyModule();
+    item.collapsed = true;
+    item.created = true;
+    item.detail = new CampaignDetailClass;
+    item.form = this.formBuilder.group({
+      name: new FormControl("", [Validators.required]),
+      type: new FormControl("", [Validators.required]),
+      url: new FormControl(""),
+      content:new FormControl(""),
+    });
+    this.details.push(item);
+  }
+
+  deleteDetail(removeEl : DetailsForAddModifyModule){
+    this.details= this.details.filter((item)=>item != removeEl);
+  }
+
+  toggleDetail(detail : DetailsForAddModifyModule){
+    this.details.forEach((item,index)=>{
+      if(item ===detail){
+        this.details[index].collapsed = !this.details[index].collapsed;
+      }
+    });
+  }
+
+  initDetailsType(){
+    this.detailsType = [];
+    for (var enumMember in CampaignDetail.TypeEnum) {
+      this.detailsType.push({'value':CampaignDetail.TypeEnum[enumMember],'used':false});
+   }
+  }
+
+
 }

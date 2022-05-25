@@ -93,8 +93,8 @@
                 <mat-card-subtitle>
                     {{'active' | translate}}: {{selectedCampaign.active}}
                 </mat-card-subtitle>
-                <img class="img-logo"
-                    src="{{PREFIX_SRC_IMG_C + selectedCampaign.logo.contentType + BASE64_SRC_IMG_C + selectedCampaign.logo.image}}">
+                <img class="img-logo" src="{{ selectedCampaign.banner.url }}">
+                <!-- old <img class="img-logo" src="{{PREFIX_SRC_IMG_C + selectedCampaign.banner.contentType + BASE64_SRC_IMG_C + selectedCampaign.banner.image}}"> -->
                 <mat-card-content>
                     <div>
                         <p>{{'dateFrom' |translate }}: {{selectedCampaign.dateFrom}} {{'dateTo' |translate }}:
@@ -107,8 +107,9 @@
                         </ul>
                         <drop-down-card-info [title]="'description' | translate" [content]="selectedCampaign.description">
                         </drop-down-card-info>
-                        <drop-down-card-info [title]="'privacy' | translate" [content]="selectedCampaign.privacy"></drop-down-card-info>
-                        <drop-down-card-info [title]="'rules' | translate" [content]="selectedCampaign.rules"></drop-down-card-info>
+                        <span *ngFor="let detail of selectedCampaign.details">
+                            <drop-down-card-info [title]="detail.type | translate" [content]="detail.content"></drop-down-card-info>
+                        </span>
                     </div>
                 </mat-card-content>
 

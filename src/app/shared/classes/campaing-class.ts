@@ -1,5 +1,6 @@
 import { Campaign } from "src/app/core/api/generated/model/campaign";
-import { Logo } from "./logo-class";
+import { CampaignDetail } from "src/app/core/api/generated/model/campaignDetail";
+import { Image } from "src/app/core/api/generated/model/image";
 
 export interface CampaignTypeInterface{
     weekStart?: string;
@@ -25,20 +26,25 @@ export class ValidationData {
 
 
 export class CampaignClass implements Campaign {
-
     active?: boolean;
+    banner?: Image;
     campaignId?: string;
     communications?: boolean;
     dateFrom?: string;
     dateTo?: string;
     description?: string;
+    details?: Array<CampaignDetail>;
     gameId?: string;
-    logo?: Logo;
+    logo?: Image;
     name?: string;
-    validationData?: ValidationData;
-    privacy?: string;
-    rules?: string;
     startDayOfWeek?: number;
     territoryId?: string;
     type?: Campaign.TypeEnum;
+    validationData?: ValidationData;
+}
+
+export class ImageClass implements Image {
+    contentType?: string;
+    image?: string;
+    url?: string;
 }

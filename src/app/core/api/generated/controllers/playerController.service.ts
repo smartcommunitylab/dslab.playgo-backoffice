@@ -71,23 +71,11 @@ export class PlayerControllerService {
   }
 
   /**
-   * getPlayerAvatarDataSmall
+   * getPlayerAvatar
    *
    */
-  public getPlayerAvatarDataSmallUsingGET(): Observable<any> {
-    return this.http.request<any>(
-      "get",
-      environment.serverUrl.api + `/playandgo/api/player/avatar/small`,
-      {}
-    );
-  }
-
-  /**
-   * getPlayerAvatarData
-   *
-   */
-  public getPlayerAvatarDataUsingGET(): Observable<any> {
-    return this.http.request<any>(
+  public getPlayerAvatarUsingGET(): Observable<Avatar> {
+    return this.http.request<Avatar>(
       "get",
       environment.serverUrl.api + `/playandgo/api/player/avatar`,
       {}
