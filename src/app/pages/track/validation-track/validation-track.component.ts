@@ -256,6 +256,7 @@ export class ValidationTrackComponent implements OnInit {
   }
 
   showTrack(row: TrackedInstanceConsoleClass) {
+    console.log(row);
     this.selectedTrack = row;
     this.selectedRowIndex = row.trackedInstance.id;
     this.dataSourceInfoTrack = new MatTableDataSource<any>(

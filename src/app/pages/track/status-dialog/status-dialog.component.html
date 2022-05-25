@@ -1,12 +1,25 @@
 <h1>{{'statusChange' | translate}}</h1>
 <p>{{'currentStatus' | translate}}: {{selectedTrack.trackedInstance.validationResult.travelValidity | translate}}</p>
 <form [formGroup]="validatingForm">
-    <mat-form-field appearance="fill" class="input-custom-half-left">
-        <mat-label>{{'newStatus' | translate}}</mat-label>
-        <mat-select id="status" formControlName="status" >
-            <mat-option *ngFor="let val of listStatus" [value]="val">{{val | translate}}</mat-option>
-        </mat-select>
-    </mat-form-field>
+    <div class="in-line-forms">
+        <mat-form-field appearance="fill" class="input-custom-half-left">
+            <mat-label>{{'newStatus' | translate}}</mat-label>
+            <mat-select id="status" formControlName="status" >
+                <mat-option *ngFor="let val of listStatus" [value]="val">{{val | translate}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="input-custom-half-right">
+            <mat-label>{{'newDistance' | translate}}</mat-label>
+            <input matInput  type="number" min="0" id="distance" formControlName="distance">
+        </mat-form-field>
+    </div>
+    <div class="in-line-forms">
+        <mat-form-field appearance="fill" class="input-custom-half-left">
+            <mat-label>{{'newTime' | translate}}</mat-label>
+            <input matInput  type="number" min="0" id="time" formControlName="time">
+        </mat-form-field>
+    </div>
+
     <p *ngIf="!!errorMsgValidation" class="full-dimension red">{{errorMsgValidation | translate}}</p>
     <div class="full-width" style="height: 40px">
         <button class="right-button back-green" mat-raised-button type="submit" (click)="validate()">

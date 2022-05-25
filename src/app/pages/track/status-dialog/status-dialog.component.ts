@@ -31,6 +31,8 @@ export class StatusDialogComponent implements OnInit {
   initializaValidatingForm() {
     this.validatingForm = this.formBuilder.group({
       status: new FormControl("", [Validators.required]),
+      distance: new FormControl(""),
+      time: new FormControl(""),
     });
   }
 
