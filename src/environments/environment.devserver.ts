@@ -16,7 +16,7 @@ export const environment = {
     aacUrl: 'https://aac.platform.smartcommunitylab.it',
     aacClientId: 'c_5445634c-95d6-4c0e-a1ff-829b951b91b3',
     redirectUrl: 'https://backofficedev.playngo.it/',
-    logout_redirect: 'https://backofficedev.playngo.it//',
+    logout_redirect: 'https://backofficedev.playngo.it/',
     scope: 'openid email profile'
   }
 };
