@@ -7,7 +7,6 @@ import { HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from './shared/shared.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { AuthService } from './core/auth/auth.service';
@@ -17,6 +16,9 @@ import { AuthInterceptor } from './core/auth/auth.interceptor';
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from '@angular/material/button';
+import { SideNavComponent } from './shared/components/side-nav/side-nav';
+import { AccountDialogComponent } from './shared/components/account-dialog/account-dialog.component';
+import { SpinnerInterceptor } from './core/loader/spinner.interceptor';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -29,6 +31,8 @@ export function init_app(appLoadService: AppLoadService) {
 @NgModule({
   declarations: [
     AppComponent,
+    SideNavComponent,
+    AccountDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -56,7 +60,13 @@ export function init_app(appLoadService: AppLoadService) {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
-    },],
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: SpinnerInterceptor,
+      multi: true
+    },
+  ],
   bootstrap: [AppComponent],
   exports: []
 })

@@ -1,0 +1,374 @@
+<div class="full-width" *ngIf="type === 'add'">
+    <h1>{{'addCampaign' | translate}}</h1>
+    <div class="col-12 full-width">
+        <form [formGroup]="validatingForm">
+            <div class="full-height">
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <mat-label>{{'territoryId' | translate}}</mat-label>
+                        <mat-select id="territoryId" formControlName="territoryId" [disabled]="true">
+                            <mat-option *ngFor="let val of territoryList" [value]="val.territoryId">{{val.territoryId}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-hint>{{"hintIdTerritoryAddCampaign" | translate}}</mat-hint>
+                    </mat-form-field>
+                </div>
+                <div class="in-line-forms" style="margin-top: 20px;">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <mat-label>{{'campaignId' | translate}}</mat-label>
+                        <input matInput id="campaignId" formControlName="campaignId">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                        <mat-label>{{'name' | translate}}</mat-label>
+                        <input matInput id="name" formControlName="name">
+                    </mat-form-field>
+                </div>
+                <div class="in-line-forms" *ngIf="selectedLogo">
+                    <img 
+                        src="{{PREFIX_SRC_IMG_C + selectedLogo.contentType + BASE64_SRC_IMG_C + selectedLogo.image}}"
+                        style="width: 100px;height: 100px;">
+                </div>
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <input matInput formControlName="logo" type="file" accept="image/png, image/jpeg"
+                            (change)="upload($event)" />
+                        <mat-hint>{{'logo' |translate}}</mat-hint>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                        <mat-label>{{'means' | translate}}</mat-label>
+                        <mat-select id="means" formControlName="means" multiple>
+                            <mat-option *ngFor="let mean of means" [value]="mean">{{mean |translate}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <mat-label>{{'dateFrom' | translate}}</mat-label>
+                        <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1">
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                        <mat-label>{{'dateTo' | translate}}</mat-label>
+                        <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="in-line-forms" *ngIf="selectedBanner">
+                    <img 
+                        src="{{PREFIX_SRC_IMG_C + selectedBanner.contentType + BASE64_SRC_IMG_C + selectedBanner.image}}"
+                        style="width: 100px;height: 100px;">
+                </div>
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <input matInput formControlName="banner" type="file" accept="image/png, image/jpeg"
+                            (change)="uploadBanner($event)" />
+                            <mat-hint>{{'banner' |translate}}</mat-hint>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                        <mat-label>{{'active' | translate}}</mat-label>
+                        <mat-select id="active" formControlName="active">
+                            <mat-option *ngFor="let val of [true,false]" [value]="val">{{val |translate}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <!-- <div class="in-line-forms" style="margin-top: 50px;margin-bottom: 50px;">
+                    <mat-slide-toggle formControlName="active">
+                        <mat-label>{{'active' | translate}}</mat-label>
+                    </mat-slide-toggle>
+                    <span *ngIf="!validatingForm.get('active')">{{"inactiveCampaign"| translate}}</span>
+                    <span *ngIf="validatingForm.get('active')">{{"activeCampaign"| translate}}</span>
+                </div> -->
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <mat-label>{{'type' | translate}}</mat-label>
+                        <mat-select id="type" formControlName="type">
+                            <mat-option *ngFor="let val of typeCampaign" [value]="val">{{val |translate}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="in-line-forms"
+                    *ngIf="!!validatingForm.get('type').value && validatingForm.get('type').value!=='company'">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <mat-label>{{'startDayOfWeek' | translate}}</mat-label>
+                        <input matInput id="startDayOfWeek" formControlName="startDayOfWeek">
+                        <mat-hint>{{"hintStartDayOfWeek" | translate}}</mat-hint>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                        <mat-label>{{'gameId' | translate}}</mat-label>
+                        <input matInput id="gameId" formControlName="gameId">
+                    </mat-form-field>
+                </div>
+                <div class="in-line-forms">
+                    <mat-card class="card-expandable card-normal">
+                        <mat-card-title class="cursor-pointer" (click)="toggleDescription()">
+                            {{'description' | translate}}
+                            <mat-card-actions class="right-button top-button">
+                                <mat-icon *ngIf="stateDescription==='collapsed'">
+                                    <span class="material-symbols-outlined">
+                                        expand_more
+                                    </span>
+                                </mat-icon>
+                                <mat-icon *ngIf="stateDescription==='expanded'">
+                                    <span class="material-symbols-outlined">
+                                        expand_less
+                                    </span>
+                                </mat-icon>
+                            </mat-card-actions>
+                        </mat-card-title>
+                        <mat-card-content [@bodyExpansion]="stateDescription" class="expandable-content">
+                            <rich-text-editor [control]="descriptionRichControl"></rich-text-editor>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div class="in-line-forms" *ngFor="let detail of details">
+                    <mat-card class="card-expandable card-normal" style="margin-bottom: 5px;">
+                        <mat-card-title class="cursor-pointer" (click)="toggleDetail(detail)">
+                            {{ (detail.name? detail.name : 'newDetail') | translate}}
+                            <mat-card-actions class="right-button top-button">
+                                <mat-icon *ngIf="detail.collapsed">
+                                    <span class="material-symbols-outlined">
+                                        expand_more
+                                    </span>
+                                </mat-icon>
+                                <mat-icon *ngIf="!detail.collapsed">
+                                    <span class="material-symbols-outlined">
+                                        expand_less
+                                    </span>
+                                </mat-icon>
+                            </mat-card-actions>
+                        </mat-card-title>
+                        <mat-card-content [@bodyExpansion]="detail.collapsed ? 'collapsed': 'expanded' " class="expandable-content">
+                            <form [formGroup]="detail.form">
+                                <div class="in-line-forms">
+                                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                                        <mat-label>{{'name' | translate}}</mat-label>
+                                        <input matInput formControlName="name" type="text" />
+                                    </mat-form-field>
+                                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                                        <mat-label>{{'type' | translate}}</mat-label>
+                                        <mat-select id="type" formControlName="type">
+                                            <mat-option *ngFor="let type of detailsType"  [value]="type.value" (onSelectionChange)="type.used = true">
+                                                    <!-- {{(!type.used? type.value : null) | translate}} -->
+                                                    {{type.value | translate}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="in-line-forms">
+                                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                                        <mat-label>{{'extraUrl' | translate}}</mat-label>
+                                        <input matInput formControlName="url" type="text"/>
+                                    </mat-form-field>
+                                </div>
+                            </form>
+                            <rich-text-editor [control]="detail.form.get('content')"></rich-text-editor>
+                        </mat-card-content>
+                    </mat-card>
+                    <button type="button" mat-flat-button class="red-background delete-right-button"
+                        (click)="deleteDetail(detail)">
+                        {{'delete' | translate}}
+                        <mat-icon>
+                            <span class="material-symbols-outlined">
+                                delete
+                            </span>
+                        </mat-icon>
+                    </button>
+                </div>
+                <div class="in-line-forms">
+                    <button mat-flat-button type="button" color="primary" (click)="addDetail()">
+                        <mat-icon>
+                            <span class="material-symbols-outlined">
+                                add
+                            </span>
+                        </mat-icon>
+                        {{'addDetail' | translate}}
+                    </button>
+                </div>
+            </div>
+            <p *ngIf="!!errorMsgValidation" class="full-dimension red">{{errorMsgValidation | translate}}</p>
+            <div class="full-width" style="height: 40px">
+                <button class="right-button back-green" mat-raised-button type="submit" (click)="validate()">{{'save' |
+                    translate}}</button>
+                <button class="right-button" mat-flat-button (click)="onNoClick($event)">{{'cancel'
+                    |translate}}</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="full-width" *ngIf="type === 'modify'">
+    <h1>{{'modifyCampaign' | translate}} - {{campaignUpdated.name}} </h1>
+    <h3> {{'territoryId' | translate}}: {{campaignUpdated.territoryId}} </h3>
+    <h3>{{'campaignId' | translate}}: {{campaignUpdated.campaignId}}</h3>
+    <div class="col-12 full-width">
+        <form [formGroup]="validatingForm">
+            <div class="full-height">
+                <div class="in-line-forms" style="margin-bottom: 10px; margin-top: 50px;">
+                    <p *ngIf="!uploadImageForModifyLogo">{{"currentLogo" | translate}}</p>
+                    <p *ngIf="uploadImageForModifyLogo">{{"newLogo" | translate}}</p>
+                    <img *ngIf="selectedLogo" src="{{selectedLogo.url}}" style="width: 100px;height: 100px;">
+                    <!-- <img *ngIf="selectedLogo" src="{{ PREFIX_SRC_IMG_C + selectedLogo.contentType + BASE64_SRC_IMG_C + selectedLogo.image}}" style="width: 100px;height: 100px;"> -->
+                </div>
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <input matInput formControlName="logo" type="file" accept="image/png, image/jpeg"
+                            (change)="upload($event)" />
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                        <mat-label>{{'means' | translate}}</mat-label>
+                        <mat-select id="means" formControlName="means" multiple>
+                            <mat-option *ngFor="let mean of means" [value]="mean">{{mean |translate}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <mat-label>{{'dateFrom' | translate}}</mat-label>
+                        <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1">
+                        <mat-hint>{{'dateFormat' |translate}}</mat-hint>
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                        <mat-label>{{'dateTo' | translate}}</mat-label>
+                        <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker">
+                        <mat-hint>{{'dateFormat' |translate}}</mat-hint>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="in-line-forms" style="margin-bottom: 10px; margin-top: 50px;">
+                    <p *ngIf="!uploadImageForModifyBanner">{{"currentBanner" | translate}}</p>
+                    <p *ngIf="uploadImageForModifyBanner">{{"newBanner" | translate}}</p>
+                    <img *ngIf="selectedBanner" src="{{selectedBanner.url}}" style="width: 100px;height: 100px;">
+                    <!-- <img *ngIf="selectedLogo" src="{{ PREFIX_SRC_IMG_C + selectedLogo.contentType + BASE64_SRC_IMG_C + selectedLogo.image}}" style="width: 100px;height: 100px;"> -->
+                </div>
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <input matInput formControlName="banner" type="file" accept="image/png, image/jpeg"
+                            (change)="uploadBanner($event)" />
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                        <mat-label>{{'active' | translate}}</mat-label>
+                        <mat-select id="active" formControlName="active">
+                            <mat-option *ngFor="let val of [true,false]" [value]="val">{{val | translate}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <mat-label>{{'type' | translate}}</mat-label>
+                        <mat-select id="type" formControlName="type">
+                            <mat-option *ngFor="let val of typeCampaign" [value]="val">{{val |translate}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="in-line-forms"
+                    *ngIf="!!validatingForm.get('type').value && validatingForm.get('type').value!=='company'">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <mat-label>{{'startDayOfWeek' | translate}}</mat-label>
+                        <input matInput id="startDayOfWeek" formControlName="startDayOfWeek">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                        <mat-label>{{'gameId' | translate}}</mat-label>
+                        <input matInput id="gameId" formControlName="gameId">
+                    </mat-form-field>
+                </div>
+                <div class="in-line-forms">
+                    <mat-card class="card-expandable card-normal">
+                        <mat-card-title class="cursor-pointer" (click)="toggleDescription()">
+                            {{'description' | translate}}
+                            <mat-card-actions class="right-button top-button">
+                                <mat-icon *ngIf="stateDescription==='collapsed'">
+                                    <span class="material-symbols-outlined">
+                                        expand_more
+                                    </span>
+                                </mat-icon>
+                                <mat-icon *ngIf="stateDescription==='expanded'">
+                                    <span class="material-symbols-outlined">
+                                        expand_less
+                                    </span>
+                                </mat-icon>
+                            </mat-card-actions>
+                        </mat-card-title>
+                        <mat-card-content [@bodyExpansion]="stateDescription" class="expandable-content">
+                            <rich-text-editor [control]="descriptionRichControl"></rich-text-editor>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div class="in-line-forms" *ngFor="let detail of details">
+                    <mat-card class="card-expandable card-normal" style="margin-bottom: 5px;">
+                        <mat-card-title class="cursor-pointer" (click)="toggleDetail(detail)">
+                            {{  detail.form.get('name').value}} - {{detail.form.get('type').value | translate}}
+                            <mat-card-actions class="right-button top-button">
+                                <mat-icon *ngIf="detail.collapsed">
+                                    <span class="material-symbols-outlined">
+                                        expand_more
+                                    </span>
+                                </mat-icon>
+                                <mat-icon *ngIf="!detail.collapsed">
+                                    <span class="material-symbols-outlined">
+                                        expand_less
+                                    </span>
+                                </mat-icon>
+                            </mat-card-actions>
+                        </mat-card-title>
+                        <mat-card-content [@bodyExpansion]="detail.collapsed ? 'collapsed': 'expanded' " class="expandable-content">
+                            <form [formGroup]="detail.form">
+                                <div class="in-line-forms">
+                                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                                        <mat-label>{{'name' | translate}}</mat-label>
+                                        <input matInput formControlName="name" type="text" />
+                                    </mat-form-field>
+                                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                                        <mat-label>{{'type' | translate}}</mat-label>
+                                        <mat-select id="type" formControlName="type" disabled="true">
+                                            <mat-option *ngFor="let type of detailsType"  [value]="type.value" (onSelectionChange)="type.used = true">
+                                                    <!-- {{(!type.used? type.value : null) | translate}} -->
+                                                    {{type.value | translate}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="in-line-forms">
+                                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                                        <mat-label>{{'extraUrl' | translate}}</mat-label>
+                                        <input matInput formControlName="url" type="text"/>
+                                    </mat-form-field>
+                                </div>
+                            </form>
+                            <rich-text-editor [control]="detail.form.get('content')"></rich-text-editor>
+                        </mat-card-content>
+                    </mat-card>
+                    <button type="button" mat-flat-button class="red-background delete-right-button"
+                        (click)="deleteDetail(detail)">
+                        {{'delete' | translate}}
+                        <mat-icon>
+                            <span class="material-symbols-outlined">
+                                delete
+                            </span>
+                        </mat-icon>
+                    </button>
+                </div>
+                <div class="in-line-forms">
+                    <button mat-flat-button type="button" color="primary" (click)="addDetail()">
+                        <mat-icon>
+                            <span class="material-symbols-outlined">
+                                add
+                            </span>
+                        </mat-icon>
+                        {{'addDetail' | translate}}
+                    </button>
+                </div>
+            </div>
+            <p *ngIf="!!errorMsgValidation" class="full-dimension red">{{errorMsgValidation | translate}}</p>
+            <div class="full-width" style="height: 40px">
+                <button class="right-button back-green" mat-raised-button type="submit" (click)="validate()">{{'save' |
+                    translate}}</button>
+                <button class="right-button" mat-flat-button (click)="onNoClick($event)">{{'cancel'
+                    |translate}}</button>
+            </div>
+        </form>
+    </div>
+</div>

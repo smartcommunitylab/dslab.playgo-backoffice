@@ -1,0 +1,103 @@
+<mat-drawer-container *ngIf="roleAdmin">
+    <mat-drawer mode="side" opened></mat-drawer>
+    <mat-drawer-content>
+        <div class="full-size">
+            <div class="button-height button-hover cursor-pointer" routerLink="/territory">
+                <mat-icon class="icon-side">
+                    <span class="material-symbols-outlined">
+                        map
+                    </span>
+                </mat-icon>
+                <h3 class="label-text">{{'territorySideNav' | translate}}</h3>
+            </div>
+            <div class="button-height button-hover cursor-pointer" routerLink="/campaign">
+                <mat-icon class="icon-side">
+                    <span class="material-symbols-outlined">
+                        signpost
+                    </span>
+                </mat-icon>
+                <h3 class="label-text">{{'campaignSideNav' | translate}}</h3>
+            </div>
+            <div class="button-height button-hover cursor-pointer" routerLink="/handle-users">
+                <mat-icon class="icon-side">
+                    <span class="material-icons-outlined">
+                        group
+                    </span>
+                </mat-icon>
+                <h3 class="label-text">{{'manageUsers' | translate}}</h3>
+            </div>
+            <div class="button-height button-hover cursor-pointer" routerLink="/track">
+                <mat-icon class="icon-side">
+                    <span class="material-icons-outlined">
+                        route
+                    </span>
+                </mat-icon>
+                <h3 class="label-text">{{'validateTrackSideNav' | translate}}</h3>
+            </div>
+            <div class="button-height button-hover cursor-pointer" routerLink="/communication">
+                <mat-icon class="icon-side">
+                    <span class="material-icons-outlined">
+                        forum
+                    </span>
+                </mat-icon>
+                <h3 class="label-text">{{'communicationTrackSideNav' | translate}}</h3>
+            </div>
+        </div>
+    </mat-drawer-content>
+</mat-drawer-container>
+
+<mat-drawer-container *ngIf="!roleAdmin && roleTerritory">
+    <mat-drawer mode="side" opened></mat-drawer>
+    <mat-drawer-content>
+        <div class="full-size">
+            <div class="button-height button-hover cursor-pointer" routerLink="/campaign">
+                <mat-icon class="icon-side">
+                    <span class="material-symbols-outlined">
+                        signpost
+                    </span>
+                </mat-icon>
+                <h3 class="label-text">{{'campaignSideNav' | translate}}</h3>
+            </div>
+            <div class="button-height button-hover cursor-pointer" routerLink="/handle-users">
+                <mat-icon class="icon-side">
+                    <span class="material-icons-outlined">
+                        group
+                    </span>
+                </mat-icon>
+                <h3 class="label-text">{{'manageUsers' | translate}}</h3>
+            </div>
+            <div class="button-height button-hover cursor-pointer" routerLink="/track">
+                <mat-icon class="icon-side">
+                    <span class="material-icons-outlined">
+                        route
+                    </span>
+                </mat-icon>
+                <h3 class="label-text">{{'validateTrackSideNav' | translate}}</h3>
+            </div>
+            <div class="button-height button-hover cursor-pointer" routerLink="/communication">
+                <mat-icon class="icon-side">
+                    <span class="material-icons-outlined">
+                        forum
+                    </span>
+                </mat-icon>
+                <h3 class="label-text">{{'communicationTrackSideNav' | translate}}</h3>
+            </div>
+        </div>
+    </mat-drawer-content>
+</mat-drawer-container>
+
+<mat-drawer-container *ngIf="!roleAdmin && !roleTerritory && roleCampaign">
+    <mat-drawer mode="side" opened></mat-drawer>
+    <mat-drawer-content>
+        <div class="full-size">
+            <div class="button-height button-hover cursor-pointer" routerLink="/404">
+                <mat-icon class="icon-side">
+                    <span class="material-icons-outlined">
+                        star
+                    </span>
+                </mat-icon>
+                <h3 class="label-text">{{'TODO' | translate}}</h3>
+            </div>
+        </div>
+    </mat-drawer-content>
+</mat-drawer-container>

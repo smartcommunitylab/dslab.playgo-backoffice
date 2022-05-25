@@ -1,0 +1,73 @@
+.add-button {
+  border-radius: 50px;
+  height: 100%;
+  width: 8%;
+}
+
+.add-button-div {
+  margin: 1%;
+  height: 50px;
+}
+
+.full-dimension {
+  width: 100%;
+  height: 100%;
+}
+
+.right-button {
+  float: right;
+  margin-right: 20px;
+}
+
+.highlight {
+  background: #979797b4; /* green */
+}
+
+.card {
+  border-top: 1px solid rgba(0, 0, 0, 0.075);
+  border-right: 1px solid rgba(0, 0, 0, 0.075);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  margin-left: 10px;
+}
+
+.full-height {
+  height: 100%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.modify-button {
+  background-color: rgb(234, 245, 80);
+}
+
+.delete-button {
+  background-color: red;
+}
+
+.manager-button {
+  background-color: rgb(99, 245, 80);
+}
+
+.img-logo {
+  object-fit: cover;
+  width: 100%;
+  height: 250px;
+}
+
+.newItem{
+  background: #f199f179; 
+}
+
+.table{
+  width: 55%;
+  height: 100%;
+  float: left;
+}
+
+.card-campaign{
+  width: 45%;
+  height: 100%;
+  float: right;
+}

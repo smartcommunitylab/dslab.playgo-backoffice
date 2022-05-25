@@ -1,0 +1,49 @@
+.full-size{
+    height: 100%;
+    width: 100%;
+  }
+  
+  .side-nav{
+    height: 100%;
+    float:left;
+    width: 6%;
+  }
+  
+  .page{
+    height: 100%;
+    float:right;
+    width: 94%;
+  }
+
+  .button-hover:hover{
+    background-color: rgba(0, 0, 0, 0.158);
+  }
+
+  .left-button{
+    height: 100%;
+    float:left;
+    width: 89%;
+  }
+
+  .right-button{
+    height: 100%;
+    float:right;
+    width: 9%;
+  }
+
+  .icon-side{
+    float: left;
+    margin: 10px;
+  }
+
+  .label-text{
+    float: left;
+    width: 70%; //170px
+    font-weight: 450;
+    margin: 0px;
+    margin-top: 10px;
+  }
+
+  .button-height{
+    height: 45px;
+  }

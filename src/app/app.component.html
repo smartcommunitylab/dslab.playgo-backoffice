@@ -1,14 +1,42 @@
 <mat-toolbar color="primary">
-  <div class="full-dimension">
-      <img src="../../../assets/images/pgLogo.png" class="logo">
-  </div>
-  <span class="example-spacer"></span>
-  <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
-      <mat-icon>
-          <span class="material-icons-outlined">
-              manage_accounts
-          </span>
-      </mat-icon>
-  </button>
+    <div>
+        <img src="../../../assets/images/pgLogo.png" class="logo">
+    </div>
+    <span class="example-spacer"></span>
+    <div class="right-toolbar">
+        <div class="full-size">
+                <mat-label>{{'territory' | translate}} - </mat-label>
+                <mat-select style="margin-top: 15px;margin-right: 20px;"  [(ngModel)]="globalSelectedTerritory" (selectionChange)="onGlobalSelectTerritory($event.value)">
+                    <mat-option *ngFor="let ter of territories" [value]="ter.territoryId">
+                      {{ter.territoryId}}
+                    </mat-option>
+                  </mat-select>
+
+              <button mat-icon-button class="example-icon favorite-icon manage-user-button" aria-label="Example icon-button with heart icon" (click)="openDialogAccount($event)">
+                  <mat-icon>
+                      <span class="material-icons-outlined">
+                          manage_accounts
+                      </span>
+                  </mat-icon>
+              </button>
+        </div>
+    </div>
+
 </mat-toolbar>
-<router-outlet></router-outlet>
+<div class="full-size">
+    <div class="side-nav">
+        <app-side-nav></app-side-nav>
+    </div>
+    <div class="page">
+        <div *ngIf="!loading" class="full-size border-left">
+            <router-outlet></router-outlet>
+        </div>
+        <div *ngIf="loading" class="loading-container">
+            <mat-spinner
+              color="primary"
+              mode="indeterminate">
+            </mat-spinner>
+            <h2 style="margin-left: 20px;">{{'loading' | translate}}...</h2>
+          </div>
+    </div>
+</div>

@@ -1,83 +1,117 @@
-<div style="height: 100%;">
+<div class="full-height">
+    <p style="margin: 10px;">{{"noteTerritoryAdmin" | translate}}</p>
     <div class="add-button-div">
-        <button mat-raised-button color="primary" class="add-button"(click)="addTerritory()" >+ {{'add' | translate}}</button>
+        <button mat-raised-button color="primary" class="add-button" (click)="addTerritory()">
+            <mat-icon>add</mat-icon>
+            {{'add' | translate}}
+        </button>
     </div>
-    <mat-grid-list cols="10" style="height: 100%;">
-        <mat-grid-tile [colspan]="6" style="height: 100%;">
-            <div class="full-dimension">
-                <mat-card style="margin-left: 10px;">
-                    <mat-grid-list cols="3" rowHeight="6:1">
-                        <mat-grid-tile>
-                            <div class="full-dimension" style="text-align: left;">
-                                <mat-card-title>
-                                    {{'territory' | translate}}
-                                </mat-card-title>
-                            </div>
-                        </mat-grid-tile>
-                        <mat-grid-tile></mat-grid-tile>
-                        <mat-grid-tile>
-                            <form class="example-form">
-                                <mat-form-field class="example-full-width" appearance="fill">
-                                    <input type="text" matInput placeholder="{{'search' | translate}}">
-                                    <mat-icon matSuffix>search</mat-icon>
-                                </mat-form-field>
-                            </form>
-                        </mat-grid-tile>
-                    </mat-grid-list>
-                    <mat-card-content>
-                        <div style="width: 100%">
-                            <table mat-table [dataSource]="dataSource" style="width: 100%">
-        
-                                <ng-container matColumnDef="name">
-                                    <th mat-header-cell *matHeaderCellDef> {{ 'name'| translate}} </th>
-                                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                                </ng-container>
-        
-                                <!--ng-container matColumnDef="description">
-                                    <th mat-header-cell *matHeaderCellDef> {{ 'description'| translate}} </th>
-                                    <td mat-cell *matCellDef="let element"> {{element.description}} </td>
-                                </ng-container>
-        
-                                <ng-container matColumnDef="means">
-                                    <th mat-header-cell *matHeaderCellDef> {{ 'means'| translate}} </th>
-                                    <td mat-cell *matCellDef="let element"> {{element.means}} </td>
-                                </ng-container-->
-        
-        
-                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                                <tr mat-row (click)="showTerritory(row)" *matRowDef="let row; columns: displayedColumns;"></tr>
-                            </table>
-        
-                            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
-                                aria-label="Select page of periodic elements">
-                            </mat-paginator>
+    <div class="full-height">
+        <div class="table">
+            <mat-card class="card" style="margin-left: 10px;">
+                <mat-grid-list cols="3" rowHeight="6:1">
+                    <mat-grid-tile>
+                        <div class="full-dimension" style="text-align: left;">
+                            <mat-card-title>
+                                {{'territory' | translate}}
+                            </mat-card-title>
                         </div>
-                    </mat-card-content>
-                </mat-card>
-            </div>
-        </mat-grid-tile>
-        <mat-grid-tile [colspan]="4" style="height: 100%;">
-            <div *ngIf="!!selectedTerritory" class="full-dimension">
-                <mat-card style="margin-right: 10px;">
-                    <mat-card-title>
-                        {{selectedTerritory.name}}
-                    </mat-card-title>
-                    <mat-card-subtitle>
-                        {{selectedTerritory.id}}
-                    </mat-card-subtitle>
-                    <mat-card-content>
-                        <div>
-                            <p>{{'means' | translate}}</p>
-                            <br>
-                            <p>{{selectedTerritory.means}}</p>
-                            <p>{{'description' | translate}}</p>
-                            <br>
-                            {{selectedTerritory.description}}
-                        </div>
-                    </mat-card-content>
-                </mat-card>
-            </div>
-        </mat-grid-tile>
-    </mat-grid-list>
+                    </mat-grid-tile>
+                    <mat-grid-tile></mat-grid-tile>
+                    <mat-grid-tile>
+                        <form class="example-form">
+                            <mat-form-field class="example-full-width" appearance="fill">
+                                <input type="text" matInput placeholder="{{'search' | translate}}"
+                                    [(ngModel)]="searchString" (keyup)="searchTerritory($event)">
+                                <mat-icon matSuffix>search</mat-icon>
+                            </mat-form-field>
+                        </form>
+                    </mat-grid-tile>
+                </mat-grid-list>
+                <mat-card-content>
+                    <div class="full-width">
+                        <table mat-table [dataSource]="dataSource" class="full-width" matSort
+                            (matSortChange)="announceSortChange($event)">
 
+                            <ng-container matColumnDef="territoryId">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    sortActionDescription="Sort by territoryId"> {{ 'territoryId'| translate}} </th>
+                                <td mat-cell *matCellDef="let element"> {{element.territoryId}} </td>
+                            </ng-container>
+
+
+                            <ng-container matColumnDef="name">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    sortActionDescription="Sort by name"> {{ 'name'| translate}} </th>
+                                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                            </ng-container>
+
+
+
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr class="cursor-pointer" mat-row (click)="showTerritory(row)"
+                                [ngClass]="{'highlight': selectedRowIndex === row.territoryId, 'newItem' : row.territoryId === newTerritory.territoryId}"
+                                *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+
+                        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                        </mat-paginator>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div *ngIf="!!selectedTerritory" class="card-territory">
+            <mat-card class="card" style="margin-right: 10px;">
+                <mat-card-title>
+                    {{selectedTerritory.name}}
+                </mat-card-title>
+                <mat-card-subtitle>
+                    {{selectedTerritory.territoryId}}
+                </mat-card-subtitle>
+                <mat-card-content>
+                    <div>
+                        <h3>{{'means' | translate}}</h3>
+                        <ul>
+                            <li *ngFor="let mean of selectedTerritory.territoryData.means">
+                                {{mean | translate}}
+                            </li>
+                        </ul>
+                        <drop-down-card-info [title]="'description' | translate"
+                            [content]="selectedTerritory.description"></drop-down-card-info>
+
+                    </div>
+                </mat-card-content>
+                <div style="height:40px;">
+                    <button class='right-button manager-button' mat-raised-button type="button"
+                        (click)="handleManager()">
+                        {{'handleManager' | translate}}
+                        <mat-icon>
+                            <span class="material-icons-outlined">
+                                supervisor_account
+                            </span>
+                        </mat-icon>
+                    </button>
+                    <button class='right-button modify-button' mat-raised-button type="button"
+                        (click)="updateTerritory()">
+                        {{'modify' | translate}}
+                        <mat-icon>
+                            <span class="material-icons-outlined">
+                                edit
+                            </span>
+                        </mat-icon>
+                    </button>
+                    <button class='right-button delete-button' mat-raised-button type="button"
+                        (click)="deleteTerritory()">
+                        {{'delete' |translate}}
+                        <mat-icon>
+                            <span class="material-icons-outlined">
+                                delete
+                            </span>
+                        </mat-icon>
+                    </button>
+                </div>
+            </mat-card>
+        </div>
+    </div>
 </div>

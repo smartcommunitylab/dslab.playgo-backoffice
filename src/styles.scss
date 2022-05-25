@@ -8,5 +8,19 @@
 // MDB SCSS
 @import "~mdb-angular-ui-kit/assets/scss/mdb.scss";
 
+// Quill rich text
+@import '~quill/dist/quill.snow.css';
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.cursor-pointer{
+    cursor: pointer;
+}
+
+.number-icon
+{
+    background: url("/assets/images/marker-icon-small-red.png") no-repeat;
+    text-align:center;
+    color: black;
+}

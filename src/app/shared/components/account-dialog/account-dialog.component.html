@@ -1,0 +1,45 @@
+<div *ngIf="!changePasswordVar">
+    <h1>{{"account" | translate}} <span *ngIf="account.email">- {{"username" | translate}}: {{account.email}}</span></h1>
+    <h3 *ngIf="account.firstName || account.lastName">{{"name" | translate}}: {{account.firstName}} {{account.lastName}}</h3>
+    <h3>{{"roles" | translate}}: {{roles}}</h3>
+    <button class="button-margin" mat-flat-button (click)="onNoClick($event)">{{"cancel" | translate}}</button>
+    <!-- <button class="button-margin" mat-raised-button color="primary" (click)="changePassword($event)">{{"changePassword" | translate}}</button> -->
+    <button class="button-margin" mat-raised-button color="primary" (click)="logout($event)">{{"logout" | translate}}</button>
+</div>
+<div *ngIf="changePasswordVar">
+    <button (click)="changePasswordVar = ! changePasswordVar">{{"back" | translate}}</button>
+    <form [formGroup]="validatingForm">
+        <div>
+            <mat-form-field appearance="fill">
+                <mat-label>{{'currentPassword' | translate}}</mat-label>
+                <input [type]="hidePassword ? 'password' : 'text'" matInput id="password" formControlName="password">
+                <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'"
+                    [attr.aria-pressed]="hidePassword">
+                <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+              </button>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field appearance="fill">
+                <mat-label>{{'newPassword' | translate}}</mat-label>
+                <input [type]="hideNewPassword ? 'password' : 'text'" matInput id="newPassword" formControlName="newPassword">
+                <button mat-icon-button matSuffix (click)="hideNewPassword = !hideNewPassword" [attr.aria-label]="'Hide password'"
+                    [attr.aria-pressed]="hideNewPassword">
+                <mat-icon>{{hideNewPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+              </button>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field appearance="fill">
+                <mat-label>{{'confirmPassword' | translate}}</mat-label>
+                <input [type]="hideConfirmPassword ? 'password' : 'text'" matInput id="confirmPassword" formControlName="confirmPassword">
+                <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" [attr.aria-label]="'Hide password'"
+                    [attr.aria-pressed]="hideConfirmPassword">
+                <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+              </button>
+            </mat-form-field>
+        </div>
+        <button type="submit" (click)="confirmPasswordChange($event)">{{"saveChange" | translate}}</button>
+    </form>
+
+</div>

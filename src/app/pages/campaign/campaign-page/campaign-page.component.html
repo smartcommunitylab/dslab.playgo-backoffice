@@ -1,0 +1,148 @@
+<div class="full-height">
+    <div class="add-button-div">
+        <button mat-raised-button color="primary" class="add-button" (click)="addCampaign()">
+            <mat-icon>add</mat-icon>
+            {{'add' | translate}}
+        </button>
+    </div>
+    <div class="full-height">
+        <div class="table">
+            <mat-card class="card" style="margin-left: 10px;">
+                <mat-grid-list cols="3" rowHeight="6:1">
+                    <mat-grid-tile>
+                        <div class="full-dimension" style="text-align: left;">
+                            <mat-card-title>
+                                {{'campaigns' | translate}}
+                            </mat-card-title>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile></mat-grid-tile>
+                    <mat-grid-tile>
+                        <form class="example-form">
+                            <mat-form-field class="example-full-width" appearance="fill">
+                                <input type="text" matInput placeholder="{{'search' | translate}}"
+                                    [(ngModel)]="searchString" (keyup)="searchCampaign($event)">
+                                <mat-icon matSuffix>search</mat-icon>
+                            </mat-form-field>
+                        </form>
+                    </mat-grid-tile>
+                </mat-grid-list>
+                <mat-card-content>
+                    <div class="full-width">
+                        <table mat-table [dataSource]="dataSource" class="full-width" matSort
+                            (matSortChange)="announceSortChange($event)">
+
+                            <ng-container matColumnDef="campaignId">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    sortActionDescription="Sort by campaignId"> {{ 'campaignId'| translate}} </th>
+                                <td mat-cell *matCellDef="let element"> {{element.campaignId}} </td>
+                            </ng-container>
+
+
+                            <ng-container matColumnDef="name">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    sortActionDescription="Sort by name"> {{ 'name'| translate}} </th>
+                                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="active">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    sortActionDescription="Sort by active"> {{ 'active'| translate}} </th>
+                                <td mat-cell *matCellDef="let element"> {{element.active}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="dateFrom">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    sortActionDescription="Sort by dateFrom"> {{ 'dateFrom'| translate}} </th>
+                                <td mat-cell *matCellDef="let element"> {{element.dateFrom}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="dateTo">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    sortActionDescription="Sort by dateTo"> {{ 'dateTo'| translate}} </th>
+                                <td mat-cell *matCellDef="let element"> {{element.dateTo}} </td>
+                            </ng-container>
+
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr class="cursor-pointer" mat-row (click)="showTerritory(row)"
+                                [ngClass]="{'highlight': selectedRowIndex === row.campaignId, 'newItem' : row.campaignId === highlightCampaign.campaignId}"
+                                *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+
+                        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                        </mat-paginator>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div *ngIf="!!selectedCampaign" class="card-campaign">
+            <mat-card class="card" style="margin-right: 10px;">
+                <mat-card-title>
+                    {{selectedCampaign.name}}
+                </mat-card-title>
+                <mat-card-subtitle>
+                    {{'territoryId' | translate}} : {{selectedCampaign.territoryId}}
+                </mat-card-subtitle>
+                <mat-card-subtitle>
+                    {{'campaignId' | translate}} :{{selectedCampaign.campaignId}}
+                </mat-card-subtitle>
+                <mat-card-subtitle>
+                    {{'type' | translate}}: {{selectedCampaign.type}}
+                </mat-card-subtitle>
+                <mat-card-subtitle>
+                    {{'active' | translate}}: {{selectedCampaign.active}}
+                </mat-card-subtitle>
+                <img class="img-logo" src="{{ selectedCampaign.banner.url }}">
+                <!-- old <img class="img-logo" src="{{PREFIX_SRC_IMG_C + selectedCampaign.banner.contentType + BASE64_SRC_IMG_C + selectedCampaign.banner.image}}"> -->
+                <mat-card-content>
+                    <div>
+                        <p>{{'dateFrom' |translate }}: {{selectedCampaign.dateFrom}} {{'dateTo' |translate }}:
+                            {{selectedCampaign.dateTo}}</p>
+                        <h3>{{'means' | translate}}</h3>
+                        <ul>
+                            <li *ngFor="let mean of selectedCampaign.validationData.means">
+                                {{mean | translate}}
+                            </li>
+                        </ul>
+                        <drop-down-card-info [title]="'description' | translate" [content]="selectedCampaign.description">
+                        </drop-down-card-info>
+                        <span *ngFor="let detail of selectedCampaign.details">
+                            <drop-down-card-info [title]="detail.type | translate" [content]="detail.content"></drop-down-card-info>
+                        </span>
+                    </div>
+                </mat-card-content>
+
+                <div style="height:40px;">
+                    <button class='right-button manager-button' mat-raised-button type="submit"
+                        (click)="handleManager()">
+                        {{'handleManager' | translate}}
+                        <mat-icon>
+                            <span class="material-icons-outlined">
+                                supervisor_account
+                            </span>
+                        </mat-icon>
+                    </button>
+                    <button class='right-button modify-button' mat-raised-button type="submit"
+                        (click)="updateTerritory()">
+                        {{'modify' | translate}}
+                        <mat-icon>
+                            <span class="material-icons-outlined">
+                                edit
+                            </span>
+                        </mat-icon>
+                    </button>
+                    <button class='right-button delete-button' mat-raised-button (click)="deleteTerritory()">
+                        {{'delete' |translate}}
+                        <mat-icon>
+                            <span class="material-icons-outlined">
+                                delete
+                            </span>
+                        </mat-icon>
+                    </button>
+                </div>
+
+            </mat-card>
+        </div>
+    </div>
+</div>
