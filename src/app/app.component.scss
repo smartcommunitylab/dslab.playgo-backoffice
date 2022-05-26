@@ -24,9 +24,9 @@
 }
 
 .example-spacer {
-  height: 100%;
-  width: 67%;
-  //flex: 1 1 auto;
+  // height: 100%;
+  // width: 50%;
+  flex: 1 1 auto;
 }
 
 .full-size {
@@ -79,10 +79,17 @@
 
 .right-toolbar{
   height: 100%;
-  width: 20%;
+  //width: 20%;
 }
 
 .manage-user-button{
   height: 100%;
   width: 10%;
+}
+
+.territory-select{
+  background-color: rgba(0, 255, 255, 0.226);
+  min-width: 200px;
+  max-width: 350px;
+  border-radius: 3px;
 }

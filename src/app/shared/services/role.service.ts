@@ -9,43 +9,32 @@ import { PlayerRole } from "src/app/core/api/generated/model/playerRole";
 })
 export class RoleService {
 
-  private rolesSubject = new Subject<string[]>();
-  private simpleRoles: string[] = [];
+  private rolesSubject = new Subject<PlayerRole[]>();
+  private simpleRoles: PlayerRole[] = [];
 
   constructor(private http: HttpClient,
     private roleService: ConsoleControllerService) {}
-
-  async getInitializedJustOncePerUser(): Promise<void> {
-    await this.roleService.getMyRolesUsingGET().subscribe((res) => {
-      var listRoles: string[] = [];
-      res.map((item) => {
-        listRoles.push(item.role);
-      });
-      this.rolesSubject.next(listRoles);
-      this.simpleRoles = listRoles;
-    });
-  }
 
   getInitializedJustOncePerUserSecond(): Observable<PlayerRole[]> {
     return this.roleService.getMyRolesUsingGET();
   }
 
-  getObservableRoles(): Observable<string[]> {
+  getObservableRoles(): Observable<PlayerRole[]> {
     // used in the components in which the roles are not already intitialized
     // https://stackoverflow.com/questions/40393703/rxjs-observable-angular-2-on-localstorage-change
     return this.rolesSubject;
   }
 
-  getRoles(): string[]{
+  getRoles(): PlayerRole[]{
     // used in the components where the roles are already intitialized
     return this.simpleRoles;
   }
 
-  setRolesSubcejt(obj){
+  setRolesSubcejt(obj: PlayerRole[]){
     this.rolesSubject.next(obj);
   }
 
-  setSimpleRoles(obj){
+  setSimpleRoles(obj: PlayerRole[]){
     this.simpleRoles = obj;
   }
 
