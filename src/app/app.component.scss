@@ -37,13 +37,13 @@
 .side-nav {
   height: 100%;
   float: left;
-  width: 13%;
+  width: 60px;
 }
 
 .page {
   height: 100%;
-  float: right;
-  width: 87%;
+  width: 95%;
+  float: left;
 }
 
 .loading-container {
@@ -77,6 +77,10 @@
   border-left: solid rgba(0, 0, 0, 0.205) 1px;
 }
 
+.border-right{
+  border-right: solid rgba(0, 0, 0, 0.205) 1px;
+}
+
 .right-toolbar{
   height: 100%;
   //width: 20%;
@@ -92,4 +96,5 @@
   min-width: 200px;
   max-width: 350px;
   border-radius: 3px;
+  padding-left: 5px;
 }
