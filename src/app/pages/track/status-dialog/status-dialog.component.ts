@@ -35,7 +35,9 @@ export class StatusDialogComponent implements OnInit {
       this.listMeans = territory.territoryData.means;
     });
     this.initializaValidatingForm();
-    this.listStatus = this.listStatus.filter(item=>item.toUpperCase()!==this.selectedTrack.trackedInstance.validationResult.travelValidity);
+    if(this.selectedTrack.trackedInstance.validationResult.travelValidity !== "VALID")
+      this.listStatus = this.listStatus.filter(item=>item.toUpperCase()!==this.selectedTrack.trackedInstance.validationResult.travelValidity);
+    
     console.log(this.listStatus);
   }
 

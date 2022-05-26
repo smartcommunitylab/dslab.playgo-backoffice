@@ -4,11 +4,11 @@
     </div>
     <span class="example-spacer"></span>
 
-    <!-- <mat-label>{{'territory' | translate}} - </mat-label> -->
+    <mat-label>{{'territory' | translate}}: </mat-label>
     <mat-select class="territory-select" [(ngModel)]="globalSelectedTerritory"
         (selectionChange)="onGlobalSelectTerritory($event.value)">
         <mat-option *ngFor="let ter of territories" [value]="ter.territoryId">
-            {{ter.territoryId | translate}}
+              {{ter.territoryId | translate}}
         </mat-option>
     </mat-select>
     <button mat-icon-button class="example-icon favorite-icon manage-user-button"
@@ -25,7 +25,7 @@
         <app-side-nav></app-side-nav>
     </div>
     <div class="page">
-        <div *ngIf="!loading" class="full-size border-left">
+        <div *ngIf="!loading" class="full-size">
             <router-outlet></router-outlet>
         </div>
         <div *ngIf="loading" class="loading-container">

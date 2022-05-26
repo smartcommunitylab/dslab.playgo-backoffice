@@ -255,21 +255,26 @@ export class ValidationTrackComponent implements OnInit {
   }
 
   showTrack(row: TrackedInstanceConsoleClass) {
-    console.log(row);
     this.trackingService.getTrackedInstanceDetailUsingGET(this.territoryId,row.trackedInstance.id).subscribe((fullDetails)=>{
       this.selectedTrack = fullDetails;
-      this.selectedRowIndex = fullDetails.trackedInstance.id;
+      this.orderPoints();
+      this.selectedRowIndex = this.selectedTrack.trackedInstance.id;
       this.dataSourceInfoTrack = new MatTableDataSource<any>(
-        fullDetails.trackedInstance.geolocationEvents
+        this.selectedTrack.trackedInstance.geolocationEvents
       );
-      this.deviceInfo = this.obejectFromString(fullDetails.trackedInstance.deviceInfo);
+      this.deviceInfo = this.obejectFromString(this.selectedTrack.trackedInstance.deviceInfo);
       this.drawPolyline(this.selectedTrack.trackedInstance.geolocationEvents);
       this.markerLayers = [];
-      for (let i = 0; i < fullDetails.trackedInstance.geolocationEvents.length; i++) {
+      for (let i = 0; i < this.selectedTrack.trackedInstance.geolocationEvents.length; i++) {
         this.markerLayers.push(undefined);
       }
     });
+  }
 
+  orderPoints(){
+    this.selectedTrack.trackedInstance.geolocationEvents.sort((a: any,b: any)=>
+      (a.recorded_at >b.recorded_at ? 1 : -1)
+    );
   }
 
   resetSearchFields() {
@@ -348,7 +353,8 @@ export class ValidationTrackComponent implements OnInit {
         this.map.removeLayer(this.layerGroup);
         this.layerGroup = undefined;
         this.markerLayers.forEach((item)=>{
-          this.map.removeLayer(item["layer"]);
+          if(!!item)
+            this.map.removeLayer(item["layer"]);
         });
       }
     } catch (error) {}
