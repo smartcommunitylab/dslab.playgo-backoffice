@@ -47,3 +47,27 @@
   .button-height{
     height: 45px;
   }
+
+  mat-drawer-container{
+    width: 60px;
+  }
+
+  mat-drawer-container:hover{
+    width: 250px;
+  }
+
+  .hider > div>h3.question{
+    visibility: hidden;
+    display: none;
+  }
+
+  .hider:hover >div> h3.question{
+    visibility: visible;
+    display:inline;
+  }
+
+  .border-right{
+    border-right: solid rgba(0, 0, 0, 0.205) 1px;
+  }
+  .border-bottom{
+    border-bottom: solid rgba(0, 0, 0, 0.205) 1px;}

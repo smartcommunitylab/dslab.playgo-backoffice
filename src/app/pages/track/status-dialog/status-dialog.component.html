@@ -20,7 +20,18 @@
             </mat-select>
         </mat-form-field>
     </div>
-    <div *ngIf="validatingForm.get('status').value==='valid'">
+
+    <div *ngIf="validatingForm.get('status').value==='valid' && selectedTrack.trackedInstance.validationResult.travelValidity ==='VALID'">
+        <div class="in-line-forms input-custom-half-left" style="float: left;">{{'currentDistance' | translate}}: {{selectedTrack.trackedInstance.validationResult.validationStatus.distance}} {{'meters' | translate}}</div>
+        <div class="in-line-forms">
+            <mat-form-field appearance="fill" class="input-custom-half-left">
+                <mat-label>{{'newDistance' | translate}}</mat-label>
+                <input matInput  type="number" min="0" id="distance" formControlName="distance">
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div *ngIf="validatingForm.get('status').value==='valid' && selectedTrack.trackedInstance.validationResult.travelValidity !=='VALID'">
         <div class="in-line-forms">
             <div class="input-custom-half-left" style="float: left;">{{'currentTime' | translate}}: {{selectedTrack.trackedInstance.validationResult.validationStatus.duration}} {{'seconds' | translate}}</div>
             <div class="input-custom-half-right" style="float: left;">{{'currentDistance' | translate}}: {{selectedTrack.trackedInstance.validationResult.validationStatus.distance}} {{'meters' | translate}}</div>
