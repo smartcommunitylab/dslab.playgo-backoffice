@@ -40,7 +40,6 @@ import * as moment from "moment";
 import { TerritoryControllerService } from "src/app/core/api/generated/controllers/territoryController.service";
 import { ConsoleControllerInternalService } from "src/app/shared/services/console-controller.service";
 import { MatDialog } from "@angular/material/dialog";
-import { DistanceDialogComponent } from "../distance-dialog/distance-dialog.component";
 import { StatusDialogComponent } from "../status-dialog/status-dialog.component";
 import { CampaignControllerService } from "src/app/core/api/generated/controllers/campaignController.service";
 
@@ -257,17 +256,20 @@ export class ValidationTrackComponent implements OnInit {
 
   showTrack(row: TrackedInstanceConsoleClass) {
     console.log(row);
-    this.selectedTrack = row;
-    this.selectedRowIndex = row.trackedInstance.id;
-    this.dataSourceInfoTrack = new MatTableDataSource<any>(
-      row.trackedInstance.geolocationEvents
-    );
-    this.deviceInfo = this.obejectFromString(row.trackedInstance.deviceInfo);
-    this.drawPolyline(this.selectedTrack.trackedInstance.geolocationEvents);
-    this.markerLayers = [];
-    for (let i = 0; i < row.trackedInstance.geolocationEvents.length; i++) {
-      this.markerLayers.push(undefined);
-    }
+    this.trackingService.getTrackedInstanceDetailUsingGET(this.territoryId,row.trackedInstance.id).subscribe((fullDetails)=>{
+      this.selectedTrack = fullDetails;
+      this.selectedRowIndex = fullDetails.trackedInstance.id;
+      this.dataSourceInfoTrack = new MatTableDataSource<any>(
+        fullDetails.trackedInstance.geolocationEvents
+      );
+      this.deviceInfo = this.obejectFromString(fullDetails.trackedInstance.deviceInfo);
+      this.drawPolyline(this.selectedTrack.trackedInstance.geolocationEvents);
+      this.markerLayers = [];
+      for (let i = 0; i < fullDetails.trackedInstance.geolocationEvents.length; i++) {
+        this.markerLayers.push(undefined);
+      }
+    });
+
   }
 
   resetSearchFields() {
@@ -388,23 +390,10 @@ export class ValidationTrackComponent implements OnInit {
 
   }
 
-  changeDistance(){
-      const dialogRef = this.dialogDistance.open(DistanceDialogComponent, {
-        width: "60%",
-        height: "30%",
-      });
-      let instance = dialogRef.componentInstance;
-      instance.selectedTrack = this.selectedTrack;
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result !== undefined) {
-        }
-      });
-  }
-
   changeStatus(){
       const dialogRef = this.dialogStatus.open(StatusDialogComponent, {
         width: "60%",
-        height: "30%",
+        height: "50%",
       });
       let instance = dialogRef.componentInstance;
       instance.selectedTrack = this.selectedTrack;

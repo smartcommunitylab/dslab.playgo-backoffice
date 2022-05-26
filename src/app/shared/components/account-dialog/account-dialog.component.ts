@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { PlayerRole } from 'src/app/core/api/generated/model/playerRole';
 import { AuthService } from 'src/app/core/auth/auth.service';
 import { RoleService } from '../../services/role.service';
 import { Account } from '../../user/account.model';
@@ -18,7 +19,7 @@ export class AccountDialogComponent implements OnInit {
   hideNewPassword: boolean = true;
   hideConfirmPassword: boolean = true;
   account: Account;
-  roles: string[];
+  roles: PlayerRole[];
   
   constructor(    public dialogRef: MatDialogRef<AccountDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,

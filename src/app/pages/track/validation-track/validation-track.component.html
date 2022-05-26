@@ -231,7 +231,13 @@
                                 </mat-grid-tile>
                             </mat-grid-list>
                             <button class="margin-5" mat-flat-button color="primary" (click)="changeStatus()">
-                                {{'modifyTrack' | translate}} </button>
+                                <mat-icon>
+                                    <span class="material-icons-outlined">
+                                        edit
+                                    </span>
+                                </mat-icon>
+                                {{'modifyTrack' | translate}}
+                            </button>
                         </mat-card-content>
                     </mat-card>
 
@@ -245,15 +251,16 @@
                                     </span>
                                 </mat-grid-tile>
                                 <mat-grid-tile>
-                                    <span class="full-width left-text"> 
-                                        {{deviceInfo.manufacturer}} <span *ngIf="deviceInfo.isVirtual" class="red">({{deviceInfo.isVirtual | translate}})</span>
+                                    <span class="full-width left-text">
+                                        {{deviceInfo.manufacturer}} <span *ngIf="deviceInfo.isVirtual"
+                                            class="red">({{deviceInfo.isVirtual | translate}})</span>
                                     </span>
-                                   
+
                                 </mat-grid-tile>
                                 <mat-grid-tile>
                                     <span class="full-width left-text">
                                         {{deviceInfo.appVersion}}
-                                    </span>                                    
+                                    </span>
                                 </mat-grid-tile>
                             </mat-grid-list>
                         </mat-card-content>
