@@ -138,8 +138,10 @@ export class CampaignPageComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== undefined) {
-        this.onSelectTerritory(result.territoryId);
-        this.selectedCampaign =result;
+        this.campaignService.getCampaignUsingGET(result.campaignId).subscribe((campaign)=>{
+          this.selectedCampaign = campaign;
+          this.onSelectTerritory(campaign.territoryId);
+        });
       }
     });
   }

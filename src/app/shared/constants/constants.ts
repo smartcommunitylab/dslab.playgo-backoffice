@@ -32,3 +32,4 @@ export const TERRITORY_ID_LOCAL_STORAGE_KEY = "TERRITORY_ID";
 export const ROLES_LOCAL_STORAGE_KEY = "ROLES";
 export const VALIDATIONJSON = "{}";
 export const LIST_STATES_TRACK = ["valid", "invalid","pending"];
+export const LIST_ERROR_STATES_TRACK = ["TOO_SHORT", "TOO_SLOW", "TOO_FAST", "OUT_OF_AREA", "DOES_NOT_MATCH", "DATA_HOLE", "NO_DATA", "SHARED_DOES_NOT_MATCH"];

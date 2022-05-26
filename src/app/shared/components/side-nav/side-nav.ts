@@ -7,6 +7,7 @@ import {
   Output,
   SimpleChanges,
 } from "@angular/core";
+import { PlayerRole } from "src/app/core/api/generated/model/playerRole";
 import {
   ADMIN,
   CAMPAIGN_ADMIN,
@@ -21,7 +22,7 @@ import { RoleService } from "../../services/role.service";
 })
 export class SideNavComponent implements OnInit {
   
-  roles: string[];
+  roles: PlayerRole[];
   roleAdmin = false;
   roleTerritory = false;
   roleCampaign = false;
@@ -41,7 +42,7 @@ export class SideNavComponent implements OnInit {
   checkIfRoleAdmin(): boolean {
     if (!!this.roles && this.roles.length > 0) {
       for (let role of this.roles) {
-        if (role === ADMIN) {
+        if (role.role === ADMIN) {
           return true;
         }
       }
@@ -53,7 +54,7 @@ export class SideNavComponent implements OnInit {
   checkIfRoleTerritory(): boolean {
     if (!!this.roles && this.roles.length > 0) {
       for (let role of this.roles) {
-        if (role === TERRITORY_ADMIN) {
+        if (role.role === TERRITORY_ADMIN) {
           return true;
         }
       }
@@ -64,7 +65,7 @@ export class SideNavComponent implements OnInit {
   checkIfRoleCampaign(): boolean {
     if (!!this.roles && this.roles.length > 0) {
       for (let role of this.roles) {
-        if (role === CAMPAIGN_ADMIN) {
+        if (role.role === CAMPAIGN_ADMIN) {
           return true;
         }
       }

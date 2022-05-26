@@ -5,7 +5,7 @@ import { delay } from "rxjs/operators";
 import { MatDialog} from '@angular/material/dialog';
 import { AccountDialogComponent } from "./shared/components/account-dialog/account-dialog.component";
 import { TerritoryClass } from "./shared/classes/territory-class";
-import { TERRITORY_ID_LOCAL_STORAGE_KEY } from "./shared/constants/constants";
+import { ADMIN, TERRITORY_ID_LOCAL_STORAGE_KEY } from "./shared/constants/constants";
 import { RoleService } from "./shared/services/role.service";
 import { TerritoryControllerService } from "./core/api/generated/controllers/territoryController.service";
 
@@ -49,29 +49,50 @@ export class AppComponent implements OnInit{
 
   ngOnInit() {
     this.roleService.getInitializedJustOncePerUserSecond().subscribe((roles)=>{
-      var listRoles: string[] = [];
-      roles.map((item) => {
-        listRoles.push(item.role);
-      });
       //listRoles = ["campaign"]; // used for testing different roles 
-      this.roleService.setRolesSubcejt(listRoles);
-      this.roleService.setSimpleRoles(listRoles);
+      this.roleService.setRolesSubcejt(roles);
+      this.roleService.setSimpleRoles(roles);
       this.listenToLoading();
       this.territoryService.getTerritoriesUsingGET().subscribe((res)=>{
         this.territories = res;
+        this.findTerritoriesPerRoles();
         try{
           //if present in local storage take it
           this.globalSelectedTerritory = localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY);
+          if(!!!this.globalSelectedTerritory){
+            throw '';
+          }
         }catch(error){
           //if not present take first
-          this.globalSelectedTerritory = res[0].territoryId;
-          localStorage.setItem(TERRITORY_ID_LOCAL_STORAGE_KEY,this.globalSelectedTerritory);
-          console.log("finished saving in local storage");
+          if(res.length>0){
+            this.globalSelectedTerritory = res[0].territoryId;
+            localStorage.setItem(TERRITORY_ID_LOCAL_STORAGE_KEY,this.globalSelectedTerritory);
+            console.log("finished saving in local storage");
+          }else{
+            this.territories = [{'territoryId': 'noValuesAvailable'}]
+          }
         }
       });
     });
+  }
+
+  findTerritoriesPerRoles() : void{
+    const roles = this.roleService.getRoles();
+    if(roles.filter((item=>item.role === ADMIN)).length<=0){
+      //if not admin filter the territories
+      let territoriesVisible = [];
+      roles.forEach((role)=>{
+        this.territories.forEach((item)=>{
+          if(role.entityId ===item.territoryId){
+            territoriesVisible.push(item);
+          }
+        });
+      });
+      this.territories = territoriesVisible;
+    }
 
   }
+
 
   openDialogAccount(event: any){
     const dialogRef = this.dialogCreate.open(AccountDialogComponent, {

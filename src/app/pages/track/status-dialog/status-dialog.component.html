@@ -1,12 +1,62 @@
 <h1>{{'statusChange' | translate}}</h1>
-<p>{{'currentStatus' | translate}}: {{selectedTrack.trackedInstance.validationResult.travelValidity | translate}}</p>
+
 <form [formGroup]="validatingForm">
-    <mat-form-field appearance="fill" class="input-custom-half-left">
-        <mat-label>{{'newStatus' | translate}}</mat-label>
-        <mat-select id="status" formControlName="status" >
-            <mat-option *ngFor="let val of listStatus" [value]="val">{{val | translate}}</mat-option>
-        </mat-select>
-    </mat-form-field>
+    <div class="in-line-forms">
+        <p class="input-custom-half-left">{{'currentStatus' | translate}}: {{selectedTrack.trackedInstance.validationResult.travelValidity | translate}}</p>
+    </div>
+    <div class="in-line-forms">
+        <mat-form-field appearance="fill" class="input-custom-half-left">
+            <mat-label>{{'newStatus' | translate}}</mat-label>
+            <mat-select id="status" formControlName="status" >
+                <mat-option *ngFor="let val of listStatus" [value]="val">{{val | translate}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field *ngIf="validatingForm.get('status').value==='invalid'" appearance="fill" class="input-custom-half-right">
+            <mat-label>{{'newStatus' | translate}}</mat-label>
+            <mat-select id="error" formControlName="error" >
+                <mat-option *ngFor="let val of listErrors" [value]="val">
+                    {{val | translate}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div *ngIf="validatingForm.get('status').value==='valid'">
+        <div class="in-line-forms">
+            <div class="input-custom-half-left" style="float: left;">{{'currentTime' | translate}}: {{selectedTrack.trackedInstance.validationResult.validationStatus.duration}} {{'seconds' | translate}}</div>
+            <div class="input-custom-half-right" style="float: left;">{{'currentDistance' | translate}}: {{selectedTrack.trackedInstance.validationResult.validationStatus.distance}} {{'meters' | translate}}</div>
+        </div>
+        <div class="in-line-forms">
+            <mat-form-field appearance="fill" class="input-custom-half-left">
+                <mat-label>{{'newTime' | translate}}</mat-label>
+                <input matInput  type="number" min="0" id="time" formControlName="time">
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="input-custom-half-right">
+                <mat-label>{{'newDistance' | translate}}</mat-label>
+                <input matInput  type="number" min="0" id="distance" formControlName="distance">
+            </mat-form-field>
+        </div>
+        <div class="in-line-forms">
+            <p class="input-custom-half-left">{{'currentModeType' | translate}}: {{selectedTrack.trackedInstance.validationResult.validationStatus.modeType | translate}}</p>
+        </div>
+        <div class="in-line-forms">
+            <mat-form-field appearance="fill" class="input-custom-half-left">
+                <mat-label>{{'newModeType' | translate}}</mat-label>
+                <mat-select id="modeType" formControlName="modeType" >
+                    <mat-option *ngFor="let val of listMeans" [value]="val">
+                    <span *ngIf="val !== selectedTrack.trackedInstance.validationResult.travelValidity">
+                        {{val | translate}}
+                    </span>
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="input-custom-half-right">
+                <mat-label>{{'notes' | translate}}</mat-label>
+                <input matInput  type="text" id="notes" formControlName="notes">
+            </mat-form-field>
+        </div>
+    </div>
+
+
     <p *ngIf="!!errorMsgValidation" class="full-dimension red">{{errorMsgValidation | translate}}</p>
     <div class="full-width" style="height: 40px">
         <button class="right-button back-green" mat-raised-button type="submit" (click)="validate()">

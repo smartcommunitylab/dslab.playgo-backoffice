@@ -78,22 +78,29 @@
         </div>
         <div *ngIf="!!selectedCampaign" class="card-campaign">
             <mat-card class="card" style="margin-right: 10px;">
-                <mat-card-title>
-                    {{selectedCampaign.name}}
-                </mat-card-title>
-                <mat-card-subtitle>
-                    {{'territoryId' | translate}} : {{selectedCampaign.territoryId}}
-                </mat-card-subtitle>
-                <mat-card-subtitle>
-                    {{'campaignId' | translate}} :{{selectedCampaign.campaignId}}
-                </mat-card-subtitle>
-                <mat-card-subtitle>
-                    {{'type' | translate}}: {{selectedCampaign.type}}
-                </mat-card-subtitle>
-                <mat-card-subtitle>
-                    {{'active' | translate}}: {{selectedCampaign.active}}
-                </mat-card-subtitle>
-                <img class="img-logo" src="{{ selectedCampaign.banner.url }}">
+                <div class="header-card">
+                    <div class="title">
+                        <mat-card-title>
+                            {{selectedCampaign.name}}
+                        </mat-card-title>
+                        <mat-card-subtitle>
+                            {{'territoryId' | translate}} : {{selectedCampaign.territoryId}}
+                        </mat-card-subtitle>
+                        <mat-card-subtitle>
+                            {{'campaignId' | translate}} :{{selectedCampaign.campaignId}}
+                        </mat-card-subtitle>
+                        <mat-card-subtitle>
+                            {{'type' | translate}}: {{selectedCampaign.type}}
+                        </mat-card-subtitle>
+                        <mat-card-subtitle>
+                            {{'active' | translate}}: {{selectedCampaign.active}}
+                        </mat-card-subtitle>
+                    </div>
+                    <div class="logo">
+                        <img class="img-logo" src="{{ selectedCampaign.logo.url }}">
+                    </div>
+                </div>
+                <img class="img-banner" src="{{ selectedCampaign.banner.url }}">
                 <!-- old <img class="img-logo" src="{{PREFIX_SRC_IMG_C + selectedCampaign.banner.contentType + BASE64_SRC_IMG_C + selectedCampaign.banner.image}}"> -->
                 <mat-card-content>
                     <div>
