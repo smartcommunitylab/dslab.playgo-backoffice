@@ -162,10 +162,6 @@ export class ManagerHandlerComponent implements OnInit {
     return result;
   }
 
-  log(aa : any){
-    console.log(aa);
-  }
-
 }
 
 
