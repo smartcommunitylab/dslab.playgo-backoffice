@@ -79,7 +79,6 @@ export class CampaignPageComponent implements OnInit {
   }
 
   showTerritory(row: CampaignClass) {
-    console.log(row);
     this.highlightCampaign = new CampaignClass();
     this.highlightCampaign.campaignId = "";
     this.selectedRowIndex = row.campaignId;

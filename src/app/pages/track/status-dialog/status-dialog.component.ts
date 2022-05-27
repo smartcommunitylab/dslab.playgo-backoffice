@@ -38,7 +38,6 @@ export class StatusDialogComponent implements OnInit {
     if(this.selectedTrack.trackedInstance.validationResult.travelValidity !== "VALID")
       this.listStatus = this.listStatus.filter(item=>item.toUpperCase()!==this.selectedTrack.trackedInstance.validationResult.travelValidity);
     
-    console.log(this.listStatus);
   }
 
   initializaValidatingForm() {
@@ -65,8 +64,6 @@ export class StatusDialogComponent implements OnInit {
   validate(){
     this.errorMsgValidation = "";
     if(this.validatingForm.valid){
-      console.log(this.validatingForm);
-      console.log(this.selectedTrack.trackedInstance.id);
       this.consoleService.updateValidationResultUsingGET(
         this.selectedTrack.trackedInstance.id,
         this.validatingForm.get('status') ? this.validatingForm.get('status').value.toUpperCase() : undefined,

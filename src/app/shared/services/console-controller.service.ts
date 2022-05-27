@@ -25,7 +25,6 @@ export class ConsoleControllerInternalService {
     campaignId?: string,
     status?: string
   ): Observable<PageTrackedInstanceConsole> {
-    console.log("dateFomr api call ", dateFrom);
     return this.http.request<PageTrackedInstanceConsole>(
       "get",
       environment.serverUrl.api + `/playandgo/api/console/track/search`,
@@ -55,6 +54,5 @@ function removeNullOrUndefined(obj: any) {
         newObj[key] = obj[key];
       }
     });
-    console.log(newObj);
     return newObj;
   }
