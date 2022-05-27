@@ -12,7 +12,7 @@
                             <mat-grid-tile>
                                 <mat-form-field appearance="fill" class="full-width margin-form">
                                     <mat-label>{{'dateFrom' | translate}}</mat-label>
-                                    <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1">
+                                    <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1" (ngModelChange)="changeDateFrom()">
                                     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                                     <mat-datepicker #picker1></mat-datepicker>
                                 </mat-form-field>
@@ -20,7 +20,7 @@
                             <mat-grid-tile>
                                 <mat-form-field appearance="fill" class="full-width margin-form">
                                     <mat-label>{{'dateTo' | translate}}</mat-label>
-                                    <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker">
+                                    <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker" (ngModelChange)="changeDateTo()">
                                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                     <mat-datepicker #picker></mat-datepicker>
                                 </mat-form-field>
@@ -29,7 +29,7 @@
                             <mat-grid-tile>
                                 <mat-form-field appearance="fill" class="full-width margin-form">
                                     <mat-label>{{'means' | translate}}</mat-label>
-                                    <mat-select id="modeType" formControlName="modeType">
+                                    <mat-select id="modeType" formControlName="modeType" (ngModelChange)="resetPageNumber()">
                                         <mat-option *ngFor="let val of listModelType" [value]="val">{{val | translate}}
                                         </mat-option>
                                     </mat-select>
@@ -38,7 +38,7 @@
                             <mat-grid-tile>
                                 <mat-form-field appearance="fill" class="full-width margin-form">
                                     <mat-label>{{'status' | translate}}</mat-label>
-                                    <mat-select id="status" formControlName="status">
+                                    <mat-select id="status" formControlName="status" (ngModelChange)="resetPageNumber()">
                                         <mat-option *ngFor="let val of listStates" [value]="val">{{val | translate}}
                                         </mat-option>
                                     </mat-select>
@@ -49,20 +49,20 @@
                             <mat-grid-tile>
                                 <mat-form-field appearance="fill" class="full-width margin-form">
                                     <mat-label>{{'playerId' | translate}}</mat-label>
-                                    <input matInput id="playerId" formControlName="playerId">
+                                    <input matInput id="playerId" formControlName="playerId" (ngModelChange)="resetPageNumber()">
                                 </mat-form-field>
                             </mat-grid-tile>
                             <mat-grid-tile>
                                 <mat-form-field appearance="fill" class="full-width margin-form">
                                     <mat-label>{{'trackId' | translate}}</mat-label>
-                                    <input matInput id="trackId" formControlName="trackId">
+                                    <input matInput id="trackId" formControlName="trackId" (ngModelChange)="resetPageNumber()">
                                 </mat-form-field>
                             </mat-grid-tile>
 
                             <mat-grid-tile>
                                 <mat-form-field appearance="fill" class="full-width margin-form">
                                     <mat-label>{{'campaignId' | translate}}</mat-label>
-                                    <mat-select id="campaignId" formControlName="campaignId">
+                                    <mat-select id="campaignId" formControlName="campaignId" (ngModelChange)="resetPageNumber()">
                                         <mat-option *ngFor="let val of listCampaings" [value]="val">{{val}}
                                         </mat-option>
                                     </mat-select>

@@ -89,9 +89,12 @@ export class ValidationTrackComponent implements OnInit {
   validationJson = VALIDATIONJSON;
   layerGroup: L.Layer;
   markerLayers: any[];
-  displayedColumnsDevice: string[] = ["available","platform","version","manufacturer","isVirtual","appVersion"];//];
   deviceInfo: any;
   listCampaings: string[] = [];
+  dateFromModified= false;
+  dateToModified= false;
+  resetSearchFieldsComponents=false;
+  SORTING = "startTime, ASC";
 
   validatingForm: FormGroup;
   constructor(
@@ -101,22 +104,19 @@ export class ValidationTrackComponent implements OnInit {
     private trackingServiceInternal: ConsoleControllerInternalService,
     private campaignService: CampaignControllerService,
     private dialogStatus: MatDialog,
-    private dialogDistance: MatDialog,
   ) {}
 
   ngOnInit(): void {
     this.territoryId = localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY);
     this.initializaValidatingForm();
     var dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value, true); 
-    console.log("ng init from: ",dateFromString);
     var dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value, true);
-    console.log("ng init to: ",dateToString); 
     this.trackingServiceInternal
       .searchTrackedInstanceUsingGET(
         this.currentPageNumber,
         this.size[0],
         this.territoryId,
-        this.validatingForm.get("sort").value ? this.validatingForm.get("sort").value : undefined,
+        this.SORTING,
         this.validatingForm.get("trackId").value ? this.validatingForm.get("trackId").value : undefined ,
         this.validatingForm.get("playerId").value ? this.validatingForm.get("playerId").value : undefined,
         this.validatingForm.get("modeType").value ? this.validatingForm.get("modeType").value : undefined,
@@ -155,8 +155,7 @@ export class ValidationTrackComponent implements OnInit {
     const sunday = this.getNextSunday();
     this.validatingForm.patchValue({
       dateFrom: moment(monday, "YYYY-MM-DD"),
-      dateTo: moment(sunday, "YYYY-MM-DD"),
-      sort: 'asc'
+      dateTo: moment(sunday, "YYYY-MM-DD")
     });
   }
 
@@ -214,21 +213,35 @@ export class ValidationTrackComponent implements OnInit {
       " " +
       date.getHours() +
       ":" +
-      date.getMinutes()
+      (date.getMinutes().toString().length ===1 ?  date.getMinutes().toString().length ===0 ? "00" :  "0"+date.getMinutes().toString() : date.getMinutes().toString())  
     );
   }
 
   searchSubmit() {
     if (this.validatingForm.valid) {
-      var dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value,true); 
-      var dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value,true);
+      if(this.resetSearchFieldsComponents){
+        this.allowResetOnsearch();
+        this.resetSearchFieldsComponents = false;
+      }
+      var dateFromString;
+      if(this.dateFromModified){
+        dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value,false); 
+      }else{
+        dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value,true); 
+      }
+      var dateToString;
+      if(this.dateToModified){
+        dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value,false);
+      }else{
+        dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value,true);
+      }
       dateToString = dateToString ? dateToString :this.transformDateToString(moment());  
       this.trackingServiceInternal
         .searchTrackedInstanceUsingGET(
           this.currentPageNumber,
           this.size[0],
           this.territoryId,
-          this.validatingForm.get("sort").value ? this.validatingForm.get("sort").value : undefined,
+          this.SORTING,
           this.validatingForm.get("trackId").value ? this.validatingForm.get("trackId").value : undefined ,
           this.validatingForm.get("playerId").value ? this.validatingForm.get("playerId").value : undefined,
           this.validatingForm.get("modeType").value ? this.validatingForm.get("modeType").value : undefined,
@@ -241,7 +254,7 @@ export class ValidationTrackComponent implements OnInit {
           this.paginatorData = res;
           this.listTrack = res.content;
           this.setTableData();
-          this.dataSource.paginator = this.paginator;
+          //this.dataSource.paginator = this.paginator;
         });
     }
   }
@@ -298,6 +311,7 @@ export class ValidationTrackComponent implements OnInit {
       campaignId: '',
       status: '',
     });
+    this.resetPageNumber();
   }
 
   selectedPageSize(event: any) {
@@ -306,15 +320,25 @@ export class ValidationTrackComponent implements OnInit {
       this.currentPageNumber = pageIndex;
       try {
         const list: Track[] = [];
-        var dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value); 
-        var dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value);
+        var dateFromString;
+        if(this.dateFromModified){
+          dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value,false); 
+        }else{
+          dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value,true); 
+        }
+        var dateToString;
+        if(this.dateToModified){
+          dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value,false);
+        }else{
+          dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value,true);
+        }
         dateToString = dateToString ? dateToString :this.transformDateToString(moment());  
         this.trackingServiceInternal
           .searchTrackedInstanceUsingGET(
             this.currentPageNumber,
             this.size[0],
             this.territoryId,
-            this.validatingForm.get("sort").value ? this.validatingForm.get("sort").value : undefined,
+            this.SORTING,
             this.validatingForm.get("trackId").value ? this.validatingForm.get("trackId").value : undefined ,
             this.validatingForm.get("playerId").value ? this.validatingForm.get("playerId").value : undefined,
             this.validatingForm.get("modeType").value ? this.validatingForm.get("modeType").value : undefined,
@@ -331,6 +355,24 @@ export class ValidationTrackComponent implements OnInit {
         console.error(error);
       }
     }
+  }
+
+  changeDateFrom(){
+    this.resetPageNumber();
+    this.dateFromModified = true;
+  }
+  changeDateTo(){
+    this.resetPageNumber();
+    this.dateToModified = true;
+  }
+
+  resetPageNumber(){
+    this.resetSearchFieldsComponents = true;
+  }
+
+  allowResetOnsearch(){
+    this.currentPageNumber = 0;
+    this.dataSource.paginator = this.paginator;
   }
 
   formatDate(datee: Moment): string {
@@ -435,7 +477,6 @@ export class ValidationTrackComponent implements OnInit {
   transformDateToString(date: Moment,startDay? :boolean): string{
     const dateFormat: Date = date ? date.toDate() : undefined;
     var dateString = dateFormat?  dateFormat.toISOString().replace('Z','').replace('T', ' ') : undefined;
-    console.log(dateString);
     if(startDay){
       if(dateString)
         return dateString.substring(0,dateString.length-'00:00:00.000'.length) + '00:00:00'
