@@ -266,6 +266,20 @@ export class CampaignPageComponent implements OnInit {
     return resultCampaign;
 }
 
+fromTimestampToDate(timestamp: number | string) : string{
+  const a = new Date(timestamp);
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var year = a.getFullYear();
+  //var month = months[a.getMonth()+1];
+  var month = a.getMonth()+1
+  var date = a.getDate();
+  var hour = a.getHours();
+  var min = a.getMinutes();
+  var sec = a.getSeconds();
+  var time = date + '/' + month + '/' + year;
+  return time;
+}
+
 
 
 }
