@@ -109,8 +109,8 @@ export class ValidationTrackComponent implements OnInit {
   ngOnInit(): void {
     this.territoryId = localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY);
     this.initializaValidatingForm();
-    var dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value, true); 
-    var dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value, true);
+    // var dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value, true);
+    // var dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value, true);
     this.trackingServiceInternal
       .searchTrackedInstanceUsingGET(
         this.currentPageNumber,
@@ -120,8 +120,8 @@ export class ValidationTrackComponent implements OnInit {
         this.validatingForm.get("trackId").value ? this.validatingForm.get("trackId").value : undefined ,
         this.validatingForm.get("playerId").value ? this.validatingForm.get("playerId").value : undefined,
         this.validatingForm.get("modeType").value ? this.validatingForm.get("modeType").value : undefined,
-        dateFromString,
-        dateToString,
+        this.validatingForm.get("dateFrom").value.valueOf(),
+        this.validatingForm.get("dateTo").value.valueOf(),
         this.validatingForm.get("campaignId").value ? this.validatingForm.get("campaignId").value : undefined,
         this.validatingForm.get("status").value ? this.validatingForm.get("status").value.toUpperCase() : undefined
       )
@@ -223,19 +223,19 @@ export class ValidationTrackComponent implements OnInit {
         this.allowResetOnsearch();
         this.resetSearchFieldsComponents = false;
       }
-      var dateFromString;
-      if(this.dateFromModified){
-        dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value,false); 
-      }else{
-        dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value,true); 
-      }
-      var dateToString;
-      if(this.dateToModified){
-        dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value,false);
-      }else{
-        dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value,true);
-      }
-      dateToString = dateToString ? dateToString :this.transformDateToString(moment());  
+      // var dateFromString;
+      // if(this.dateFromModified){
+      //   dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value,false); 
+      // }else{
+      //   dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value,true); 
+      // }
+      // var dateToString;
+      // if(this.dateToModified){
+      //   dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value,false);
+      // }else{
+      //   dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value,true);
+      // }
+      // dateToString = dateToString ? dateToString :this.transformDateToString(moment());  
       this.trackingServiceInternal
         .searchTrackedInstanceUsingGET(
           this.currentPageNumber,
@@ -245,8 +245,8 @@ export class ValidationTrackComponent implements OnInit {
           this.validatingForm.get("trackId").value ? this.validatingForm.get("trackId").value : undefined ,
           this.validatingForm.get("playerId").value ? this.validatingForm.get("playerId").value : undefined,
           this.validatingForm.get("modeType").value ? this.validatingForm.get("modeType").value : undefined,
-          dateFromString,
-          dateToString,
+          this.validatingForm.get("dateFrom").value.valueOf(),
+          this.validatingForm.get("dateTo").value.valueOf(),
           this.validatingForm.get("campaignId").value ? this.validatingForm.get("campaignId").value : undefined,
           this.validatingForm.get("status").value ? this.validatingForm.get("status").value.toUpperCase() : undefined
         )
@@ -320,19 +320,19 @@ export class ValidationTrackComponent implements OnInit {
       this.currentPageNumber = pageIndex;
       try {
         const list: Track[] = [];
-        var dateFromString;
-        if(this.dateFromModified){
-          dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value,false); 
-        }else{
-          dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value,true); 
-        }
-        var dateToString;
-        if(this.dateToModified){
-          dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value,false);
-        }else{
-          dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value,true);
-        }
-        dateToString = dateToString ? dateToString :this.transformDateToString(moment());  
+        // var dateFromString;
+        // if(this.dateFromModified){
+        //   dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value,false); 
+        // }else{
+        //   dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value,true); 
+        // }
+        // var dateToString;
+        // if(this.dateToModified){
+        //   dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value,false);
+        // }else{
+        //   dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value,true);
+        // }
+        // dateToString = dateToString ? dateToString :this.transformDateToString(moment());  
         this.trackingServiceInternal
           .searchTrackedInstanceUsingGET(
             this.currentPageNumber,
@@ -342,8 +342,8 @@ export class ValidationTrackComponent implements OnInit {
             this.validatingForm.get("trackId").value ? this.validatingForm.get("trackId").value : undefined ,
             this.validatingForm.get("playerId").value ? this.validatingForm.get("playerId").value : undefined,
             this.validatingForm.get("modeType").value ? this.validatingForm.get("modeType").value : undefined,
-            dateFromString,
-            dateToString,
+            this.validatingForm.get("dateFrom").value.valueOf(),
+            this.validatingForm.get("dateTo").value.valueOf(),
             this.validatingForm.get("campaignId").value ? this.validatingForm.get("campaignId").value : undefined,
             this.validatingForm.get("status").value ? this.validatingForm.get("status").value.toUpperCase() : undefined
           )
