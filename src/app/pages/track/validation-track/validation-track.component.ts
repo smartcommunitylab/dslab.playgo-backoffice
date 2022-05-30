@@ -211,7 +211,7 @@ export class ValidationTrackComponent implements OnInit {
       "/" +
       date.getFullYear() +
       " " +
-      date.getHours() +
+      (date.getHours().toString().length ===1 ?  date.getHours().toString().length ===0 ? "00" :  "0"+date.getHours().toString() : date.getHours().toString()) +
       ":" +
       (date.getMinutes().toString().length ===1 ?  date.getMinutes().toString().length ===0 ? "00" :  "0"+date.getMinutes().toString() : date.getMinutes().toString())  
     );

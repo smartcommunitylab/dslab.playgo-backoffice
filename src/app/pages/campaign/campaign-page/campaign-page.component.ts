@@ -206,12 +206,12 @@ export class CampaignPageComponent implements OnInit {
     if(element.dateFrom){
         resultCampaign.dateFrom = element.dateFrom;
     }else{
-        resultCampaign.dateFrom = "";
+        resultCampaign.dateFrom = undefined;
     }
     if(element.dateTo){
         resultCampaign.dateTo = element.dateTo;
     }else{
-        resultCampaign.dateTo = "";
+        resultCampaign.dateTo = undefined;
     }
     if(element.description){
         resultCampaign.description = element.description;
@@ -266,7 +266,7 @@ export class CampaignPageComponent implements OnInit {
     return resultCampaign;
 }
 
-fromTimestampToDate(timestamp: number | string) : string{
+fromTimestampToDate(timestamp: any) : string{
   const a = new Date(timestamp);
   var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   var year = a.getFullYear();
