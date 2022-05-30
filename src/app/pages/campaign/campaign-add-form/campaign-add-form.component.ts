@@ -246,9 +246,9 @@ export class CampaignAddFormComponent implements OnInit {
     if (this.validatingForm.valid) {
       this.campaignCreated.active = this.validatingForm.get("active").value;
       const dataFrom: Moment = this.validatingForm.get("dateFrom").value;
-      this.campaignCreated.dateFrom = this.formatDate(dataFrom); // dataFrom.toDate();//
+      this.campaignCreated.dateFrom = dataFrom.toDate();// this.formatDate(dataFrom); // 
       const dataTo: Moment = this.validatingForm.get("dateTo").value;
-      this.campaignCreated.dateTo = this.formatDate(dataTo); //dataTo.toDate();//
+      this.campaignCreated.dateTo = dataTo.toDate();//this.formatDate(dataTo); //
       this.campaignCreated.logo = new ImageClass();
       if (!!this.selectedLogo) {
         this.campaignCreated.logo.contentType = this.selectedLogo.contentType;
@@ -575,7 +575,7 @@ export class CampaignAddFormComponent implements OnInit {
   //     this.stateRules === "collapsed" ? "expanded" : "collapsed";
   // }
 
-  validDates(startt: string, endd: string): boolean {
+  validDatesOld(startt: string, endd: string): boolean {
     this.errorMsgValidation = "";
     const dateStart = startt + "";
     const dateEnd = endd + "";
@@ -608,6 +608,13 @@ export class CampaignAddFormComponent implements OnInit {
     }
   }
 
+  validDates(start: Date,end: Date){
+    if(start< end){
+      return true;
+    }
+    return false;
+  }
+
   setDetails(details: CampaignDetail[]): DetailsForAddModifyModule[] {
     var result = [];
     for (let el of details) {
@@ -629,7 +636,6 @@ export class CampaignAddFormComponent implements OnInit {
       });
       result.push(item);
     }
-    console.log("result:", result);
     return result;
   }
 
