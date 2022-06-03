@@ -245,10 +245,10 @@ export class CampaignAddFormComponent implements OnInit {
     }
     if (this.validatingForm.valid) {
       this.campaignCreated.active = this.validatingForm.get("active").value;
-      const dataFrom: Moment = this.validatingForm.get("dateFrom").value;
-      this.campaignCreated.dateFrom = dataFrom.toDate();// this.formatDate(dataFrom); // 
-      const dataTo: Moment = this.validatingForm.get("dateTo").value;
-      this.campaignCreated.dateTo = dataTo.toDate();//this.formatDate(dataTo); //
+      //const dataFrom: Moment = this.validatingForm.get("dateFrom").value;
+      this.campaignCreated.dateFrom = this.validatingForm.get("dateFrom").value;//dataFrom.toDate();// this.formatDate(dataFrom); // 
+      //const dataTo: Moment = this.validatingForm.get("dateTo").value;
+      this.campaignCreated.dateTo =  this.validatingForm.get("dateTo").value;//dataTo.toDate();//this.formatDate(dataTo); //
       this.campaignCreated.logo = new ImageClass();
       if (!!this.selectedLogo) {
         this.campaignCreated.logo.contentType = this.selectedLogo.contentType;
@@ -608,7 +608,7 @@ export class CampaignAddFormComponent implements OnInit {
     }
   }
 
-  validDates(start: Date,end: Date){
+  validDates(start: number,end: number){
     if(start< end){
       return true;
     }
