@@ -41,7 +41,7 @@ export class TrackedInstanceClass implements TrackedInstance{
     overriddenDistances?: { [key: string]: number };
     routesPolylines?: any;
     sharedTravelId?: string;
-    startTime?: Date;
+    startTime?: number;
     started?: boolean;
     suspect?: boolean;
     territoryId?: string;
@@ -63,7 +63,7 @@ export class GeolocationClass implements Geolocation{
     batteryIsCharging?: boolean;
     batteryLevel?: number;
     certificate?: string;
-    createdAt?: Date;
+    createdAt?: number;
     deviceId?: string;
     deviceModel?: string;
     geocoding?: Array<number>;
@@ -73,7 +73,7 @@ export class GeolocationClass implements Geolocation{
     latitude?: number;
     longitude?: number;
     multimodalId?: string;
-    recordedAt?: Date;
+    recordedAt?: number;
     sharedTravelId?: string;
     speed?: number;
     travelId?: string;

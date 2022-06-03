@@ -21,7 +21,7 @@ export class Subscription implements CampaignSubscription{
     id?: string;
     mail?: string;
     playerId?: string;
-    registrationDate?: Date;
+    registrationDate?: number;
     sendMail?: boolean;
     territoryId?: string;
 }
