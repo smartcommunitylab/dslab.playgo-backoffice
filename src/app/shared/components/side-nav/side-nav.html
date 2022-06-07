@@ -1,4 +1,4 @@
-<mat-drawer-container *ngIf="roleAdmin" class="border-right border-bottom">
+<mat-drawer-container *ngIf="roleAdmin" class="border-right">
     <mat-drawer mode="side" opened></mat-drawer>
     <mat-drawer-content>
         <div class="full-size hider">
@@ -72,7 +72,7 @@
                         route
                     </span>
                 </mat-icon>
-                <h3 class="label-text">{{'validateTrackSideNav' | translate}}</h3>
+                <h3 class="label-text question">{{'validateTrackSideNav' | translate}}</h3>
             </div>
             <div class="button-height button-hover cursor-pointer" routerLink="/communication">
                 <mat-icon class="icon-side">

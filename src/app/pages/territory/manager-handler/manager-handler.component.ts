@@ -127,7 +127,7 @@ export class ManagerHandlerTerritoryComponent implements OnInit {
   deleteManager(manager: ExtendedUserClass){
     const dialogRef = this.dialogDelete.open(ManagerDeleteTerritoryComponent, {
       width: "40%",
-      height: "30%",
+      height: "150px",
     });
     let instance = dialogRef.componentInstance;
     instance.territoryId = this.territoryId;

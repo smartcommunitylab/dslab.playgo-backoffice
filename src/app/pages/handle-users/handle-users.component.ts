@@ -16,7 +16,7 @@ import { PagePlayer } from "src/app/shared/classes/PagePlayerInfoConsole-class";
   styleUrls: ["./handle-users.component.scss"],
 })
 export class HandleUsersComponent implements OnInit {
-  pageSizesOnTable = [15];
+  pageSizesOnTable = [50];
   territoryId: string;
   searchString: string ="";
   displayedColumns: string[] = ["playerId","nickname","mail", "name", "surname", "campaings", "notifications"];
@@ -138,6 +138,7 @@ export class HandleUsersComponent implements OnInit {
   copy(element: string) {
     this.clipboard.copy(element);
     this._snackBar.openFromComponent(CopiedComponent, {
+      panelClass: 'snackBar-small',
       duration: 600,
     });
   }
@@ -145,6 +146,6 @@ export class HandleUsersComponent implements OnInit {
 }
 
 @Component({
-  template: "<p>Copiato</p>",
+  template: "<mat-icon><span>content_copy</span></mat-icon>",
 })
 export class CopiedComponent {}
