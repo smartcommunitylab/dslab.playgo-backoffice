@@ -23,65 +23,71 @@
             <mat-card-content>
                 <div class="full-width">
                     <table mat-table [dataSource]="dataSource" class="full-width" matSort
-                    (matSortChange)="sortData($event)">
+                        (matSortChange)="sortData($event)">
 
                         <ng-container matColumnDef="playerId">
-                            <th mat-header-cell  mat-sort-header *matHeaderCellDef sortActionDescription="Sort by playerId"> {{
+                            <th mat-header-cell mat-sort-header *matHeaderCellDef
+                                sortActionDescription="Sort by playerId"> {{
                                 'playerId'| translate}} </th>
                             <td mat-cell *matCellDef="let element">
-                                <mat-icon class="cursor-pointer hover-copy-icon"
+                                {{element.player.playerId}}
+                                <mat-icon class="cursor-pointer hover-copy-icon font-lighter"
                                     (click)="copy(element.player.playerId)">
                                     <span class="material-symbols-outlined">
                                         content_copy
                                     </span>
                                 </mat-icon>
-                                {{element.player.playerId}}
                             </td>
                         </ng-container>
 
                         <ng-container matColumnDef="nickname">
-                            <th mat-header-cell mat-sort-header *matHeaderCellDef sortActionDescription="Sort by nickname"> {{
+                            <th mat-header-cell mat-sort-header *matHeaderCellDef
+                                sortActionDescription="Sort by nickname"> {{
                                 'nickname'| translate}} </th>
                             <td mat-cell *matCellDef="let element">
-                                <mat-icon class="cursor-pointer hover-copy-icon"
+                                {{element.player.nickname}}
+                                <mat-icon class="cursor-pointer hover-copy-icon font-lighter"
                                     (click)="copy(element.player.nickname)">
                                     <span class="material-symbols-outlined">
                                         content_copy
                                     </span>
                                 </mat-icon>
-                                {{element.player.nickname}}
                             </td>
                         </ng-container>
 
                         <ng-container matColumnDef="mail">
-                            <th mat-header-cell mat-sort-header *matHeaderCellDef sortActionDescription="Sort by mail"> {{ 'mail'|
+                            <th mat-header-cell mat-sort-header *matHeaderCellDef sortActionDescription="Sort by mail">
+                                {{ 'mail'|
                                 translate}} </th>
                             <td mat-cell *matCellDef="let element">
-                                <mat-icon class="cursor-pointer hover-copy-icon" (click)="copy(element.player.mail)">
+                                {{element.player.mail}}
+                                <mat-icon class="cursor-pointer hover-copy-icon font-lighter" (click)="copy(element.player.mail)">
                                     <span class="material-symbols-outlined">
                                         content_copy
                                     </span>
                                 </mat-icon>
-                                {{element.player.mail}}
+
                             </td>
                         </ng-container>
 
 
                         <ng-container matColumnDef="name">
-                            <th mat-header-cell  mat-sort-header *matHeaderCellDef sortActionDescription="Sort by name"> {{
+                            <th mat-header-cell mat-sort-header *matHeaderCellDef sortActionDescription="Sort by name">
+                                {{
                                 'name'| translate}} </th>
                             <td mat-cell *matCellDef="let element">
 
-                                {{!! element.player.givenName ?  element.player.givenName : '-'}}
+                                {{!! element.player.givenName ? element.player.givenName : '-'}}
                             </td>
                         </ng-container>
 
 
                         <ng-container matColumnDef="surname">
-                            <th mat-header-cell mat-sort-header *matHeaderCellDef sortActionDescription="Sort by surname"> {{
+                            <th mat-header-cell mat-sort-header *matHeaderCellDef
+                                sortActionDescription="Sort by surname"> {{
                                 'surname'| translate}} </th>
                             <td mat-cell *matCellDef="let element">
-                                {{!! element.player.familyName ?  element.player.familyName : '-'}}
+                                {{!! element.player.familyName ? element.player.familyName : '-'}}
                             </td>
                         </ng-container>
 
@@ -89,14 +95,16 @@
                             <th mat-header-cell *matHeaderCellDef sortActionDescription="Sort by campaigns"> {{
                                 'campaigns'| translate}} </th>
                             <td mat-cell *matCellDef="let element">
-                                <div class="full-dimension" style="margin: 3px;" *ngFor="let campaignEl of element.campaigns">
+                                <div class="full-dimension" style="margin: 3px;"
+                                    *ngFor="let campaignEl of element.campaigns">
                                     {{campaignEl.campaign.campaignId}}
                                 </div>
                             </td>
                         </ng-container>
 
                         <ng-container matColumnDef="notifications">
-                            <th mat-header-cell  mat-sort-header *matHeaderCellDef sortActionDescription="Sort by notifications"> {{
+                            <th mat-header-cell mat-sort-header *matHeaderCellDef
+                                sortActionDescription="Sort by notifications"> {{
                                 'notifications'| translate}} </th>
                             <td mat-cell *matCellDef="let element">
                                 {{element.player.sendMail}}
@@ -114,3 +122,13 @@
         </mat-card>
     </div>
 </div>
+
+<!-- <style>
+    .material-symbols-outlined {
+        font-variation-settings:
+            'FILL'1,
+            'wght'100,
+            'GRAD'-25,
+            'opsz'48
+    }
+</style> -->

@@ -4,13 +4,18 @@
     </div>
     <span class="example-spacer"></span>
 
-    <mat-label>{{'territory' | translate}}: </mat-label>
+    <mat-label style="margin-right: 10px">{{'territory' | translate}}: </mat-label>
     <mat-select class="territory-select" [(ngModel)]="globalSelectedTerritory"
         (selectionChange)="onGlobalSelectTerritory($event.value)">
         <mat-option *ngFor="let ter of territories" [value]="ter.territoryId">
               {{ter.territoryId | translate}}
         </mat-option>
     </mat-select>
+    <!-- <mat-select *ngIf="!!!territories && territories.length===0" class="territory-select">
+        <mat-option>
+              {{'NoTerritoriesPerUser' | translate}}
+        </mat-option>
+    </mat-select> -->
     <button mat-icon-button class="example-icon favorite-icon manage-user-button"
         aria-label="Example icon-button with heart icon" (click)="openDialogAccount($event)">
         <mat-icon>
@@ -21,7 +26,7 @@
     </button>
 </mat-toolbar>
 <div class="full-size">
-    <div class="side-nav">
+    <div class="side-nav border-right">
         <app-side-nav></app-side-nav>
     </div>
     <div class="page">

@@ -18,6 +18,7 @@ import { TerritoryControllerService } from 'src/app/core/api/generated/controlle
 })
 export class TerritoryPageComponent implements OnInit,AfterViewInit {
   displayedColumns: string[] = ['territoryId','name']; //, 'description', 'means'];
+  size=[50];
   dataSource : MatTableDataSource<TerritoryClass>;
   selectedTerritory?: TerritoryClass = null;
   listTerriotory: TerritoryClass[];
@@ -88,7 +89,7 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
   deleteTerritory(){
     const dialogRef = this.dialogDelete.open(TerritoryDeleteComponent, {
       width: '40%',
-      height: '30%',
+      height: '150px',
     });
     let instance = dialogRef.componentInstance;
     instance.territoryId = this.selectedTerritory.territoryId;

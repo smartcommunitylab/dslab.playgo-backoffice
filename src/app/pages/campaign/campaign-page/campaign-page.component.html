@@ -70,7 +70,7 @@
                                 *matRowDef="let row; columns: displayedColumns;"></tr>
                         </table>
 
-                        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                        <mat-paginator [pageSizeOptions]="size" showFirstLastButtons>
                         </mat-paginator>
                     </div>
                 </mat-card-content>
@@ -83,18 +83,29 @@
                         <mat-card-title>
                             {{selectedCampaign.name}}
                         </mat-card-title>
-                        <mat-card-subtitle>
-                            {{'territoryId' | translate}} : {{selectedCampaign.territoryId}}
-                        </mat-card-subtitle>
-                        <mat-card-subtitle>
-                            {{'campaignId' | translate}} :{{selectedCampaign.campaignId}}
-                        </mat-card-subtitle>
-                        <mat-card-subtitle>
+                        <div class="bold" style="margin-top: 20px;">
+                            {{'territoryId' | translate}}: {{selectedCampaign.territoryId}}
+                        </div>
+                        <div class="bold" style="margin-top: 7px;">
+                            {{'campaignId' | translate}}: {{selectedCampaign.campaignId}}
+                        </div>
+                        <div class="bold" style="margin-top: 7px;">
                             {{'type' | translate}}: {{selectedCampaign.type}}
-                        </mat-card-subtitle>
-                        <mat-card-subtitle>
-                            {{'active' | translate}}: {{selectedCampaign.active}}
-                        </mat-card-subtitle>
+                        </div>
+                        <div style="margin-top: 7px;">
+                            <!-- {{'active' | translate}}: -->
+                            <mat-icon *ngIf="selectedCampaign.active">
+                                <span class="material-icons-outlined">
+                                    done
+                                </span>
+                            </mat-icon>
+                            <mat-icon *ngIf="!selectedCampaign.active">
+                                <span class="material-icons-outlined">
+                                    close
+                                </span>
+                            </mat-icon>
+
+                        </div>
                     </div>
                     <div class="logo">
                         <img class="img-logo" src="{{ selectedCampaign.logo.url }}">
@@ -103,7 +114,7 @@
                 <img class="img-banner" src="{{ selectedCampaign.banner.url }}">
                 <!-- old <img class="img-logo" src="{{PREFIX_SRC_IMG_C + selectedCampaign.banner.contentType + BASE64_SRC_IMG_C + selectedCampaign.banner.image}}"> -->
                 <mat-card-content>
-                    <div>
+                    <div class="bold" style="margin-top: 10px">
                         <p>{{'dateFrom' |translate }}: {{fromTimestampToDate(selectedCampaign.dateFrom)}} {{'dateTo' |translate }}:
                             {{fromTimestampToDate(selectedCampaign.dateTo)}}</p>
                         <h3>{{'means' | translate}}</h3>
@@ -131,7 +142,7 @@
                         </mat-icon>
                     </button>
                     <button class='right-button modify-button' mat-raised-button type="submit"
-                        (click)="updateTerritory()">
+                        (click)="updateCampaign()">
                         {{'modify' | translate}}
                         <mat-icon>
                             <span class="material-icons-outlined">
@@ -139,7 +150,7 @@
                             </span>
                         </mat-icon>
                     </button>
-                    <button class='right-button delete-button' mat-raised-button (click)="deleteTerritory()">
+                    <button class='right-button delete-button' mat-raised-button (click)="deleteCampaign()">
                         {{'delete' |translate}}
                         <mat-icon>
                             <span class="material-icons-outlined">

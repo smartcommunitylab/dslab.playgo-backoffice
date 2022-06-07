@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { SharedModule } from "src/app/shared/shared.module";
-import { HandleUsersComponent } from "./handle-users.component";
+import { CopiedComponent, HandleUsersComponent } from "./handle-users.component";
 import { HandleUsersRouting } from "./handle-users.routing";
 
 @NgModule({
@@ -8,6 +8,6 @@ import { HandleUsersRouting } from "./handle-users.routing";
     SharedModule,
     HandleUsersRouting
   ],
-  declarations: [HandleUsersComponent],
+  declarations: [HandleUsersComponent,CopiedComponent],
 })
 export class HandleUsersModule {}
