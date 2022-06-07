@@ -70,14 +70,14 @@
                     </div>
                     <div class="full-width" *ngIf="unlockRaySelector">
                         <div>
-                            <mat-label style="margin-right: 1%;">{{'selectRadius' | translate}}</mat-label>
+                            <mat-label style="margin-right: 1%;">{{'selectRadius' | translate}} ({{'meters' | translate}})</mat-label>
                             <mat-slider class="full-width" [displayWith]="formatLabel" tickInterval="5000" step="5000"
                                 min="0" max="500000" (valueChange)="setRay($event)" aria-label="units">
                             </mat-slider>
                         </div>
                         <div>
                             <mat-form-field appearance="fill" class="full-width">
-                                <mat-label>{{'radius' | translate}}</mat-label>
+                                <mat-label>{{'radius' | translate}} ({{'meters' | translate}})</mat-label>
                                 <input matInput disabled id="ray" formControlName="ray">
                             </mat-form-field>
                         </div>
@@ -159,14 +159,14 @@
                     </div>
                     <div class="full-width" *ngIf="unlockRaySelector">
                         <div>
-                            <mat-label style="margin-right: 1%;">{{'selectRay' | translate}}</mat-label>
+                            <mat-label style="margin-right: 1%;">{{'selectRadius' | translate}} ({{'meters' | translate}})</mat-label>
                             <mat-slider class="full-width" [displayWith]="formatLabel" tickInterval="5000" step="5000"
                                 min="0" max="500000" (valueChange)="setRay($event)" aria-label="units">
                             </mat-slider>
                         </div>
                         <div>
                             <mat-form-field appearance="fill" class="full-width">
-                                <mat-label>{{'ray' | translate}}</mat-label>
+                                <mat-label>{{'radius' | translate}} ({{'meters' | translate}})</mat-label>
                                 <input matInput disabled id="ray" formControlName="ray">
                             </mat-form-field>
                         </div>

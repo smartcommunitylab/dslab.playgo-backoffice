@@ -1,7 +1,10 @@
 <div *ngIf="!changePasswordVar">
     <h1>{{"account" | translate}} <span *ngIf="account.email">- {{"username" | translate}}: {{account.email}}</span></h1>
     <h3 *ngIf="account.firstName || account.lastName">{{"name" | translate}}: {{account.firstName}} {{account.lastName}}</h3>
-    <h3>{{"roles" | translate}}: {{roles | json}}</h3>
+    <h3>{{"roles" | translate}}</h3>
+    <ul *ngFor="let role of roles">
+        <li><span *ngIf="role.entityId"> {{role.entityId}}: </span>{{role.role | translate}} </li>
+    </ul>
     <button class="button-margin" mat-flat-button (click)="onNoClick($event)">{{"cancel" | translate}}</button>
     <!-- <button class="button-margin" mat-raised-button color="primary" (click)="changePassword($event)">{{"changePassword" | translate}}</button> -->
     <button class="button-margin" mat-raised-button color="primary" (click)="logout($event)">{{"logout" | translate}}</button>

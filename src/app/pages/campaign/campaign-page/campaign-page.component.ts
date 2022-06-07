@@ -22,6 +22,7 @@ import { Campaign } from "src/app/core/api/generated/model/campaign";
 })
 export class CampaignPageComponent implements OnInit {
   displayedColumns: string[] = ["campaignId", "name","active", "dateFrom", "dateTo"];
+  size=[50];
   dataSource: MatTableDataSource<CampaignClass>;
   selectedCampaign?: CampaignClass = null;
   listCampaign: CampaignClass[];
@@ -102,10 +103,10 @@ export class CampaignPageComponent implements OnInit {
     });
   }
 
-  deleteTerritory() {
+  deleteCampaign() {
     const dialogRef = this.dialogDelete.open(CampaignDeleteComponent, {
       width: "40%",
-      height: "30%",
+      height: "150px",
     });
     let instance = dialogRef.componentInstance;
     instance.campaignId = this.selectedCampaign.campaignId;
@@ -126,7 +127,7 @@ export class CampaignPageComponent implements OnInit {
     });
   }
 
-  updateTerritory() {
+  updateCampaign() {
     const dialogRef = this.dialogUpdate.open(CampaignAddFormComponent, {
       width: "80%",
       height: "90%",

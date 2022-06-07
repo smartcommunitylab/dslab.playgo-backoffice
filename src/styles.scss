@@ -20,7 +20,14 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .number-icon
 {
-    background: url("/assets/images/marker-icon-small-red.png") no-repeat;
+    background: url("/assets/images/marker-icon-small.png") no-repeat;
     text-align:center;
-    color: black;
+    color: white;
 }
+
+.snackBar-small{
+    // color: red;
+    mat-snack-bar-container {
+        min-width: 50px;
+    }
+  }

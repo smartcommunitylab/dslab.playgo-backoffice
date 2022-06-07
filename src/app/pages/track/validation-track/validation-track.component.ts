@@ -72,7 +72,7 @@ export class ValidationTrackComponent implements OnInit {
   mapOptions: MapOptions;
   map: Map;
   stateValidationTrack: string = "collapsed";
-  size: number[] = [15];
+  size: number[] = [50];
   paginatorData: PageTrackedInstanceClass = new PageTrackedInstanceClass();
   dataSourceInfoTrack: MatTableDataSource<any[]>; //GeolocationClass 
   displayedColumnsTrack: string[] = ["index","lat","long", "date", "accuracy", "activity","activityConfidence","isMoving","speed"];
@@ -88,6 +88,8 @@ export class ValidationTrackComponent implements OnInit {
   listStates = LIST_STATES_TRACK;
   validationJson = VALIDATIONJSON;
   layerGroup: L.Layer;
+  startMarker: L.Layer;
+  stopMarker: L.Layer;
   markerLayers: any[];
   deviceInfo: any;
   listCampaings: string[] = [];
@@ -281,7 +283,15 @@ export class ValidationTrackComponent implements OnInit {
       for (let i = 0; i < this.selectedTrack.trackedInstance.geolocationEvents.length; i++) {
         this.markerLayers.push(undefined);
       }
+      var start = [this.selectedTrack.trackedInstance.geolocationEvents[0].geocoding[1],this.selectedTrack.trackedInstance.geolocationEvents[0].geocoding[0]];
+      this.addStartMarker(start);
+      const length = this.selectedTrack.trackedInstance.geolocationEvents.length;
+      if(length >1){
+        var end = [this.selectedTrack.trackedInstance.geolocationEvents[length-1].geocoding[1],this.selectedTrack.trackedInstance.geolocationEvents[length-1].geocoding[0]];
+        this.addEndMarker(end);
+      }
     });
+
   }
 
   orderPoints(){
@@ -435,8 +445,49 @@ export class ValidationTrackComponent implements OnInit {
       this.markerLayers[index] = {"layer": new L.LayerGroup(markers),"markers": markers, "popup": popup  };
       this.markerLayers[index]["layer"].addTo(this.map);
     }
-
   }
+
+  addStartMarker(point: any){
+    var icon = L.icon({
+      iconUrl: '/../../../assets/images/start-marker.png', // /dslab.playgo-backoffice/src/assets/images/start-marker.png
+      iconSize: [25, 41],
+      iconAnchor: [12, 43],
+    });
+    if (!!this.startMarker){
+      //defined
+      try {
+        this.map.removeLayer(this.startMarker);
+        var marker = L.marker([point[0], point[1]], { icon: icon });
+        this.startMarker = new L.LayerGroup([marker]);
+        this.startMarker.addTo(this.map);
+      } catch {}
+    } else {
+      var marker = L.marker([point[0], point[1]], { icon: icon });
+      this.startMarker = new L.LayerGroup([marker]);
+      this.startMarker.addTo(this.map);
+  }
+}
+
+  addEndMarker(point:any){
+    var icon = L.icon({
+      iconUrl: '/../../../assets/images/stop-marker.png', // /dslab.playgo-backoffice/src/assets/images/stop-marker.png
+      iconSize: [25, 41],
+      iconAnchor: [12, 43],
+    });
+    if (!!this.stopMarker){
+      //defined
+      try {
+        this.map.removeLayer(this.stopMarker);
+        var marker = L.marker([point[0], point[1]], { icon: icon });
+        this.stopMarker = new L.LayerGroup([marker]);
+        this.stopMarker.addTo(this.map);
+      } catch {}
+    } else {
+      var marker = L.marker([point[0], point[1]], { icon: icon });
+      this.stopMarker = new L.LayerGroup([marker]);
+      this.stopMarker.addTo(this.map);
+  }
+}
 
   changeStatus(){
       const dialogRef = this.dialogStatus.open(StatusDialogComponent, {
