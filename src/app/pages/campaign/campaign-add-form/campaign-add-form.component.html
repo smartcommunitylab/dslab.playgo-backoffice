@@ -4,7 +4,7 @@
         <form [formGroup]="validatingForm">
             <div class="full-height">
                 <div class="in-line-forms">
-                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                    <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'territoryId' | translate}}</mat-label>
                         <mat-select id="territoryId" formControlName="territoryId" [disabled]="true">
                             <mat-option *ngFor="let val of territoryList" [value]="val.territoryId">{{val.territoryId}}
@@ -14,17 +14,17 @@
                     </mat-form-field>
                 </div>
                 <div class="in-line-forms" style="margin-top: 20px;">
-                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                    <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'campaignId' | translate}}</mat-label>
                         <input matInput id="campaignId" formControlName="campaignId">
                     </mat-form-field>
-                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                    <mat-form-field appearance="fill" class="input-half-right">
                         <mat-label>{{'name' | translate}}</mat-label>
                         <input matInput id="name" formControlName="name">
                     </mat-form-field>
                 </div>
                 <div class="in-line-forms">
-                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                    <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'type' | translate}}</mat-label>
                         <mat-select id="type" formControlName="type">
                             <mat-option *ngFor="let val of typeCampaign" [value]="val">{{val |translate}}</mat-option>
@@ -33,24 +33,24 @@
                 </div>
                 <div class="in-line-forms"
                     *ngIf="!!validatingForm.get('type').value && validatingForm.get('type').value!=='company'">
-                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                    <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'startDayOfWeek' | translate}}</mat-label>
                         <input matInput id="startDayOfWeek" formControlName="startDayOfWeek">
                         <mat-hint>{{"hintStartDayOfWeek" | translate}}</mat-hint>
                     </mat-form-field>
-                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                    <mat-form-field appearance="fill" class="input-half-right">
                         <mat-label>{{'gameId' | translate}}</mat-label>
                         <input matInput id="gameId" formControlName="gameId">
                     </mat-form-field>
                 </div>
                 <div class="in-line-forms">
-                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                    <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'means' | translate}}</mat-label>
                         <mat-select id="means" formControlName="means" multiple>
                             <mat-option *ngFor="let mean of means" [value]="mean">{{mean |translate}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                    <mat-form-field appearance="fill" class="input-half-right">
                         <mat-label>{{'active' | translate}}</mat-label>
                         <mat-select id="active" formControlName="active">
                             <mat-option *ngFor="let val of [true,false]" [value]="val">{{val |translate}}</mat-option>
@@ -58,13 +58,13 @@
                     </mat-form-field>
                 </div>
                 <div class="in-line-forms">
-                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                    <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'dateFrom' | translate}}</mat-label>
                         <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1">
                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                         <mat-datepicker #picker1></mat-datepicker>
                     </mat-form-field>
-                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                    <mat-form-field appearance="fill" class="input-half-right">
                         <mat-label>{{'dateTo' | translate}}</mat-label>
                         <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker">
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -94,21 +94,21 @@
                     </mat-card>
                 </div>
                 <div class="in-line-forms" *ngIf="selectedLogo || selectedBanner">
-                    <img *ngIf="selectedLogo" class="input-custom-half-left"
+                    <img *ngIf="selectedLogo" class="input-half-left"
                         src="{{PREFIX_SRC_IMG_C + selectedLogo.contentType + BASE64_SRC_IMG_C + selectedLogo.image}}"
                         style="width: 100px;height: 100px;">
                         <span style="margin-right: 47%"></span>
-                        <img *ngIf="selectedBanner" class="input-custom-half-right"
+                        <img *ngIf="selectedBanner" class="input-half-right"
                         src="{{PREFIX_SRC_IMG_C + selectedBanner.contentType + BASE64_SRC_IMG_C + selectedBanner.image}}"
                         style="width: 100px;height: 100px;">
                 </div>
                 <div class="in-line-forms">
-                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                    <mat-form-field appearance="fill" class="input-half-left">
                         <input matInput formControlName="logo" type="file" accept="image/png, image/jpeg"
                             (change)="upload($event)" />
                         <mat-hint>{{'logo' |translate}}</mat-hint>
                     </mat-form-field>
-                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                    <mat-form-field appearance="fill" class="input-half-right">
                         <input matInput formControlName="banner" type="file" accept="image/png, image/jpeg"
                             (change)="uploadBanner($event)" />
                             <mat-hint>{{'banner' |translate}}</mat-hint>
@@ -141,11 +141,11 @@
                         <mat-card-content [@bodyExpansion]="detail.collapsed ? 'collapsed': 'expanded' " class="expandable-content">
                             <form [formGroup]="detail.form">
                                 <div class="in-line-forms">
-                                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                                    <mat-form-field appearance="fill" class="new-details-input">
                                         <mat-label>{{'name' | translate}}</mat-label>
                                         <input matInput formControlName="name" type="text" />
                                     </mat-form-field>
-                                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                                    <mat-form-field appearance="fill" class="new-details-input">
                                         <mat-label>{{'type' | translate}}</mat-label>
                                         <mat-select id="type" formControlName="type">
                                             <mat-option *ngFor="let type of detailsType"  [value]="type.value" (onSelectionChange)="type.used = true">
@@ -156,7 +156,7 @@
                                     </mat-form-field>
                                 </div>
                                 <div class="in-line-forms">
-                                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                                    <mat-form-field appearance="fill" class="new-details-input">
                                         <mat-label>{{'extraUrl' | translate}}</mat-label>
                                         <input matInput formControlName="url" type="text"/>
                                     </mat-form-field>
@@ -165,7 +165,7 @@
                             <rich-text-editor [control]="detail.form.get('content')"></rich-text-editor>
                         </mat-card-content>
                     </mat-card>
-                    <button type="button" mat-flat-button class="red-background delete-right-button"
+                    <button type="button" mat-flat-button class="delete-detail-button"
                         (click)="deleteDetail(detail)">
                         {{'delete' | translate}}
                         <mat-icon>
@@ -186,9 +186,9 @@
                     </button>
                 </div>
             </div>
-            <p *ngIf="!!errorMsgValidation" class="full-dimension red">{{errorMsgValidation | translate}}</p>
+            <p *ngIf="!!errorMsgValidation" class="full-dimension red-text">{{errorMsgValidation | translate}}</p>
             <div class="full-width" style="height: 40px">
-                <button class="right-button back-green" mat-raised-button type="submit" (click)="validate()">{{'save' |
+                <button class="right-button green-background" mat-raised-button type="submit" (click)="validate()">{{'save' |
                     translate}}</button>
                 <button class="right-button" mat-flat-button (click)="onNoClick($event)">{{'cancel'
                     |translate}}</button>
@@ -204,7 +204,7 @@
         <form [formGroup]="validatingForm">
             <div class="full-height">
                 <div class="in-line-forms">
-                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                    <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'type' | translate}}</mat-label>
                         <mat-select id="type" formControlName="type">
                             <mat-option *ngFor="let val of typeCampaign" [value]="val">{{val |translate}}</mat-option>
@@ -213,23 +213,23 @@
                 </div>
                 <div class="in-line-forms"
                     *ngIf="!!validatingForm.get('type').value && validatingForm.get('type').value!=='company'">
-                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                    <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'startDayOfWeek' | translate}}</mat-label>
                         <input matInput id="startDayOfWeek" formControlName="startDayOfWeek">
                     </mat-form-field>
-                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                    <mat-form-field appearance="fill" class="input-half-right">
                         <mat-label>{{'gameId' | translate}}</mat-label>
                         <input matInput id="gameId" formControlName="gameId">
                     </mat-form-field>
                 </div>
                 <div class="in-line-forms">
-                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                    <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'means' | translate}}</mat-label>
                         <mat-select id="means" formControlName="means" multiple>
                             <mat-option *ngFor="let mean of means" [value]="mean">{{mean |translate}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                    <mat-form-field appearance="fill" class="input-half-right">
                         <mat-label>{{'active' | translate}}</mat-label>
                         <mat-select id="active" formControlName="active">
                             <mat-option *ngFor="let val of [true,false]" [value]="val">{{val | translate}}</mat-option>
@@ -237,14 +237,14 @@
                     </mat-form-field>
                 </div>
                 <div class="in-line-forms">
-                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                    <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'dateFrom' | translate}}</mat-label>
                         <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1">
                         <mat-hint>{{'dateFormat' |translate}}</mat-hint>
                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                         <mat-datepicker #picker1></mat-datepicker>
                     </mat-form-field>
-                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                    <mat-form-field appearance="fill" class="input-half-right">
                         <mat-label>{{'dateTo' | translate}}</mat-label>
                         <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker">
                         <mat-hint>{{'dateFormat' |translate}}</mat-hint>
@@ -297,11 +297,11 @@
                     </div>
                 </div>
                 <div class="in-line-forms">
-                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                    <mat-form-field appearance="fill" class="input-half-left">
                         <input matInput formControlName="logo" type="file" accept="image/png, image/jpeg"
                             (change)="upload($event)" />
                     </mat-form-field>
-                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                    <mat-form-field appearance="fill" class="input-half-right">
                         <input matInput formControlName="banner" type="file" accept="image/png, image/jpeg"
                             (change)="uploadBanner($event)" />
                     </mat-form-field>
@@ -310,7 +310,12 @@
                 <div class="in-line-forms" *ngFor="let detail of details" style="margin-top: 20px">
                     <mat-card class="card-expandable card-normal" style="margin-bottom: 5px;">
                         <mat-card-title class="cursor-pointer" (click)="toggleDetail(detail)">
-                            {{  detail.form.get('name').value}} - {{detail.form.get('type').value | translate}}
+                            <span *ngIf="!detail.created">
+                                {{  detail.form.get('name').value}} - {{detail.form.get('type').value | translate}}
+                            </span>
+                            <span *ngIf="detail.created">
+                                {{  'newDetail' | translate}}
+                            </span>
                             <mat-card-actions class="right-button top-button">
                                 <mat-icon *ngIf="detail.collapsed">
                                     <span class="material-symbols-outlined">
@@ -327,13 +332,13 @@
                         <mat-card-content [@bodyExpansion]="detail.collapsed ? 'collapsed': 'expanded' " class="expandable-content">
                             <form [formGroup]="detail.form">
                                 <div class="in-line-forms">
-                                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                                    <mat-form-field appearance="fill" class="new-details-input">
                                         <mat-label>{{'name' | translate}}</mat-label>
                                         <input matInput formControlName="name" type="text" />
                                     </mat-form-field>
-                                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                                    <mat-form-field appearance="fill" class="new-details-input">
                                         <mat-label>{{'type' | translate}}</mat-label>
-                                        <mat-select id="type" formControlName="type" disabled="true">
+                                        <mat-select id="type" formControlName="type" disabled="{{!detail.created}}">
                                             <mat-option *ngFor="let type of detailsType"  [value]="type.value" (onSelectionChange)="type.used = true">
                                                     <!-- {{(!type.used? type.value : null) | translate}} -->
                                                     {{type.value | translate}}
@@ -342,7 +347,7 @@
                                     </mat-form-field>
                                 </div>
                                 <div class="in-line-forms">
-                                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                                    <mat-form-field appearance="fill" class="new-details-input">
                                         <mat-label>{{'extraUrl' | translate}}</mat-label>
                                         <input matInput formControlName="url" type="text"/>
                                     </mat-form-field>
@@ -351,7 +356,7 @@
                             <rich-text-editor [control]="detail.form.get('content')"></rich-text-editor>
                         </mat-card-content>
                     </mat-card>
-                    <button type="button" mat-flat-button class="red-background delete-right-button"
+                    <button type="button" mat-flat-button class="delete-detail-button"
                         (click)="deleteDetail(detail)">
                         {{'delete' | translate}}
                         <mat-icon>
@@ -372,9 +377,9 @@
                     </button>
                 </div>
             </div>
-            <p *ngIf="!!errorMsgValidation" class="full-dimension red">{{errorMsgValidation | translate}}</p>
+            <p *ngIf="!!errorMsgValidation" class="full-dimension red-text">{{errorMsgValidation | translate}}</p>
             <div class="full-width" style="height: 40px">
-                <button class="right-button back-green" mat-raised-button type="submit" (click)="validate()">{{'save' |
+                <button class="right-button green-background" mat-raised-button type="submit" (click)="validate()">{{'save' |
                     translate}}</button>
                 <button class="right-button" mat-flat-button (click)="onNoClick($event)">{{'cancel'
                     |translate}}</button>

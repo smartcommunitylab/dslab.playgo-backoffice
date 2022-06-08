@@ -1,0 +1,74 @@
+<div class="full-width">
+    <h1>{{'addCommunication' | translate}}</h1>
+    <div class="col-12 full-width">
+        <form [formGroup]="validatingForm">
+            <div class="full-height">
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <mat-label>{{'territoryId' | translate}}</mat-label>
+                        <mat-select id="territoryId" formControlName="territoryId" [disabled]="true">
+                            <mat-option *ngFor="let val of territories" [value]="val">{{val}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-hint>{{"hintIdTerritoryAddCampaign" | translate}}</mat-hint>
+                    </mat-form-field>
+                </div>
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <mat-label>{{'title' | translate}}</mat-label>
+                        <input matInput id="title" formControlName="title">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                        <mat-label>{{'channels' | translate}}</mat-label>
+                        <mat-select id="channels" formControlName="channels" multiple>
+                            <mat-option *ngFor="let val of channels" [value]="val">{{val | translate}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="in-line-forms" *ngIf="emailEnabled()">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <mat-label>{{'users' | translate}}</mat-label>
+                        <input matInput id="users" formControlName="users">
+                    </mat-form-field>
+                </div>
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>{{'briefDescription' | translate}}</mat-label>
+                        <textarea matInput id="briefDescription" formControlName="briefDescription"></textarea>
+                    </mat-form-field>
+                </div>
+                <div class="in-line-forms">
+                    <mat-card class="card-expandable card-normal">
+                        <mat-card-title class="cursor-pointer">
+                            {{'richDescription' | translate}}
+                        </mat-card-title>
+                        <mat-card-content class="expandable-content">
+                            <rich-text-editor [control]="descriptionRichControl"></rich-text-editor>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <mat-label>{{'campaignId' | translate}}</mat-label>
+                        <input matInput id="campaignId" formControlName="campaignId">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                        <mat-label>{{'dateFrom' | translate}}</mat-label>
+                        <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1">
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+            <p *ngIf="!!errorMsgValidation" class="full-dimension red-text">{{errorMsgValidation | translate}}</p>
+            <div class="full-width" style="height: 40px">
+                <button class="right-button greed-background" mat-raised-button type="submit" (click)="validate()">{{'save' |
+                    translate}}</button>
+                <button class="right-button" mat-flat-button (click)="onNoClick($event)">{{'cancel'
+                    |translate}}</button>
+            </div>
+        </form>
+    </div>
+
+</div>

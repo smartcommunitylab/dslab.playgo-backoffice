@@ -1,12 +1,15 @@
-.red{
-    color:red;
-  }
-  
-  .right-button{
-    position: relative;
-    float:right;
-  }
+.right-button{
+  position: relative;
+  float:right;
+}
 
-  .red-background{
-    background-color: rgba(255, 0, 0, 0.7);
+.confirm-delete{
+  color:white;
+  position: relative;
+  float:right;
+  background-color: rgba(255, 0, 0, 0.7);
+}
+
+.red-text{
+  color: red;
 }
