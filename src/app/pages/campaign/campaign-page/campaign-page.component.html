@@ -90,7 +90,7 @@
                             {{'campaignId' | translate}}: {{selectedCampaign.campaignId}}
                         </div>
                         <div class="bold" style="margin-top: 7px;">
-                            {{'type' | translate}}: {{selectedCampaign.type}}
+                            {{'type' | translate}}: {{selectedCampaign.type | translate}}
                         </div>
                         <div style="margin-top: 7px;">
                             <!-- {{'active' | translate}}: -->
@@ -114,8 +114,8 @@
                 <img class="img-banner" src="{{ selectedCampaign.banner.url }}">
                 <!-- old <img class="img-logo" src="{{PREFIX_SRC_IMG_C + selectedCampaign.banner.contentType + BASE64_SRC_IMG_C + selectedCampaign.banner.image}}"> -->
                 <mat-card-content>
-                    <div class="bold" style="margin-top: 10px">
-                        <p>{{'dateFrom' |translate }}: {{fromTimestampToDate(selectedCampaign.dateFrom)}} {{'dateTo' |translate }}:
+                    <div style="margin-top: 10px">
+                        <p class="bold">{{'dateFrom' |translate }}: {{fromTimestampToDate(selectedCampaign.dateFrom)}} {{'dateTo' |translate }}:
                             {{fromTimestampToDate(selectedCampaign.dateTo)}}</p>
                         <h3>{{'means' | translate}}</h3>
                         <ul>

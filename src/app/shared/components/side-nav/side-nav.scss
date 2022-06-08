@@ -1,73 +1,76 @@
-.full-size{
-    height: 100%;
-    width: 100%;
-  }
-  
-  .side-nav{
-    height: 100%;
-    float:left;
-    width: 6%;
-  }
-  
-  .page{
-    height: 100%;
-    float:right;
-    width: 94%;
-  }
+.full-size {
+  height: 100%;
+  width: 100%;
+}
 
-  .button-hover:hover{
-    background-color: rgba(0, 0, 0, 0.158);
-  }
+.side-nav {
+  height: 100%;
+  float: left;
+  width: 6%;
+}
 
-  .left-button{
-    height: 100%;
-    float:left;
-    width: 89%;
-  }
+.page {
+  height: 100%;
+  float: right;
+  width: 94%;
+}
 
-  .right-button{
-    height: 100%;
-    float:right;
-    width: 9%;
-  }
+.button-hover:hover {
+  background-color: rgba(0, 0, 0, 0.158);
+}
 
-  .icon-side{
-    float: left;
-    margin: 10px;
-  }
+.left-button {
+  height: 100%;
+  float: left;
+  width: 89%;
+}
 
-  .label-text{
-    float: left;
-    width: 70%; //170px
-    font-weight: 450;
-    margin: 0px;
-    margin-top: 10px;
-  }
+.right-button {
+  height: 100%;
+  float: right;
+  width: 9%;
+}
 
-  .button-height{
-    height: 45px;
-  }
+.icon-side {
+  float: left;
+  margin: 10px;
+}
 
-  mat-drawer-container{
-    width: 60px;
-  }
+.label-text {
+  float: left;
+  width: 70%; //170px
+  font-weight: 450;
+  margin: 0px;
+  margin-top: 10px;
+}
 
-  mat-drawer-container:hover{
-    width: 250px;
-  }
+.button-height {
+  height: 45px;
+}
 
-  .hider > div>h3.question{
-    visibility: hidden;
-    display: none;
-  }
+mat-drawer-container {
+  width: 60px;
+}
 
-  .hider:hover >div> h3.question{
-    visibility: visible;
-    display:inline;
-  }
+mat-drawer-container:hover {
+  width: 250px;
+}
 
-  .border-right{
-    border-right: solid rgba(0, 0, 0, 0.205) 1px;
-  }
-  .border-bottom{
-    border-bottom: solid rgba(0, 0, 0, 0.205) 1px;}
+.hider > div > h3.question {
+  visibility: hidden;
+  display: none;
+}
+
+.hider:hover > div > h3.question {
+  visibility: visible;
+  display: inline;
+}
+
+.border-right {
+  border-right: solid rgba(0, 0, 0, 0.205) 1px;
+}
+
+.border-bottom {
+  border-bottom: solid rgba(0, 0, 0, 0.205) 1px;
+}
+
