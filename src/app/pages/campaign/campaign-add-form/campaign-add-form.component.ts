@@ -620,7 +620,7 @@ export class CampaignAddFormComponent implements OnInit {
     for (let el of details) {
       let item = new DetailsForAddModifyModule();
       item.collapsed = true;
-      item.created = true;
+      item.created = false;
       item.detail = el;
       item.form = this.formBuilder.group({
         name: new FormControl("", [Validators.required]),

@@ -1,0 +1,44 @@
+.add-button {
+    border-radius: 50px;
+    height: 100%;
+    width: 8%;
+  }
+  
+  .add-button-div {
+    margin: 1%;
+    height: 50px;
+  }
+    
+  .right-button {
+    float: right;
+    margin-right: 20px;
+  }
+  
+  .highlight {
+    background: #979797b4; /* green */
+  }
+  
+  .card {
+    border-top: 1px solid rgba(0, 0, 0, 0.075);
+    border-right: 1px solid rgba(0, 0, 0, 0.075);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    margin-left: 10px;
+  }
+    
+  .newItem{
+    background: #f199f179; 
+  }
+  
+  .table{
+    width: 50%;
+    height: 100%;
+    float: left;
+  }
+
+  
+  .title{
+    float: left;
+    width: 65%;
+    height: 100%;
+  }
+

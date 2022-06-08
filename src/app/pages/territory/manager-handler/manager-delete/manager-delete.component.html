@@ -1,8 +1,8 @@
 <div>
     <h1>{{'confirmDelete' |translate}} - {{email}}</h1>
-    <h2 *ngIf="!!msgErrorDelete" class="red"> {{ msgErrorDelete | translate}}: {{error}} </h2>
+    <h2 *ngIf="!!msgErrorDelete" class="red-text"> {{ msgErrorDelete | translate}}: {{error}} </h2>
     <div style="height:100%; margin-bottom: 10px;">
-        <button class="right-button red-background" mat-raised-button (click)="delete()">
+        <button class="confirm-delete" mat-raised-button (click)="delete()">
             {{'delete' | translate}}
         </button>
         <button class="right-button" mat-flat-button (click)="onNoClick($event)">
