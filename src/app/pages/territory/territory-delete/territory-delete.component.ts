@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { TerritoryControllerService } from "src/app/core/api/generated/controllers/territoryController.service";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-territory-delete",
@@ -14,6 +15,7 @@ export class TerritoryDeleteComponent implements OnInit {
   error: string;
   constructor(
     private territoryService: TerritoryControllerService,
+    private translate: TranslateService,
     public dialogRef: MatDialogRef<TerritoryDeleteComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _snackBar: MatSnackBar
@@ -26,27 +28,26 @@ export class TerritoryDeleteComponent implements OnInit {
   }
 
   delete() {
-    try {
-      this.territoryService.deleteTerritoryUsingDELETE(this.territoryId).subscribe(
+    this.territoryService
+      .deleteTerritoryUsingDELETE(this.territoryId)
+      .subscribe(
         () => {
           this.onNoClick("", this.territoryId);
-          this._snackBar.open("Territorio eliminato", "close");
+          this._snackBar.open(
+            this.translate.instant("deletedTerritory"),
+            this.translate.instant("close")
+          );
         },
         (error) => {
-          console.log(error);
-          this.msgError = "cannotDeleteTerritory";
-          if(!!error.error && !!error.error.ex) {
+          //console.log("ciaoo", error);
+          this.msgError = this.translate.instant("cannotDeleteTerritory");
+          if (!!error && !!error.error && !!error.error.ex) {
             this.error = error.error.ex.toString();
-          }else{
+          } else {
             this.error = error;
           }
           // this._snackBar.open("Territorio cannot be delited because:"+ error.error.ex, "close");
         }
       );
-    } catch (e) {
-      this.error = e.toString();
-      this.msgError = "cannotDeleteTerritory";
-      // this._snackBar.open("Error durante cancellazione", "close");
-    }
   }
 }

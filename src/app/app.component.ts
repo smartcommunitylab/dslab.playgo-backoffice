@@ -23,19 +23,11 @@ export interface Tile {
 })
 export class AppComponent implements OnInit{
   title = "backOfficeConsolePlayGo";
-  events: string[] = [];
-  opened: boolean;
   loading: boolean = false;
-
-  tiles: Tile[] = [
-    { text: "One", cols: 3, rows: 1, color: "lightblue" },
-    { text: "Two", cols: 1, rows: 2, color: "lightgreen" },
-    { text: "Three", cols: 1, rows: 1, color: "lightpink" },
-    { text: "Four", cols: 2, rows: 1, color: "#DDBDF1" },
-  ];
-  login: boolean = false;
   territories: TerritoryClass[];
   globalSelectedTerritory: string;
+  userEnabledToVisualize: boolean = true;
+  roles: string[] = [];
 
   constructor(
     private translate: TranslateService,
@@ -56,6 +48,7 @@ export class AppComponent implements OnInit{
       this.territoryService.getTerritoriesUsingGET().subscribe((res)=>{
         this.territories = res;
         this.findTerritoriesPerRoles();
+        this.userEnabled();
         try{
           //if present in local storage take it
           this.globalSelectedTerritory = localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY);
@@ -82,6 +75,7 @@ export class AppComponent implements OnInit{
       //if not admin filter the territories
       let territoriesVisible = [];
       roles.forEach((role)=>{
+        this.roles.push(role.role); // contains duplicate
         this.territories.forEach((item)=>{
           if(role.entityId ===item.territoryId){
             territoriesVisible.push(item);
@@ -123,6 +117,14 @@ export class AppComponent implements OnInit{
     localStorage.setItem(TERRITORY_ID_LOCAL_STORAGE_KEY,value);
     this.globalSelectedTerritory = value;
     window.location.reload();
+  }
+
+  userEnabled(){
+    if(!!this.territories && this.territories.length>0){
+      this.userEnabledToVisualize = true;
+    }else{
+      this.userEnabledToVisualize = false;
+    }
   }
 
 }

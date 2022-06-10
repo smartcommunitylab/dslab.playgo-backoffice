@@ -36,7 +36,6 @@
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss",
               "./node_modules/leaflet/dist/leaflet.css"
-
             ],
             "scripts": []
           },
@@ -68,16 +67,10 @@
                 }
               ]
             },
-            "devserver": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.devserver.ts"
-                }
-              ],
+            "dev": {
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": false,
+              "sourceMap": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -103,6 +96,9 @@
             "browserTarget": "backOfficeConsolePlayGo:build"
           },
           "configurations": {
+            "dev": {
+              "browserTarget": "backOfficeConsolePlayGo:build:dev"
+            },
             "production": {
               "browserTarget": "backOfficeConsolePlayGo:build:production"
             }

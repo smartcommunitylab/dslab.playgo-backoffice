@@ -4,8 +4,8 @@
     </div>
     <span class="example-spacer"></span>
 
-    <mat-label style="margin-right: 10px">{{'territory' | translate}}: </mat-label>
-    <mat-select class="territory-select" [(ngModel)]="globalSelectedTerritory"
+    <mat-label *ngIf="userEnabledToVisualize" style="margin-right: 10px">{{'territory' | translate}}: </mat-label>
+    <mat-select *ngIf="userEnabledToVisualize" class="territory-select" [(ngModel)]="globalSelectedTerritory"
         (selectionChange)="onGlobalSelectTerritory($event.value)">
         <mat-option *ngFor="let ter of territories" [value]="ter.territoryId">
               {{ter.territoryId | translate}}
@@ -26,12 +26,17 @@
     </button>
 </mat-toolbar>
 <div class="full-size">
-    <div class="side-nav border-right">
+    <div class="side-nav border-right" *ngIf="userEnabledToVisualize">
         <app-side-nav></app-side-nav>
     </div>
     <div class="page">
-        <div *ngIf="!loading" class="full-size">
+        <div *ngIf="!loading && userEnabledToVisualize" class="full-size">
             <router-outlet></router-outlet>
+        </div>
+        <div *ngIf="!userEnabledToVisualize">
+            <h1 class="warning-user-not-valid">
+                {{'wrongAccount' | translate}}
+            </h1>
         </div>
         <div *ngIf="loading" class="loading-container">
             <mat-spinner color="primary" mode="indeterminate">

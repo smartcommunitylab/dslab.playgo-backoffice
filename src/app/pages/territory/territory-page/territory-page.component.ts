@@ -89,7 +89,7 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
   deleteTerritory(){
     const dialogRef = this.dialogDelete.open(TerritoryDeleteComponent, {
       width: '40%',
-      height: '150px',
+      //height: '150px',
     });
     let instance = dialogRef.componentInstance;
     instance.territoryId = this.selectedTerritory.territoryId;

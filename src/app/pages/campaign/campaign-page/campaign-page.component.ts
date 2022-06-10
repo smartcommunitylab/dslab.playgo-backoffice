@@ -106,7 +106,7 @@ export class CampaignPageComponent implements OnInit {
   deleteCampaign() {
     const dialogRef = this.dialogDelete.open(CampaignDeleteComponent, {
       width: "40%",
-      height: "150px",
+      //height: "150px",
     });
     let instance = dialogRef.componentInstance;
     instance.campaignId = this.selectedCampaign.campaignId;

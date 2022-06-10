@@ -54,6 +54,8 @@ mat-drawer-container {
 
 mat-drawer-container:hover {
   width: 250px;
+  border-right: solid rgba(0, 0, 0, 0.205) 1px;
+  border-bottom: solid rgba(0, 0, 0, 0.205) 1px;
 }
 
 .hider > div > h3.question {
