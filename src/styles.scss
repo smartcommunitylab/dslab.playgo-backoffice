@@ -27,6 +27,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .snackBar-small{
     // color: red;
+    min-width: 50px;
     mat-snack-bar-container {
         min-width: 50px;
     }
