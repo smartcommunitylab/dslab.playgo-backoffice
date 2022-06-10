@@ -6,7 +6,7 @@ import {
   HttpInterceptor,
   HttpResponse,
 } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { Observable, throwError } from "rxjs";
 import { catchError, map } from "rxjs/operators";
 import { LoadingService } from "src/app/shared/services/loading.service";
 import { environment } from "../../../environments/environment";
@@ -32,7 +32,7 @@ export class SpinnerInterceptor implements HttpInterceptor {
         .pipe(
           catchError((err) => {
             this._loading.setLoading(false, request.url);
-            return err;
+            return throwError(err);
           })
         )
         .pipe(

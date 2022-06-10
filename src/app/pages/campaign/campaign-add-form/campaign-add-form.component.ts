@@ -45,6 +45,7 @@ import {
 } from "src/app/shared/classes/campaign-details-class";
 import { CampaignDetail } from "src/app/core/api/generated/model/campaignDetail";
 import { Image } from "src/app/core/api/generated/model/image";
+import { TranslateService } from "@ngx-translate/core";
 
 const moment = _moment;
 
@@ -133,6 +134,7 @@ export class CampaignAddFormComponent implements OnInit {
 
   constructor(
     private territoryService: TerritoryControllerService,
+    private translate: TranslateService,
     private campaignService: CampaignControllerService,
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<CampaignAddFormComponent>,
@@ -202,8 +204,8 @@ export class CampaignAddFormComponent implements OnInit {
         description: this.campaignUpdated.description,
         means: this.campaignUpdated.validationData.means,
         active: this.campaignUpdated.active,
-        dateFrom: moment(this.campaignUpdated.dateFrom),//moment(this.campaignUpdated.dateFrom, "YYYY-MM-DD"),
-        dateTo: moment(this.campaignUpdated.dateTo),//moment(this.campaignUpdated.dateTo, "YYYY-MM-DD"),
+        dateFrom: moment(this.campaignUpdated.dateFrom), //moment(this.campaignUpdated.dateFrom, "YYYY-MM-DD"),
+        dateTo: moment(this.campaignUpdated.dateTo), //moment(this.campaignUpdated.dateTo, "YYYY-MM-DD"),
         type: this.campaignUpdated.type,
         gameId: this.campaignUpdated.gameId,
         startDayOfWeek: this.campaignUpdated.startDayOfWeek,
@@ -246,9 +248,9 @@ export class CampaignAddFormComponent implements OnInit {
     if (this.validatingForm.valid) {
       this.campaignCreated.active = this.validatingForm.get("active").value;
       //const dataFrom: Moment = this.validatingForm.get("dateFrom").value;
-      this.campaignCreated.dateFrom = this.validatingForm.get("dateFrom").value;//dataFrom.toDate();// this.formatDate(dataFrom); // 
+      this.campaignCreated.dateFrom = this.validatingForm.get("dateFrom").value; //dataFrom.toDate();// this.formatDate(dataFrom); //
       //const dataTo: Moment = this.validatingForm.get("dateTo").value;
-      this.campaignCreated.dateTo =  this.validatingForm.get("dateTo").value;//dataTo.toDate();//this.formatDate(dataTo); //
+      this.campaignCreated.dateTo = this.validatingForm.get("dateTo").value; //dataTo.toDate();//this.formatDate(dataTo); //
       this.campaignCreated.logo = new ImageClass();
       if (!!this.selectedLogo) {
         this.campaignCreated.logo.contentType = this.selectedLogo.contentType;
@@ -306,185 +308,212 @@ export class CampaignAddFormComponent implements OnInit {
         this.campaignCreated.territoryId =
           this.validatingForm.get("territoryId").value;
         this.campaignCreated.name = this.validatingForm.get("name").value;
-        try {
-          this.campaignService
-            .addCampaignUsingPOST(this.campaignCreated)
-            .subscribe(
-              () => {
-                if (this.uploadImageForModifyBanner) {
-                  const formData = new FormData();
-                  formData.append("data", this.blobImageUploadBanner);
-                  this.campaignService
-                    .uploadCampaignBannerUsingPOST(
-                      this.campaignCreated.campaignId,
-                      formData
-                    )
-                    .subscribe(
-                      () => {
-                        if(!this.uploadImageForModifyLogo){
-                          this.onNoClick("", this.campaignCreated);
-                          this._snackBar.open("Dati modificati", "close");
-                        }
-                      },
-                      (error) => {
-                        // console.log(error);
-                        if (error.error && error.error.ex)
-                          this.errorMsgValidation =
-                            "Tutti i dati sono stati modificati tranne il banner. Per errore: " +
-                            error.error.ex +
-                            "\n";
-                        else if (error.error)
-                          this.errorMsgValidation =
-                            "Tutti i dati sono stati modificati tranne il banner. Per errore: " +
-                            error.error +
-                            "\n";
-                        else
-                          this.errorMsgValidation =
-                            "Tutti i dati sono stati modificati tranne il banner. Per errore: " +
-                            error +
-                            "\n";
-                      }
-                    );
-                }
-                if (this.uploadImageForModifyLogo) {
-                  const formData = new FormData();
-                  formData.append("data", this.blobImageUploadLogo); //this.blobImageUploadLogo
-                  this.campaignService
-                    .uploadCampaignLogoUsingPOST(
-                      this.campaignCreated.campaignId,
-                      formData
-                    )
-                    .subscribe(
-                      () => {
+        this.campaignService
+          .addCampaignUsingPOST(this.campaignCreated)
+          .subscribe(
+            () => {
+              if (this.uploadImageForModifyBanner) {
+                const formData = new FormData();
+                formData.append("data", this.blobImageUploadBanner);
+                this.campaignService
+                  .uploadCampaignBannerUsingPOST(
+                    this.campaignCreated.campaignId,
+                    formData
+                  )
+                  .subscribe(
+                    () => {
+                      if (!this.uploadImageForModifyLogo) {
                         this.onNoClick("", this.campaignCreated);
-                        this._snackBar.open("Dati modificati", "close");
-                      },
-                      (error) => {
-                        // console.log(error);
-                        if (error.error && error.error.ex)
-                          this.errorMsgValidation =
-                            "Tutti i dati sono stati modificati tranne il logo. Per errore: " +
-                            error.error.ex +
-                            "\n";
-                        else if (error.error)
-                          this.errorMsgValidation =
-                            "Tutti i dati sono stati modificati tranne il logo. Per errore: " +
-                            error.error +
-                            "\n";
-                        else
-                          this.errorMsgValidation =
-                            "Tutti i dati sono stati modificati tranne il logo. Per errore: " +
-                            error +
-                            "\n";
+                        this._snackBar.open(
+                          this.translate.instant("savedData"),
+                          this.translate.instant("close")
+                        );
                       }
-                    );
-                }
-                if(!this.uploadImageForModifyBanner && !this.uploadImageForModifyLogo){
-                  this.onNoClick("", this.campaignCreated);
-                  this._snackBar.open("Dati modificati", "close");
-                }
-              },
-              (error) => {
-                this.errorMsgValidation =
-                  "Dati non salvati per errore in post: " + error.error.ex;
-                //this._snackBar.open('Dati non salvati per errore: ' +error.error.ex, "close");
+                    },
+                    (error) => {
+                      // console.log(error);
+                      if (error.error && error.error.ex)
+                        this.errorMsgValidation =
+                          this.translate.instant(
+                            "allDataModifiedExceptBanner"
+                          ) +
+                          error.error.ex +
+                          "\n";
+                      else if (error.error)
+                        this.errorMsgValidation =
+                          this.translate.instant(
+                            "allDataModifiedExceptBanner"
+                          ) +
+                          error.error +
+                          "\n";
+                      else
+                        this.errorMsgValidation =
+                          this.translate.instant(
+                            "allDataModifiedExceptBanner"
+                          ) +
+                          error +
+                          "\n";
+                    }
+                  );
               }
-            );
-        } catch (e) {
-          this.errorMsgValidation = "Dati non salvati per errore: " + e;
-          //this._snackBar.open('error:' +e.errors, "close");
-        }
+              if (this.uploadImageForModifyLogo) {
+                const formData = new FormData();
+                formData.append("data", this.blobImageUploadLogo); //this.blobImageUploadLogo
+                this.campaignService
+                  .uploadCampaignLogoUsingPOST(
+                    this.campaignCreated.campaignId,
+                    formData
+                  )
+                  .subscribe(
+                    () => {
+                      this.onNoClick("", this.campaignCreated);
+                      this._snackBar.open(
+                        this.translate.instant("savedData"),
+                        this.translate.instant("close")
+                      );
+                    },
+                    (error) => {
+                      // console.log(error);
+                      if (error.error && error.error.ex)
+                        this.errorMsgValidation =
+                          this.translate.instant("allDataModifiedExceptLogo") +
+                          error.error.ex +
+                          "\n";
+                      else if (error.error)
+                        this.errorMsgValidation =
+                          this.translate.instant("allDataModifiedExceptLogo") +
+                          error.error +
+                          "\n";
+                      else
+                        this.errorMsgValidation =
+                          this.translate.instant("allDataModifiedExceptLogo") +
+                          error +
+                          "\n";
+                    }
+                  );
+              }
+              if (
+                !this.uploadImageForModifyBanner &&
+                !this.uploadImageForModifyLogo
+              ) {
+                this.onNoClick("", this.campaignCreated);
+                this._snackBar.open(
+                  this.translate.instant("savedData"),
+                  this.translate.instant("close")
+                );
+              }
+            },
+            (error) => {
+              this.errorMsgValidation =
+                this.translate.instant("dataNotSavedForError") + error.error.ex;
+              //this._snackBar.open('Dati non salvati per errore: ' +error.error.ex, "close");
+            }
+          );
       }
       if (this.type === "modify") {
         this.campaignCreated.name = this.campaignUpdated.name;
         this.campaignCreated.territoryId = this.campaignUpdated.territoryId;
         this.campaignCreated.campaignId = this.campaignUpdated.campaignId;
-        try {
-          this.campaignService
-            .updateCampaignUsingPUT(this.campaignCreated)
-            .subscribe(
-              () => {
-                if (this.uploadImageForModifyBanner) {
-                  const formData = new FormData();
-                  formData.append("data", this.blobImageUploadBanner);
-                  this.campaignService
-                    .uploadCampaignBannerUsingPOST(
-                      this.campaignCreated.campaignId,
-                      formData
-                    )
-                    .subscribe(
-                      () => {
-                        if(!this.uploadImageForModifyLogo){
-                          this.onNoClick("", this.campaignCreated);
-                          this._snackBar.open("Dati modificati", "close");
-                        }
-                      },
-                      (error) => {
-                        // console.log(error);
-                        if (error.error && error.error.ex)
-                          this.errorMsgValidation =
-                            "Tutti i dati sono stati modificati tranne il banner. Per errore: " +
-                            error.error.ex +
-                            "\n";
-                        else if (error.error)
-                          this.errorMsgValidation =
-                            "Tutti i dati sono stati modificati tranne il banner. Per errore: " +
-                            error.error +
-                            "\n";
-                        else
-                          this.errorMsgValidation =
-                            "Tutti i dati sono stati modificati tranne il banner. Per errore: " +
-                            error +
-                            "\n";
-                      }
-                    );
-                }
-                if (this.uploadImageForModifyLogo) {
-                  const formData = new FormData();
-                  formData.append("data", this.blobImageUploadLogo); //this.blobImageUploadLogo
-                  this.campaignService
-                    .uploadCampaignLogoUsingPOST(
-                      this.campaignCreated.campaignId,
-                      formData
-                    )
-                    .subscribe(
-                      () => {
+        this.campaignService
+          .updateCampaignUsingPUT(this.campaignCreated)
+          .subscribe(
+            () => {
+              if (this.uploadImageForModifyBanner) {
+                const formData = new FormData();
+                formData.append("data", this.blobImageUploadBanner);
+                this.campaignService
+                  .uploadCampaignBannerUsingPOST(
+                    this.campaignCreated.campaignId,
+                    formData
+                  )
+                  .subscribe(
+                    () => {
+                      if (!this.uploadImageForModifyLogo) {
                         this.onNoClick("", this.campaignCreated);
-                        this._snackBar.open("Dati modificati", "close");
-                      },
-                      (error) => {
-                        // console.log(error);
-                        if (error.error && error.error.ex)
-                          this.errorMsgValidation =
-                            "Tutti i dati sono stati modificati tranne il logo. Per errore: " +
-                            error.error.ex +
-                            "\n";
-                        else if (error.error)
-                          this.errorMsgValidation =
-                            "Tutti i dati sono stati modificati tranne il logo. Per errore: " +
-                            error.error +
-                            "\n";
-                        else
-                          this.errorMsgValidation =
-                            "Tutti i dati sono stati modificati tranne il logo. Per errore: " +
-                            error +
-                            "\n";
+                        this._snackBar.open(
+                          this.translate.instant("updatedData"),
+                          this.translate.instant("close")
+                        );
                       }
-                    );
-                }
-                if(!this.uploadImageForModifyBanner && !this.uploadImageForModifyLogo){
-                  this.onNoClick("", this.campaignCreated);
-                  this._snackBar.open("Dati modificati", "close");
-                }
-              },
-              (error) => {
-                this.errorMsgValidation =
-                  "Modifica dati non avvenuta per errore: " + error.error.ex;
+                    },
+                    (error) => {
+                      // console.log(error);
+                      if (error.error && error.error.ex)
+                        this.errorMsgValidation =
+                          this.translate.instant(
+                            "allDataModifiedExceptBanner"
+                          ) +
+                          error.error.ex +
+                          "\n";
+                      else if (error.error)
+                        this.errorMsgValidation =
+                          this.translate.instant(
+                            "allDataModifiedExceptBanner"
+                          ) +
+                          error.error +
+                          "\n";
+                      else
+                        this.errorMsgValidation =
+                          this.translate.instant(
+                            "allDataModifiedExceptBanner"
+                          ) +
+                          error +
+                          "\n";
+                    }
+                  );
               }
-            );
-        } catch (e) {
-          this.errorMsgValidation = "error:" + e.errors;
-        }
+              if (this.uploadImageForModifyLogo) {
+                const formData = new FormData();
+                formData.append("data", this.blobImageUploadLogo); //this.blobImageUploadLogo
+                this.campaignService
+                  .uploadCampaignLogoUsingPOST(
+                    this.campaignCreated.campaignId,
+                    formData
+                  )
+                  .subscribe(
+                    () => {
+                      this.onNoClick("", this.campaignCreated);
+                      this._snackBar.open(
+                        this.translate.instant("updatedData"),
+                        this.translate.instant("close")
+                      );
+                    },
+                    (error) => {
+                      // console.log(error);
+                      if (error.error && error.error.ex)
+                        this.errorMsgValidation =
+                          this.translate.instant("allDataModifiedExceptLogo") +
+                          error.error.ex +
+                          "\n";
+                      else if (error.error)
+                        this.errorMsgValidation =
+                          this.translate.instant("allDataModifiedExceptLogo") +
+                          error.error +
+                          "\n";
+                      else
+                        this.errorMsgValidation =
+                          this.translate.instant("allDataModifiedExceptLogo") +
+                          error +
+                          "\n";
+                    }
+                  );
+              }
+              if (
+                !this.uploadImageForModifyBanner &&
+                !this.uploadImageForModifyLogo
+              ) {
+                this.onNoClick("", this.campaignCreated);
+                this._snackBar.open(
+                  this.translate.instant("updatedData"),
+                  this.translate.instant("close")
+                );
+              }
+            },
+            (error) => {
+              this.errorMsgValidation =
+                this.translate.instant("dataNotSavedForError") + error.error.ex;
+            }
+          );
       }
     } else {
     }
@@ -608,8 +637,8 @@ export class CampaignAddFormComponent implements OnInit {
     }
   }
 
-  validDates(start: number,end: number){
-    if(start< end){
+  validDates(start: number, end: number) {
+    if (start < end) {
       return true;
     }
     return false;
