@@ -75,7 +75,7 @@ export class ValidationTrackComponent implements OnInit {
   size: number[] = [50];
   paginatorData: PageTrackedInstanceClass = new PageTrackedInstanceClass();
   dataSourceInfoTrack: MatTableDataSource<any[]>; //GeolocationClass 
-  displayedColumnsTrack: string[] = ["index","lat","long", "date", "accuracy", "activity","activityConfidence","isMoving","speed"];
+  displayedColumnsTrack: string[] = ["index","date","accuracy", "activity","activityConfidence","lat","long","isMoving","speed"];
   dataSource: MatTableDataSource<TrackedInstanceConsoleClass>;
   displayedColumns: string[] = ["tracks"];
   selectedTrack: TrackedInstanceConsoleClass;
@@ -139,7 +139,7 @@ export class ValidationTrackComponent implements OnInit {
     });
     this.campaignService.getCampaignsUsingGET(this.territoryId).subscribe((campaigns)=>{
       campaigns.forEach((item)=>{this.listCampaings.push(item.campaignId)});
-    })
+    });
   }
 
   initializaValidatingForm() {
@@ -492,7 +492,6 @@ export class ValidationTrackComponent implements OnInit {
   changeStatus(){
       const dialogRef = this.dialogStatus.open(StatusDialogComponent, {
         width: "60%",
-        height: "50%",
       });
       let instance = dialogRef.componentInstance;
       instance.selectedTrack = this.selectedTrack;
@@ -543,7 +542,8 @@ export class ValidationTrackComponent implements OnInit {
   createDate(timestamp : number) : string{
     const date = new Date(timestamp);
     const midDate = date.toISOString().replace('Z','').replace('T', ' ')
-    return midDate.substring(0,midDate.length-4);
+    //return midDate.substring(0,midDate.length-4); // full date
+    return midDate.substring(midDate.length-12,midDate.length-4);
   }
 
 

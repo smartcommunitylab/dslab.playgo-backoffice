@@ -300,6 +300,38 @@
                             </td>
                         </ng-container>
 
+                        <ng-container matColumnDef="date">
+                            <th mat-header-cell *matHeaderCellDef class="center-text">
+                                {{ 'date'| translate}} </th>
+                            <td mat-cell *matCellDef="let element" class="center-text">
+                                {{createDate(element.recorded_at)}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="accuracy">
+                            <th mat-header-cell *matHeaderCellDef class="center-text">
+                                {{ 'accuracy'| translate}} ({{'meters' | translate}}) </th>
+                            <td mat-cell *matCellDef="let element" class="center-text">
+                                {{element.accuracy}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="activity">
+                            <th mat-header-cell *matHeaderCellDef class="center-text">
+                                {{ 'activity'| translate}} </th>
+                            <td mat-cell *matCellDef="let element" class="center-text">
+                                {{element.activity_type}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="activityConfidence">
+                            <th mat-header-cell *matHeaderCellDef class="center-text">
+                                {{ 'activityConfidence'| translate}} (%) </th>
+                            <td mat-cell *matCellDef="let element" class="center-text">
+                                {{element.activity_confidence}}
+                            </td>
+                        </ng-container>
+
                         <ng-container matColumnDef="lat">
                             <th mat-header-cell *matHeaderCellDef class="center-text">
                                 {{ 'latitude'| translate}} </th>
@@ -317,38 +349,6 @@
                             </td>
                         </ng-container>
 
-                        <ng-container matColumnDef="date">
-                            <th mat-header-cell *matHeaderCellDef class="center-text">
-                                {{ 'date'| translate}} </th>
-                            <td mat-cell *matCellDef="let element" class="center-text">
-                                {{createDate(element.recorded_at)}}
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="accuracy">
-                            <th mat-header-cell *matHeaderCellDef class="center-text">
-                                {{ 'accuracy'| translate}} </th>
-                            <td mat-cell *matCellDef="let element" class="center-text">
-                                {{element.accuracy}}
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="activity">
-                            <th mat-header-cell *matHeaderCellDef class="center-text">
-                                {{ 'activity'| translate}} </th>
-                            <td mat-cell *matCellDef="let element" class="center-text">
-                                {{element.activity_type}}
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="activityConfidence">
-                            <th mat-header-cell *matHeaderCellDef class="center-text">
-                                {{ 'activityConfidence'| translate}} </th>
-                            <td mat-cell *matCellDef="let element" class="center-text">
-                                {{element.activity_confidence}}
-                            </td>
-                        </ng-container>
-
                         <ng-container matColumnDef="isMoving">
                             <th mat-header-cell *matHeaderCellDef class="center-text">
                                 {{ 'isMoving'| translate}} </th>
@@ -359,7 +359,7 @@
 
                         <ng-container matColumnDef="speed">
                             <th mat-header-cell *matHeaderCellDef class="center-text">
-                                {{ 'speed'| translate}} </th>
+                                {{ 'speed'| translate}} (m/s) </th>
                             <td mat-cell *matCellDef="let element" class="center-text">
                                 {{element.speed}}
                             </td>

@@ -11,6 +11,7 @@ import { ConsoleControllerService } from "src/app/core/api/generated/controllers
 import { TerritoryControllerService } from "src/app/core/api/generated/controllers/territoryController.service";
 import { TrackedInstanceConsoleClass } from "src/app/shared/classes/PageTrackedInstance-class";
 import { LIST_ERROR_STATES_TRACK, LIST_STATES_TRACK } from "src/app/shared/constants/constants";
+import { RoundPipe } from "src/app/shared/services/decimal.pipe";
 @Component({
   selector: 'app-status-dialog',
   templateUrl: './status-dialog.component.html',
@@ -49,9 +50,10 @@ export class StatusDialogComponent implements OnInit {
       modeType:new FormControl(""),
       notes: new FormControl("")
     });
+    const round = new RoundPipe();
     this.validatingForm.patchValue({
       //status: this.selectedTrack.trackedInstance.validationResult.travelValidity.toLocaleLowerCase(),
-      distance: this.selectedTrack.trackedInstance.validationResult.distance,
+      distance: round.transform(this.selectedTrack.trackedInstance.validationResult.distance) ,
       time: this.selectedTrack.trackedInstance.validationResult.time,
       modeType:this.selectedTrack.trackedInstance.validationResult.validationStatus.modeType
     });

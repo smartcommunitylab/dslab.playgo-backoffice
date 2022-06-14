@@ -90,7 +90,6 @@ export class CampaignPageComponent implements OnInit {
   addCampaign() {
     const dialogRef = this.dialogCreate.open(CampaignAddFormComponent, {
       width: "80%",
-      height: "90%",
     });
     let instance = dialogRef.componentInstance;
     instance.type = "add";
@@ -130,7 +129,6 @@ export class CampaignPageComponent implements OnInit {
   updateCampaign() {
     const dialogRef = this.dialogUpdate.open(CampaignAddFormComponent, {
       width: "80%",
-      height: "90%",
     });
     let instance = dialogRef.componentInstance;
     instance.type = "modify";
@@ -174,7 +172,6 @@ export class CampaignPageComponent implements OnInit {
   handleManager() {
     const dialogRef = this.dialogUpdate.open(ManagerHandlerComponent, {
       width: "80%",
-      height: "90%",
     });
     let instance = dialogRef.componentInstance;
     instance.name = this.selectedCampaign.name;
