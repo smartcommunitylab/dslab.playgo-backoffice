@@ -30,7 +30,11 @@ export class ManagerDeleteComponent implements OnInit {
   delete(){
     this.msgErrorDelete= "";
     try{
-      this.managerService.removeCampaignManagerUsingDELETE(this.email,this.campaignId).subscribe(
+      this.managerService.removeCampaignManagerUsingDELETE(
+        {
+          userName: this.email,
+          campaignId: this.campaignId
+        }).subscribe(
         () =>{
           this.dialogRef.close(true);
           this._snackBar.open("Manager "+this.email+" eliminato", "close");

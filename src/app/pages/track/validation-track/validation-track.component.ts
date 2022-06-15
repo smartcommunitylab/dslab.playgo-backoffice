@@ -103,7 +103,7 @@ export class ValidationTrackComponent implements OnInit {
     private formBuilder: FormBuilder,
     private trackingService: ConsoleControllerService,
     private territoryService: TerritoryControllerService,
-    private trackingServiceInternal: ConsoleControllerInternalService,
+    private trackingServiceInternal: ConsoleControllerService,
     private campaignService: CampaignControllerService,
     private dialogStatus: MatDialog,
   ) {}
@@ -114,18 +114,20 @@ export class ValidationTrackComponent implements OnInit {
     // var dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value, true);
     // var dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value, true);
     this.trackingServiceInternal
-      .searchTrackedInstanceUsingGET(
-        this.currentPageNumber,
-        this.size[0],
-        this.territoryId,
-        this.SORTING,
-        this.validatingForm.get("trackId").value ? this.validatingForm.get("trackId").value : undefined ,
-        this.validatingForm.get("playerId").value ? this.validatingForm.get("playerId").value : undefined,
-        this.validatingForm.get("modeType").value ? this.validatingForm.get("modeType").value : undefined,
-        this.validatingForm.get("dateFrom").value.valueOf(),
-        this.validatingForm.get("dateTo").value.valueOf(),
-        this.validatingForm.get("campaignId").value ? this.validatingForm.get("campaignId").value : undefined,
-        this.validatingForm.get("status").value ? this.validatingForm.get("status").value.toUpperCase() : undefined
+      .searchTrackedInstanceUsingGET({
+        page: this.currentPageNumber,
+        size: this.size[0],
+        territoryId: this.territoryId,
+        sort: this.SORTING,
+        trackId: this.validatingForm.get("trackId").value ? this.validatingForm.get("trackId").value : undefined ,
+        playerId: this.validatingForm.get("playerId").value ? this.validatingForm.get("playerId").value : undefined,
+        modeType: this.validatingForm.get("modeType").value ? this.validatingForm.get("modeType").value : undefined,
+        dateFrom: this.validatingForm.get("dateFrom").value.valueOf(),
+        dateTo: this.validatingForm.get("dateTo").value.valueOf(),
+        campaignId: this.validatingForm.get("campaignId").value ? this.validatingForm.get("campaignId").value : undefined,
+        status: this.validatingForm.get("status").value ? this.validatingForm.get("status").value.toUpperCase() : undefined
+      }
+
       )
       .subscribe((res) => {
         this.paginatorData = res;
@@ -137,7 +139,7 @@ export class ValidationTrackComponent implements OnInit {
     this.territoryService.getTerritoryUsingGET(this.territoryId).subscribe((territory)=>{
       this.listModelType = territory.territoryData.means;
     });
-    this.campaignService.getCampaignsUsingGET(this.territoryId).subscribe((campaigns)=>{
+    this.campaignService.getCampaignsUsingGET({territoryId: this.territoryId}).subscribe((campaigns)=>{
       campaigns.forEach((item)=>{this.listCampaings.push(item.campaignId)});
     });
   }
@@ -240,17 +242,19 @@ export class ValidationTrackComponent implements OnInit {
       // dateToString = dateToString ? dateToString :this.transformDateToString(moment());  
       this.trackingServiceInternal
         .searchTrackedInstanceUsingGET(
-          this.currentPageNumber,
-          this.size[0],
-          this.territoryId,
-          this.SORTING,
-          this.validatingForm.get("trackId").value ? this.validatingForm.get("trackId").value : undefined ,
-          this.validatingForm.get("playerId").value ? this.validatingForm.get("playerId").value : undefined,
-          this.validatingForm.get("modeType").value ? this.validatingForm.get("modeType").value : undefined,
-          this.validatingForm.get("dateFrom").value.valueOf(),
-          this.validatingForm.get("dateTo").value.valueOf(),
-          this.validatingForm.get("campaignId").value ? this.validatingForm.get("campaignId").value : undefined,
-          this.validatingForm.get("status").value ? this.validatingForm.get("status").value.toUpperCase() : undefined
+          {
+            page: this.currentPageNumber,
+            size: this.size[0],
+            territoryId: this.territoryId,
+            sort: this.SORTING,
+            trackId: this.validatingForm.get("trackId").value ? this.validatingForm.get("trackId").value : undefined ,
+            playerId: this.validatingForm.get("playerId").value ? this.validatingForm.get("playerId").value : undefined,
+            modeType: this.validatingForm.get("modeType").value ? this.validatingForm.get("modeType").value : undefined,
+            dateFrom: this.validatingForm.get("dateFrom").value.valueOf(),
+            dateTo: this.validatingForm.get("dateTo").value.valueOf(),
+            campaignId: this.validatingForm.get("campaignId").value ? this.validatingForm.get("campaignId").value : undefined,
+            status: this.validatingForm.get("status").value ? this.validatingForm.get("status").value.toUpperCase() : undefined
+          }
         )
         .subscribe((res) => {
           this.paginatorData = res;
@@ -270,7 +274,12 @@ export class ValidationTrackComponent implements OnInit {
   }
 
   showTrack(row: TrackedInstanceConsoleClass) {
-    this.trackingService.getTrackedInstanceDetailUsingGET(this.territoryId,row.trackedInstance.id).subscribe((fullDetails)=>{
+    this.trackingService.getTrackedInstanceDetailUsingGET(
+      {
+        territoryId: this.territoryId,
+        trackId: row.trackedInstance.id
+      }
+      ).subscribe((fullDetails)=>{
       this.selectedTrack = fullDetails;
       this.orderPoints();
       this.selectedRowIndex = this.selectedTrack.trackedInstance.id;
@@ -345,17 +354,19 @@ export class ValidationTrackComponent implements OnInit {
         // dateToString = dateToString ? dateToString :this.transformDateToString(moment());  
         this.trackingServiceInternal
           .searchTrackedInstanceUsingGET(
-            this.currentPageNumber,
-            this.size[0],
-            this.territoryId,
-            this.SORTING,
-            this.validatingForm.get("trackId").value ? this.validatingForm.get("trackId").value : undefined ,
-            this.validatingForm.get("playerId").value ? this.validatingForm.get("playerId").value : undefined,
-            this.validatingForm.get("modeType").value ? this.validatingForm.get("modeType").value : undefined,
-            this.validatingForm.get("dateFrom").value.valueOf(),
-            this.validatingForm.get("dateTo").value.valueOf(),
-            this.validatingForm.get("campaignId").value ? this.validatingForm.get("campaignId").value : undefined,
-            this.validatingForm.get("status").value ? this.validatingForm.get("status").value.toUpperCase() : undefined
+            {
+              page: this.currentPageNumber,
+              size: this.size[0],
+              territoryId: this.territoryId,
+              sort: this.SORTING,
+              trackId: this.validatingForm.get("trackId").value ? this.validatingForm.get("trackId").value : undefined ,
+              playerId: this.validatingForm.get("playerId").value ? this.validatingForm.get("playerId").value : undefined,
+              modeType: this.validatingForm.get("modeType").value ? this.validatingForm.get("modeType").value : undefined,
+              dateFrom: this.validatingForm.get("dateFrom").value.valueOf(),
+              dateTo: this.validatingForm.get("dateTo").value.valueOf(),
+              campaignId: this.validatingForm.get("campaignId").value ? this.validatingForm.get("campaignId").value : undefined,
+              status: this.validatingForm.get("status").value ? this.validatingForm.get("status").value.toUpperCase() : undefined
+            }
           )
           .subscribe((res) => {
             this.listTrack = res.content;

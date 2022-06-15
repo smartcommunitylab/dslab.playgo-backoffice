@@ -66,14 +66,16 @@ export class StatusDialogComponent implements OnInit {
   validate(){
     this.errorMsgValidation = "";
     if(this.validatingForm.valid){
-      this.consoleService.updateValidationResultUsingGET(
-        this.selectedTrack.trackedInstance.id,
-        this.validatingForm.get('status') ? this.validatingForm.get('status').value.toUpperCase() : undefined,
-        this.validatingForm.get('modeType') ? this.validatingForm.get('modeType').value : this.selectedTrack.trackedInstance.validationResult.validationStatus.modeType,
-        this.validatingForm.get('distance') ? this.validatingForm.get('distance').value : 0,
-        this.validatingForm.get('time') ? this.validatingForm.get('time').value : 0,
-        this.validatingForm.get('error') || this.validatingForm.get('error').value  ? this.validatingForm.get('error').value : undefined,
-        this.validatingForm.get('notes') || this.validatingForm.get('notes').value  ? this.validatingForm.get('notes').value : undefined,
+      this.consoleService.updateValidationResultUsingGET({
+        trackId: this.selectedTrack.trackedInstance.id,
+        validity: this.validatingForm.get('status') ? this.validatingForm.get('status').value.toUpperCase() : undefined,
+        modeType: this.validatingForm.get('modeType') ? this.validatingForm.get('modeType').value : this.selectedTrack.trackedInstance.validationResult.validationStatus.modeType,
+        distance: this.validatingForm.get('distance') ? this.validatingForm.get('distance').value : 0,
+        duration: this.validatingForm.get('time') ? this.validatingForm.get('time').value : 0,
+        errorType: this.validatingForm.get('error') || this.validatingForm.get('error').value  ? this.validatingForm.get('error').value : undefined,
+        note: this.validatingForm.get('notes') || this.validatingForm.get('notes').value  ? this.validatingForm.get('notes').value : undefined,
+      }
+
       ).subscribe(()=>{
         this.onNoClick('');
         this._snackBar.open("Dati modificati", "close");

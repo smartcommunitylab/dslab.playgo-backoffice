@@ -109,7 +109,11 @@ export class ManagerHandlerComponent implements OnInit {
       this.newManager = new ExtendedUserClass();
       this.newManager.manager = new UserClass();
       this.newManager.manager.preferredUsername = this.newManagerForm.get("email").value;
-      this.managerService.addCampaignManagerUsingPOST(this.newManager.manager.preferredUsername,this.campaignId).subscribe((res)=>{
+      this.managerService.addCampaignManagerUsingPOST({
+        userName:this.newManager.manager.preferredUsername,
+        campaignId: this.campaignId
+      }
+        ).subscribe((res)=>{
         this.listManagers.push(this.newManager);
         this.setTableData();
         //this.addNewManager = false;

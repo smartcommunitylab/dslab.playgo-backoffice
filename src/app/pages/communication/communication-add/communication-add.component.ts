@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { CampaignControllerService } from 'src/app/core/api/generated/controllers/campaignController.service';
 import { NotificationControllerService } from 'src/app/core/api/generated/controllers/notificationController.service';
@@ -24,6 +25,7 @@ export class CommunicationAddComponent implements OnInit {
     private formBuilder: FormBuilder,
     private translate: TranslateService,
     private campaignService: CampaignControllerService,
+    private _snackBar: MatSnackBar,
     private communicationService: NotificationControllerService,
     public dialogRef: MatDialogRef<CommunicationAddComponent>,) { }
 
@@ -44,21 +46,53 @@ export class CommunicationAddComponent implements OnInit {
     this.validatingForm.patchValue({
       territoryId: this.territoryId,
     });
-    this.campaignService.getCampaignsUsingGET(this.territoryId).subscribe((campaigns)=>{
+    this.campaignService.getCampaignsUsingGET({territoryId: this.territoryId}).subscribe((campaigns)=>{
       campaigns.forEach((item)=>{this.listCampaings.push(item.campaignId)});
     });
   }
 
-  onNoClick(event: any): void {
+  onNoClick(event: any,body: any): void {
     this.dialogRef.close();
   }
 
   validate(){
     if(this.validatingForm.valid){
+      const dateFrom:number = this.validatingForm.get("dateFrom").value ? this.validatingForm.get("dateFrom").value.valueOf() : undefined;
+      const dateTo:number = this.validatingForm.get("dateTo").value? this.validatingForm.get("dateTo").value.valueOf() : undefined;
+      console.log("date: ",dateFrom);
+      if (!!dateFrom && !!dateTo){
+        if(!this.validDates(
+          dateFrom,
+          dateTo
+        )
+      ) {
+        this.msgError = "dateNotValid";
+        return;
+      }
+      }
+
       let announce: any;
       announce = this.validatingForm.get("channels").value === 'email' ? Announcement.ChannelsEnum.Email : (this.validatingForm.get("channels").value === 'push' ? Announcement.ChannelsEnum.Push : Announcement.ChannelsEnum.News); 
       const campaignId =  this.validatingForm.get('campaignId').value ? this.validatingForm.get('campaignId').value : undefined;
-      this.communicationService.notifyCampaignUsingPOST(this.territoryId,campaignId).subscribe((res)=>{},
+      const channels = this.tranformChannels();
+      const body = {
+        "channels": channels,
+        "description": this.validatingForm.get("briefDescription").value ? this.validatingForm.get("briefDescription").value : undefined ,
+        "from": dateFrom.toString() ,
+        "html": this.validatingForm.get("richDescription").value ? this.validatingForm.get("richDescription").value : undefined ,
+        "players": this.validatingForm.get("users").value ? this.validatingForm.get("users").value.split(',') : undefined ,
+        "timestamp": new Date().getMilliseconds(),
+        "title": this.validatingForm.get("title").value ? this.validatingForm.get("title").value : undefined,
+        "to": dateTo.toString(),
+      };
+      console.log("body: ", body);
+      this.communicationService.notifyCampaignUsingPOST({territoryId: this.territoryId,body: body ,campaignId: campaignId}).subscribe((res)=>{
+        this.onNoClick("", body);
+        this._snackBar.open(
+          this.translate.instant("savedData"),
+          this.translate.instant("close")
+        );
+      },
       (error)=>{
         console.log(error);
         error ? (error.error.ex ? this.msgError = this.translate.instant('error') +": "+ error.error.ex :  this.translate.instant('errorNotFound') ) : this.translate.instant('errorNotFound');
@@ -81,6 +115,32 @@ export class CommunicationAddComponent implements OnInit {
     }
     return false;
 
+  }
+
+  validDates(start: number, end: number) {
+    if (start < end) {
+      return true;
+    }
+    return false;
+  }
+
+  tranformChannels(): Announcement.ChannelsEnum[]{
+    let result: Announcement.ChannelsEnum[] = [];
+    let list = this.validatingForm.get("channels").value;
+    for(let el of list){
+      if(el ==='email'){
+        result.push(Announcement.ChannelsEnum.Email);
+      }
+
+      if(el ==='push'){
+        result.push(Announcement.ChannelsEnum.Push);
+      }
+
+      if(el ==='announcement'){
+        result.push(Announcement.ChannelsEnum.News);
+      }
+    }
+    return result;
   }
 
 }

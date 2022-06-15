@@ -316,9 +316,10 @@ export class CampaignAddFormComponent implements OnInit {
                 const formData = new FormData();
                 formData.append("data", this.blobImageUploadBanner);
                 this.campaignService
-                  .uploadCampaignBannerUsingPOST(
-                    this.campaignCreated.campaignId,
-                    formData
+                  .uploadCampaignBannerUsingPOST({
+                    campaignId :this.campaignCreated.campaignId,
+                    body: formData
+                  }
                   )
                   .subscribe(
                     () => {
@@ -360,9 +361,11 @@ export class CampaignAddFormComponent implements OnInit {
                 const formData = new FormData();
                 formData.append("data", this.blobImageUploadLogo); //this.blobImageUploadLogo
                 this.campaignService
-                  .uploadCampaignLogoUsingPOST(
-                    this.campaignCreated.campaignId,
-                    formData
+                  .uploadCampaignLogoUsingPOST({
+                    campaignId: this.campaignCreated.campaignId,
+                    body: formData
+                  }
+
                   )
                   .subscribe(
                     () => {
@@ -422,9 +425,10 @@ export class CampaignAddFormComponent implements OnInit {
                 const formData = new FormData();
                 formData.append("data", this.blobImageUploadBanner);
                 this.campaignService
-                  .uploadCampaignBannerUsingPOST(
-                    this.campaignCreated.campaignId,
-                    formData
+                  .uploadCampaignBannerUsingPOST({
+                    campaignId :this.campaignCreated.campaignId,
+                    body: formData
+                  }
                   )
                   .subscribe(
                     () => {
@@ -466,9 +470,10 @@ export class CampaignAddFormComponent implements OnInit {
                 const formData = new FormData();
                 formData.append("data", this.blobImageUploadLogo); //this.blobImageUploadLogo
                 this.campaignService
-                  .uploadCampaignLogoUsingPOST(
-                    this.campaignCreated.campaignId,
-                    formData
+                  .uploadCampaignLogoUsingPOST({
+                      campaignId: this.campaignCreated.campaignId,
+                      body: formData
+                    }
                   )
                   .subscribe(
                     () => {

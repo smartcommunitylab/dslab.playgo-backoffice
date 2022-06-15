@@ -58,7 +58,7 @@ export class CampaignPageComponent implements OnInit {
 
   async onSelectTerritory(territoryId: string){
     if(territoryId){
-      await this.campaignService.getCampaignsUsingGET(territoryId).subscribe(
+      await this.campaignService.getCampaignsUsingGET({territoryId: territoryId}).subscribe(
         (listTerritory) => {
           if(!!listTerritory){
             this.listAllCampaign = listTerritory.reverse();

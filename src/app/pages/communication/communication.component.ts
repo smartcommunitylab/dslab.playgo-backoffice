@@ -16,11 +16,12 @@ import { CommunicationAddComponent } from './communication-add/communication-add
 export class CommunicationComponent implements OnInit {
 
   dataSource:MatTableDataSource<any>;
-  displayedColumns = ["when","channel","users"];
+  displayedColumns = ["when","channel"];//,"users"];
   size=[50];
   territoryId:string;
   paginator: PageAnnouncement;
   communications: any[];
+  newItem;
 
   constructor(
     private dialogCreate: MatDialog,
@@ -30,7 +31,9 @@ export class CommunicationComponent implements OnInit {
 
   ngOnInit(): void {
       this.territoryId = localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY);
-      this.communicationService.getNotificationsUsingGET(this.territoryId).subscribe((result)=>{
+      this.communicationService.getNotificationsUsingGET(
+        {territoryId: this.territoryId}).subscribe((result)=>{
+        console.log(result);
         this.paginator = result;
         this.communications = result.content;
         this.setTableData();
@@ -50,6 +53,8 @@ export class CommunicationComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== undefined) {
+        this.newItem = result;
+        this.communications.push(result);
       }
     });
   }
