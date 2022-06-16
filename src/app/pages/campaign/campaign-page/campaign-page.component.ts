@@ -14,6 +14,7 @@ import { CampaignControllerService } from "src/app/core/api/generated/controller
 import { TerritoryControllerService } from "src/app/core/api/generated/controllers/territoryController.service";
 import { Logo } from "src/app/shared/classes/logo-class";
 import { Campaign } from "src/app/core/api/generated/model/campaign";
+import { SurveyComponentComponent } from "../survey-component/survey-component.component";
 
 @Component({
   selector: "app-campaign-page",
@@ -171,6 +172,19 @@ export class CampaignPageComponent implements OnInit {
 
   handleManager() {
     const dialogRef = this.dialogUpdate.open(ManagerHandlerComponent, {
+      width: "80%",
+    });
+    let instance = dialogRef.componentInstance;
+    instance.name = this.selectedCampaign.name;
+    instance.campaignId = this.selectedCampaign.campaignId;
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result !== undefined) {
+      }
+    });
+  }
+
+  survey(){
+    const dialogRef = this.dialogUpdate.open(SurveyComponentComponent, {
       width: "80%",
     });
     let instance = dialogRef.componentInstance;

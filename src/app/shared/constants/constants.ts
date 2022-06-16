@@ -34,3 +34,4 @@ export const VALIDATIONJSON = "{}";
 export const LIST_STATES_TRACK = ["valid", "invalid"];
 export const LIST_ERROR_STATES_TRACK = ["TOO_SHORT", "TOO_SLOW", "TOO_FAST", "OUT_OF_AREA", "DOES_NOT_MATCH", "DATA_HOLE", "NO_DATA", "SHARED_DOES_NOT_MATCH"];
 export const CHANNELS_COMMUNICATION = ["email","announcement","push"];
+export const PRE_TEXT_JSON_ASSIGN_SURVAY = '{}';

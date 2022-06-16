@@ -1,0 +1,42 @@
+<h1>{{ 'survey'| translate}}</h1>
+<table mat-table [dataSource]="dataSource" class="full-width">
+
+    <ng-container matColumnDef="surveyId">
+        <th mat-header-cell *matHeaderCellDef> {{
+            'surveyId'| translate}} </th>
+        <td mat-cell *matCellDef="let element" class="bold"> {{element.surveyId}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="link">
+        <th mat-header-cell *matHeaderCellDef> {{ 'link'|
+            translate}} </th>
+        <td mat-cell *matCellDef="let element"><a href="{{element.link}}">{{element.link}}</a>  </td>
+    </ng-container>
+
+    <ng-container matColumnDef="buttons">
+        <th mat-header-cell *matHeaderCellDef> {{'actions' | translate}} </th>
+        <td mat-cell *matCellDef="let element">
+            <button type="button" mat-flat-button class="delete" (click)="deleteSurvey(element)">{{'delete' |
+                translate}}</button>
+            <button type="button" mat-flat-button class="edit" (click)="assignSurvey(element)">{{'assign' |
+                translate}}</button>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row [ngClass]="{'newItem' : row.surveyId === newItem.surveyId}"
+        *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<form [formGroup]="validatingForm">
+    <div class="in-line-forms" style="margin-top: 20px;">
+        <mat-form-field appearance="fill" class="input-half-left">
+            <mat-label>{{'surveyId' | translate}}</mat-label>
+            <input matInput id="surveyId" formControlName="surveyId">
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="input-half-right">
+            <mat-label>{{'link' | translate}}</mat-label>
+            <input matInput id="link" formControlName="link">
+        </mat-form-field>
+        <button type="submit" class="add" mat-flat-button (click)="addSurvey()">{{'add' | translate}}</button>
+    </div>
+</form>

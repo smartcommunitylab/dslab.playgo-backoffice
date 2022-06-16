@@ -1,0 +1,18 @@
+<h1>{{'surveyAssignment' | translate}}</h1>
+<form [formGroup]="validatingForm">
+    <div class="in-line-forms" style="margin-top: 20px;">
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>{{'playersId' | translate}} ({{'separatedByComma' | translate}})</mat-label>
+            <input matInput id="playersId" formControlName="playersId">
+        </mat-form-field>
+    </div>
+    <p class="waring">{{'assignSurvayWarning' | translate}}</p>
+    <div class="in-line-forms" style="margin-top: 20px;">
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>{{'challengeDefinition' | translate}}</mat-label>
+            <textarea matInput id="challengeDefinition" formControlName="challengeDefinition"></textarea>
+        </mat-form-field>
+    </div>
+    <button type="button"  mat-flat-button (click)="onNoClick('')">{{'close' | translate}}</button>
+    <button type="submit" class="assign" mat-flat-button (click)="assign()">{{'assign' | translate}}</button>
+</form>
