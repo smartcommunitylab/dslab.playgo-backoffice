@@ -304,7 +304,7 @@ export class CampaignAddFormComponent implements OnInit {
       }
       if (this.type === "add") {
         this.campaignCreated.campaignId =
-          this.validatingForm.get("campaignId").value;
+          this.validatingForm.get("campaignId").value ?  this.validatingForm.get("campaignId").value : undefined;
         this.campaignCreated.territoryId =
           this.validatingForm.get("territoryId").value;
         this.campaignCreated.name = this.validatingForm.get("name").value;
@@ -312,6 +312,8 @@ export class CampaignAddFormComponent implements OnInit {
           .addCampaignUsingPOST(this.campaignCreated)
           .subscribe(
             () => {
+              //TODO take it
+              // this.campaignCreated.campaignId = 
               if (this.uploadImageForModifyBanner) {
                 const formData = new FormData();
                 formData.append("data", this.blobImageUploadBanner);

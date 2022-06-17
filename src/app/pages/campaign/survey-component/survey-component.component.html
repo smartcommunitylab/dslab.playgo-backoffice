@@ -24,7 +24,7 @@
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row [ngClass]="{'newItem' : row.surveyId === newItem.surveyId}"
+    <tr mat-row [ngClass]="{'newItem' : !!row && !! newItem &&  row.surveyId === newItem.surveyId}"
         *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 <form [formGroup]="validatingForm">
@@ -40,3 +40,4 @@
         <button type="submit" class="add" mat-flat-button (click)="addSurvey()">{{'add' | translate}}</button>
     </div>
 </form>
+<p *ngIf="msgError" class="error">{{msgError}}</p>

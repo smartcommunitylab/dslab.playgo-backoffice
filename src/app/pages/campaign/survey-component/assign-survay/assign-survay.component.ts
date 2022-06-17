@@ -1,20 +1,36 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PRE_TEXT_JSON_ASSIGN_SURVAY } from 'src/app/shared/constants/constants';
+import { SurveyControllerService } from 'src/app/core/api/generated/controllers/surveyController.service';
+import { SurveyRequest } from 'src/app/core/api/generated/model/surveyRequest';
+import { MY_DATE_FORMATS, PRE_TEXT_JSON_ASSIGN_SURVAY } from 'src/app/shared/constants/constants';
 
 @Component({
   selector: 'app-assign-survay',
   templateUrl: './assign-survay.component.html',
-  styleUrls: ['./assign-survay.component.scss']
+  styleUrls: ['./assign-survay.component.scss'],
+  providers: [
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE],
+    },
+
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+  ],
 })
 export class AssignSurvayComponent implements OnInit {
 
+  campaignId:string;
   surveyId:string;
+  surveyLink: string;
   validatingForm: FormGroup;
 
   constructor(private formBuilder: FormBuilder,
+    private survayService: SurveyControllerService,
     public dialogRef: MatDialogRef<AssignSurvayComponent>,
    @Inject(MAT_DIALOG_DATA) public data: any,
    private _snackBar: MatSnackBar) { }
@@ -22,7 +38,10 @@ export class AssignSurvayComponent implements OnInit {
   ngOnInit(): void {
     this.validatingForm = this.formBuilder.group({
       playersId: new FormControl("" ),
-      challengeDefinition: new FormControl("",[Validators.required])
+      dateFrom: new FormControl("",[Validators.required]),
+      dateTo: new FormControl("",[Validators.required]),
+      bonusPoint: new FormControl("",[Validators.required]),
+      bonusScore: new FormControl("",[Validators.required]),
     });
     this.validatingForm.patchValue({
       challengeDefinition: PRE_TEXT_JSON_ASSIGN_SURVAY
@@ -36,7 +55,25 @@ export class AssignSurvayComponent implements OnInit {
   assign(){
     //TODO stuff
     if(this.validatingForm.valid){
+      const body:SurveyRequest = {
+        start: this.validatingForm.get("dateFrom").value ? this.validatingForm.get("dateFrom").value.valueOf() : undefined,
+        end: this.validatingForm.get("dateTo").value ? this.validatingForm.get("dateTo").value.valueOf() : undefined,
+        data:{
+          bonusPointType: this.validatingForm.get("bonusPoint").value ? this.validatingForm.get("bonusPoint").value : undefined,
+          bonusScore: this.validatingForm.get("bonusScore").value ? this.validatingForm.get("bonusScore").value : undefined,
+        },
+        surveyLink: this.surveyLink,
+        surveyName: this.surveyId
+      };
+      const players:string = this.validatingForm.get("playersId").value ? this.validatingForm.get("playersId").value : '';
+      //const idPlayers:string[]= players.split(',');
+      this.survayService.assignSurveyChallengesUsingPOST({
+        campaignId:this.campaignId,
+        body:body,
+        playerIds: players,
+      }).subscribe(()=>{},(error)=>{
 
+      });
     }
   }
 

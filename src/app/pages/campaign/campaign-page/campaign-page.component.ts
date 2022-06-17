@@ -188,7 +188,9 @@ export class CampaignPageComponent implements OnInit {
       width: "80%",
     });
     let instance = dialogRef.componentInstance;
+    console.log("full campaign:", this.selectedCampaign);
     instance.name = this.selectedCampaign.name;
+    instance.surveysMap = this.selectedCampaign.surveys;
     instance.campaignId = this.selectedCampaign.campaignId;
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== undefined) {
@@ -199,7 +201,12 @@ export class CampaignPageComponent implements OnInit {
 
   setClassWithourError(element: CampaignClass) : CampaignClass{
     const nullString = "valueNotProvided";
-    var resultCampaign = new CampaignClass(); 
+    var resultCampaign = new CampaignClass();
+    if(element.surveys){
+      resultCampaign.surveys = element.surveys;
+  }else{
+      resultCampaign.surveys = undefined;
+  }
     if(element.active){
         resultCampaign.active = element.active;
     }else{

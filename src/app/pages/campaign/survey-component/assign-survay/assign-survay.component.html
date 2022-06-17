@@ -7,12 +7,36 @@
         </mat-form-field>
     </div>
     <p class="waring">{{'assignSurvayWarning' | translate}}</p>
+    <div class="in-line-forms">
+        <mat-form-field appearance="fill" class="input-half-left">
+            <mat-label>{{'dateFrom' | translate}}</mat-label>
+            <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1">
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="input-half-right">
+            <mat-label>{{'dateTo' | translate}}</mat-label>
+            <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker2">
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field>
+    </div>
     <div class="in-line-forms" style="margin-top: 20px;">
+        <mat-form-field appearance="fill" class="input-half-left">
+            <mat-label>{{'bonusPoint' | translate}} ({{'bonusPointType' | translate}})</mat-label>
+            <input matInput id="bonusPoint" formControlName="bonusPoint">
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="input-half-right">
+            <mat-label>{{'bonusScore' | translate}} ({{'bonusScore' | translate}})</mat-label>
+            <input matInput id="bonusScore" formControlName="bonusScore">
+        </mat-form-field>
+    </div>
+    <!-- <div class="in-line-forms" style="margin-top: 20px;">
         <mat-form-field appearance="fill" class="full-width">
             <mat-label>{{'challengeDefinition' | translate}}</mat-label>
             <textarea matInput id="challengeDefinition" formControlName="challengeDefinition"></textarea>
         </mat-form-field>
-    </div>
+    </div> -->
     <button type="button"  mat-flat-button (click)="onNoClick('')">{{'close' | translate}}</button>
     <button type="submit" class="assign" mat-flat-button (click)="assign()">{{'assign' | translate}}</button>
 </form>

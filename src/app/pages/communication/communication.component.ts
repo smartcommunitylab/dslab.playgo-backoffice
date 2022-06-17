@@ -30,7 +30,8 @@ export class CommunicationComponent implements OnInit {
   communicationSelected: AnnouncementClass;
   searchString:string;
   listCampaings: any[] = [];
-  selectedCampaigns: any[] = [];
+  selectedCampaign:string;
+  page =0;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) matPaginator: MatPaginator;
 
@@ -44,7 +45,14 @@ export class CommunicationComponent implements OnInit {
   ngOnInit(): void {
       this.territoryId = localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY);
       this.communicationService.getNotificationsUsingGET(
-        {territoryId: this.territoryId}).subscribe((result)=>{
+        {
+          page: this.page,
+          size: this.size[0],
+          territoryId: this.territoryId
+          // campaignId?: string,
+          // channels?: string,
+        
+        }).subscribe((result)=>{
         console.log(result);
         this.paginator = result;
         if(!!result.content){
@@ -161,7 +169,7 @@ export class CommunicationComponent implements OnInit {
   }
 
   searchCommunication(event:any){
-    console.log(this.selectedCampaigns, this.searchString);
+    console.log(this.selectedCampaign, this.searchString);
     //TODO 
   }
 

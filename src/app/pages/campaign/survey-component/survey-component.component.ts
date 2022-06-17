@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
+import { CampaignControllerService } from 'src/app/core/api/generated/controllers/campaignController.service';
 import { AssignSurvayComponent } from './assign-survay/assign-survay.component';
 import { DeleteSurvayComponent } from './delete-survay/delete-survay.component';
 
@@ -14,15 +15,18 @@ export class SurveyComponentComponent implements OnInit {
 
   name: string;
   campaignId:string;
+  surveysMap: any;//{ [key: string]: string };
   surveys = [];
   dataSource: MatTableDataSource<any>;
   displayedColumns: string[] = ["surveyId", "link", "buttons"];
   newItem;
+  msgError:string;
 
   validatingForm: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
+    private survayService: CampaignControllerService,
     private dialogAssign: MatDialog,
     private dialogDelete: MatDialog,) { }
 
@@ -31,6 +35,14 @@ export class SurveyComponentComponent implements OnInit {
       surveyId: new FormControl("",[Validators.required] ),
       link: new FormControl("",[Validators.required])
     });
+    console.log("surveys:",this.surveysMap, typeof(this.surveysMap) );
+    if(this.surveysMap){
+      const keys = Object.keys(this.surveysMap);
+      for(let item of keys){
+        this.surveys.push({'surveyId': item, 'link': this.surveysMap[item]});
+      }
+    }
+    console.log(this.surveys)
     this.setTableData();
   }
 
@@ -40,9 +52,17 @@ export class SurveyComponentComponent implements OnInit {
     });
     let instance = dialogRef.componentInstance;
     instance.surveyId = element.surveyId;
+    instance.campaignId = this.campaignId;
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== undefined) {
+        let res = [];
+        for(let item of this.surveys){
+          if(item.surveyId !== result){
+            res.push(item);
+          }
+        }
+        this.surveys = res;
         this.setTableData();
       }
     });
@@ -51,10 +71,12 @@ export class SurveyComponentComponent implements OnInit {
 
   assignSurvey(element: any){
     const dialogRef = this.dialogDelete.open(AssignSurvayComponent, {
-      width: "40%",
+      width: "55%",
     });
     let instance = dialogRef.componentInstance;
     instance.surveyId = element.surveyId;
+    instance.surveyLink = element.link;
+    instance.campaignId = this.campaignId;
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== undefined) {
@@ -63,14 +85,23 @@ export class SurveyComponentComponent implements OnInit {
   }
 
   addSurvey(){
+    this.msgError = undefined;
     if(this.validatingForm.valid){
       const body = {
         surveyId : this.validatingForm.get('surveyId').value,
         link: this.validatingForm.get('link').value
       }
-      this.newItem = body;
-      this.surveys.push(this.newItem);
-      this.setTableData();
+      this.survayService.addSurveyUsingPOST({
+        campaignId: this.campaignId,
+        name: body.surveyId,
+        link: body.link
+      }).subscribe(()=>{
+        this.newItem = body;
+        this.surveys.push(this.newItem);
+        this.setTableData();
+      },(error)=>{
+        this.msgError = error ? error.error? error.error.ex: 'error' : 'error';
+      });
       //TODO call API 
     }
   }

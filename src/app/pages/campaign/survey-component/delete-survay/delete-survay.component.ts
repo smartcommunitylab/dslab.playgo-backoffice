@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
+import { CampaignControllerService } from 'src/app/core/api/generated/controllers/campaignController.service';
 
 @Component({
   selector: 'app-delete-survay',
@@ -9,12 +10,14 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./delete-survay.component.scss']
 })
 export class DeleteSurvayComponent implements OnInit {
+  campaignId:string;
   surveyId:string;
   msgError: string;
   recivedError: string;
 
   constructor(
     private translate: TranslateService,
+    private survayService: CampaignControllerService,
      public dialogRef: MatDialogRef<DeleteSurvayComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _snackBar: MatSnackBar
@@ -28,22 +31,18 @@ export class DeleteSurvayComponent implements OnInit {
   }
 
   delete(){
-      // TODO
-      // this.survayService.deleteCampaignUsingDELETE(this.surveyId).subscribe(()=>{
-      //   this.onNoClick('',this.surveyId);
-      //   this._snackBar.open(
-      //     this.translate.instant("deletedSurvey"),
-      //     this.translate.instant("close"));
-      // }, 
-      // (error) =>{
-      //   this.msgError = 'cannotDeleteSurvey';
-      //   if(!!error && !!error.error && !!error.error.ex){
-      //     this.recivedError = error.error.ex;
-      //   }else{
-      //     this.recivedError = error;
-      //   }
-      // }
-      // );
+    this.survayService.deleteSurveyUsingDELETE({
+      campaignId: this.campaignId,
+      name: this.surveyId
+    }).subscribe(()=>{
+      this.onNoClick('',this.surveyId);
+      this._snackBar.open(
+        this.translate.instant("deleted"),
+        this.translate.instant("close")
+      );
+    },(error)=>{
+      this.msgError = error ? (error.error ? error.error.ex : error) : 'error';
+    });
   }
 
 }

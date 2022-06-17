@@ -20,7 +20,7 @@
                         <form class="example-form">
                             <mat-form-field class="example-full-width" appearance="fill">
                                 <mat-label>{{'campaignId' | translate}}</mat-label>
-                                <mat-select [(ngModel)]="selectedCampaigns" multiple (closed)="searchCommunication($event)">
+                                <mat-select [(ngModel)]="selectedCampaign" (closed)="searchCommunication($event)">
                                     <mat-option *ngFor="let val of listCampaings" [value]="val">{{val | translate}}
                                     </mat-option>
                                 </mat-select>

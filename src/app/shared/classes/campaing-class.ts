@@ -36,6 +36,7 @@ export class CampaignClass implements Campaign {
     details?: Array<CampaignDetail>;
     gameId?: string;
     logo?: Image;
+    surveys?: { [key: string]: string };
     name?: string;
     startDayOfWeek?: number;
     territoryId?: string;
