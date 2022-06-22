@@ -5,8 +5,8 @@ import { TerritoryData } from "./territory-data";
 export class TerritoryClass implements Territory {
 
     territoryId?: string;
-    name?: string;
-    description?: string;
+    description?: { [key: string]: string };
+    name?: { [key: string]: string };
     messagingAppId?: string;
     territoryData?: TerritoryData;
 }

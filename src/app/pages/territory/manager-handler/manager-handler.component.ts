@@ -109,7 +109,12 @@ export class ManagerHandlerTerritoryComponent implements OnInit {
       this.newManager = new ExtendedUserClass();
       this.newManager.manager = new UserClass();
       this.newManager.manager.preferredUsername = this.newManagerForm.get("email").value;
-      this.managerService.addTerritoryManagerUsingPOST(this.newManager.manager.preferredUsername,this.territoryId).subscribe((res)=>{
+      this.managerService.addTerritoryManagerUsingPOST(
+        {
+          userName: this.newManager.manager.preferredUsername,
+          territoryId: this.territoryId
+        }
+        ).subscribe((res)=>{
         this.listManagers.push(this.newManager);
         this.setTableData();
         //this.addNewManager = false;

@@ -1,0 +1,39 @@
+.input-half-left{
+    width: 45%;
+    margin-right: 1%;
+  }
+  
+  .input-half-right{
+    width: 45%;
+    margin-left: 1%;
+  }
+  
+  .in-line-forms{
+    width: 100%;
+  }
+
+  .newItem{
+    background: #f199f179; 
+  }
+
+  .add{
+      margin-left: 1%;
+      background-color: darkcyan;
+  }
+
+  .delete{
+    background: #c70f3779; 
+    margin-right: 20px;
+  }
+
+  .edit{
+    background: #9cf19979; 
+  }
+
+  .bold{
+      font-weight: bold;
+  }
+
+  .error{
+    color: red;
+  }

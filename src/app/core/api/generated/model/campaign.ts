@@ -11,20 +11,25 @@
  */
 import { CampaignDetail } from "./campaignDetail";
 import { Image } from "./image";
+import { SurveyRequest } from "./surveyRequest";
 
 export interface Campaign {
   active?: boolean;
+  allSurveys?: { [key: string]: string };
   banner?: Image;
   campaignId?: string;
   communications?: boolean;
   dateFrom?: number;
   dateTo?: number;
-  description?: string;
-  details?: Array<CampaignDetail>;
+  defaultSurvey?: SurveyRequest;
+  description?: { [key: string]: string };
+  details?: { [key: string]: Array<CampaignDetail> };
   gameId?: string;
   logo?: Image;
-  name?: string;
+  name?: { [key: string]: string };
+  specificData?: any;
   startDayOfWeek?: number;
+  surveys?: { [key: string]: string };
   territoryId?: string;
   type?: Campaign.TypeEnum;
   validationData?: any;

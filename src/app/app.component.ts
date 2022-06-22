@@ -5,7 +5,7 @@ import { delay } from "rxjs/operators";
 import { MatDialog} from '@angular/material/dialog';
 import { AccountDialogComponent } from "./shared/components/account-dialog/account-dialog.component";
 import { TerritoryClass } from "./shared/classes/territory-class";
-import { ADMIN, TERRITORY_ID_LOCAL_STORAGE_KEY } from "./shared/constants/constants";
+import { ADMIN, LANGUAGE_DEFAULT, TERRITORY_ID_LOCAL_STORAGE_KEY } from "./shared/constants/constants";
 import { RoleService } from "./shared/services/role.service";
 import { TerritoryControllerService } from "./core/api/generated/controllers/territoryController.service";
 
@@ -36,7 +36,11 @@ export class AppComponent implements OnInit{
     private territoryService: TerritoryControllerService,
     private roleService: RoleService
   ) {
-    this.translate.setDefaultLang("it");
+    this.translate.setDefaultLang('it');
+    var userLang = navigator.language;
+    console.log('browser language: ',userLang);
+    //this.translate.use('en');
+    this.translate.use(LANGUAGE_DEFAULT); //TODO get language from browser
   }
 
   ngOnInit() {
@@ -47,6 +51,7 @@ export class AppComponent implements OnInit{
       this.listenToLoading();
       this.territoryService.getTerritoriesUsingGET().subscribe((res)=>{
         this.territories = res;
+        console.log("territori: ",this.territories);
         this.findTerritoriesPerRoles();
         this.userEnabled();
         try{
@@ -66,6 +71,9 @@ export class AppComponent implements OnInit{
           }
         }
       });
+    },
+    (error)=>{
+      console.log(error);
     });
   }
 

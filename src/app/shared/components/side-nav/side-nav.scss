@@ -50,12 +50,14 @@
 
 mat-drawer-container {
   width: 60px;
+  height: 100vh;
+  border-right: solid rgba(0, 0, 0, 0.205) 1px;
 }
 
 mat-drawer-container:hover {
   width: 250px;
+  height: 100vh;
   border-right: solid rgba(0, 0, 0, 0.205) 1px;
-  border-bottom: solid rgba(0, 0, 0, 0.205) 1px;
 }
 
 .hider > div > h3.question {
