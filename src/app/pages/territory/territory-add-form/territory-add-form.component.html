@@ -9,45 +9,32 @@
                         <input matInput id="territoryId" formControlName="territoryId">
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="input-custom-half-right">
-                        <mat-label>{{'name' | translate}}</mat-label>
-                        <input matInput id="name" formControlName="name">
-                    </mat-form-field>
-                </div>
-                <div>
-                    <mat-form-field appearance="fill" class="input-custom-half-left">
                         <mat-label>{{'means' | translate}}</mat-label>
                         <mat-select id="means" formControlName="means" multiple>
                             <mat-option *ngFor="let mean of means" [value]="mean">{{mean | translate}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <!-- <mat-form-field appearance="fill" class="input-custom-half-right">
-                        <mat-label>{{'validationParameters' | translate}}</mat-label>
-                        <mat-select id="validation" formControlName="validation" multiple>
-                            <mat-option *ngFor="let val of validationParam" [value]="val">{{val}}</mat-option>
-                        </mat-select>
-                    </mat-form-field> -->
                 </div>
-                <div>
-                    <mat-card class="card-expandable card-normal">
-                        <mat-card-title class="cursor-pointer" (click)="toggleDescription()">
-                            {{'description' | translate}}
-                            <mat-card-actions class="right-button top-button">
-                                <mat-icon *ngIf="stateDescription==='collapsed'">
-                                    <span class="material-symbols-outlined">
-                                        expand_more
-                                    </span>
-                                </mat-icon>
-                                <mat-icon *ngIf="stateDescription==='expanded'">
-                                    <span class="material-symbols-outlined">
-                                        expand_less
-                                    </span>
-                                </mat-icon>
-                            </mat-card-actions>
-                        </mat-card-title>
-                        <mat-card-content [@bodyExpansion]="stateDescription" class="expandable-content">
-                            <rich-text-editor [control]="descriptionRichControl"></rich-text-editor>
-                        </mat-card-content>
-                    </mat-card>
+                <div class="multilanguage-box">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <mat-label>{{'languages' | translate}}</mat-label>
+                        <mat-select id="languages" formControlName="languages" (valueChange)="selectedLanguageClick($event)">
+                            <mat-option *ngFor="let lang of languagesSupported" [value]="lang">{{lang | translate}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <p class="warning">{{'warningTextBoxesSelectedLanguage' | translate}}</p>
+                    <div *ngFor="let l of languagesSupported">
+                        <mat-form-field appearance="fill" class="input-custom-half-left" *ngIf="l===languageSelected">
+                            <mat-label>{{'nameTerritory' | translate}} - {{l | translate}}</mat-label>
+                            <input matInput id="{{'name'+languageSelected}}" formControlName="{{'name'+languageSelected}}">
+                        </mat-form-field>
+                        <mat-card class="card" *ngIf="l===languageSelected">
+                            <mat-card-title>{{'description' | translate}} - {{l | translate}}</mat-card-title>
+                            <mat-card-content>
+                                <rich-text-editor [control]="descriptionRichControl"></rich-text-editor>
+                            </mat-card-content>                                
+                        </mat-card>
+                    </div>
                 </div>
             </div>
             <div class="map-div">
@@ -97,7 +84,7 @@
     </div>
 </div>
 <div class="full-width" *ngIf="type === 'modify'">
-    <h1>{{'modifyTerritory' | translate}} - {{terrytoryUpdate.name}}  </h1>
+    <h1>{{'modifyTerritory' | translate}} - {{terrytoryUpdate.name[languageDefault]}}  </h1>
     <h3>{{'Id' | translate}}: {{terrytoryUpdate.territoryId}} </h3>
     <div class="col-12 full-width">
         <form [formGroup]="validatingForm">
@@ -109,34 +96,23 @@
                             <mat-option *ngFor="let mean of means" [value]="mean">{{mean | translate}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <!-- <mat-form-field appearance="fill" class="input-custom-half-right">
-                        <mat-label>{{'validationParameters' | translate}}</mat-label>
-                        <mat-select id="validation" formControlName="validation" multiple>
-                            <mat-option *ngFor="let val of validationParam" [value]="val">{{val}}</mat-option>
-                        </mat-select>
-                    </mat-form-field> -->
                 </div>
-                <div>
-                    <mat-card class="card-expandable card-normal">
-                        <mat-card-title class="cursor-pointer" (click)="toggleDescription()">
-                            {{'description' | translate}}
-                            <mat-card-actions class="right-button top-button">
-                                <mat-icon *ngIf="stateDescription==='collapsed'">
-                                    <span class="material-symbols-outlined">
-                                        expand_more
-                                    </span>
-                                </mat-icon>
-                                <mat-icon *ngIf="stateDescription==='expanded'">
-                                    <span class="material-symbols-outlined">
-                                        expand_less
-                                    </span>
-                                </mat-icon>
-                            </mat-card-actions>
-                        </mat-card-title>
-                        <mat-card-content [@bodyExpansion]="stateDescription" class="expandable-content">
-                            <rich-text-editor [control]="descriptionRichControl"></rich-text-editor>
-                        </mat-card-content>
-                    </mat-card>
+                <div class="multilanguage-box">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <mat-label>{{'languages' | translate}}</mat-label>
+                        <mat-select id="languages" formControlName="languages" (valueChange)="selectedLanguageClick($event)">
+                            <mat-option *ngFor="let lang of languagesSupported" [value]="lang">{{lang | translate}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <p class="warning">{{'warningTextBoxesSelectedLanguage' | translate}}</p>
+                    <div *ngFor="let l of languagesSupported">
+                        <mat-card class="card" *ngIf="l===languageSelected">
+                            <mat-card-title>{{'description' | translate}} - {{l | translate}}</mat-card-title>
+                            <mat-card-content>
+                                <rich-text-editor [control]="descriptionRichControl"></rich-text-editor>
+                            </mat-card-content>                                
+                        </mat-card>
+                    </div>
                 </div>
             </div>
             <div class="map-div">
@@ -175,7 +151,7 @@
                     </div>
                 </div>
             </div>
-            <p *ngIf="!!errorMsgValidation" class="full-dimension red">{{errorMsgValidation | translate}}</p>
+            <p *ngIf="!!errorMsgValidation" class="full-dimension warning">{{errorMsgValidation | translate}}</p>
             <div style="height:40px;">
                 <button class="right-button green" mat-raised-button type="submit" (click)="validate()">{{'save' |
                     translate}}</button>

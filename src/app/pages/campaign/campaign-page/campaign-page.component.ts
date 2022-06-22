@@ -6,7 +6,7 @@ import { CampaignAddFormComponent } from "../campaign-add-form/campaign-add-form
 import { CampaignDeleteComponent } from "../campaign-delete/campaign-delete.component";
 import { CampaignClass, ImageClass, ValidationData,  } from "src/app/shared/classes/campaing-class";
 import { TerritoryClass } from "src/app/shared/classes/territory-class";
-import { BASE64_SRC_IMG, PREFIX_SRC_IMG, TERRITORY_ID_LOCAL_STORAGE_KEY } from "src/app/shared/constants/constants";
+import { BASE64_SRC_IMG, CONST_LANGUAGES_SUPPORTED, LANGUAGE_DEFAULT, PREFIX_SRC_IMG, TERRITORY_ID_LOCAL_STORAGE_KEY } from "src/app/shared/constants/constants";
 import {MatSort, Sort} from '@angular/material/sort';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import { ManagerHandlerComponent } from "../manager-handler/manager-handler.component";
@@ -14,6 +14,8 @@ import { CampaignControllerService } from "src/app/core/api/generated/controller
 import { TerritoryControllerService } from "src/app/core/api/generated/controllers/territoryController.service";
 import { Logo } from "src/app/shared/classes/logo-class";
 import { Campaign } from "src/app/core/api/generated/model/campaign";
+import { SurveyComponentComponent } from "../survey-component/survey-component.component";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-campaign-page",
@@ -32,7 +34,8 @@ export class CampaignPageComponent implements OnInit {
   selectedRowIndex = "";
   PREFIX_SRC_IMG_C = PREFIX_SRC_IMG;
   BASE64_SRC_IMG_C =BASE64_SRC_IMG;
-  highlightCampaign: CampaignClass
+  highlightCampaign: CampaignClass;
+  languageDefault:any;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -40,6 +43,7 @@ export class CampaignPageComponent implements OnInit {
     private dialogCreate: MatDialog,
     private dialogUpdate: MatDialog,
     private dialogDelete: MatDialog,
+    private translate: TranslateService,
     private campaignService: CampaignControllerService,
     private territoryService:TerritoryControllerService,
     private _liveAnnouncer: LiveAnnouncer
@@ -48,6 +52,7 @@ export class CampaignPageComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.languageDefault = this.translate.currentLang;
     this.territoryService.getTerritoriesUsingGET().subscribe(result => this.listTerritories = result);
     this.highlightCampaign = new CampaignClass();
     this.highlightCampaign.campaignId = "";
@@ -58,7 +63,7 @@ export class CampaignPageComponent implements OnInit {
 
   async onSelectTerritory(territoryId: string){
     if(territoryId){
-      await this.campaignService.getCampaignsUsingGET(territoryId).subscribe(
+      await this.campaignService.getCampaignsUsingGET({territoryId: territoryId}).subscribe(
         (listTerritory) => {
           if(!!listTerritory){
             this.listAllCampaign = listTerritory.reverse();
@@ -74,6 +79,18 @@ export class CampaignPageComponent implements OnInit {
   }
 
   setTableData() {
+    for(let i=0;i<this.listCampaign.length;i++){
+      // replace empty value names with default name
+      var obj ={};
+      for(let l of CONST_LANGUAGES_SUPPORTED){
+        if(!!!this.listCampaign[i].name[l]){
+          obj[l] = this.listCampaign[i].name[LANGUAGE_DEFAULT];
+        }else{
+          obj[l] = this.listCampaign[i].name[l];          
+        }
+      }
+      this.listCampaign[i].name = obj;
+    }
     this.dataSource = new MatTableDataSource<CampaignClass>(this.listCampaign);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -90,7 +107,7 @@ export class CampaignPageComponent implements OnInit {
   addCampaign() {
     const dialogRef = this.dialogCreate.open(CampaignAddFormComponent, {
       width: "80%",
-      height: "90%",
+      height: '820px'
     });
     let instance = dialogRef.componentInstance;
     instance.type = "add";
@@ -130,7 +147,7 @@ export class CampaignPageComponent implements OnInit {
   updateCampaign() {
     const dialogRef = this.dialogUpdate.open(CampaignAddFormComponent, {
       width: "80%",
-      height: "90%",
+      height: '900px'
     });
     let instance = dialogRef.componentInstance;
     instance.type = "modify";
@@ -152,7 +169,7 @@ export class CampaignPageComponent implements OnInit {
       this.setTableData();
     } else {
       this.listCampaign = this.listAllCampaign.filter((item) =>
-        item.name.toLocaleLowerCase().includes(this.searchString.toLocaleLowerCase())
+        item.name[this.translate.currentLang].toLocaleLowerCase().includes(this.searchString.toLocaleLowerCase())
       );
       this.setTableData();
     }
@@ -174,10 +191,24 @@ export class CampaignPageComponent implements OnInit {
   handleManager() {
     const dialogRef = this.dialogUpdate.open(ManagerHandlerComponent, {
       width: "80%",
-      height: "90%",
     });
     let instance = dialogRef.componentInstance;
-    instance.name = this.selectedCampaign.name;
+    instance.name = this.selectedCampaign.name[this.translate.currentLang];
+    instance.campaignId = this.selectedCampaign.campaignId;
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result !== undefined) {
+      }
+    });
+  }
+
+  survey(){
+    const dialogRef = this.dialogUpdate.open(SurveyComponentComponent, {
+      width: "80%",
+    });
+    let instance = dialogRef.componentInstance;
+    console.log("full campaign:", this.selectedCampaign);
+    instance.name = this.selectedCampaign.name[this.translate.currentLang];
+    instance.surveysMap = this.selectedCampaign.surveys;
     instance.campaignId = this.selectedCampaign.campaignId;
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== undefined) {
@@ -188,7 +219,12 @@ export class CampaignPageComponent implements OnInit {
 
   setClassWithourError(element: CampaignClass) : CampaignClass{
     const nullString = "valueNotProvided";
-    var resultCampaign = new CampaignClass(); 
+    var resultCampaign = new CampaignClass();
+    if(element.surveys){
+      resultCampaign.surveys = element.surveys;
+  }else{
+      resultCampaign.surveys = undefined;
+  }
     if(element.active){
         resultCampaign.active = element.active;
     }else{
@@ -217,7 +253,7 @@ export class CampaignPageComponent implements OnInit {
     if(element.description){
         resultCampaign.description = element.description;
     }else{
-        resultCampaign.description = "";
+        resultCampaign.description = {};
     }
     if(element.gameId){
         resultCampaign.gameId = element.gameId;
@@ -237,7 +273,7 @@ export class CampaignPageComponent implements OnInit {
     if(element.name){
         resultCampaign.name = element.name;
     }else{
-        resultCampaign.name = "";
+        resultCampaign.name = {};
     }
     if(element.validationData){
         resultCampaign.validationData = element.validationData;
@@ -247,7 +283,7 @@ export class CampaignPageComponent implements OnInit {
     if(element.details){
         resultCampaign.details = element.details;
     }else{
-        resultCampaign.details = [];
+        resultCampaign.details = {};
     }
     if(element.startDayOfWeek){
         resultCampaign.startDayOfWeek = element.startDayOfWeek;

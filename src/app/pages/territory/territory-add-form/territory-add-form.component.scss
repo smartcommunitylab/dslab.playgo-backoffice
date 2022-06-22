@@ -48,3 +48,23 @@
 .red{
   color:rgba(255, 0, 0, 0.404);
 }
+
+.multilanguage-box{
+  width: 100%;
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px rgba(0, 0, 0, 0.452) solid;
+}
+
+.warning{
+  color: red;
+}
+
+.card{
+  border-top: 1px solid rgba(0, 0, 0, 0.075);
+  border-right: 1px solid rgba(0, 0, 0, 0.075);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  margin-top: 20px; 
+  margin-bottom: 20px;
+}

@@ -47,10 +47,11 @@ export class HandleUsersComponent implements OnInit {
     this.currentPageNumber = 0;
     try {
       this.playerService.
-      searchPlayersByTerritoryUsingGET(
-          0,
-          this.pageSizesOnTable[0],
-          this.territoryId
+      searchPlayersByTerritoryUsingGET({
+        page: 0,
+        size: this.pageSizesOnTable[0],
+        territoryId :this.territoryId
+      }
         )
         .subscribe(
           (res) => {
@@ -75,21 +76,24 @@ export class HandleUsersComponent implements OnInit {
 
   searchUser(item: any){
     if (this.searchString === "") {
-      this.playerService.searchPlayersByTerritoryUsingGET(
-        this.currentPageNumber,
-        this.pageSizesOnTable[0],
-        this.territoryId).subscribe((res) =>{
+      this.playerService.searchPlayersByTerritoryUsingGET({
+        page:         this.currentPageNumber,
+        size: this.pageSizesOnTable[0],
+        territoryId: this.territoryId
+      }
+).subscribe((res) =>{
         this.listUserCampaign = res.content;
         this.setTableData();
       });
       this.setTableData();
     } else {
-      this.playerService.searchPlayersByTerritoryUsingGET(
-        this.currentPageNumber,
-        this.pageSizesOnTable[0],
-        this.territoryId,
-        this.sorting,
-        this.searchString).subscribe((res) =>{
+      this.playerService.searchPlayersByTerritoryUsingGET({
+        page: this.currentPageNumber,
+        size: this.pageSizesOnTable[0],
+        territoryId: this.territoryId,
+        sort: this.sorting,
+        text: this.searchString}
+        ).subscribe((res) =>{
         this.listUserCampaign = res.content;
         this.setTableData();
       });
@@ -101,12 +105,12 @@ export class HandleUsersComponent implements OnInit {
     this.fieldOrdering = event.active;
     this.ordering = event.direction;
     this.sorting = this.ordering ? this.fieldOrdering + "," + this.ordering : '';
-    this.playerService.searchPlayersByTerritoryUsingGET(
-      this.currentPageNumber,
-      this.pageSizesOnTable[0],
-      this.territoryId,
-      this.sorting,
-      this.searchString).subscribe((res) =>{
+    this.playerService.searchPlayersByTerritoryUsingGET({
+      page: this.currentPageNumber,
+      size: this.pageSizesOnTable[0],
+      territoryId: this.territoryId,
+      sort: this.sorting,
+      text: this.searchString}).subscribe((res) =>{
       this.listUserCampaign = res.content;
       this.setTableData();
     });
@@ -118,12 +122,12 @@ export class HandleUsersComponent implements OnInit {
       this.currentPageNumber = pageIndex;
       try {
           this.playerService
-          .searchPlayersByTerritoryUsingGET(
-            this.currentPageNumber,
-            this.pageSizesOnTable[0],
-            this.territoryId,
-            this.sorting,
-            this.searchString)
+          .searchPlayersByTerritoryUsingGET({
+            page: this.currentPageNumber,
+            size: this.pageSizesOnTable[0],
+            territoryId: this.territoryId,
+            sort: this.sorting,
+            text: this.searchString})
             .subscribe((res) => {
               this.listUserCampaign = res.content;
               this.setTableData();

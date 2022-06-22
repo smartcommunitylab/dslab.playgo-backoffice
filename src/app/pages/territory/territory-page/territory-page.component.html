@@ -43,7 +43,7 @@
                             <ng-container matColumnDef="name">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header
                                     sortActionDescription="Sort by name"> {{ 'name'| translate}} </th>
-                                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                                <td mat-cell *matCellDef="let element"> {{element.name[language]}} </td>
                             </ng-container>
 
 
@@ -64,7 +64,7 @@
         <div *ngIf="!!selectedTerritory" class="card-territory">
             <mat-card class="card" style="margin-right: 10px;">
                 <mat-card-title>
-                    {{selectedTerritory.name}}
+                    {{selectedTerritory.name[language]}}
                 </mat-card-title>
                 <mat-card-subtitle>
                     {{selectedTerritory.territoryId}}
@@ -78,7 +78,7 @@
                             </li>
                         </ul>
                         <drop-down-card-info [title]="'description' | translate"
-                            [content]="selectedTerritory.description"></drop-down-card-info>
+                            [content]="selectedTerritory.description[language]"></drop-down-card-info>
 
                     </div>
                 </mat-card-content>

@@ -26,14 +26,14 @@
     </button>
 </mat-toolbar>
 <div class="full-size">
-    <div class="side-nav border-right" *ngIf="userEnabledToVisualize">
+    <div class="side-nav" *ngIf="userEnabledToVisualize">
         <app-side-nav></app-side-nav>
     </div>
     <div class="page">
         <div *ngIf="!loading && userEnabledToVisualize" class="full-size">
             <router-outlet></router-outlet>
         </div>
-        <div *ngIf="!userEnabledToVisualize">
+        <div *ngIf="!loading && !userEnabledToVisualize">
             <h1 class="warning-user-not-valid">
                 {{'wrongAccount' | translate}}
             </h1>

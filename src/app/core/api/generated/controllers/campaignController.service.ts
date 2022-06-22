@@ -15,7 +15,8 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Observable } from "rxjs";
 
-import { Campaign } from "../model/campaign";
+import { CampaignReq } from "../model/campaignReq";
+import { CampaignRes } from "../model/campaignRes";
 import { CampaignSubscription } from "../model/campaignSubscription";
 import { Image } from "../model/image";
 import { PlayerCampaign } from "../model/playerCampaign";
@@ -30,8 +31,8 @@ export class CampaignControllerService {
    *
    * @param body
    */
-  public addCampaignUsingPOST(body?: Campaign): Observable<any> {
-    return this.http.request<any>(
+  public addCampaignUsingPOST(body?: CampaignReq): Observable<CampaignRes> {
+    return this.http.request<CampaignRes>(
       "post",
       environment.serverUrl.api + `/playandgo/api/campaign`,
       {
@@ -41,12 +42,42 @@ export class CampaignControllerService {
   }
 
   /**
+   * addSurvey
+   *
+   * @param campaignId campaignId
+   * @param name name
+   * @param link link
+   */
+  public addSurveyUsingPOST(args: {
+    campaignId: string;
+    name: string;
+    link: string;
+  }): Observable<{ [key: string]: string }> {
+    const { campaignId, name, link } = args;
+    return this.http.request<{ [key: string]: string }>(
+      "post",
+      environment.serverUrl.api +
+        `/playandgo/api/campaign/${encodeURIComponent(
+          String(campaignId)
+        )}/survey`,
+      {
+        params: removeNullOrUndefined({
+          name,
+          link,
+        }),
+      }
+    );
+  }
+
+  /**
    * deleteCampaign
    *
    * @param campaignId campaignId
    */
-  public deleteCampaignUsingDELETE(campaignId: string): Observable<Campaign> {
-    return this.http.request<Campaign>(
+  public deleteCampaignUsingDELETE(
+    campaignId: string
+  ): Observable<CampaignRes> {
+    return this.http.request<CampaignRes>(
       "delete",
       environment.serverUrl.api +
         `/playandgo/api/campaign/${encodeURIComponent(String(campaignId))}`,
@@ -55,12 +86,37 @@ export class CampaignControllerService {
   }
 
   /**
+   * deleteSurvey
+   *
+   * @param campaignId campaignId
+   * @param name name
+   */
+  public deleteSurveyUsingDELETE(args: {
+    campaignId: string;
+    name: string;
+  }): Observable<{ [key: string]: string }> {
+    const { campaignId, name } = args;
+    return this.http.request<{ [key: string]: string }>(
+      "delete",
+      environment.serverUrl.api +
+        `/playandgo/api/campaign/${encodeURIComponent(
+          String(campaignId)
+        )}/survey`,
+      {
+        params: removeNullOrUndefined({
+          name,
+        }),
+      }
+    );
+  }
+
+  /**
    * getCampaign
    *
    * @param campaignId campaignId
    */
-  public getCampaignUsingGET(campaignId: string): Observable<Campaign> {
-    return this.http.request<Campaign>(
+  public getCampaignUsingGET(campaignId: string): Observable<CampaignRes> {
+    return this.http.request<CampaignRes>(
       "get",
       environment.serverUrl.api +
         `/playandgo/api/campaign/${encodeURIComponent(String(campaignId))}`,
@@ -74,11 +130,12 @@ export class CampaignControllerService {
    * @param territoryId territoryId
    * @param type type
    */
-  public getCampaignsUsingGET(
-    territoryId: string,
-    type?: string
-  ): Observable<Array<Campaign>> {
-    return this.http.request<Array<Campaign>>(
+  public getCampaignsUsingGET(args: {
+    territoryId: string;
+    type?: string;
+  }): Observable<Array<CampaignRes>> {
+    const { territoryId, type } = args;
+    return this.http.request<Array<CampaignRes>>(
       "get",
       environment.serverUrl.api + `/playandgo/api/campaign`,
       {
@@ -108,10 +165,11 @@ export class CampaignControllerService {
    * @param campaignId campaignId
    * @param body
    */
-  public subscribeCampaignUsingPOST(
-    campaignId: string,
-    body?: any
-  ): Observable<CampaignSubscription> {
+  public subscribeCampaignUsingPOST(args: {
+    campaignId: string;
+    body?: any;
+  }): Observable<CampaignSubscription> {
+    const { campaignId, body } = args;
     return this.http.request<CampaignSubscription>(
       "post",
       environment.serverUrl.api +
@@ -147,7 +205,7 @@ export class CampaignControllerService {
    *
    * @param body
    */
-  public updateCampaignUsingPUT(body?: Campaign): Observable<any> {
+  public updateCampaignUsingPUT(body?: CampaignReq): Observable<any> {
     return this.http.request<any>(
       "put",
       environment.serverUrl.api + `/playandgo/api/campaign`,
@@ -163,10 +221,11 @@ export class CampaignControllerService {
    * @param campaignId campaignId
    * @param body
    */
-  public uploadCampaignBannerUsingPOST(
-    campaignId: string,
-    body?: Object
-  ): Observable<Image> {
+  public uploadCampaignBannerUsingPOST(args: {
+    campaignId: string;
+    body?: Object;
+  }): Observable<Image> {
+    const { campaignId, body } = args;
     return this.http.request<Image>(
       "post",
       environment.serverUrl.api +
@@ -185,10 +244,11 @@ export class CampaignControllerService {
    * @param campaignId campaignId
    * @param body
    */
-  public uploadCampaignLogoUsingPOST(
-    campaignId: string,
-    body?: Object
-  ): Observable<Image> {
+  public uploadCampaignLogoUsingPOST(args: {
+    campaignId: string;
+    body?: Object;
+  }): Observable<Image> {
+    const { campaignId, body } = args;
     return this.http.request<Image>(
       "post",
       environment.serverUrl.api +

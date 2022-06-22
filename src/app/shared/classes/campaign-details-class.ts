@@ -12,5 +12,5 @@ export class DetailsForAddModifyModule{
     collapsed:boolean;
     created:boolean;
     detail: CampaignDetailClass;
-    form : FormGroup;
+    form : { [key: string]: FormGroup};
 }

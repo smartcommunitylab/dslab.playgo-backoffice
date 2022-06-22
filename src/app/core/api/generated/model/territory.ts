@@ -11,8 +11,8 @@
  */
 
 export interface Territory {
-  description?: string;
-  name?: string;
+  description?: { [key: string]: string };
+  name?: { [key: string]: string };
   territoryData?: any;
   territoryId?: string;
   timezone?: string;
