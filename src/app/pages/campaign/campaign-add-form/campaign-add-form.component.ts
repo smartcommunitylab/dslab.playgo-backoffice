@@ -16,6 +16,8 @@ import {
 } from "src/app/shared/classes/campaing-class";
 import {
   BASE64_SRC_IMG,
+  CONST_LANGUAGES_SUPPORTED,
+  LANGUAGE_DEFAULT,
   MY_DATE_FORMATS,
   PREFIX_SRC_IMG,
   TERRITORY_ID_LOCAL_STORAGE_KEY,
@@ -45,7 +47,7 @@ import {
 } from "src/app/shared/classes/campaign-details-class";
 import { CampaignDetail } from "src/app/core/api/generated/model/campaignDetail";
 import { Image } from "src/app/core/api/generated/model/image";
-import { TranslateService } from "@ngx-translate/core";
+import { DEFAULT_LANGUAGE, TranslateService } from "@ngx-translate/core";
 
 const moment = _moment;
 
@@ -99,36 +101,24 @@ export class CampaignAddFormComponent implements OnInit {
   uploadImageForModifyBanner: boolean = false;
   blobImageUploadBanner: Blob;
   activeValue = false;
+  languageDefault: any;
+  languagesSupported = CONST_LANGUAGES_SUPPORTED;
+  languageSelected: string;
 
   @Input() set formTerritory(value: CampaignClass) {
-    this.campaignUpdated = new CampaignClass();
-    this.campaignUpdated.territoryId = value.territoryId;
-    this.campaignUpdated.communications = value.communications;
-    this.campaignUpdated.name = value.name;
-    this.campaignUpdated.campaignId = value.campaignId;
-    this.campaignUpdated.logo = new ImageClass();
-    this.campaignUpdated.logo.contentType = value.logo.contentType;
-    this.campaignUpdated.logo.image = value.logo.image;
-    this.selectedLogo = new ImageClass();
-    this.selectedLogo.contentType = value.logo.contentType;
-    this.selectedLogo.image = value.logo.image;
-    this.selectedLogo.url = value.logo.url;
-    this.selectedLogo.contentType = value.logo.contentType;
-    this.selectedBanner = new ImageClass();
-    this.selectedBanner.contentType = value.banner.contentType;
-    this.selectedBanner.image = value.banner.image;
-    this.selectedBanner.url = value.banner.url;
+    this.campaignUpdated = value;
+    this.selectedLogo = value.logo;
+    this.selectedBanner = value.banner;
+    // this.selectedLogo = new ImageClass();
+    // this.selectedLogo.contentType = value.logo.contentType;
+    // this.selectedLogo.image = value.logo.image;
+    // this.selectedLogo.url = value.logo.url;
+    // this.selectedLogo.contentType = value.logo.contentType;
+    // this.selectedBanner = new ImageClass();
+    // this.selectedBanner.contentType = value.banner.contentType;
+    // this.selectedBanner.image = value.banner.image;
+    // this.selectedBanner.url = value.banner.url;
     this.details = this.setDetails(value.details);
-    this.campaignUpdated.description = value.description;
-    this.campaignUpdated.details = value.details;
-    this.campaignUpdated.validationData = new ValidationData();
-    this.campaignUpdated.validationData.means = value.validationData.means;
-    this.campaignUpdated.active = value.active;
-    this.campaignUpdated.dateFrom = value.dateFrom;
-    this.campaignUpdated.dateTo = value.dateTo;
-    this.campaignUpdated.type = value.type;
-    this.campaignUpdated.gameId = value.gameId;
-    this.campaignUpdated.startDayOfWeek = value.startDayOfWeek;
     this.initializaValidatingForm();
   }
 
@@ -147,6 +137,7 @@ export class CampaignAddFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.languageDefault = this.translate.currentLang;
     this.campaignCreated = new CampaignClass();
     this.campaignCreated.validationData = new ValidationData();
     this.initializaValidatingForm();
@@ -168,11 +159,11 @@ export class CampaignAddFormComponent implements OnInit {
     if (this.type === "add") {
       this.validatingForm = this.formBuilder.group({
         territoryId: new FormControl("", [Validators.required]),
-        campaignId: new FormControl("", [Validators.required]),
-        name: new FormControl("", [Validators.required]),
+        languages: new FormControl(""),
+        //name: new FormControl("", [Validators.required]),
         logo: new FormControl("", [Validators.required]),
         banner: new FormControl("", [Validators.required]),
-        description: new FormControl(""),
+        //description: new FormControl(""),
         means: new FormControl("", [Validators.required]),
         active: new FormControl("", [Validators.required]),
         dateFrom: new FormControl("", [Validators.required]),
@@ -189,6 +180,7 @@ export class CampaignAddFormComponent implements OnInit {
       this.validatingForm = this.formBuilder.group({
         logo: new FormControl(""),
         banner: new FormControl(""),
+        languages: new FormControl(""),
         description: new FormControl(""),
         means: new FormControl("", [Validators.required]),
         active: new FormControl("", [Validators.required]),
@@ -201,7 +193,6 @@ export class CampaignAddFormComponent implements OnInit {
       this.validatingForm.patchValue({
         logo: this.campaignUpdated.logo,
         banner: this.campaignUpdated.banner,
-        description: this.campaignUpdated.description,
         means: this.campaignUpdated.validationData.means,
         active: this.campaignUpdated.active,
         dateFrom: moment(this.campaignUpdated.dateFrom), //moment(this.campaignUpdated.dateFrom, "YYYY-MM-DD"),
@@ -211,6 +202,10 @@ export class CampaignAddFormComponent implements OnInit {
         startDayOfWeek: this.campaignUpdated.startDayOfWeek,
       });
     }
+    // language common for add and update
+    this.addFormControlMultilanguage();
+    this.languageSelected = LANGUAGE_DEFAULT;
+    this.validatingForm.patchValue({ languages: LANGUAGE_DEFAULT });
   }
 
   public myError = (controlName: string, errorName: string) => {
@@ -233,66 +228,19 @@ export class CampaignAddFormComponent implements OnInit {
 
   validate(): void {
     this.errorMsgValidation = "";
-    var validDetails = true;
-    this.details.forEach((item) => {
-      if (!item.form.valid) {
-        item.collapsed = false;
-        item.form.markAllAsTouched();
-        validDetails = false;
-        return;
-      }
-    });
-    if (!validDetails) {
-      return;
-    }
     if (this.validatingForm.valid) {
-      this.campaignCreated.active = this.validatingForm.get("active").value;
-      //const dataFrom: Moment = this.validatingForm.get("dateFrom").value;
-      this.campaignCreated.dateFrom = this.validatingForm.get("dateFrom").value; //dataFrom.toDate();// this.formatDate(dataFrom); //
-      //const dataTo: Moment = this.validatingForm.get("dateTo").value;
-      this.campaignCreated.dateTo = this.validatingForm.get("dateTo").value; //dataTo.toDate();//this.formatDate(dataTo); //
-      this.campaignCreated.logo = new ImageClass();
-      if (!!this.selectedLogo) {
-        this.campaignCreated.logo.contentType = this.selectedLogo.contentType;
-        this.campaignCreated.logo.image = this.selectedLogo.image;
-        this.campaignCreated.logo.url = this.selectedLogo.url;
+      const resValDetails = this.checkValidityDetails();
+      if (!resValDetails["bool"]) {
+        this.errorMsgValidation =
+          this.translate.instant("detailsForLanguageDefaultNotValid") +
+          LANGUAGE_DEFAULT +
+          ", " +
+          resValDetails["name"];
+        return;
+      } else {
+        this.addMultilanguageFields();
       }
-      this.campaignCreated.banner = new ImageClass();
-      if (!!this.selectedBanner) {
-        this.campaignCreated.banner.contentType =
-          this.selectedBanner.contentType;
-        this.campaignCreated.banner.image = this.selectedBanner.image;
-        this.campaignCreated.banner.url = this.selectedBanner.url;
-      }
-      this.campaignCreated.details = [];
-      this.details.forEach((item) => {
-        var detail = new CampaignDetailClass();
-        detail.content = item.form.get("content").value;
-        detail.extUrl = item.form.get("url").value;
-        detail.name = item.form.get("name").value;
-        detail.type = item.form.get("type").value;
-        this.campaignCreated.details.push(detail);
-      });
-      this.campaignCreated.type = this.validatingForm.get("type").value;
-      this.campaignCreated.validationData.means =
-        this.validatingForm.get("means").value;
-      this.campaignCreated.description =
-        this.validatingForm.get("description").value;
-      if (this.validatingForm.get("type").value !== "company") {
-        if (!!this.validatingForm.get("gameId").value) {
-          this.campaignCreated.gameId = this.validatingForm.get("gameId").value;
-        } else {
-          const currentDate = new Date();
-          const timestamp = currentDate.getTime().toString();
-          this.campaignCreated.gameId = timestamp; //timestamp as ID
-        }
-        if (!!this.validatingForm.get("startDayOfWeek").value) {
-          this.campaignCreated.startDayOfWeek =
-            this.validatingForm.get("startDayOfWeek").value;
-        } else {
-          this.campaignCreated.startDayOfWeek = 1; //default value
-        }
-      }
+      this.fillCampaingCreated();
       if (
         !this.validDates(
           this.campaignCreated.dateFrom,
@@ -303,104 +251,28 @@ export class CampaignAddFormComponent implements OnInit {
         return;
       }
       if (this.type === "add") {
-        this.campaignCreated.campaignId =
-          this.validatingForm.get("campaignId").value ?  this.validatingForm.get("campaignId").value : undefined;
         this.campaignCreated.territoryId =
           this.validatingForm.get("territoryId").value;
-        this.campaignCreated.name = this.validatingForm.get("name").value;
         this.campaignService
           .addCampaignUsingPOST(this.campaignCreated)
           .subscribe(
-            () => {
-              //TODO take it
-              // this.campaignCreated.campaignId = 
-              if (this.uploadImageForModifyBanner) {
-                const formData = new FormData();
-                formData.append("data", this.blobImageUploadBanner);
-                this.campaignService
-                  .uploadCampaignBannerUsingPOST({
-                    campaignId :this.campaignCreated.campaignId,
-                    body: formData
-                  }
-                  )
-                  .subscribe(
-                    () => {
-                      if (!this.uploadImageForModifyLogo) {
-                        this.onNoClick("", this.campaignCreated);
-                        this._snackBar.open(
-                          this.translate.instant("savedData"),
-                          this.translate.instant("close")
-                        );
-                      }
-                    },
-                    (error) => {
-                      // console.log(error);
-                      if (error.error && error.error.ex)
-                        this.errorMsgValidation =
-                          this.translate.instant(
-                            "allDataModifiedExceptBanner"
-                          ) +
-                          error.error.ex +
-                          "\n";
-                      else if (error.error)
-                        this.errorMsgValidation =
-                          this.translate.instant(
-                            "allDataModifiedExceptBanner"
-                          ) +
-                          error.error +
-                          "\n";
-                      else
-                        this.errorMsgValidation =
-                          this.translate.instant(
-                            "allDataModifiedExceptBanner"
-                          ) +
-                          error +
-                          "\n";
-                    }
-                  );
-              }
-              if (this.uploadImageForModifyLogo) {
-                const formData = new FormData();
-                formData.append("data", this.blobImageUploadLogo); //this.blobImageUploadLogo
-                this.campaignService
-                  .uploadCampaignLogoUsingPOST({
-                    campaignId: this.campaignCreated.campaignId,
-                    body: formData
-                  }
-
-                  )
-                  .subscribe(
-                    () => {
-                      this.onNoClick("", this.campaignCreated);
-                      this._snackBar.open(
-                        this.translate.instant("savedData"),
-                        this.translate.instant("close")
-                      );
-                    },
-                    (error) => {
-                      // console.log(error);
-                      if (error.error && error.error.ex)
-                        this.errorMsgValidation =
-                          this.translate.instant("allDataModifiedExceptLogo") +
-                          error.error.ex +
-                          "\n";
-                      else if (error.error)
-                        this.errorMsgValidation =
-                          this.translate.instant("allDataModifiedExceptLogo") +
-                          error.error +
-                          "\n";
-                      else
-                        this.errorMsgValidation =
-                          this.translate.instant("allDataModifiedExceptLogo") +
-                          error +
-                          "\n";
-                    }
-                  );
-              }
+            (campaignSubmitted) => {
+              this.campaignCreated.campaignId = campaignSubmitted.campaignId;
+              console.log("campaing created with Id: ",this.campaignCreated.campaignId);
               if (
-                !this.uploadImageForModifyBanner &&
-                !this.uploadImageForModifyLogo
+                this.uploadImageForModifyBanner &&
+                this.uploadImageForModifyLogo
               ) {
+                //upload logo and banner
+                this.uploadBannerAndLogoPost(this.campaignCreated.campaignId);
+              } else if (this.uploadImageForModifyLogo) {
+                //upload just logo
+                this.uploadLogoPost(this.campaignCreated.campaignId);
+              } else if (this.uploadImageForModifyBanner) {
+                //upload just banner
+                this.uploadBannerPost(this.campaignCreated.campaignId);
+              } else {
+                // no upload for logo and banner
                 this.onNoClick("", this.campaignCreated);
                 this._snackBar.open(
                   this.translate.instant("savedData"),
@@ -411,118 +283,164 @@ export class CampaignAddFormComponent implements OnInit {
             (error) => {
               this.errorMsgValidation =
                 this.translate.instant("dataNotSavedForError") + error.error.ex;
-              //this._snackBar.open('Dati non salvati per errore: ' +error.error.ex, "close");
             }
           );
-      }
-      if (this.type === "modify") {
+      }else if (this.type === "modify") {
         this.campaignCreated.name = this.campaignUpdated.name;
         this.campaignCreated.territoryId = this.campaignUpdated.territoryId;
         this.campaignCreated.campaignId = this.campaignUpdated.campaignId;
         this.campaignService
           .updateCampaignUsingPUT(this.campaignCreated)
           .subscribe(
-            () => {
-              if (this.uploadImageForModifyBanner) {
-                const formData = new FormData();
-                formData.append("data", this.blobImageUploadBanner);
-                this.campaignService
-                  .uploadCampaignBannerUsingPOST({
-                    campaignId :this.campaignCreated.campaignId,
-                    body: formData
-                  }
-                  )
-                  .subscribe(
-                    () => {
-                      if (!this.uploadImageForModifyLogo) {
-                        this.onNoClick("", this.campaignCreated);
-                        this._snackBar.open(
-                          this.translate.instant("updatedData"),
-                          this.translate.instant("close")
-                        );
-                      }
-                    },
-                    (error) => {
-                      // console.log(error);
-                      if (error.error && error.error.ex)
-                        this.errorMsgValidation =
-                          this.translate.instant(
-                            "allDataModifiedExceptBanner"
-                          ) +
-                          error.error.ex +
-                          "\n";
-                      else if (error.error)
-                        this.errorMsgValidation =
-                          this.translate.instant(
-                            "allDataModifiedExceptBanner"
-                          ) +
-                          error.error +
-                          "\n";
-                      else
-                        this.errorMsgValidation =
-                          this.translate.instant(
-                            "allDataModifiedExceptBanner"
-                          ) +
-                          error +
-                          "\n";
-                    }
-                  );
-              }
-              if (this.uploadImageForModifyLogo) {
-                const formData = new FormData();
-                formData.append("data", this.blobImageUploadLogo); //this.blobImageUploadLogo
-                this.campaignService
-                  .uploadCampaignLogoUsingPOST({
-                      campaignId: this.campaignCreated.campaignId,
-                      body: formData
-                    }
-                  )
-                  .subscribe(
-                    () => {
-                      this.onNoClick("", this.campaignCreated);
-                      this._snackBar.open(
-                        this.translate.instant("updatedData"),
-                        this.translate.instant("close")
-                      );
-                    },
-                    (error) => {
-                      // console.log(error);
-                      if (error.error && error.error.ex)
-                        this.errorMsgValidation =
-                          this.translate.instant("allDataModifiedExceptLogo") +
-                          error.error.ex +
-                          "\n";
-                      else if (error.error)
-                        this.errorMsgValidation =
-                          this.translate.instant("allDataModifiedExceptLogo") +
-                          error.error +
-                          "\n";
-                      else
-                        this.errorMsgValidation =
-                          this.translate.instant("allDataModifiedExceptLogo") +
-                          error +
-                          "\n";
-                    }
-                  );
-              }
+            (campaignSubmitted) => {
+              this.campaignCreated.campaignId = campaignSubmitted.campaignId;
               if (
-                !this.uploadImageForModifyBanner &&
-                !this.uploadImageForModifyLogo
+                this.uploadImageForModifyBanner &&
+                this.uploadImageForModifyLogo
               ) {
+                //upload logo and banner
+                this.uploadBannerAndLogoPost(this.campaignCreated.campaignId);
+              } else if (this.uploadImageForModifyLogo) {
+                //upload just logo
+                this.uploadLogoPost(this.campaignCreated.campaignId);
+              } else if (this.uploadImageForModifyBanner) {
+                //upload just banner
+                this.uploadBannerPost(this.campaignCreated.campaignId);
+              } else {
+                // no upload for logo and banner
                 this.onNoClick("", this.campaignCreated);
                 this._snackBar.open(
-                  this.translate.instant("updatedData"),
+                  this.translate.instant("savedData"),
                   this.translate.instant("close")
                 );
               }
             },
             (error) => {
               this.errorMsgValidation =
-                this.translate.instant("dataNotSavedForError") + error.error.ex;
+                this.translate.instant("dataNotSavedForError") + (error.error.ex ? error.error.ex : this.translate.instant('errorNotProvidedByresponse'));
             }
           );
       }
     } else {
+      const nameName = "name" + LANGUAGE_DEFAULT;
+      if (
+        !!!this.validatingForm.get(nameName) &&
+        !!!this.validatingForm.get(nameName).value
+      ) {
+        this.errorMsgValidation =
+          this.translate.instant("nameCampaingForLanguageDefaultNotValid") +
+          LANGUAGE_DEFAULT;
+      } else {
+        this.errorMsgValidation = this.translate.instant("fillAllfields");
+      }
+    }
+  }
+
+  uploadBannerPost(campaignId: string) {
+    const formData = new FormData();
+    formData.append("data", this.blobImageUploadBanner);
+    this.campaignService
+      .uploadCampaignBannerUsingPOST({
+        campaignId: campaignId,
+        body: formData,
+      })
+      .subscribe(
+        () => {
+          if (!this.uploadImageForModifyLogo) {
+            this.onNoClick("", this.campaignCreated);
+            this._snackBar.open(
+              this.translate.instant("savedData"),
+              this.translate.instant("close")
+            );
+          }
+        },
+        (error) => {
+          this.errorMsgValidation =
+            this.translate.instant("allDataModifiedExceptBanner") + (error.error.ex ? error.error.ex : this.translate.instant('errorNotProvidedByresponse'));
+        }
+      );
+  }
+
+  uploadLogoPost(campaignId: string) {
+    const formData = new FormData();
+    formData.append("data", this.blobImageUploadLogo); //this.blobImageUploadLogo
+    this.campaignService
+      .uploadCampaignLogoUsingPOST({
+        campaignId: campaignId,
+        body: formData,
+      })
+      .subscribe(
+        () => {
+          this.onNoClick("", this.campaignCreated);
+          this._snackBar.open(
+            this.translate.instant("savedData"),
+            this.translate.instant("close")
+          );
+        },
+        (error) => {
+          this.errorMsgValidation =
+            this.translate.instant("allDataModifiedExceptLogo") +
+            (error.error.ex ? error.error.ex : this.translate.instant('errorNotProvidedByresponse'));
+        }
+      );
+  }
+
+  uploadBannerAndLogoPost(campaignId: string) {
+    const formData = new FormData();
+    formData.append("data", this.blobImageUploadBanner);
+    this.campaignService
+      .uploadCampaignBannerUsingPOST({
+        campaignId: campaignId,
+        body: formData,
+      })
+      .subscribe(
+        () => {
+          this.uploadLogoPost(campaignId);
+        },
+        (error) => {
+          this.errorMsgValidation =
+            this.translate.instant("allDataModifiedExceptBanner") +
+            (error.error.ex ? error.error.ex : this.translate.instant('errorNotProvidedByresponse'));
+        }
+      );
+  }
+
+  fillCampaingCreated(){
+    this.campaignCreated.active = this.validatingForm.get("active").value;
+    //const dataFrom: Moment = this.validatingForm.get("dateFrom").value;
+    this.campaignCreated.dateFrom = this.validatingForm.get("dateFrom").value; //dataFrom.toDate();// this.formatDate(dataFrom); //
+    //const dataTo: Moment = this.validatingForm.get("dateTo").value;
+    this.campaignCreated.dateTo = this.validatingForm.get("dateTo").value; //dataTo.toDate();//this.formatDate(dataTo); //
+    this.campaignCreated.logo = new ImageClass();
+    if (!!this.selectedLogo) {
+      this.campaignCreated.logo.contentType = this.selectedLogo.contentType;
+      this.campaignCreated.logo.image = this.selectedLogo.image;
+      this.campaignCreated.logo.url = this.selectedLogo.url;
+    }
+    this.campaignCreated.banner = new ImageClass();
+    if (!!this.selectedBanner) {
+      this.campaignCreated.banner.contentType =
+        this.selectedBanner.contentType;
+      this.campaignCreated.banner.image = this.selectedBanner.image;
+      this.campaignCreated.banner.url = this.selectedBanner.url;
+    }
+    this.campaignCreated.type = this.validatingForm.get("type").value;
+    this.campaignCreated.validationData.means =
+      this.validatingForm.get("means").value;
+    if (this.validatingForm.get("type").value !== "company") {
+      if (!!this.validatingForm.get("gameId").value) {
+        this.campaignCreated.gameId = this.validatingForm.get("gameId").value;
+      } else {
+        const currentDate = new Date();
+        const timestamp = currentDate.getTime().toString();
+        this.campaignCreated.gameId = timestamp; //timestamp as ID
+      }
+      if (!!this.validatingForm.get("startDayOfWeek").value) {
+        this.campaignCreated.startDayOfWeek =
+          this.validatingForm.get("startDayOfWeek").value;
+      } else {
+        this.campaignCreated.startDayOfWeek = 1; //default value
+      }
     }
   }
 
@@ -584,7 +502,11 @@ export class CampaignAddFormComponent implements OnInit {
   }
 
   get descriptionRichControl() {
-    return this.validatingForm.controls.description as FormControl;
+    const name = "description" + this.languageSelected;
+    var obj = {};
+    obj[name] = this.campaignUpdated.description[this.languageSelected] ?  this.campaignUpdated.description[this.languageSelected] : '';
+    this.validatingForm.patchValue(obj);
+    return this.validatingForm.controls[name] as FormControl;
   }
 
   get privacyRichControl() {
@@ -600,16 +522,57 @@ export class CampaignAddFormComponent implements OnInit {
       this.stateDescription === "collapsed" ? "expanded" : "collapsed";
   }
 
-  // togglePrivacy() {
-  //   this.
-  //   this.statePrivacy =
-  //     this.statePrivacy === "collapsed" ? "expanded" : "collapsed";
-  // }
+  addMultilanguageFields() {
+    this.campaignCreated.name = {};
+    this.campaignCreated.description = {};
+    this.campaignCreated.details = {};
+    for (let l of CONST_LANGUAGES_SUPPORTED) {
+      //name
+      const nameName = "name" + l;
+      this.campaignCreated.name[l] = this.validatingForm.get(nameName).value;
+      //description
+      const nameDescription = "description" + l;
+      this.campaignCreated.description[l] = this.validatingForm.get(
+        nameDescription
+      ).value
+        ? this.validatingForm.get(nameDescription).value
+        : undefined;
+      //details
+      this.campaignCreated.details[l] = [];
+      if (this.details) {
+        this.details.forEach((item) => {
+          var detail = new CampaignDetailClass();
+          detail.content = item.form[l].get("content").value;
+          detail.extUrl = item.form[l].get("url").value
+            ? item.form[l].get("url").value
+            : item.form[LANGUAGE_DEFAULT].get("url").value;
+          detail.name = item.form[l].get("name").value;
+          detail.type = item.form[l].get("type").value
+            ? item.form[l].get("type").value
+            : item.form[LANGUAGE_DEFAULT].get("type").value;
+          this.campaignCreated.details[l].push(detail);
+        });
+      }
+    }
+  }
 
-  // toggleRules() {
-  //   this.stateRules =
-  //     this.stateRules === "collapsed" ? "expanded" : "collapsed";
-  // }
+  checkValidityDetails(): {} {
+    var result = { bool: true, name: "" };
+    this.details.forEach((item) => {
+      item.form[LANGUAGE_DEFAULT].markAllAsTouched();
+      if (!item.form[LANGUAGE_DEFAULT].valid) {
+        if (item.detail.name) {
+          result = { bool: false, name: item.detail.name };
+        } else {
+          result = {
+            bool: false,
+            name: this.translate.instant("nameNotDefined"),
+          };
+        }
+      }
+    });
+    return result;
+  }
 
   validDatesOld(startt: string, endd: string): boolean {
     this.errorMsgValidation = "";
@@ -651,26 +614,60 @@ export class CampaignAddFormComponent implements OnInit {
     return false;
   }
 
-  setDetails(details: CampaignDetail[]): DetailsForAddModifyModule[] {
+  setDetails(details: {
+    [key: string]: CampaignDetail[];
+  }): DetailsForAddModifyModule[] {
     var result = [];
-    for (let el of details) {
-      let item = new DetailsForAddModifyModule();
-      item.collapsed = true;
-      item.created = false;
-      item.detail = el;
-      item.form = this.formBuilder.group({
-        name: new FormControl("", [Validators.required]),
-        type: new FormControl("", [Validators.required]),
-        url: new FormControl(""),
-        content: new FormControl(""),
-      });
-      item.form.patchValue({
-        name: el.name,
-        type: el.type,
-        url: el.extUrl,
-        content: el.content,
-      });
-      result.push(item);
+    if(!!details && details[LANGUAGE_DEFAULT]){
+      var totalNumberOfDetail = details[LANGUAGE_DEFAULT].length; 
+      var keys = Object.keys(details); // subset of CONST_LANGUAGES_SUPPORTED
+      for(let i=0;i<totalNumberOfDetail;i++){
+        //iterate over the campaignDetails supposed that the default language is the one that has all the campaigns
+        let item = new DetailsForAddModifyModule();
+        item.collapsed = true;
+        item.created = false;
+        item.detail = {};
+        item.form = {};
+        for(let l of CONST_LANGUAGES_SUPPORTED){
+          item.form[l] = this.formBuilder.group({
+            name: new FormControl("", [Validators.required]),
+            type: new FormControl("", [Validators.required]),
+            url: new FormControl(""),
+            content: new FormControl(""),
+          });
+          if(details[l]){
+            //json object with the language exists
+            if(details[l][i]){
+              //campaingDetail-iesimo exists
+              item.form[l].patchValue({
+                name: details[l][i].name? details[l][i].name : details[LANGUAGE_DEFAULT][i].name,
+                type: details[l][i].type? details[l][i].type : details[LANGUAGE_DEFAULT][i].type,
+                url: details[l][i].extUrl? details[l][i].extUrl : details[LANGUAGE_DEFAULT][i].extUrl,
+                content: details[l][i].content ? details[l][i].content : '',
+              });
+            }else{
+              //campaingDetail-iesimo doesn't exists (copy data from default)
+              //should enter here if data on 'it':[1,2,3] while 'en':[1,2] so there are some campaigndetails missing on the others languages
+              item.form[l].patchValue({
+                name: details[LANGUAGE_DEFAULT][i].name,
+                type: details[LANGUAGE_DEFAULT][i].type,
+                url: details[LANGUAGE_DEFAULT][i].extUrl,
+                content: '',
+              });
+            }
+          }else{
+            //json object with language doesn't exists
+            // for example {'it':[details1,details2]} doesn't have 'en' add a full-empty form copying the default values
+            item.form[l].patchValue({
+              name: details[LANGUAGE_DEFAULT][i].name,
+              type: details[LANGUAGE_DEFAULT][i].type,
+              url: details[LANGUAGE_DEFAULT][i].extUrl,
+              content: '',
+            });
+          }
+        }
+        result.push(item);
+      }
     }
     return result;
   }
@@ -680,12 +677,27 @@ export class CampaignAddFormComponent implements OnInit {
     item.collapsed = true;
     item.created = true;
     item.detail = new CampaignDetailClass();
-    item.form = this.formBuilder.group({
-      name: new FormControl("", [Validators.required]),
-      type: new FormControl("", [Validators.required]),
-      url: new FormControl(""),
-      content: new FormControl(""),
-    });
+    item.form = {};
+    for (let l of this.languagesSupported) {
+      let controlName;
+      let controlType;
+      if (l === LANGUAGE_DEFAULT) {
+        controlName = new FormControl("", [
+          Validators.required,
+          Validators.maxLength(40),
+        ]);
+        controlType = new FormControl("", [Validators.required]);
+      } else {
+        controlName = new FormControl("", [Validators.maxLength(40)]);
+        controlType = new FormControl("");
+      }
+      item.form[l] = this.formBuilder.group({
+        name: controlName,
+        type: controlType,
+        url: new FormControl(""),
+        content: new FormControl(""),
+      });
+    }
     this.details.push(item);
   }
 
@@ -709,5 +721,29 @@ export class CampaignAddFormComponent implements OnInit {
         used: false,
       });
     }
+  }
+
+  addFormControlMultilanguage() {
+    for (let l of this.languagesSupported) {
+      const nameName = "name" + l;
+      const nameDescription = "description" + l;
+      let controlName;
+      let controlDescription = new FormControl("");
+      if (l === LANGUAGE_DEFAULT) {
+        controlName = new FormControl("", [
+          Validators.required,
+          Validators.maxLength(40),
+        ]);
+      } else {
+        controlName = new FormControl("", [Validators.maxLength(40)]);
+      }
+      this.validatingForm.addControl(nameName, controlName);
+      this.validatingForm.addControl(nameDescription, controlDescription);
+    }
+  }
+
+  selectedLanguageClick(event: any) {
+    this.languageSelected = event;
+    console.log("detailssssss", this.details);
   }
 }

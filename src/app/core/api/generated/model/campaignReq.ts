@@ -19,11 +19,11 @@ export interface CampaignReq {
   communications?: boolean;
   dateFrom?: number;
   dateTo?: number;
-  description?: string;
-  details?: Array<CampaignDetail>;
+  description?: { [key: string]: string };
+  details?: { [key: string]: Array<CampaignDetail> };
   gameId?: string;
   logo?: Image;
-  name?: string;
+  name?: { [key: string]: string };
   specificData?: any;
   startDayOfWeek?: number;
   surveys?: { [key: string]: string };

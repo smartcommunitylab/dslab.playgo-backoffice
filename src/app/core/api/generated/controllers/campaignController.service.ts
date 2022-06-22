@@ -31,8 +31,8 @@ export class CampaignControllerService {
    *
    * @param body
    */
-  public addCampaignUsingPOST(body?: CampaignReq): Observable<any> {
-    return this.http.request<any>(
+  public addCampaignUsingPOST(body?: CampaignReq): Observable<CampaignRes> {
+    return this.http.request<CampaignRes>(
       "post",
       environment.serverUrl.api + `/playandgo/api/campaign`,
       {

@@ -42,7 +42,7 @@
                             <ng-container matColumnDef="name">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header
                                     sortActionDescription="Sort by name"> {{ 'name'| translate}} </th>
-                                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                                <td mat-cell *matCellDef="let element"> {{element.name[languageDefault]}} </td>
                             </ng-container>
 
                             <ng-container matColumnDef="active">
@@ -92,7 +92,7 @@
                 <div class="header-card">
                     <div class="title">
                         <mat-card-title>
-                            {{selectedCampaign.name}}
+                            {{selectedCampaign.name[languageDefault]}}
                         </mat-card-title>
                         <div class="bold" style="margin-top: 20px;">
                             {{'territoryId' | translate}}: {{selectedCampaign.territoryId}}
@@ -134,9 +134,9 @@
                                 {{mean | translate}}
                             </li>
                         </ul>
-                        <drop-down-card-info [title]="'description' | translate" [content]="selectedCampaign.description">
+                        <drop-down-card-info [title]="'description' | translate" [content]="selectedCampaign.description[languageDefault]">
                         </drop-down-card-info>
-                        <span *ngFor="let detail of selectedCampaign.details">
+                        <span *ngFor="let detail of selectedCampaign.details[languageDefault]">
                             <drop-down-card-info [title]="detail.type | translate" [content]="detail.content"></drop-down-card-info>
                         </span>
                     </div>

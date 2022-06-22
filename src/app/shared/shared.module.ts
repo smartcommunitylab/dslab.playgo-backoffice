@@ -28,6 +28,7 @@ import { ManagerDeleteTerritoryComponent } from "../pages/territory/manager-hand
 import {MatTreeModule} from '@angular/material/tree';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { RoundPipe } from "./services/decimal.pipe";
+import {MatTabsModule} from '@angular/material/tabs';
 
 @NgModule({
   imports: [
@@ -57,6 +58,7 @@ import { RoundPipe } from "./services/decimal.pipe";
     MatTooltipModule,
     RichTextEditorModule,
     DropDownCardInfoModule,
+    MatTabsModule,
 
   ],
   declarations: [ManagerHandlerTerritoryComponent,ManagerDeleteTerritoryComponent,RoundPipe],
@@ -89,6 +91,7 @@ import { RoundPipe } from "./services/decimal.pipe";
     RichTextEditorModule,
     DropDownCardInfoModule,
     RoundPipe,
+    MatTabsModule,
   ],
 })
 export class SharedModule {}

@@ -20,22 +20,13 @@ import {
   animate,
 } from "@angular/animations";
 import { TerritoryControllerService } from "src/app/core/api/generated/controllers/territoryController.service";
-import { TranslateService } from "@ngx-translate/core";
+import { DEFAULT_LANGUAGE, TranslateService } from "@ngx-translate/core";
+import { CONST_LANGUAGES_SUPPORTED, LANGUAGE_DEFAULT } from "src/app/shared/constants/constants";
 
 @Component({
   selector: "app-territory-add-form",
   templateUrl: "./territory-add-form.component.html",
   styleUrls: ["./territory-add-form.component.scss"],
-  animations: [
-    trigger("bodyExpansion", [
-      state("collapsed, void", style({ height: "0px", visibility: "hidden" })),
-      state("expanded", style({ height: "*", visibility: "visible" })),
-      transition(
-        "expanded <=> collapsed, void => collapsed",
-        animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")
-      ),
-    ]),
-  ],
 })
 export class TerritoryAddFormComponent implements OnInit {
   @Input() type: string; // can be add or modify
@@ -51,30 +42,12 @@ export class TerritoryAddFormComponent implements OnInit {
   settedLong = false;
   unlockRaySelector = false;
   terrytoryUpdate: TerritoryClass;
-  stateDescription: string = "collapsed";
   errorMsgValidation: string;
+  languageDefault:any;
+  languagesSupported= CONST_LANGUAGES_SUPPORTED;
+  languageSelected: string;
   @Input() set formTerritory(value: TerritoryClass) {
-    this.terrytoryUpdate = new TerritoryClass();
-    this.terrytoryUpdate.name = value.name;
-    this.terrytoryUpdate.territoryId = value.territoryId;
-    this.terrytoryUpdate.description = value.description;
-    this.terrytoryUpdate.messagingAppId = value.messagingAppId;
-    this.terrytoryUpdate.territoryData = new TerritoryData();
-    this.terrytoryUpdate.territoryData.means = value.territoryData.means;
-    this.terrytoryUpdate.territoryData.validation =
-      value.territoryData.validation;
-    this.terrytoryUpdate.territoryData.area = [];
-    if (!!value.territoryData.area) {
-      for (let area_i of value.territoryData.area) {
-        let newArea = new TerritoryArea();
-        if (!!area_i) {
-          newArea.lat = area_i.lat;
-          newArea.long = area_i.long;
-          newArea.radius = area_i.radius;
-          this.terrytoryUpdate.territoryData.area.push(newArea);
-        }
-      }
-    }
+    this.terrytoryUpdate = value;
   }
 
   constructor(
@@ -91,6 +64,7 @@ export class TerritoryAddFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.languageDefault= this.translate.currentLang;
     this.myPoint = new MapPoint();
     this.terrotyCreated = new TerritoryClass();
     this.terrotyCreated.territoryData = new TerritoryData();
@@ -105,11 +79,6 @@ export class TerritoryAddFormComponent implements OnInit {
           Validators.required,
           Validators.maxLength(40),
         ]),
-        name: new FormControl("", [
-          Validators.required,
-          Validators.maxLength(40),
-        ]),
-        description: new FormControl(""),
         means: new FormControl("", [Validators.required]),
         lat: new FormControl("", [
           Validators.required,
@@ -124,12 +93,12 @@ export class TerritoryAddFormComponent implements OnInit {
           Validators.pattern("^[0-9]+.?[0-9]*"),
         ]),
         validation: new FormControl(""),
+        languages: new FormControl(""),
       });
+      this.addFormControlMultilanguage();
     } else {
       this.validatingForm = this.formBuilder.group({
         territoryId: new FormControl(""),
-        name: new FormControl(""),
-        description: new FormControl(""),
         means: new FormControl("", [Validators.required]),
         lat: new FormControl("", [
           Validators.required,
@@ -144,8 +113,12 @@ export class TerritoryAddFormComponent implements OnInit {
           Validators.pattern("^[0-9]+.?[0-9]*"),
         ]),
         validation: new FormControl(""),
+        languages: new FormControl(""),
       });
+      this.addFormControlMultilanguage();
     }
+    this.validatingForm.patchValue({languages: LANGUAGE_DEFAULT});
+    this.languageSelected = LANGUAGE_DEFAULT;
     this.validatingForm.get("lat").valueChanges.subscribe((selectedValue) => {
       if (!!selectedValue) {
         this.settedLat = true;
@@ -192,6 +165,7 @@ export class TerritoryAddFormComponent implements OnInit {
         ray: this.terrytoryUpdate.territoryData.area[0].radius,
         validation: this.terrytoryUpdate.territoryData.validation,
       });
+      this.patchValuedMultilanguageOnModify(this.terrytoryUpdate.name,this.terrytoryUpdate.description);
     }
   }
 
@@ -219,14 +193,10 @@ export class TerritoryAddFormComponent implements OnInit {
 
   validate() {
     this.errorMsgValidation = "";
-    const p = this.validatingForm.get("name").value;
-
     if (this.validatingForm.valid) {
       this.terrotyCreated.territoryId =
         this.validatingForm.get("territoryId").value;
-      this.terrotyCreated.name = this.validatingForm.get("name").value;
-      this.terrotyCreated.description =
-        this.validatingForm.get("description").value;
+      this.addNameAndDescriptionToTerritoryCreated();
       this.terrotyCreated.territoryData.means =
         this.validatingForm.get("means").value;
       this.terrotyCreated.territoryData.validation =
@@ -257,7 +227,6 @@ export class TerritoryAddFormComponent implements OnInit {
                     ? error.error.ex
                     : error.error
                   : error);
-              //this._snackBar.open('Dati non salvati per errore: ' +error.error.ex, "close");
             }
           );
       }
@@ -286,15 +255,61 @@ export class TerritoryAddFormComponent implements OnInit {
             }
           );
       }
+    }else{
+      if(!this.validatingForm.get('name'+LANGUAGE_DEFAULT).valid){
+        this.errorMsgValidation = this.translate.instant("selectDefaultLanuguageForName") + LANGUAGE_DEFAULT;
+      }
     }
   }
 
-  toggleDescription() {
-    this.stateDescription =
-      this.stateDescription === "collapsed" ? "expanded" : "collapsed";
+  get descriptionRichControl() {
+    const name = 'description' + this.languageSelected;
+    return this.validatingForm.controls[name] as FormControl;
   }
 
-  get descriptionRichControl() {
-    return this.validatingForm.controls.description as FormControl;
+  selectedLanguageClick(event: any){
+    this.languageSelected = event;
+    console.log(this.validatingForm.value);
   }
+
+  addFormControlMultilanguage(){
+    for(let l of this.languagesSupported){
+      const nameName = 'name'+ l;
+      const nameDescription = 'description'+ l;
+      let controlName;
+      let controlDescription = new FormControl("");
+      if(l===LANGUAGE_DEFAULT){
+        controlName = new FormControl("", [Validators.required,Validators.maxLength(40)]);
+      }else{
+        controlName = new FormControl("", [Validators.maxLength(40)]);
+      }
+      this.validatingForm.addControl(nameName,controlName);
+      this.validatingForm.addControl(nameDescription,controlDescription);
+    }
+  }
+
+  patchValuedMultilanguageOnModify(nameLanguages: { [key: string]: string },descriptionLanguages: { [key: string]: string }){
+    for(let l of this.languagesSupported){
+      var nameName = 'name'+ l;
+      var nameDescription = 'description'+ l;
+      var obj ={};
+      obj[nameName] = nameLanguages[l];
+      obj[nameDescription] = descriptionLanguages[l];
+      this.validatingForm.patchValue(obj);
+    }
+  }
+
+  addNameAndDescriptionToTerritoryCreated(){
+    var nameObj:{ [key: string]: string } = {};
+    var descriptionObj:{ [key: string]: string } = {};
+    for(let l of this.languagesSupported){
+      var nameName = 'name'+l;
+      var nameDescription = 'description'+l;
+      nameObj[l] = this.validatingForm.get(nameName).value ? this.validatingForm.get(nameName).value : '';
+      descriptionObj[l]= this.validatingForm.get(nameDescription).value ? this.validatingForm.get(nameDescription).value : '';
+    }
+    this.terrotyCreated.name = nameObj;
+    this.terrotyCreated.description = descriptionObj;
+  }
+
 }

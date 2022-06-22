@@ -1,6 +1,7 @@
 import { Campaign } from "src/app/core/api/generated/model/campaign";
 import { CampaignDetail } from "src/app/core/api/generated/model/campaignDetail";
 import { Image } from "src/app/core/api/generated/model/image";
+import { SurveyRequest } from "src/app/core/api/generated/model/surveyRequest";
 
 export interface CampaignTypeInterface{
     weekStart?: string;
@@ -27,21 +28,24 @@ export class ValidationData {
 
 export class CampaignClass implements Campaign {
     active?: boolean;
+    allSurveys?: { [key: string]: string };
     banner?: Image;
     campaignId?: string;
     communications?: boolean;
     dateFrom?: number;
     dateTo?: number;
-    description?: string;
-    details?: Array<CampaignDetail>;
+    defaultSurvey?: SurveyRequest;
+    description?: { [key: string]: string };
+    details?: { [key: string]: Array<CampaignDetail> };
     gameId?: string;
     logo?: Image;
-    surveys?: { [key: string]: string };
-    name?: string;
+    name?: { [key: string]: string };
+    specificData?: any;
     startDayOfWeek?: number;
+    surveys?: { [key: string]: string };
     territoryId?: string;
     type?: Campaign.TypeEnum;
-    validationData?: ValidationData;
+    validationData?: any;
 }
 
 export class ImageClass implements Image {

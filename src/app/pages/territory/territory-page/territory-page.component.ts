@@ -8,8 +8,9 @@ import { TerritoryDeleteComponent } from '../territory-delete/territory-delete.c
 import {MatSort, Sort} from '@angular/material/sort';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import { ManagerHandlerTerritoryComponent } from '../manager-handler/manager-handler.component';
-import { TERRITORY_ID_LOCAL_STORAGE_KEY } from 'src/app/shared/constants/constants';
+import { CONST_LANGUAGES_SUPPORTED, LANGUAGE_DEFAULT, TERRITORY_ID_LOCAL_STORAGE_KEY } from 'src/app/shared/constants/constants';
 import { TerritoryControllerService } from 'src/app/core/api/generated/controllers/territoryController.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-territory-page',
@@ -26,6 +27,7 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
   searchString: string;
   selectedRowIndex = "";
   newTerritory: TerritoryClass;
+  language: any;
   @ViewChild(MatSort) sort: MatSort;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -35,12 +37,14 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
   constructor( private dialogCreate: MatDialog,
     private dialogUpdate: MatDialog,
      private dialogDelete: MatDialog,
+     private translate: TranslateService,
       private territoryService: TerritoryControllerService,
     private _liveAnnouncer: LiveAnnouncer){// private dialog: MatDialog
 
   }
 
   ngOnInit() {
+    this.language= this.translate.currentLang;
     this.territoryService.getTerritoriesUsingGET().subscribe(
       listTerritory => {
         this.listAllTerriotory = listTerritory.reverse();
@@ -56,13 +60,24 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
   }
 
   setTableData(){
+    for(let i=0;i<this.listTerriotory.length;i++){
+      // replace empty value names with default name
+      var obj ={};
+      for(let l of CONST_LANGUAGES_SUPPORTED){
+        if(!!!this.listTerriotory[i].name[l]){
+          obj[l] = this.listTerriotory[i].name[LANGUAGE_DEFAULT];
+        }else{
+          obj[l] = this.listTerriotory[i].name[l];          
+        }
+      }
+      this.listTerriotory[i].name = obj;
+    }
     this.dataSource = new MatTableDataSource<TerritoryClass>(this.listTerriotory);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
   showTerritory(row : TerritoryClass){
-
       this.selectedRowIndex = row.territoryId;
       this.selectedTerritory = row;
   }
@@ -70,6 +85,7 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
   addTerritory(){
     const dialogRef = this.dialogCreate.open(TerritoryAddFormComponent, {
       width: '80%',
+      height: '900px'
     });
     let instance = dialogRef.componentInstance;
     instance.type = 'add';
@@ -119,6 +135,7 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
   updateTerritory(){
     const dialogRef = this.dialogUpdate.open(TerritoryAddFormComponent, {
       width: '80%',
+      height: '900px'
     });
     let instance = dialogRef.componentInstance;
     instance.type = 'modify';
@@ -156,7 +173,7 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
       this.setTableData();
     }else{
       this.listTerriotory = this.listAllTerriotory.filter(item =>
-        item.name.toLocaleLowerCase().includes(this.searchString.toLocaleLowerCase())
+        item.name[this.translate.currentLang].toLocaleLowerCase().includes(this.searchString.toLocaleLowerCase())
       );
       this.setTableData();
     }
@@ -169,7 +186,7 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
       height: "90%",
     });
     let instance = dialogRef.componentInstance;
-    instance.name = this.selectedTerritory.name;
+    instance.name = this.selectedTerritory.name[this.translate.currentLang];
     instance.territoryId = this.selectedTerritory.territoryId;
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== undefined) {
