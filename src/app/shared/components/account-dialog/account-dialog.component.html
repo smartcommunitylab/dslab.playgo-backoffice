@@ -1,6 +1,17 @@
 <div *ngIf="!changePasswordVar">
     <h1>{{"account" | translate}} <span *ngIf="account.email">- {{"username" | translate}}: {{account.email}}</span></h1>
     <h3 *ngIf="account.firstName || account.lastName">{{"name" | translate}}: {{account.firstName}} {{account.lastName}}</h3>
+    <div>
+        <mat-form-field appearance="fill" class="new-details-input">
+            <mat-label>{{'selectLanguage' | translate}}</mat-label>
+            <mat-select [(ngModel)]="selectedLanguage" id="lang">
+                <mat-option *ngFor="let lang of languagesSelectable"
+                    [value]="lang" (click)="changeLanguage(lang)">
+                    {{lang | translate}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
     <h3>{{"roles" | translate}}</h3>
     <ul *ngFor="let role of roles">
         <li><span *ngIf="role.entityId"> {{role.entityId}}: </span>{{role.role | translate}} </li>

@@ -37,3 +37,4 @@ export const CHANNELS_COMMUNICATION = ["email","announcement","push"];
 export const PRE_TEXT_JSON_ASSIGN_SURVAY = '{}';
 export const CONST_LANGUAGES_SUPPORTED = ['it','en'];
 export const LANGUAGE_DEFAULT = 'it'; 
+export const LANGUAGE_LOCAL_STORAGE = 'language';
