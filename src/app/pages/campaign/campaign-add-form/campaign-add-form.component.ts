@@ -163,7 +163,7 @@ export class CampaignAddFormComponent implements OnInit {
         //name: new FormControl("", [Validators.required]),
         logo: new FormControl("", [Validators.required]),
         banner: new FormControl("", [Validators.required]),
-        //description: new FormControl(""),
+        description: new FormControl(""),
         means: new FormControl("", [Validators.required]),
         active: new FormControl("", [Validators.required]),
         dateFrom: new FormControl("", [Validators.required]),
@@ -178,8 +178,6 @@ export class CampaignAddFormComponent implements OnInit {
       });
     } else {
       this.validatingForm = this.formBuilder.group({
-        logo: new FormControl(""),
-        banner: new FormControl(""),
         languages: new FormControl(""),
         description: new FormControl(""),
         means: new FormControl("", [Validators.required]),
@@ -191,8 +189,6 @@ export class CampaignAddFormComponent implements OnInit {
         startDayOfWeek: new FormControl(""),
       });
       this.validatingForm.patchValue({
-        logo: this.campaignUpdated.logo,
-        banner: this.campaignUpdated.banner,
         means: this.campaignUpdated.validationData.means,
         active: this.campaignUpdated.active,
         dateFrom: moment(this.campaignUpdated.dateFrom), //moment(this.campaignUpdated.dateFrom, "YYYY-MM-DD"),
@@ -292,8 +288,7 @@ export class CampaignAddFormComponent implements OnInit {
         this.campaignService
           .updateCampaignUsingPUT(this.campaignCreated)
           .subscribe(
-            (campaignSubmitted) => {
-              this.campaignCreated.campaignId = campaignSubmitted.campaignId;
+            () => {
               if (
                 this.uploadImageForModifyBanner &&
                 this.uploadImageForModifyLogo
@@ -346,13 +341,11 @@ export class CampaignAddFormComponent implements OnInit {
       })
       .subscribe(
         () => {
-          if (!this.uploadImageForModifyLogo) {
-            this.onNoClick("", this.campaignCreated);
-            this._snackBar.open(
-              this.translate.instant("savedData"),
-              this.translate.instant("close")
-            );
-          }
+          this.onNoClick("", this.campaignCreated);
+          this._snackBar.open(
+            this.translate.instant("savedData"),
+            this.translate.instant("close")
+          );
         },
         (error) => {
           this.errorMsgValidation =
@@ -399,7 +392,7 @@ export class CampaignAddFormComponent implements OnInit {
         },
         (error) => {
           this.errorMsgValidation =
-            this.translate.instant("allDataModifiedExceptBanner") +
+            this.translate.instant("allDataModifiedExceptBannerAndLogo") +
             (error.error.ex ? error.error.ex : this.translate.instant('errorNotProvidedByresponse'));
         }
       );
@@ -444,7 +437,7 @@ export class CampaignAddFormComponent implements OnInit {
     }
   }
 
-  upload(event: any): void {
+  uploadLogo(event: any): void {
     if (event.target.files && event.target.files[0]) {
       var reader = new FileReader();
       const eev = event;
@@ -503,9 +496,9 @@ export class CampaignAddFormComponent implements OnInit {
 
   get descriptionRichControl() {
     const name = "description" + this.languageSelected;
-    var obj = {};
-    obj[name] = this.campaignUpdated.description[this.languageSelected] ?  this.campaignUpdated.description[this.languageSelected] : '';
-    this.validatingForm.patchValue(obj);
+    // var obj = {};
+    // obj[name] = this.campaignUpdated.description[this.languageSelected] ?  this.campaignUpdated.description[this.languageSelected] : '';
+    // this.validatingForm.patchValue(obj);
     return this.validatingForm.controls[name] as FormControl;
   }
 
@@ -739,7 +732,14 @@ export class CampaignAddFormComponent implements OnInit {
       }
       this.validatingForm.addControl(nameName, controlName);
       this.validatingForm.addControl(nameDescription, controlDescription);
+      if(this.type !== "add"){
+        var obj = {};
+        obj[nameName] = this.campaignUpdated.name[l];
+        obj[nameDescription] = this.campaignUpdated.description[l] ?  this.campaignUpdated.description[l] : '';
+        this.validatingForm.patchValue(obj);
+      }
     }
+
   }
 
   selectedLanguageClick(event: any) {
