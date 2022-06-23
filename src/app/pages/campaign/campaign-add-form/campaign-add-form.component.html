@@ -172,7 +172,7 @@
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-half-left">
                         <input matInput formControlName="logo" type="file" accept="image/png, image/jpeg"
-                            (change)="upload($event)" />
+                            (change)="uploadLogo($event)" />
                         <mat-hint>{{'logo' |translate}}</mat-hint>
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="input-half-right">
@@ -270,7 +270,7 @@
                             <div *ngFor="let detail of details">
                                 <mat-card class="card-expandable card-normal" style="margin-bottom: 15px;">
                                     <mat-card-title class="cursor-pointer" (click)="toggleDetail(detail)">
-                                        {{ (detail.form[languageSelected].get('name')? detail.form[languageSelected].get('name').value : 'newDetail')}} ({{detail.form[languageSelected].get('type').value | translate}}) - {{l | translate}}
+                                        {{ (detail.form[languageSelected].get('name') && detail.form[languageSelected].get('name').value? detail.form[languageSelected].get('name').value +' (' + (detail.form[languageSelected].get('type').value | translate) + ')' : 'newDetail')}} - {{l | translate}}
                                         <mat-card-actions class="right-button top-button">
                                             <mat-icon *ngIf="detail.collapsed">
                                                 <span class="material-symbols-outlined">
@@ -368,11 +368,11 @@
                 </div>
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-half-left">
-                        <input matInput formControlName="logo" type="file" accept="image/png, image/jpeg"
-                            (change)="upload($event)" />
+                        <input matInput type="file" accept="image/png, image/jpeg"
+                            (change)="uploadLogo($event)" />
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="input-half-right">
-                        <input matInput formControlName="banner" type="file" accept="image/png, image/jpeg"
+                        <input matInput type="file" accept="image/png, image/jpeg"
                             (change)="uploadBanner($event)" />
                     </mat-form-field>
                 </div>

@@ -1,10 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { PlayerRole } from 'src/app/core/api/generated/model/playerRole';
 import { AuthService } from 'src/app/core/auth/auth.service';
 import { RoleService } from '../../services/role.service';
 import { Account } from '../../user/account.model';
+import {CONST_LANGUAGES_SUPPORTED, LANGUAGE_LOCAL_STORAGE} from '../../constants/constants';
 
 @Component({
   selector: 'app-account-dialog',
@@ -20,14 +22,18 @@ export class AccountDialogComponent implements OnInit {
   hideConfirmPassword: boolean = true;
   account: Account;
   roles: PlayerRole[];
+  languagesSelectable = CONST_LANGUAGES_SUPPORTED;
+  selectedLanguage: string;
   
   constructor(    public dialogRef: MatDialogRef<AccountDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
+    private translate: TranslateService,
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private roleService: RoleService) { }
 
   ngOnInit(): void {
+    this.selectedLanguage = this.translate.currentLang;
     this.account = this.authService.getAccount();
     this.roles = this.roleService.getRoles();
   }
@@ -57,6 +63,14 @@ export class AccountDialogComponent implements OnInit {
         console.log("Password don't match");
       }
     }
+  }
+
+  changeLanguage(event){
+    this.selectedLanguage = event;
+    localStorage.setItem(LANGUAGE_LOCAL_STORAGE, event);
+    this.translate.setDefaultLang(event);
+    this.translate.use(event); //TODO get language from browser
+    window.location.reload();
   }
 
 }
