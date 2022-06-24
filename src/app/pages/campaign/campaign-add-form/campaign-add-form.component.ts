@@ -254,7 +254,6 @@ export class CampaignAddFormComponent implements OnInit {
           .subscribe(
             (campaignSubmitted) => {
               this.campaignCreated.campaignId = campaignSubmitted.campaignId;
-              console.log("campaing created with Id: ",this.campaignCreated.campaignId);
               if (
                 this.uploadImageForModifyBanner &&
                 this.uploadImageForModifyLogo
@@ -744,6 +743,5 @@ export class CampaignAddFormComponent implements OnInit {
 
   selectedLanguageClick(event: any) {
     this.languageSelected = event;
-    console.log("detailssssss", this.details);
   }
 }

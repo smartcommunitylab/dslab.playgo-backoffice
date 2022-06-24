@@ -269,7 +269,6 @@ export class TerritoryAddFormComponent implements OnInit {
 
   selectedLanguageClick(event: any){
     this.languageSelected = event;
-    console.log(this.validatingForm.value);
   }
 
   addFormControlMultilanguage(){

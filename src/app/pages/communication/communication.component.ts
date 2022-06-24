@@ -3,13 +3,16 @@ import { MatDialog } from "@angular/material/dialog";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
+import { TranslateService } from "@ngx-translate/core";
 import { CampaignControllerService } from "src/app/core/api/generated/controllers/campaignController.service";
 import { NotificationControllerService } from "src/app/core/api/generated/controllers/notificationController.service";
 import { TerritoryControllerService } from "src/app/core/api/generated/controllers/territoryController.service";
+import { Announcement } from "src/app/core/api/generated/model/announcement";
+import { CampaignRes } from "src/app/core/api/generated/model/campaignRes";
 import { PageAnnouncement } from "src/app/core/api/generated/model/pageAnnouncement";
 import { AnnouncementClass } from "src/app/shared/classes/announcment-class";
 import { PageTrackedInstanceClass } from "src/app/shared/classes/PageTrackedInstance-class";
-import { TERRITORY_ID_LOCAL_STORAGE_KEY } from "src/app/shared/constants/constants";
+import { TERRITORY_ID_LOCAL_STORAGE_KEY, VALUE_EMPTY_SELECT_LIST } from "src/app/shared/constants/constants";
 import { CommunicationAddComponent } from "./communication-add/communication-add.component";
 
 @Component({
@@ -27,30 +30,38 @@ export class CommunicationComponent implements OnInit {
   communications: AnnouncementClass[] = [];
   newItem: AnnouncementClass;
   communicationSelected: AnnouncementClass;
-  searchString: string;
-  listCampaings: any[] = [];
+  searchString: string = VALUE_EMPTY_SELECT_LIST;
+  listCampaings: string[] = [];
   selectedCampaign: string;
+  listComunications:string[] =[VALUE_EMPTY_SELECT_LIST];
   page = 0;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) matPaginator: MatPaginator;
 
   constructor(
     private dialogCreate: MatDialog,
+    private translate: TranslateService,
     private communicationService: NotificationControllerService,
     private campaignService: CampaignControllerService,
   ) {}
 
   ngOnInit(): void {
     this.territoryId = localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY);
-    this.getNotificationUsingGet();
-
     this.campaignService
       .getCampaignsUsingGET({ territoryId: this.territoryId })
       .subscribe((campaigns) => {
         campaigns.forEach((item) => {
           this.listCampaings.push(item.campaignId);
         });
+        if(this.listCampaings.length>0){
+          this.selectedCampaign = this.listCampaings[0];
+        }
+        this.getNotificationUsingGet();
       });
+     Object.keys(Announcement.ChannelsEnum).forEach((item)=>{
+      this.listComunications.push(Announcement.ChannelsEnum[item]);
+     });
+
   }
 
   setTableData() {
@@ -111,7 +122,7 @@ export class CommunicationComponent implements OnInit {
 
   selectedCommunication(row) {
     this.communicationSelected = row;
-    if (this.communicationSelected.title === this.newItem.title) {
+    if (!!this.communicationSelected && !!this.newItem && this.communicationSelected.title === this.newItem.title) {
       this.newItem = new AnnouncementClass();
       this.newItem.title = "";
     }
@@ -126,11 +137,15 @@ export class CommunicationComponent implements OnInit {
   }
 
   searchCommunication(event: any) {
-    console.log(this.selectedCampaign, this.searchString);
     this.getNotificationUsingGet();
   }
 
   getNotificationUsingGet(){
+    var searchStrinNull = false;
+    if(this.searchString ==='-'){
+      searchStrinNull = true;
+      this.searchString = undefined;
+    }
     this.communicationService
     .getNotificationsUsingGET({
       page: this.page,
@@ -141,15 +156,22 @@ export class CommunicationComponent implements OnInit {
     })
     .subscribe(
       (result) => {
+        if(searchStrinNull){
+          this.searchString ='-';
+        }
         if (!!result.content) {
           this.communications = result.content;
           this.setTableData();
         }
       },
       (error) => {
-        console.log("myError: ", error);
+        console.error("myError: ", error);
       }
     );
+  }
+
+  translateList(list:any[]):string{
+    return list.join(', ');
   }
 
 }
