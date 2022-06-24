@@ -206,7 +206,6 @@ export class CampaignPageComponent implements OnInit {
       width: "80%",
     });
     let instance = dialogRef.componentInstance;
-    console.log("full campaign:", this.selectedCampaign);
     instance.name = this.selectedCampaign.name[this.translate.currentLang];
     instance.surveysMap = this.selectedCampaign.surveys;
     instance.campaignId = this.selectedCampaign.campaignId;

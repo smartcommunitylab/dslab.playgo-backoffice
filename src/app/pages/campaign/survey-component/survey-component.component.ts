@@ -35,14 +35,12 @@ export class SurveyComponentComponent implements OnInit {
       surveyId: new FormControl("",[Validators.required] ),
       link: new FormControl("",[Validators.required])
     });
-    console.log("surveys:",this.surveysMap, typeof(this.surveysMap) );
     if(this.surveysMap){
       const keys = Object.keys(this.surveysMap);
       for(let item of keys){
         this.surveys.push({'surveyId': item, 'link': this.surveysMap[item]});
       }
     }
-    console.log(this.surveys)
     this.setTableData();
   }
 
