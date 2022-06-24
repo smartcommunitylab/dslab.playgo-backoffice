@@ -138,7 +138,6 @@ export class AppComponent implements OnInit {
   initTerritory(){
     this.territoryService.getTerritoriesUsingGET().subscribe((res) => {
       this.territories = res;
-      console.log("territori: ", this.territories);
       this.findTerritoriesPerRoles();
       this.userEnabled();
       try {

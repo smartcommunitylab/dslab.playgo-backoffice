@@ -12,7 +12,9 @@
                         </mat-select>
                         <mat-hint>{{"hintIdTerritoryAddCampaign" | translate}}</mat-hint>
                     </mat-form-field>
-                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                </div>
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
                         <mat-label>{{'campaignId' | translate}}</mat-label>
                         <mat-select  id="campaignId" formControlName="campaignId">
                             <mat-option *ngFor="let val of listCampaings" [value]="val">{{val | translate}}

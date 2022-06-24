@@ -9,16 +9,16 @@
         <div class="table">
             <mat-card class="card" style="margin-left: 10px;">
                 <mat-grid-list cols="3" rowHeight="6:1">
-                    <mat-grid-tile>
+                    <mat-grid-tile style="height: 80px;">
                         <div class="full-dimension" style="text-align: left;">
                             <mat-card-title>
                                 {{'communications' | translate}}
                             </mat-card-title>
                         </div>
                     </mat-grid-tile>
-                    <mat-grid-tile>
+                    <mat-grid-tile style="height: 65px;">
                         <form class="example-form">
-                            <mat-form-field class="example-full-width" appearance="fill">
+                            <mat-form-field class="example-full-width" appearance="fill" >
                                 <mat-label>{{'campaignId' | translate}}</mat-label>
                                 <mat-select [(ngModel)]="selectedCampaign" (closed)="searchCommunication($event)">
                                     <mat-option *ngFor="let val of listCampaings" [value]="val">{{val | translate}}
@@ -27,12 +27,14 @@
                             </mat-form-field>
                         </form>
                     </mat-grid-tile>
-                    <mat-grid-tile>
+                    <mat-grid-tile style="height: 65px;">
                         <form class="example-form">
                             <mat-form-field class="example-full-width" appearance="fill">
-                                <input type="text" matInput placeholder="{{'search' | translate}}"
-                                    [(ngModel)]="searchString" (keyup)="searchCommunication($event)">
-                                <mat-icon matSuffix>search</mat-icon>
+                                <mat-label>{{'search' | translate}}</mat-label>
+                                <mat-select [(ngModel)]="searchString" (closed)="searchCommunication($event)" >
+                                    <mat-option *ngFor="let val of listComunications" [value]="val">{{val | translate}}
+                                    </mat-option>
+                                </mat-select>
                             </mat-form-field>
                         </form>
                     </mat-grid-tile>
@@ -56,7 +58,7 @@
                             <ng-container matColumnDef="channel">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header
                                     sortActionDescription="Sort by channel"> {{ 'channel'| translate}} </th>
-                                <td mat-cell *matCellDef="let element"> {{element.channels}} </td>
+                                <td mat-cell *matCellDef="let element"> {{translateList(element.channels)}} </td>
                             </ng-container>
 
 

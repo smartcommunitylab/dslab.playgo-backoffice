@@ -50,7 +50,7 @@ export class CommunicationAddComponent implements OnInit {
     this.territories.push(this.territoryId);
     this.validatingForm = this.formBuilder.group({
       territoryId: new FormControl("", [Validators.required]),
-      campaignId: new FormControl(""),
+      campaignId: new FormControl("", [Validators.required]),
       channels: new FormControl("", [Validators.required]),
       briefDescription: new FormControl("", [Validators.required]),
       richDescription: new FormControl(""),
@@ -84,7 +84,6 @@ export class CommunicationAddComponent implements OnInit {
       const dateTo: number = this.validatingForm.get("dateTo").value
         ? this.validatingForm.get("dateTo").value.valueOf()
         : undefined;
-      console.log("date: ", dateFrom);
       if (!this.validDates(dateFrom, dateTo)) {
         this.msgError = "dateNotValid";
         return;
@@ -118,32 +117,30 @@ export class CommunicationAddComponent implements OnInit {
         ? this.validatingForm.get("title").value
         : "";
       body.to = dateTo.toString();
-      console.log("body: ", body);
-      this.onNoClick("", body);
-    //   this.communicationService
-    //     .notifyCampaignUsingPOST({
-    //       territoryId: this.territoryId,
-    //       body: body,
-    //       campaignId: campaignId,
-    //     })
-    //     .subscribe(
-    //       (res) => {
-    //         this.onNoClick("", body);
-    //         this._snackBar.open(
-    //           this.translate.instant("savedData"),
-    //           this.translate.instant("close")
-    //         );
-    //       },
-    //       (error) => {
-    //         console.log(error);
-    //         error
-    //           ? error.error.ex
-    //             ? (this.msgError =
-    //                 this.translate.instant("error") + ": " + error.error.ex)
-    //             : this.translate.instant("errorNotFound")
-    //           : this.translate.instant("errorNotFound");
-    //       }
-    //     );
+      this.communicationService
+        .notifyCampaignUsingPOST({
+          territoryId: this.territoryId,
+          body: body,
+          campaignId: campaignId,
+        })
+        .subscribe(
+          (res) => {
+            this.onNoClick("", body);
+            this._snackBar.open(
+              this.translate.instant("savedData"),
+              this.translate.instant("close")
+            );
+          },
+          (error) => {
+            console.error(error);
+            error
+              ? error.error.ex
+                ? (this.msgError =
+                    this.translate.instant("error") + ": " + error.error.ex)
+                : this.translate.instant("errorNotFound")
+              : this.translate.instant("errorNotFound");
+          }
+        );
     }
   }
 
@@ -182,7 +179,7 @@ export class CommunicationAddComponent implements OnInit {
         result.push(Announcement.ChannelsEnum.Push);
       }
 
-      if (el === "announcement") {
+      if (el === "news") {
         result.push(Announcement.ChannelsEnum.News);
       }
     }
