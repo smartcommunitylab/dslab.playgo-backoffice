@@ -204,6 +204,8 @@ export class CampaignPageComponent implements OnInit {
   survey(){
     const dialogRef = this.dialogUpdate.open(SurveyComponentComponent, {
       width: "80%",
+      minHeight: '300px',
+      maxHeight:'800px'
     });
     let instance = dialogRef.componentInstance;
     instance.name = this.selectedCampaign.name[this.translate.currentLang];

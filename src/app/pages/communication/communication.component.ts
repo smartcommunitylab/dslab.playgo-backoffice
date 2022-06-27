@@ -171,7 +171,11 @@ export class CommunicationComponent implements OnInit {
   }
 
   translateList(list:any[]):string{
-    return list.join(', ');
+    let result =[];
+    for(let i=0;i<list.length;i++){
+      result.push( this.translate.instant(list[i]));
+    }
+    return result.join(', ');
   }
 
 }
