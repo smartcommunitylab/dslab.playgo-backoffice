@@ -68,6 +68,8 @@ import { CampaignControllerService } from "src/app/core/api/generated/controller
   ],
 })
 export class ValidationTrackComponent implements OnInit {
+
+  day = 60*60*24*1000;
   territoryId: string;
   mapOptions: MapOptions;
   map: Map;
@@ -240,6 +242,7 @@ export class ValidationTrackComponent implements OnInit {
       //   dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value,true);
       // }
       // dateToString = dateToString ? dateToString :this.transformDateToString(moment());  
+      const today:number = (new Date()).getTime();
       this.trackingServiceInternal
         .searchTrackedInstanceUsingGET(
           {
@@ -250,8 +253,8 @@ export class ValidationTrackComponent implements OnInit {
             trackId: this.validatingForm.get("trackId").value ? this.validatingForm.get("trackId").value : undefined ,
             playerId: this.validatingForm.get("playerId").value ? this.validatingForm.get("playerId").value : undefined,
             modeType: this.validatingForm.get("modeType").value ? this.validatingForm.get("modeType").value : undefined,
-            dateFrom: this.validatingForm.get("dateFrom").value.valueOf(),
-            dateTo: this.validatingForm.get("dateTo").value.valueOf(),
+            dateFrom: this.validatingForm.get("dateFrom").value? this.validatingForm.get("dateFrom").value.valueOf() : undefined,
+            dateTo: this.validatingForm.get("dateTo").value ? this.validatingForm.get("dateTo").value.valueOf() + this.day : today,
             campaignId: this.validatingForm.get("campaignId").value ? this.validatingForm.get("campaignId").value : undefined,
             status: this.validatingForm.get("status").value ? this.validatingForm.get("status").value.toUpperCase() : undefined
           }
@@ -352,6 +355,7 @@ export class ValidationTrackComponent implements OnInit {
         //   dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value,true);
         // }
         // dateToString = dateToString ? dateToString :this.transformDateToString(moment());  
+        const today:number = (new Date()).getTime();
         this.trackingServiceInternal
           .searchTrackedInstanceUsingGET(
             {
@@ -362,8 +366,8 @@ export class ValidationTrackComponent implements OnInit {
               trackId: this.validatingForm.get("trackId").value ? this.validatingForm.get("trackId").value : undefined ,
               playerId: this.validatingForm.get("playerId").value ? this.validatingForm.get("playerId").value : undefined,
               modeType: this.validatingForm.get("modeType").value ? this.validatingForm.get("modeType").value : undefined,
-              dateFrom: this.validatingForm.get("dateFrom").value.valueOf(),
-              dateTo: this.validatingForm.get("dateTo").value.valueOf(),
+              dateFrom: this.validatingForm.get("dateFrom").value? this.validatingForm.get("dateFrom").value.valueOf() : undefined,
+              dateTo: this.validatingForm.get("dateTo").value ? this.validatingForm.get("dateTo").value.valueOf() + this.day : today,
               campaignId: this.validatingForm.get("campaignId").value ? this.validatingForm.get("campaignId").value : undefined,
               status: this.validatingForm.get("status").value ? this.validatingForm.get("status").value.toUpperCase() : undefined
             }

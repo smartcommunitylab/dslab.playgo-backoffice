@@ -37,7 +37,10 @@
             <mat-label>{{'link' | translate}}</mat-label>
             <input matInput id="link" formControlName="link">
         </mat-form-field>
-        <button type="submit" class="add" mat-flat-button (click)="addSurvey()">{{'add' | translate}}</button>
+        <button class="add" mat-flat-button color="primary" class="add-button" (click)="addSurvey()">
+            <mat-icon>add</mat-icon>
+            {{'add' | translate}}
+        </button>
     </div>
 </form>
 <p *ngIf="msgError" class="error">{{msgError}}</p>
