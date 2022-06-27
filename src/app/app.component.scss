@@ -1,9 +1,11 @@
 .sidebar {
+  z-index: 900;
   width: 9%;
   height: 100%;
 }
 
 .sidebar:hover {
+  z-index: 190000;
   width: 100%;
   height: 100%;
   background-color: darkgray;
@@ -35,16 +37,21 @@
 }
 
 .side-nav {
+  z-index: 1000;
   height: 100%;
   float: left;
-  //position:fixed;
+  position:fixed;
   width: 60px;
+  top: 60px;
 }
 
 .page {
+  margin-left: 60px;
   //height: 100%;
   width: 95%;
   float: left;
+  z-index: -30;
+  margin-top: 60px;
 }
 
 .loading-container {
@@ -105,4 +112,11 @@
 .warning-user-not-valid{
   margin: 5px;
   color: red;
+}
+
+.app-toolbar {
+  position: fixed;
+  position: -webkit-sticky; /* For macOS/iOS Safari */
+  top: 0; /* Sets the sticky toolbar to be on top */
+  z-index: 1001; /* Ensure that your app's content doesn't overlap the toolbar */
 }
