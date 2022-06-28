@@ -105,7 +105,9 @@ export class SurveyComponentComponent implements OnInit {
   }
 
   setTableData() {
-    this.dataSource = new MatTableDataSource<any>(this.surveys);
+    const l = this.surveys.map((x)=>x);
+    l.reverse();
+    this.dataSource = new MatTableDataSource<any>(l);
   }
 
 }

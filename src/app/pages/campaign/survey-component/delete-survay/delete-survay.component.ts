@@ -38,7 +38,10 @@ export class DeleteSurvayComponent implements OnInit {
       this.onNoClick('',this.surveyId);
       this._snackBar.open(
         this.translate.instant("deleted"),
-        this.translate.instant("close")
+        this.translate.instant("close"),
+        {
+          duration: 1500
+        }
       );
     },(error)=>{
       this.msgError = error ? (error.error ? error.error.ex : error) : 'error';

@@ -1,7 +1,24 @@
 <div class="full-width" *ngIf="type === 'add'">
-    <h1>{{'addCampaign' | translate}}</h1>
-    <div class="col-12 full-width">
-        <form [formGroup]="validatingForm">
+    <form [formGroup]="validatingForm">
+        <div class="header-bar-stick">
+            <div class="title-left">
+                <h1>{{'addCampaign' | translate}}</h1>
+                <p *ngIf="!!errorMsgValidation" class="full-dimension warning">{{errorMsgValidation | translate}}</p>
+            </div>
+            <div class="title-right">
+                <button color="primary" class="right-button" mat-raised-button type="submit" (click)="validate()">
+                    <mat-icon>
+                        <span class="material-symbols-outlined">
+                            save
+                        </span>
+                    </mat-icon>
+                    {{'save' |translate}}
+                </button>
+                <button class="right-button" mat-flat-button (click)="cancelGoBack($event)">{{'cancel'
+                    |translate}}</button>
+            </div>
+        </div>        
+        <div class="col-12 full-width" style="margin-top: 15px;">
             <div class="full-height">
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-half-left">
@@ -182,23 +199,31 @@
                     </mat-form-field>
                 </div>
             </div>
-            <p *ngIf="!!errorMsgValidation" class="full-dimension red-text">{{errorMsgValidation | translate}}</p>
-            <div class="full-width" style="height: 40px">
-                <button class="right-button green-background" mat-raised-button type="submit"
-                    (click)="validate()">{{'save' |
-                    translate}}</button>
-                <button class="right-button" mat-flat-button (click)="onNoClick($event)">{{'cancel'
-                    |translate}}</button>
-            </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
 <div class="full-width" *ngIf="type === 'modify'">
-    <h1>{{'modifyCampaign' | translate}} - {{campaignUpdated.name[languageDefault]}} </h1>
-    <h3> {{'territoryId' | translate}}: {{campaignUpdated.territoryId}} </h3>
-    <h3>{{'campaignId' | translate}}: {{campaignUpdated.campaignId}}</h3>
-    <div class="col-12 full-width">
-        <form [formGroup]="validatingForm">
+    <form [formGroup]="validatingForm">
+        <div class="header-bar-stick">
+            <div class="title-left">
+                <h1>{{'modifyCampaign' | translate}} - {{campaignUpdated.name[languageDefault]}}, {{'campaignId' | translate}}: {{campaignUpdated.campaignId}} </h1>
+                <p *ngIf="!!errorMsgValidation" class="full-dimension warning">{{errorMsgValidation | translate}}</p>
+            </div>
+            <div class="title-right">
+                <button color="primary" class="right-button" mat-raised-button type="submit" (click)="validate()">
+                    <mat-icon>
+                        <span class="material-symbols-outlined">
+                            save
+                        </span>
+                    </mat-icon>
+                    {{'save' |translate}}
+                </button>
+                <button class="right-button" mat-flat-button (click)="cancelGoBack($event)">{{'cancel'
+                    |translate}}</button>
+            </div>
+        </div>  
+
+        <div class="col-12 full-width" style="margin-top: 15px;">
             <div class="full-height">
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-half-left">
@@ -270,7 +295,11 @@
                             <div *ngFor="let detail of details">
                                 <mat-card class="card-expandable card-normal" style="margin-bottom: 15px;">
                                     <mat-card-title class="cursor-pointer" (click)="toggleDetail(detail)">
-                                        {{ (detail.form[languageSelected].get('name') && detail.form[languageSelected].get('name').value? detail.form[languageSelected].get('name').value +' (' + (detail.form[languageSelected].get('type').value | translate) + ')' : 'newDetail')}} - {{l | translate}}
+                                        {{ (detail.form[languageSelected].get('name') &&
+                                        detail.form[languageSelected].get('name').value?
+                                        detail.form[languageSelected].get('name').value +' (' +
+                                        (detail.form[languageSelected].get('type').value | translate) + ')' :
+                                        'newDetail')}} - {{l | translate}}
                                         <mat-card-actions class="right-button top-button">
                                             <mat-icon *ngIf="detail.collapsed">
                                                 <span class="material-symbols-outlined">
@@ -368,23 +397,13 @@
                 </div>
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-half-left">
-                        <input matInput type="file" accept="image/png, image/jpeg"
-                            (change)="uploadLogo($event)" />
+                        <input matInput type="file" accept="image/png, image/jpeg" (change)="uploadLogo($event)" />
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="input-half-right">
-                        <input matInput type="file" accept="image/png, image/jpeg"
-                            (change)="uploadBanner($event)" />
+                        <input matInput type="file" accept="image/png, image/jpeg" (change)="uploadBanner($event)" />
                     </mat-form-field>
                 </div>
             </div>
-            <p *ngIf="!!errorMsgValidation" class="full-dimension red-text">{{errorMsgValidation | translate}}</p>
-            <div class="full-width" style="height: 40px">
-                <button class="right-button green-background" mat-raised-button type="submit"
-                    (click)="validate()">{{'save' |
-                    translate}}</button>
-                <button class="right-button" mat-flat-button (click)="onNoClick($event)">{{'cancel'
-                    |translate}}</button>
-            </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>

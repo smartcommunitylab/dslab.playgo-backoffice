@@ -107,7 +107,8 @@ export class CampaignPageComponent implements OnInit {
   addCampaign() {
     const dialogRef = this.dialogCreate.open(CampaignAddFormComponent, {
       width: "80%",
-      height: '820px'
+      height: '820px',
+      disableClose: true
     });
     let instance = dialogRef.componentInstance;
     instance.type = "add";
@@ -147,7 +148,8 @@ export class CampaignPageComponent implements OnInit {
   updateCampaign() {
     const dialogRef = this.dialogUpdate.open(CampaignAddFormComponent, {
       width: "80%",
-      height: '900px'
+      height: '900px',
+      disableClose: true
     });
     let instance = dialogRef.componentInstance;
     instance.type = "modify";
