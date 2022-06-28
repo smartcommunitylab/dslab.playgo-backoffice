@@ -12,17 +12,14 @@
     width: 100%;
   }
 
-  .newItem{
-    background: #f199f179; 
-  }
 
   .add{
       margin-left: 1%;
-      background-color: darkcyan;
   }
 
   .delete{
-    background: #c70f3779; 
+    background: red; 
+    color: white;
     margin-right: 20px;
   }
 
@@ -72,4 +69,24 @@
 
 .mat-column-buttons {
   margin-left: 10px;
+}
+
+.header-bar-stick{
+  background-color: white;
+  height:200px;
+  position: sticky;
+  z-index: 1000;
+  top: 0px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.116);
+}
+
+.title-left{
+  margin-top: 10px;
+  float:left; 
+  width: 900px;
+}
+
+
+.title-right{
+  margin-top: 20px;
 }

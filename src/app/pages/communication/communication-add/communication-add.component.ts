@@ -36,7 +36,7 @@ export class CommunicationAddComponent implements OnInit {
   territories: string[] = ["aa", "bb"];
   channels: string[] = CHANNELS_COMMUNICATION;
   listCampaings: string[] = [];
-  msgError = "";
+  errorMsgValidation = "";
   constructor(
     private formBuilder: FormBuilder,
     private translate: TranslateService,
@@ -85,7 +85,7 @@ export class CommunicationAddComponent implements OnInit {
         ? this.validatingForm.get("dateTo").value.valueOf()
         : undefined;
       if (!this.validDates(dateFrom, dateTo)) {
-        this.msgError = "dateNotValid";
+        this.errorMsgValidation = "dateNotValid";
         return;
       }
 
@@ -128,19 +128,24 @@ export class CommunicationAddComponent implements OnInit {
             this.onNoClick("", body);
             this._snackBar.open(
               this.translate.instant("savedData"),
-              this.translate.instant("close")
+              this.translate.instant("close"),
+              {
+                duration: 1500
+              }
             );
           },
           (error) => {
             console.error(error);
             error
               ? error.error.ex
-                ? (this.msgError =
+                ? (this.errorMsgValidation =
                     this.translate.instant("error") + ": " + error.error.ex)
                 : this.translate.instant("errorNotFound")
               : this.translate.instant("errorNotFound");
           }
         );
+    }else{
+      this.errorMsgValidation = this.translate.instant("fillAllfields");
     }
   }
 

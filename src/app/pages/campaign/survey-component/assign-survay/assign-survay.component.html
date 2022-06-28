@@ -38,6 +38,6 @@
         </mat-form-field>
     </div> -->
     <p *ngIf="!!msgError" class="warning">{{msgError | translate}}</p>
-    <button type="button"  mat-flat-button (click)="onNoClick('')">{{'close' | translate}}</button>
-    <button type="submit" class="assign" mat-flat-button (click)="assign()">{{'assign' | translate}}</button>
+    <button type="submit" class="right-button" color="primary" mat-flat-button (click)="assign()">{{'assign' | translate}}</button>
+    <button type="button" class="right-button"  mat-flat-button (click)="onNoClick('')">{{'close' | translate}}</button>
 </form>

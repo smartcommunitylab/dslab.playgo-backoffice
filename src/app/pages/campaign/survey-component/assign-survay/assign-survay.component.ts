@@ -88,6 +88,8 @@ export class AssignSurvayComponent implements OnInit {
       },(error)=>{
         this.msgError = this.translate.instant('errorOnAssign') +': ' +  (error? error.error? error.error.ex : 'error' : 'error');
       });
+    }else{
+      this.msgError = this.translate.instant("fillAllfields");
     }
   }
 

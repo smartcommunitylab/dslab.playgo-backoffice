@@ -19,9 +19,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { SideNavComponent } from './shared/components/side-nav/side-nav';
 import { AccountDialogComponent } from './shared/components/account-dialog/account-dialog.component';
 import { SpinnerInterceptor } from './core/loader/spinner.interceptor';
-import { SurveyComponentComponent } from './pages/campaign/survey-component/survey-component.component';
-import { DeleteSurvayComponent } from './pages/campaign/survey-component/delete-survay/delete-survay.component';
-import { AssignSurvayComponent } from './pages/campaign/survey-component/assign-survay/assign-survay.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http);

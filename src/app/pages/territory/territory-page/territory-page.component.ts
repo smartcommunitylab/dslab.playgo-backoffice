@@ -85,7 +85,8 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
   addTerritory(){
     const dialogRef = this.dialogCreate.open(TerritoryAddFormComponent, {
       width: '80%',
-      height: '900px'
+      height: '900px',
+      disableClose: true
     });
     let instance = dialogRef.componentInstance;
     instance.type = 'add';
@@ -135,7 +136,8 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
   updateTerritory(){
     const dialogRef = this.dialogUpdate.open(TerritoryAddFormComponent, {
       width: '80%',
-      height: '900px'
+      height: '900px',
+      disableClose: true
     });
     let instance = dialogRef.componentInstance;
     instance.type = 'modify';
