@@ -16,7 +16,7 @@
     <ul *ngFor="let role of roles">
         <li><span *ngIf="role.entityId"> {{role.entityId}}: </span>{{role.role | translate}} </li>
     </ul>
-    <button class="button-margin" mat-flat-button (click)="onNoClick($event)">{{"cancel" | translate}}</button>
+    <button class="button-margin" mat-flat-button (click)="onNoClick($event)">{{"close" | translate}}</button>
     <!-- <button class="button-margin" mat-raised-button color="primary" (click)="changePassword($event)">{{"changePassword" | translate}}</button> -->
     <button class="button-margin" mat-raised-button color="primary" (click)="logout($event)">{{"logout" | translate}}</button>
 </div>

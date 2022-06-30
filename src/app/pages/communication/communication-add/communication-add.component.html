@@ -1,7 +1,24 @@
 <div class="full-width">
-    <h1>{{'addCommunication' | translate}}</h1>
-    <div class="col-12 full-width">
-        <form [formGroup]="validatingForm">
+    <form [formGroup]="validatingForm">
+        <div class="header-bar-stick">
+            <div class="title-left">
+                <h1>{{'addCommunication' | translate}}</h1>
+                <p *ngIf="!!errorMsgValidation" class="full-dimension warning">{{errorMsgValidation | translate}}</p>
+            </div>
+            <div class="title-right">
+                <button color="primary" class="right-button" mat-raised-button type="submit" (click)="validate()">
+                    <mat-icon>
+                        <span class="material-symbols-outlined">
+                            save
+                        </span>
+                    </mat-icon>
+                    {{'save' |translate}}
+                </button>
+                <button class="right-button" mat-flat-button (click)="onNoClick($event,undefined)">{{'cancel'
+                    |translate}}</button>
+            </div>
+        </div>
+        <div class="col-12 full-width" style="margin-top: 15px;">
             <div class="full-height">
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-custom-half-left">
@@ -16,7 +33,7 @@
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-custom-half-left">
                         <mat-label>{{'campaignId' | translate}}</mat-label>
-                        <mat-select  id="campaignId" formControlName="campaignId">
+                        <mat-select id="campaignId" formControlName="campaignId">
                             <mat-option *ngFor="let val of listCampaings" [value]="val">{{val | translate}}
                             </mat-option>
                         </mat-select>
@@ -37,7 +54,7 @@
                 </div>
                 <div class="in-line-forms" *ngIf="emailEnabled()">
                     <mat-form-field appearance="fill" class="full-width">
-                        <mat-label>{{'users' | translate}},  ({{'addUserModalityCommunication' | translate}})</mat-label>
+                        <mat-label>{{'users' | translate}}, ({{'addUserModalityCommunication' | translate}})</mat-label>
                         <textarea matInput id="users" formControlName="users"></textarea>
                     </mat-form-field>
                 </div>
@@ -72,14 +89,6 @@
                     </mat-form-field>
                 </div>
             </div>
-            <p *ngIf="!!msgError" class="full-dimension red-text">{{msgError | translate}}</p>
-            <div class="full-width" style="height: 40px">
-                <button class="right-button greed-background" mat-raised-button type="submit" (click)="validate()">{{'save' |
-                    translate}}</button>
-                <button class="right-button" mat-flat-button (click)="onNoClick($event,undefined)">{{'cancel'
-                    |translate}}</button>
-            </div>
-        </form>
-    </div>
-
+        </div>
+    </form>
 </div>

@@ -33,7 +33,10 @@ export class CampaignDeleteComponent implements OnInit {
         this.onNoClick('',this.campaignId);
         this._snackBar.open(
           this.translate.instant("deletedCampaign"),
-          this.translate.instant("close"));
+          this.translate.instant("close"),
+          {
+            duration: 1500
+          });
       }, 
       (error) =>{
         this.msgError = 'cannotDeleteCampaign';

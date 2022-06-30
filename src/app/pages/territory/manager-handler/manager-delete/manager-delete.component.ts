@@ -33,7 +33,10 @@ export class ManagerDeleteTerritoryComponent implements OnInit {
       this.managerService.removeTerritoryManagerUsingDELETE({userName: this.email,territoryId: this.territoryId}).subscribe(
         () =>{
           this.dialogRef.close(true);
-          this._snackBar.open("Manager "+this.email+" eliminato", "close");
+          this._snackBar.open("Manager "+this.email+" eliminato", "close",
+          {
+            duration: 1500
+          });
         },
         (error) =>{
           if(!!error.error && !!error.error.ex){

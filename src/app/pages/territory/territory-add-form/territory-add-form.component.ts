@@ -215,7 +215,10 @@ export class TerritoryAddFormComponent implements OnInit {
               this.onNoClick("", this.terrotyCreated);
               this._snackBar.open(
                 this.translate.instant("savedData"),
-                this.translate.instant("close")
+                this.translate.instant("close"),
+                {
+                  duration: 1500
+                }
               );
             },
             (error) => {
@@ -240,7 +243,10 @@ export class TerritoryAddFormComponent implements OnInit {
               this.onNoClick("", this.terrotyCreated);
               this._snackBar.open(
                 this.translate.instant("updatedData"),
-                this.translate.instant("close")
+                this.translate.instant("close"),
+                {
+                  duration: 1500
+                }
               );
             },
             (error) => {
@@ -258,6 +264,8 @@ export class TerritoryAddFormComponent implements OnInit {
     }else{
       if(!this.validatingForm.get('name'+LANGUAGE_DEFAULT).valid){
         this.errorMsgValidation = this.translate.instant("selectDefaultLanuguageForName") + LANGUAGE_DEFAULT;
+      }else{
+        this.errorMsgValidation = this.translate.instant("fillAllfields");
       }
     }
   }

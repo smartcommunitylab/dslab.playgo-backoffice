@@ -37,7 +37,10 @@ export class ManagerDeleteComponent implements OnInit {
         }).subscribe(
         () =>{
           this.dialogRef.close(true);
-          this._snackBar.open("Manager "+this.email+" eliminato", "close");
+          this._snackBar.open("Manager "+this.email+" eliminato", "close",
+          {
+            duration: 1500
+          });
         },
           (error) =>{
             if(!!error.error && !!error.error.ex){

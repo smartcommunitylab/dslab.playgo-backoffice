@@ -35,7 +35,10 @@ export class TerritoryDeleteComponent implements OnInit {
           this.onNoClick("", this.territoryId);
           this._snackBar.open(
             this.translate.instant("deletedTerritory"),
-            this.translate.instant("close")
+            this.translate.instant("close"),
+            {
+              duration: 1500
+            }
           );
         },
         (error) => {

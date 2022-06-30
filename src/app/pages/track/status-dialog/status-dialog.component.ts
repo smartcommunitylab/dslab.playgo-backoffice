@@ -7,6 +7,7 @@ import {
 } from "@angular/forms";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { TranslateService } from "@ngx-translate/core";
 import { ConsoleControllerService } from "src/app/core/api/generated/controllers/consoleController.service";
 import { TerritoryControllerService } from "src/app/core/api/generated/controllers/territoryController.service";
 import { TrackedInstanceConsoleClass } from "src/app/shared/classes/PageTrackedInstance-class";
@@ -25,6 +26,7 @@ export class StatusDialogComponent implements OnInit {
   listErrors=LIST_ERROR_STATES_TRACK;
   listMeans=[];
   constructor(private formBuilder: FormBuilder,
+    private translate: TranslateService,
     private consoleService: ConsoleControllerService,
     private territoryService: TerritoryControllerService,
     public dialogRef: MatDialogRef<StatusDialogComponent>,
@@ -78,7 +80,10 @@ export class StatusDialogComponent implements OnInit {
 
       ).subscribe(()=>{
         this.onNoClick('');
-        this._snackBar.open("Dati modificati", "close");
+        this._snackBar.open(this.translate.instant('updatedData'), "close",
+        {
+          duration: 1500
+        });
       },
       (error)=>{
         this.errorMsgValidation = "There was an error: " + error + "\n";

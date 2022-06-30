@@ -5,7 +5,7 @@ import {
   FormGroup,
   Validators,
 } from "@angular/forms";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MapPoint } from "src/app/shared/classes/map-point";
 import { TerritoryClass } from "src/app/shared/classes/territory-class";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -48,6 +48,7 @@ import {
 import { CampaignDetail } from "src/app/core/api/generated/model/campaignDetail";
 import { Image } from "src/app/core/api/generated/model/image";
 import { DEFAULT_LANGUAGE, TranslateService } from "@ngx-translate/core";
+import { ConfirmCancelComponent } from "./confirm-cancel/confirm-cancel.component";
 
 const moment = _moment;
 
@@ -124,6 +125,7 @@ export class CampaignAddFormComponent implements OnInit {
 
   constructor(
     private territoryService: TerritoryControllerService,
+    private confirmCancel: MatDialog,
     private translate: TranslateService,
     private campaignService: CampaignControllerService,
     private formBuilder: FormBuilder,
@@ -271,7 +273,10 @@ export class CampaignAddFormComponent implements OnInit {
                 this.onNoClick("", this.campaignCreated);
                 this._snackBar.open(
                   this.translate.instant("savedData"),
-                  this.translate.instant("close")
+                  this.translate.instant("close"),
+                  {
+                    duration: 1500
+                  }
                 );
               }
             },
@@ -305,7 +310,10 @@ export class CampaignAddFormComponent implements OnInit {
                 this.onNoClick("", this.campaignCreated);
                 this._snackBar.open(
                   this.translate.instant("savedData"),
-                  this.translate.instant("close")
+                  this.translate.instant("close"),
+                  {
+                    duration: 1500
+                  }
                 );
               }
             },
@@ -343,7 +351,10 @@ export class CampaignAddFormComponent implements OnInit {
           this.onNoClick("", this.campaignCreated);
           this._snackBar.open(
             this.translate.instant("savedData"),
-            this.translate.instant("close")
+            this.translate.instant("close"),
+            {
+              duration: 1500
+            }
           );
         },
         (error) => {
@@ -366,7 +377,10 @@ export class CampaignAddFormComponent implements OnInit {
           this.onNoClick("", this.campaignCreated);
           this._snackBar.open(
             this.translate.instant("savedData"),
-            this.translate.instant("close")
+            this.translate.instant("close"),
+            {
+              duration: 1500
+            }
           );
         },
         (error) => {
@@ -606,6 +620,30 @@ export class CampaignAddFormComponent implements OnInit {
     return false;
   }
 
+  cancelGoBack(event:any){
+    if(this.hasBeenModified()){
+      const dialogRef = this.confirmCancel.open(ConfirmCancelComponent, {
+        width: "40%",
+        //height: "150px",
+      });
+      let instance = dialogRef.componentInstance;
+  
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result !== undefined) {
+          if(result){
+            this.onNoClick('',undefined);
+          }
+        }
+      });
+    }else{
+      this.onNoClick('',undefined);
+    }
+  }
+
+  hasBeenModified():boolean{
+    return true;
+  }
+
   setDetails(details: {
     [key: string]: CampaignDetail[];
   }): DetailsForAddModifyModule[] {
@@ -666,7 +704,7 @@ export class CampaignAddFormComponent implements OnInit {
 
   addDetail() {
     var item = new DetailsForAddModifyModule();
-    item.collapsed = true;
+    item.collapsed = false;
     item.created = true;
     item.detail = new CampaignDetailClass();
     item.form = {};
@@ -744,4 +782,13 @@ export class CampaignAddFormComponent implements OnInit {
   selectedLanguageClick(event: any) {
     this.languageSelected = event;
   }
+
+  transformActiveBoolean(val:boolean): string{
+    if(val){
+      return 'active';
+    }else{
+      return 'inactive';
+    }
+  }
+
 }

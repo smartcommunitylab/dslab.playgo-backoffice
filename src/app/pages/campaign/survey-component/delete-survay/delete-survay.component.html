@@ -2,8 +2,15 @@
     <h1>{{'confirmDelete' |translate}} - {{"survay" | translate}}: {{surveyId}}</h1>
     <h2 *ngIf="!!msgError" class="red-text"> {{ msgError | translate}}: {{recivedError}} </h2>
     <h6 *ngIf="!!recivedError">{{recivedError}}</h6>
-        <div style="height:100%; margin-bottom: 10px;">
-            <button class="confirm-delete" mat-raised-button (click)="delete()">{{'delete' | translate}}</button>
-            <button class="right-button" mat-flat-button (click)="onNoClick($event)">{{'cancel' |translate}}</button>
-        </div>
+    <div style="height:100%; margin-bottom: 10px;">
+        <button type="button" mat-flat-button class="confirm-delete" (click)="delete()">
+            <mat-icon>
+                <span class="material-symbols-outlined">
+                    delete
+                </span>
+            </mat-icon>
+            {{'delete' | translate}}
+        </button>
+        <button class="right-button" mat-flat-button (click)="onNoClick($event)">{{'cancel' |translate}}</button>
+    </div>
 </div>
