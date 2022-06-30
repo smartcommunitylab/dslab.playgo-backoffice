@@ -90,3 +90,20 @@
 .title-right{
   margin-top: 20px;
 }
+
+.header-div{
+  position: relative; top: -28px;
+  display: inline-block;
+  width: 88%;
+}
+
+.close-div{
+  display: inline-block;
+  width: 10%;
+  height: 50px;
+}
+
+.right-button{
+  position: relative;
+  float:right;
+}

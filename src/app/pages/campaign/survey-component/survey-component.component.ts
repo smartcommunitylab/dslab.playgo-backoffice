@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { CampaignControllerService } from 'src/app/core/api/generated/controllers/campaignController.service';
 import { AssignSurvayComponent } from './assign-survay/assign-survay.component';
@@ -25,6 +25,7 @@ export class SurveyComponentComponent implements OnInit {
   validatingForm: FormGroup;
 
   constructor(
+    public dialogRef: MatDialogRef<SurveyComponentComponent>,
     private formBuilder: FormBuilder,
     private survayService: CampaignControllerService,
     private dialogAssign: MatDialog,
@@ -42,6 +43,10 @@ export class SurveyComponentComponent implements OnInit {
       }
     }
     this.setTableData();
+  }
+
+  onNoClick(event: any): void {
+    this.dialogRef.close();
   }
 
   deleteSurvey(element: any){

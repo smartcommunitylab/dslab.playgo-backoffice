@@ -1,6 +1,15 @@
 <div class="header-bar-stick">
-    <div>
-        <h1>{{ 'survey'| translate}}</h1>
+    <div class="full-width" style="height: 50px">
+        <h1 class="header-div">{{ 'survey'| translate}}</h1>
+        <div class="close-div">
+            <button class="right-button" type="button" mat-icon-button (click)="onNoClick($event)">
+                <mat-icon>
+                    <span class="material-symbols-outlined">
+                        close
+                    </span>
+                </mat-icon>
+            </button>
+        </div>
     </div>
     <form [formGroup]="validatingForm">
         <div class="in-line-forms" style="margin-top: 20px;">
