@@ -782,4 +782,13 @@ export class CampaignAddFormComponent implements OnInit {
   selectedLanguageClick(event: any) {
     this.languageSelected = event;
   }
+
+  transformActiveBoolean(val:boolean): string{
+    if(val){
+      return 'active';
+    }else{
+      return 'inactive';
+    }
+  }
+
 }

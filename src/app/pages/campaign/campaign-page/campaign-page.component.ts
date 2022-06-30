@@ -6,7 +6,7 @@ import { CampaignAddFormComponent } from "../campaign-add-form/campaign-add-form
 import { CampaignDeleteComponent } from "../campaign-delete/campaign-delete.component";
 import { CampaignClass, ImageClass, ValidationData,  } from "src/app/shared/classes/campaing-class";
 import { TerritoryClass } from "src/app/shared/classes/territory-class";
-import { BASE64_SRC_IMG, CONST_LANGUAGES_SUPPORTED, LANGUAGE_DEFAULT, PREFIX_SRC_IMG, TERRITORY_ID_LOCAL_STORAGE_KEY } from "src/app/shared/constants/constants";
+import { BASE64_SRC_IMG, CONST_LANGUAGES_SUPPORTED, DEFAULT_SURVEY_KEY, LANGUAGE_DEFAULT, PREFIX_SRC_IMG, TERRITORY_ID_LOCAL_STORAGE_KEY } from "src/app/shared/constants/constants";
 import {MatSort, Sort} from '@angular/material/sort';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import { ManagerHandlerComponent } from "../manager-handler/manager-handler.component";
@@ -211,6 +211,7 @@ export class CampaignPageComponent implements OnInit {
     });
     let instance = dialogRef.componentInstance;
     instance.name = this.selectedCampaign.name[this.translate.currentLang];
+    instance.defaultSurvey = !!this.selectedCampaign.specificData && !!this.selectedCampaign.specificData[DEFAULT_SURVEY_KEY] ? this.selectedCampaign.specificData[DEFAULT_SURVEY_KEY]  : undefined;
     instance.surveysMap = this.selectedCampaign.surveys;
     instance.campaignId = this.selectedCampaign.campaignId;
     dialogRef.afterClosed().subscribe((result) => {
