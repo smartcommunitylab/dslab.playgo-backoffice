@@ -39,3 +39,4 @@ export const CONST_LANGUAGES_SUPPORTED = ['it','en'];
 export const LANGUAGE_DEFAULT = 'it'; 
 export const LANGUAGE_LOCAL_STORAGE = 'language';
 export const VALUE_EMPTY_SELECT_LIST = '-';
+export const DEFAULT_SURVEY_KEY = 'defaultSurvay';
