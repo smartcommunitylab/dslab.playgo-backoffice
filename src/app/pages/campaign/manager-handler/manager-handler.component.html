@@ -45,7 +45,7 @@
         <ng-container matColumnDef="role">
             <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by role"> 
                 {{ 'role'| translate}} </th>
-            <td mat-cell *matCellDef="let element"> {{element.manager.role}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.manager.role| translate}} </td>
         </ng-container>
 
         <ng-container matColumnDef="delete">
