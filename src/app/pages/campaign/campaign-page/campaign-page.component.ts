@@ -101,7 +101,7 @@ export class CampaignPageComponent implements OnInit {
     this.highlightCampaign.campaignId = "";
     this.selectedRowIndex = row.campaignId;
     this.selectedCampaign = new CampaignClass();
-    this.selectedCampaign = this.setClassWithourError(row);
+    this.selectedCampaign = row;//this.setClassWithourError(row);
   }
 
   addCampaign() {
@@ -211,8 +211,8 @@ export class CampaignPageComponent implements OnInit {
     });
     let instance = dialogRef.componentInstance;
     instance.name = this.selectedCampaign.name[this.translate.currentLang];
-    instance.defaultSurvey = !!this.selectedCampaign.specificData && !!this.selectedCampaign.specificData[DEFAULT_SURVEY_KEY] ? this.selectedCampaign.specificData[DEFAULT_SURVEY_KEY]  : undefined;
-    instance.surveysMap = this.selectedCampaign.surveys;
+    // instance.defaultSurvey = !!this.selectedCampaign.specificData && !!this.selectedCampaign.specificData[DEFAULT_SURVEY_KEY] ? this.selectedCampaign.specificData[DEFAULT_SURVEY_KEY]  : undefined;
+    // instance.surveysMap = this.selectedCampaign.surveys;
     instance.campaignId = this.selectedCampaign.campaignId;
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== undefined) {

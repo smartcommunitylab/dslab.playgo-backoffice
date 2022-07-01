@@ -29,6 +29,7 @@ import {MatTreeModule} from '@angular/material/tree';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { RoundPipe } from "./services/decimal.pipe";
 import {MatTabsModule} from '@angular/material/tabs';
+import { SnackbarSavedModule } from "./components/snackbar-saved/snakbar-save.module";
 
 @NgModule({
   imports: [
@@ -59,6 +60,7 @@ import {MatTabsModule} from '@angular/material/tabs';
     RichTextEditorModule,
     DropDownCardInfoModule,
     MatTabsModule,
+    SnackbarSavedModule,
 
   ],
   declarations: [ManagerHandlerTerritoryComponent,ManagerDeleteTerritoryComponent,RoundPipe],
@@ -92,6 +94,7 @@ import {MatTabsModule} from '@angular/material/tabs';
     DropDownCardInfoModule,
     RoundPipe,
     MatTabsModule,
+    SnackbarSavedModule
   ],
 })
 export class SharedModule {}

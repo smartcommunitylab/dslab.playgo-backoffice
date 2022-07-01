@@ -143,7 +143,7 @@ export class HandleUsersComponent implements OnInit {
     this.clipboard.copy(element);
     this._snackBar.openFromComponent(CopiedComponent, {
       panelClass: 'snackBar-small',
-      duration: 60000,
+      duration: 4999,
     });
   }
 

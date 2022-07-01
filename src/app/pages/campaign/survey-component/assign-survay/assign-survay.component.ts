@@ -7,6 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { SurveyControllerService } from 'src/app/core/api/generated/controllers/surveyController.service';
 import { SurveyRequest } from 'src/app/core/api/generated/model/surveyRequest';
+import { SnackbarSavedComponent } from 'src/app/shared/components/snackbar-saved/snackbar-saved.component';
 import { MY_DATE_FORMATS, PRE_TEXT_JSON_ASSIGN_SURVAY } from 'src/app/shared/constants/constants';
 
 @Component({
@@ -81,10 +82,12 @@ export class AssignSurvayComponent implements OnInit {
         playerIds: players,
       }).subscribe(()=>{
         this.onNoClick('',this.surveyId);
-        this._snackBar.open(
-          this.translate.instant("assigned"),
-          this.translate.instant("close")
-        );
+        const text = 'assigned';
+        this._snackBar.openFromComponent(SnackbarSavedComponent,
+          {
+           data:{displayText: text},
+           duration: 4999
+         });
       },(error)=>{
         this.msgError = this.translate.instant('errorOnAssign') +': ' +  (error? error.error? error.error.ex : 'error' : 'error');
       });
