@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { CampaignControllerService } from 'src/app/core/api/generated/controllers/campaignController.service';
+import { SnackbarSavedComponent } from 'src/app/shared/components/snackbar-saved/snackbar-saved.component';
 
 @Component({
   selector: 'app-campaign-delete',
@@ -31,12 +32,11 @@ export class CampaignDeleteComponent implements OnInit {
   delete(){
       this.campaignService.deleteCampaignUsingDELETE(this.campaignId).subscribe(()=>{
         this.onNoClick('',this.campaignId);
-        this._snackBar.open(
-          this.translate.instant("deletedCampaign"),
-          this.translate.instant("close"),
+        this._snackBar.openFromComponent(SnackbarSavedComponent,
           {
-            duration: 1500
-          });
+           data:{displayText: 'deletedCampaign'},
+           duration: 4999
+         });
       }, 
       (error) =>{
         this.msgError = 'cannotDeleteCampaign';

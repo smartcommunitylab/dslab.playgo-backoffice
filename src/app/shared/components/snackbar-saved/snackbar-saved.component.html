@@ -1,0 +1,18 @@
+<mat-grid-list [cols]="4" rowHeight="30px">
+    <mat-grid-tile [colspan]="3">
+        <h3 class="position">{{data.displayText | translate}}</h3>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="1">
+        <button  mat-icon-button (click)="close()">
+            <mat-icon>
+                <span class="material-symbols-outlined">
+                    close
+                    </span>
+            </mat-icon>
+        </button>
+    </mat-grid-tile>
+</mat-grid-list>
+
+
+
+

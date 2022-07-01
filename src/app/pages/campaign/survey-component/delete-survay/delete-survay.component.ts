@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { CampaignControllerService } from 'src/app/core/api/generated/controllers/campaignController.service';
+import { SnackbarSavedComponent } from 'src/app/shared/components/snackbar-saved/snackbar-saved.component';
 
 @Component({
   selector: 'app-delete-survay',
@@ -36,13 +37,12 @@ export class DeleteSurvayComponent implements OnInit {
       name: this.surveyId
     }).subscribe(()=>{
       this.onNoClick('',this.surveyId);
-      this._snackBar.open(
-        this.translate.instant("deleted"),
-        this.translate.instant("close"),
+      const text = 'deleted';
+      this._snackBar.openFromComponent(SnackbarSavedComponent,
         {
-          duration: 1500
-        }
-      );
+         data:{displayText: text},
+         duration: 4999
+       });
     },(error)=>{
       this.msgError = error ? (error.error ? error.error.ex : error) : 'error';
     });

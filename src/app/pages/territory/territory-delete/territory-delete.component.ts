@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { TerritoryControllerService } from "src/app/core/api/generated/controllers/territoryController.service";
 import { TranslateService } from "@ngx-translate/core";
+import { SnackbarSavedComponent } from "src/app/shared/components/snackbar-saved/snackbar-saved.component";
 
 @Component({
   selector: "app-territory-delete",
@@ -33,13 +34,11 @@ export class TerritoryDeleteComponent implements OnInit {
       .subscribe(
         () => {
           this.onNoClick("", this.territoryId);
-          this._snackBar.open(
-            this.translate.instant("deletedTerritory"),
-            this.translate.instant("close"),
+          this._snackBar.openFromComponent(SnackbarSavedComponent,
             {
-              duration: 1500
-            }
-          );
+             data:{displayText: "deletedTerritory"},
+             duration: 4999
+           });
         },
         (error) => {
           //console.log("ciaoo", error);
@@ -49,7 +48,6 @@ export class TerritoryDeleteComponent implements OnInit {
           } else {
             this.error = error;
           }
-          // this._snackBar.open("Territorio cannot be delited because:"+ error.error.ex, "close");
         }
       );
   }

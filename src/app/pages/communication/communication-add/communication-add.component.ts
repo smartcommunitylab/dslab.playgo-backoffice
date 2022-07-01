@@ -14,6 +14,7 @@ import { CampaignControllerService } from "src/app/core/api/generated/controller
 import { NotificationControllerService } from "src/app/core/api/generated/controllers/notificationController.service";
 import { Announcement } from "src/app/core/api/generated/model/announcement";
 import { AnnouncementClass } from "src/app/shared/classes/announcment-class";
+import { SnackbarSavedComponent } from "src/app/shared/components/snackbar-saved/snackbar-saved.component";
 import { CHANNELS_COMMUNICATION, MY_DATE_FORMATS } from "src/app/shared/constants/constants";
 
 @Component({
@@ -126,13 +127,11 @@ export class CommunicationAddComponent implements OnInit {
         .subscribe(
           (res) => {
             this.onNoClick("", body);
-            this._snackBar.open(
-              this.translate.instant("savedData"),
-              this.translate.instant("close"),
+            this._snackBar.openFromComponent(SnackbarSavedComponent,
               {
-                duration: 1500
-              }
-            );
+               data:{displayText: "savedData"},
+               duration: 4999
+             });
           },
           (error) => {
             console.error(error);

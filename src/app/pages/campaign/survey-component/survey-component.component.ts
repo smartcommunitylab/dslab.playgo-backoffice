@@ -77,25 +77,29 @@ export class SurveyComponentComponent implements OnInit {
       bonusPoint: new FormControl("", [Validators.required]),
       bonusScore: new FormControl("", [Validators.required]),
     });
-    if (this.surveysMap) {
-      const keys = Object.keys(this.surveysMap);
-      for (let item of keys) {
+    this.campaignService.getCampaignUsingGET(this.campaignId).subscribe((result)=>{
+      this.surveysMap = result.surveys;
+      this.defaultSurvey = result.specificData[DEFAULT_SURVEY_KEY]; 
+      if (this.surveysMap) {
+        const keys = Object.keys(this.surveysMap);
+        for (let item of keys) {
+          this.surveys.push({
+            surveyId: item,
+            link: this.surveysMap[item],
+            default: false,
+          });
+        }
+      }
+      if (!!this.defaultSurvey) {
         this.surveys.push({
-          surveyId: item,
-          link: this.surveysMap[item],
-          default: false,
+          surveyId: this.defaultSurvey.surveyName,
+          link: this.defaultSurvey.surveyLink,
+          default: true,
         });
       }
-    }
-    if (!!this.defaultSurvey) {
-      this.surveys.push({
-        surveyId: this.defaultSurvey.surveyName,
-        link: this.defaultSurvey.surveyLink,
-        default: true,
-      });
-    }
+      this.setTableData();
+    });
 
-    this.setTableData();
   }
 
   onNoClick(event: any): void {
@@ -147,33 +151,51 @@ export class SurveyComponentComponent implements OnInit {
           this.validationDefault.markAllAsTouched();
           return;
         } else {
-          var body: SurveyRequest = {
-            data: {
-              bonusPointType: this.validationDefault.get("bonusPoint").value,
-              bonusScore: this.validationDefault.get("bonusScore").value,
-            },
-            end: this.validationDefault.get("dateTo").value.valueOf(),
-            start: this.validationDefault.get("dateFrom").value.valueOf(),
-            surveyLink: this.validatingForm.get("link").value,
-            surveyName: this.validatingForm.get("surveyId").value,
-          };
-          this.campaignService
-            .getCampaignUsingGET(this.campaignId)
-            .subscribe((result) => {
-              result.specificData = {};
-              result.specificData[this.defaultKey] = body;
-              this.campaignService
-                .updateCampaignUsingPUT(result)
-                .subscribe(() => {
-                  this.newItem = {
-                    surveyId: body.surveyName,
-                    link: body.surveyLink,
-                    default: true,
-                  };
-                  this.surveys.push(this.newItem);
-                  this.setTableData();
-                });
-            });
+          const start = this.validationDefault.get("dateFrom").value ? this.validationDefault.get("dateFrom").value.valueOf() : undefined;
+          const end = this.validationDefault.get("dateTo").value ? this.validationDefault.get("dateTo").value.valueOf() : undefined;
+          if(this.validDates(start,end)){
+            var body: SurveyRequest = {
+              data: {
+                bonusPointType: this.validationDefault.get("bonusPoint").value,
+                bonusScore: this.validationDefault.get("bonusScore").value,
+              },
+              end: end,
+              start: start,
+              surveyLink: this.validatingForm.get("link").value,
+              surveyName: this.validatingForm.get("surveyId").value,
+            };
+            this.campaignService
+              .getCampaignUsingGET(this.campaignId)
+              .subscribe((result) => {
+                result.specificData = {};
+                result.specificData[this.defaultKey] = body;
+                this.campaignService
+                  .updateCampaignUsingPUT(result)
+                  .subscribe(() => {
+                    this.newItem = {
+                      surveyId: body.surveyName,
+                      link: body.surveyLink,
+                      default: true,
+                    };
+                    let res = [];
+                    for(let i=0;i<this.surveys.length;i++){
+                      //remove from the survays the old default one 
+                      if(!this.surveys[i].default){
+                        res.push(this.surveys[i]);
+                      }
+                    }
+                    this.surveys = res;
+                    this.surveys.push(this.newItem);
+                    this.setTableData();
+                  },
+                  (error)=>{
+                    this.msgError = (error.error.ex ? error.error.ex : this.translate.instant('errorNotProvidedByresponse'));
+                  });
+              });
+          }else{
+            this.msgError = this.translate.instant("dateNotValid");
+          }
+
         }
       } else {
         const body = {
@@ -212,4 +234,12 @@ export class SurveyComponentComponent implements OnInit {
     l.reverse();
     this.dataSource = new MatTableDataSource<any>(l);
   }
+
+  validDates(start: number, end: number) {
+    if (start < end) {
+      return true;
+    }
+    return false;
+  }
+
 }

@@ -22,6 +22,7 @@ import {
 import { TerritoryControllerService } from "src/app/core/api/generated/controllers/territoryController.service";
 import { DEFAULT_LANGUAGE, TranslateService } from "@ngx-translate/core";
 import { CONST_LANGUAGES_SUPPORTED, LANGUAGE_DEFAULT } from "src/app/shared/constants/constants";
+import { SnackbarSavedComponent } from "src/app/shared/components/snackbar-saved/snackbar-saved.component";
 
 @Component({
   selector: "app-territory-add-form",
@@ -213,13 +214,11 @@ export class TerritoryAddFormComponent implements OnInit {
           .subscribe(
             () => {
               this.onNoClick("", this.terrotyCreated);
-              this._snackBar.open(
-                this.translate.instant("savedData"),
-                this.translate.instant("close"),
-                {
-                  duration: 1500
-                }
-              );
+            this._snackBar.openFromComponent(SnackbarSavedComponent,
+              {
+               data:{displayText: "savedData"},
+               duration: 4999
+             });
             },
             (error) => {
               this.errorMsgValidation =
@@ -241,13 +240,11 @@ export class TerritoryAddFormComponent implements OnInit {
           .subscribe(
             () => {
               this.onNoClick("", this.terrotyCreated);
-              this._snackBar.open(
-                this.translate.instant("updatedData"),
-                this.translate.instant("close"),
+              this._snackBar.openFromComponent(SnackbarSavedComponent,
                 {
-                  duration: 1500
-                }
-              );
+                 data:{displayText: "updatedData"},
+                 duration: 4999
+               });
             },
             (error) => {
               this.errorMsgValidation =

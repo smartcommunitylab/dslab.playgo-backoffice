@@ -49,6 +49,7 @@ import { CampaignDetail } from "src/app/core/api/generated/model/campaignDetail"
 import { Image } from "src/app/core/api/generated/model/image";
 import { DEFAULT_LANGUAGE, TranslateService } from "@ngx-translate/core";
 import { ConfirmCancelComponent } from "./confirm-cancel/confirm-cancel.component";
+import { SnackbarSavedComponent } from "src/app/shared/components/snackbar-saved/snackbar-saved.component";
 
 const moment = _moment;
 
@@ -271,13 +272,11 @@ export class CampaignAddFormComponent implements OnInit {
               } else {
                 // no upload for logo and banner
                 this.onNoClick("", this.campaignCreated);
-                this._snackBar.open(
-                  this.translate.instant("savedData"),
-                  this.translate.instant("close"),
-                  {
-                    duration: 1500
-                  }
-                );
+                this._snackBar.openFromComponent(SnackbarSavedComponent,
+                 {
+                  data:{displayText: 'savedData'},
+                  duration: 4999
+                });
               }
             },
             (error) => {
@@ -308,13 +307,11 @@ export class CampaignAddFormComponent implements OnInit {
               } else {
                 // no upload for logo and banner
                 this.onNoClick("", this.campaignCreated);
-                this._snackBar.open(
-                  this.translate.instant("savedData"),
-                  this.translate.instant("close"),
+                this._snackBar.openFromComponent(SnackbarSavedComponent,
                   {
-                    duration: 1500
-                  }
-                );
+                   data:{displayText: 'savedData'},
+                   duration: 4999
+                 });
               }
             },
             (error) => {
@@ -349,13 +346,11 @@ export class CampaignAddFormComponent implements OnInit {
       .subscribe(
         () => {
           this.onNoClick("", this.campaignCreated);
-          this._snackBar.open(
-            this.translate.instant("savedData"),
-            this.translate.instant("close"),
+          this._snackBar.openFromComponent(SnackbarSavedComponent,
             {
-              duration: 1500
-            }
-          );
+             data:{displayText: 'savedData'},
+             duration: 4999
+           });
         },
         (error) => {
           this.errorMsgValidation =
@@ -375,13 +370,11 @@ export class CampaignAddFormComponent implements OnInit {
       .subscribe(
         () => {
           this.onNoClick("", this.campaignCreated);
-          this._snackBar.open(
-            this.translate.instant("savedData"),
-            this.translate.instant("close"),
+          this._snackBar.openFromComponent(SnackbarSavedComponent,
             {
-              duration: 1500
-            }
-          );
+             data:{displayText: 'savedData'},
+             duration: 4999
+           });
         },
         (error) => {
           this.errorMsgValidation =

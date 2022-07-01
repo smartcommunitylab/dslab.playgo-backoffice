@@ -11,6 +11,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { ConsoleControllerService } from "src/app/core/api/generated/controllers/consoleController.service";
 import { TerritoryControllerService } from "src/app/core/api/generated/controllers/territoryController.service";
 import { TrackedInstanceConsoleClass } from "src/app/shared/classes/PageTrackedInstance-class";
+import { SnackbarSavedComponent } from "src/app/shared/components/snackbar-saved/snackbar-saved.component";
 import { LIST_ERROR_STATES_TRACK, LIST_STATES_TRACK } from "src/app/shared/constants/constants";
 import { RoundPipe } from "src/app/shared/services/decimal.pipe";
 @Component({
@@ -80,10 +81,11 @@ export class StatusDialogComponent implements OnInit {
 
       ).subscribe(()=>{
         this.onNoClick('');
-        this._snackBar.open(this.translate.instant('updatedData'), "close",
-        {
-          duration: 1500
-        });
+        this._snackBar.openFromComponent(SnackbarSavedComponent,
+          {
+           data:{displayText: "updatedData"},
+           duration: 4999
+         });
       },
       (error)=>{
         this.errorMsgValidation = "There was an error: " + error + "\n";
