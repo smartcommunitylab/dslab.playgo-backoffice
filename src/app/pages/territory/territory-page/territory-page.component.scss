@@ -1,14 +1,13 @@
 .add-button{
   border-radius: 50px;
   height: 100%;
-  width: 8%;
+  min-width: 8%;
 }
 
 .add-button-div{
   margin: 1%;
   height: 50px;
 }
-
 
 .right-button{
   float:right;
@@ -28,13 +27,26 @@
 
 
 .table{
-  width: 60%;
-  height: 100%;
-  float: left;
+  min-width:550px;
+  width: 51%;
+  float:left;
+  margin-right:1%;
 }
 
 .card-territory{
-  width: 40%;
+  min-width:550px;
+  width: 48%;
+  float: left;
+}
+
+.wrapper{
+  width:100vw;
+  height:100vh;
+}
+
+.searchBar{
+  width: 80%;
+  min-height: 54px;
   height: 100%;
-  float: right;
+  float:right;
 }

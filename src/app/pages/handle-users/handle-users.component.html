@@ -1,18 +1,17 @@
 <div class="full-height" style="margin-top: 20px">
     <div class="full-dimension">
-        <mat-card class="card" style="margin-left: 10px;">
-            <mat-grid-list cols="3" rowHeight="6:1">
-                <mat-grid-tile style="width: 150px;">
+        <mat-card class="card">
+            <mat-grid-list cols="3" rowHeight="60px">
+                <mat-grid-tile style="width: 150px;" [colspan]="1">
                     <div class="full-dimension" style="text-align: left;">
                         <mat-card-title>
                             {{'users' | translate}}
                         </mat-card-title>
                     </div>
                 </mat-grid-tile>
-                <mat-grid-tile></mat-grid-tile>
-                <mat-grid-tile>
-                    <form class="example-form full-dimension">
-                        <mat-form-field class="full-width" appearance="fill">
+                <mat-grid-tile [colspan]="2">
+                    <form class="example-form full-width">
+                        <mat-form-field class="searchBar" appearance="fill">
                             <input class="full-width" type="text" matInput placeholder="{{'search' | translate}}"
                                 [(ngModel)]="searchString" (keyup)="searchUser($event)">
                             <mat-icon matSuffix>search</mat-icon>
