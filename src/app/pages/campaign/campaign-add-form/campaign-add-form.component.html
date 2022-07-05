@@ -42,6 +42,26 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
+                <mat-grid-list [cols]="3" rowHeight="50px" style="margin-bottom: 10px">
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                            <mat-label>{{'dailyLimit' | translate}}</mat-label>
+                            <input type="number" matInput id="dailyLimit" formControlName="dailyLimit">
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                            <mat-label>{{'weeklyLimit' | translate}}</mat-label>
+                            <input type="number" matInput id="weeklyLimit" formControlName="weeklyLimit">
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="grid-tile-limit">
+                            <mat-label>{{'monthlyLimit' | translate}}</mat-label>
+                            <input type="number" matInput id="monthlyLimit" formControlName="monthlyLimit">
+                        </mat-form-field>
+                    </mat-grid-tile>
+                </mat-grid-list>
                 <div class="in-line-forms"
                     *ngIf="!!validatingForm.get('type').value && validatingForm.get('type').value!=='company'">
                     <mat-form-field appearance="fill" class="input-half-left">
@@ -233,6 +253,26 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
+                <mat-grid-list [cols]="3" rowHeight="50px" style="margin-bottom: 10px">
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                            <mat-label>{{'dailyLimit' | translate}}</mat-label>
+                            <input type="number" matInput id="dailyLimit" formControlName="dailyLimit">
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                            <mat-label>{{'weeklyLimit' | translate}}</mat-label>
+                            <input type="number" matInput id="weeklyLimit" formControlName="weeklyLimit">
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="grid-tile-limit">
+                            <mat-label>{{'monthlyLimit' | translate}}</mat-label>
+                            <input type="number" matInput id="monthlyLimit" formControlName="monthlyLimit">
+                        </mat-form-field>
+                    </mat-grid-tile>
+                </mat-grid-list>
                 <div class="in-line-forms"
                     *ngIf="!!validatingForm.get('type').value && validatingForm.get('type').value!=='company'">
                     <mat-form-field appearance="fill" class="input-half-left">
@@ -254,7 +294,7 @@
                     <mat-form-field appearance="fill" class="input-half-right">
                         <mat-label>{{'active' | translate}}</mat-label>
                         <mat-select id="active" formControlName="active">
-                            <mat-option *ngFor="let val of [true,false]" [value]="val">{{val | translate}}</mat-option>
+                            <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val) |translate}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>

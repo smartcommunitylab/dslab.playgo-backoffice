@@ -86,7 +86,8 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
     const dialogRef = this.dialogCreate.open(TerritoryAddFormComponent, {
       width: '80%',
       height: '900px',
-      disableClose: true
+      disableClose: true,
+      panelClass: 'custom-dialog-container' 
     });
     let instance = dialogRef.componentInstance;
     instance.type = 'add';
@@ -137,7 +138,8 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
     const dialogRef = this.dialogUpdate.open(TerritoryAddFormComponent, {
       width: '80%',
       height: '900px',
-      disableClose: true
+      disableClose: true,
+      panelClass: 'custom-dialog-container' 
     });
     let instance = dialogRef.componentInstance;
     instance.type = 'modify';

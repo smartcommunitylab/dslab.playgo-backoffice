@@ -85,3 +85,16 @@ $bv-theme: mat-light-theme($bv-palette-primary, $bv-palette-accent);
     background-color: rgba(255, 0, 0, 0.7);
     color: white;
   }
+
+  .mat-accent .mat-slider-track-fill {
+    background-color: #01579b !important;
+}
+
+.mat-slider-thumb-label {
+    background-color: #01579b !important;
+
+}
+
+.mat-slider-thumb {
+    background-color: #01579b !important;
+}

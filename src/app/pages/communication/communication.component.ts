@@ -76,7 +76,8 @@ export class CommunicationComponent implements OnInit {
     const dialogRef = this.dialogCreate.open(CommunicationAddComponent, {
       width: "80%",
       height: "900px",
-      disableClose: true
+      disableClose: true,
+      panelClass: 'custom-dialog-container' 
     });
     let instance = dialogRef.componentInstance;
     instance.territoryId = this.territoryId;

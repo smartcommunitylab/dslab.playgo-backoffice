@@ -8,19 +8,18 @@
     <div class="full-height">
         <div class="table">
             <mat-card class="card" style="margin-left: 10px;">
-                <mat-grid-list cols="3" rowHeight="6:1">
-                    <mat-grid-tile>
+                <mat-grid-list cols="3" rowHeight="60px">
+                    <mat-grid-tile [colspan]="1">
                         <div class="full-dimension" style="text-align: left;">
                             <mat-card-title>
                                 {{'campaigns' | translate}}
                             </mat-card-title>
                         </div>
                     </mat-grid-tile>
-                    <mat-grid-tile></mat-grid-tile>
-                    <mat-grid-tile>
-                        <form class="example-form">
-                            <mat-form-field class="example-full-width" appearance="fill">
-                                <input type="text" matInput placeholder="{{'search' | translate}}"
+                    <mat-grid-tile [colspan]="2">
+                        <form class="example-form full-width">
+                            <mat-form-field class="example-full-width searchBar" appearance="fill">
+                                <input type="text" matInput placeholder="{{'searchName' | translate}}"
                                     [(ngModel)]="searchString" (keyup)="searchCampaign($event)">
                                 <mat-icon matSuffix>search</mat-icon>
                             </mat-form-field>
@@ -119,10 +118,10 @@
                         </div>
                     </div>
                     <div class="logo">
-                        <img class="img-logo" src="{{ selectedCampaign.logo.url }}">
+                        <img *ngIf="selectedCampaign.logo" class="img-logo" src="{{ selectedCampaign.logo.url }}">
                     </div>
                 </div>
-                <img class="img-banner" src="{{ selectedCampaign.banner.url }}">
+                    <img *ngIf="selectedCampaign.banner" class="img-banner" src="{{ selectedCampaign.banner.url }}">
                 <!-- old <img class="img-logo" src="{{PREFIX_SRC_IMG_C + selectedCampaign.banner.contentType + BASE64_SRC_IMG_C + selectedCampaign.banner.image}}"> -->
                 <mat-card-content>
                     <div style="margin-top: 10px">

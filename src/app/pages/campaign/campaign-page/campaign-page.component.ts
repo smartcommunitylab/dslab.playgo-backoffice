@@ -108,7 +108,8 @@ export class CampaignPageComponent implements OnInit {
     const dialogRef = this.dialogCreate.open(CampaignAddFormComponent, {
       width: "80%",
       height: '820px',
-      disableClose: true
+      disableClose: true,
+      panelClass: 'custom-dialog-container' 
     });
     let instance = dialogRef.componentInstance;
     instance.type = "add";
@@ -149,7 +150,8 @@ export class CampaignPageComponent implements OnInit {
     const dialogRef = this.dialogUpdate.open(CampaignAddFormComponent, {
       width: "80%",
       height: '900px',
-      disableClose: true
+      disableClose: true,
+      panelClass: 'custom-dialog-container' 
     });
     let instance = dialogRef.componentInstance;
     instance.type = "modify";

@@ -1,7 +1,7 @@
 .add-button {
   border-radius: 50px;
   height: 100%;
-  width: 8%;
+  min-width: 8%;
 }
 
 .add-button-div {
@@ -40,27 +40,28 @@
 }
 
 .table{
-  width: 55%;
-  height: 100%;
-  float: left;
+  min-width:750px;
+  width: 51%;
+  float:left;
+  margin-right:1%;
 }
 
 .card-campaign{
-  width: 45%;
-  height: 100%;
-  float: right;
+  min-width:750px;
+  width: 48%;
+  float: left;
 }
 
 .title{
   float: left;
-  width: 65%;
+  width: 50%;
   height: 100%;
 }
 
 .logo{
   float: right;
-  width: 35%;
-  height: 100%;
+  width: 250px;
+  height: 250px;
 }
 
 .header-card{
@@ -74,4 +75,11 @@
 
 .survey-button{
   background-color: rgba(80, 193, 245, 0.7);
+}
+
+.searchBar{
+  width: 80%;
+  min-height: 54px;
+  height: 100%;
+  float:right;
 }

@@ -40,3 +40,6 @@ export const LANGUAGE_DEFAULT = 'it';
 export const LANGUAGE_LOCAL_STORAGE = 'language';
 export const VALUE_EMPTY_SELECT_LIST = '-';
 export const DEFAULT_SURVEY_KEY = 'defaultSurvey';
+export const DAILY_LIMIT = 'dailyLimit';
+export const WEEKLY_LIMIT = 'weeklyLimit';
+export const MONTHLY_LIMIT = 'monthlyLimit';
