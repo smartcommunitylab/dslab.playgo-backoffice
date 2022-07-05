@@ -1,7 +1,7 @@
 .add-button {
     border-radius: 50px;
     height: 100%;
-    width: 8%;
+    min-width: 8%;
   }
   
   .add-button-div {
@@ -25,10 +25,10 @@
     margin-left: 10px;
   }
 
-  .card-campaign{
-    width: 45%;
-    height: 100%;
-    float: right;
+  .card-communication{
+    min-width:650px;
+    width: 48%;
+    float: left;
   }
 
   .header-card{
@@ -42,9 +42,10 @@
   }
     
   .table{
-    width: 54%;
-    height: 100%;
-    float: left;
+    min-width: 650px;
+    width: 51%;
+    float:left;
+    margin-right:1%;
   }
 
   

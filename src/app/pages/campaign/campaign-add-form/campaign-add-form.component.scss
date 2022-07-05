@@ -20,6 +20,7 @@
   position: relative;
   float:right;
   margin-right: 20px;
+  margin-top: 10px;
 }
 
 .top-button{
@@ -74,7 +75,7 @@
 
 .header-bar-stick{
   background-color: white;
-  height:80px;
+  height: 100px;
   position: sticky;
   z-index: 1000;
   top: 0px;
@@ -84,10 +85,20 @@
 .title-left{
   margin-top: 10px;
   float:left; 
-  width: 900px;
+  min-width: 500px;
+  width: 75%;
+  height: 100%;
 }
 
 
 .title-right{
-  margin-top: 20px;
+  width: 25%;
+  height: 100%;
+  float: right;
+}
+
+.grid-tile-limit{
+  width: 100%;
+  display: inline-block;
+
 }

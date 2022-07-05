@@ -20,6 +20,7 @@
 .right-button{
   float:right;
   margin-right: 20px;
+  margin-top: 10px;
 }
 
 .green{
@@ -69,7 +70,7 @@
 
 .header-bar-stick{
   background-color: white;
-  height:80px;
+  height: 80px;
   position: sticky;
   z-index: 1000;
   top: 0px;
@@ -79,10 +80,14 @@
 .title-left{
   margin-top: 10px;
   float:left; 
-  width: 500px;
+  min-width: 500px;
+  width: 75%;
+  height: 100%;
 }
 
 
 .title-right{
-  margin-top: 20px;
+  width: 25%;
+  height: 100%;
+  float: right;
 }

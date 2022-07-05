@@ -17,11 +17,15 @@ import {
 import {
   BASE64_SRC_IMG,
   CONST_LANGUAGES_SUPPORTED,
+  DAILY_LIMIT,
+  DEFAULT_SURVEY_KEY,
   LANGUAGE_DEFAULT,
+  MONTHLY_LIMIT,
   MY_DATE_FORMATS,
   PREFIX_SRC_IMG,
   TERRITORY_ID_LOCAL_STORAGE_KEY,
   TYPE_CAMPAIGN,
+  WEEKLY_LIMIT,
 } from "src/app/shared/constants/constants";
 import {
   trigger,
@@ -174,6 +178,9 @@ export class CampaignAddFormComponent implements OnInit {
         type: new FormControl("", [Validators.required]),
         gameId: new FormControl(""),
         startDayOfWeek: new FormControl("", [Validators.pattern("^[1-7]")]),
+        dailyLimit: new FormControl(""),
+        weeklyLimit: new FormControl(""),
+        monthlyLimit: new FormControl("")
       });
       this.validatingForm.patchValue({
         territoryId: localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY),
@@ -190,6 +197,9 @@ export class CampaignAddFormComponent implements OnInit {
         type: new FormControl("", [Validators.required]),
         gameId: new FormControl(""),
         startDayOfWeek: new FormControl(""),
+        dailyLimit: new FormControl(""),
+        weeklyLimit: new FormControl(""),
+        monthlyLimit: new FormControl("")
       });
       this.validatingForm.patchValue({
         means: this.campaignUpdated.validationData.means,
@@ -199,6 +209,9 @@ export class CampaignAddFormComponent implements OnInit {
         type: this.campaignUpdated.type,
         gameId: this.campaignUpdated.gameId,
         startDayOfWeek: this.campaignUpdated.startDayOfWeek,
+        dailyLimit: this.campaignUpdated.specificData[DAILY_LIMIT] ? this.campaignUpdated.specificData[DAILY_LIMIT] : undefined,
+        weeklyLimit: this.campaignUpdated.specificData[WEEKLY_LIMIT] ? this.campaignUpdated.specificData[WEEKLY_LIMIT] : undefined,
+        monthlyLimit: this.campaignUpdated.specificData[MONTHLY_LIMIT] ? this.campaignUpdated.specificData[MONTHLY_LIMIT] : undefined,
       });
     }
     // language common for add and update
@@ -441,6 +454,15 @@ export class CampaignAddFormComponent implements OnInit {
         this.campaignCreated.startDayOfWeek = 1; //default value
       }
     }
+    this.campaignCreated.specificData = {};
+    if(this.type==='modify'){
+      // make it better copy every map and then override
+      this.campaignCreated.specificData[DEFAULT_SURVEY_KEY] = this.campaignUpdated.specificData[DEFAULT_SURVEY_KEY];
+    }
+
+    this.campaignCreated.specificData[DAILY_LIMIT] = this.validatingForm.get(DAILY_LIMIT) ? this.validatingForm.get(DAILY_LIMIT).value : undefined;
+    this.campaignCreated.specificData[WEEKLY_LIMIT] = this.validatingForm.get(WEEKLY_LIMIT) ? this.validatingForm.get(WEEKLY_LIMIT).value : undefined;
+    this.campaignCreated.specificData[MONTHLY_LIMIT] = this.validatingForm.get(MONTHLY_LIMIT) ? this.validatingForm.get(MONTHLY_LIMIT).value : undefined;  
   }
 
   uploadLogo(event: any): void {

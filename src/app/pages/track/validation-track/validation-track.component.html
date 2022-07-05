@@ -107,12 +107,12 @@
                 <ng-container matColumnDef="tracks">
                     <th mat-header-cell *matHeaderCellDef></th>
                     <td class="margin-20" mat-cell *matCellDef="let element">
-                        <mat-card class="cursor-pointer card-normal full-dimension  " (click)="showTrack(element)"
+                        <mat-card class="cursor-pointer card-normal" (click)="showTrack(element)"
                             [ngClass]="{'highlight': selectedRowIndex === element.trackedInstance.id,
                             'yellow-background' : element.trackedInstance.validationResult.travelValidity==='PENDING',
                             'red-background' : element.trackedInstance.validationResult.travelValidity==='INVALID',
                             'green-background' : element.trackedInstance.validationResult.travelValidity==='VALID'  }">
-                            <mat-grid-list cols="3" rowHeight="15:2">
+                            <mat-grid-list cols="3" rowHeight="40px">
                                 <mat-grid-tile>
                                     <span class="full-width">
                                         {{getDateFromTimeStamp(element.trackedInstance.startTime)}}
@@ -130,7 +130,7 @@
                                     </span>
                                 </mat-grid-tile>
                             </mat-grid-list>
-                            <mat-grid-list cols="1" rowHeight="45:2">
+                            <mat-grid-list cols="1" rowHeight="40px">
                                 <mat-grid-tile>
                                     <span class="left-text full-width">
                                         {{'player' | translate}}: {{element.playerInfo.nickname}}
@@ -165,7 +165,7 @@
                             'red-background' : selectedTrack.trackedInstance.validationResult.travelValidity==='INVALID',
                             'green-background' : selectedTrack.trackedInstance.validationResult.travelValidity==='VALID'  }">
                         <mat-card-content>
-                            <mat-grid-list cols="2" rowHeight="9:2" style="margin: 5px;">
+                            <mat-grid-list cols="2" rowHeight="50px" style="margin: 5px;">
                                 <mat-grid-tile>
                                     <div class="wrapper">
                                         <span class="info-title">
@@ -244,7 +244,7 @@
                     <mat-card class="card-normal devaice-details">
                         <mat-card-title>{{'device' | translate}}</mat-card-title>
                         <mat-card-content *ngIf="!!selectedTrack.trackedInstance.deviceInfo">
-                            <mat-grid-list cols="1" rowHeight="45:2">
+                            <mat-grid-list cols="1" rowHeight="50px">
                                 <mat-grid-tile>
                                     <span class="full-width left-text">
                                         {{deviceInfo.platform}} {{deviceInfo.version}}

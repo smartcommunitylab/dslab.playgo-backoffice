@@ -23,6 +23,7 @@
     border-right: 1px solid rgba(0, 0, 0, 0.075);
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),0 4px 8px 0 rgba(0, 0, 0, 0.2);
     margin-left: 10px;
+    min-width: 900px;
   }
     
 
@@ -53,4 +54,11 @@
   .font-lighter{
     font-weight: 100 !important; // any weight you want your icon to be [bold, normal, 100, 200, ..., 800]
     color: rgba(0, 0, 0, 0.356);
+}
+
+.searchBar{
+  width: 80%;
+  min-height: 54px;
+  height: 100%;
+  float:right;
 }
