@@ -42,7 +42,7 @@ export class CampaignClass implements Campaign {
     name?: { [key: string]: string };
     specificData?: any;
     startDayOfWeek?: number;
-    surveys?: { [key: string]: string };
+    surveys?: Array<SurveyRequest>;
     territoryId?: string;
     type?: Campaign.TypeEnum;
     validationData?: any;

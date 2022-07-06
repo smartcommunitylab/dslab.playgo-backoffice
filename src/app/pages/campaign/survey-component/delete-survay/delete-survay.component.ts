@@ -12,7 +12,7 @@ import { SnackbarSavedComponent } from 'src/app/shared/components/snackbar-saved
 })
 export class DeleteSurvayComponent implements OnInit {
   campaignId:string;
-  surveyId:string;
+  surveyName:string;
   msgError: string;
   recivedError: string;
 
@@ -34,9 +34,9 @@ export class DeleteSurvayComponent implements OnInit {
   delete(){
     this.survayService.deleteSurveyUsingDELETE({
       campaignId: this.campaignId,
-      name: this.surveyId
+      name: this.surveyName
     }).subscribe(()=>{
-      this.onNoClick('',this.surveyId);
+      this.onNoClick('',this.surveyName);
       const text = 'deleted';
       this._snackBar.openFromComponent(SnackbarSavedComponent,
         {

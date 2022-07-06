@@ -15,7 +15,6 @@ import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { MatTableDataSource } from "@angular/material/table";
 import { TranslateService } from "@ngx-translate/core";
 import { CampaignControllerService } from "src/app/core/api/generated/controllers/campaignController.service";
-import { SurveyControllerService } from "src/app/core/api/generated/controllers/surveyController.service";
 import { SurveyRequest } from "src/app/core/api/generated/model/surveyRequest";
 import {
   DEFAULT_SURVEY_KEY,
@@ -40,16 +39,14 @@ import { DeleteSurvayComponent } from "./delete-survay/delete-survay.component";
 })
 export class SurveyComponentComponent implements OnInit {
   defaultKey = DEFAULT_SURVEY_KEY;
+  defaultSurveyCheck = false;
   name: string;
   campaignId: string;
-  defaultSurvey: SurveyRequest;
-  surveysMap: any; //{ [key: string]: string };
-  surveys = [];
+  surveys: SurveyRequest[] = [];
   dataSource: MatTableDataSource<any>;
-  displayedColumns: string[] = ["default", "surveyId", "link", "buttons"];
-  newItem;
+  displayedColumns: string[] = ["defaultSurvey", "surveyName", "surveyLink","type","score", "buttons"];
+  newItem: SurveyRequest;
   msgError: string;
-  validationDefault: FormGroup;
   validatingForm: FormGroup;
 
   constructor(
@@ -64,39 +61,17 @@ export class SurveyComponentComponent implements OnInit {
 
   ngOnInit(): void {
     this.validatingForm = this.formBuilder.group({
-      surveyId: new FormControl("", [Validators.required]),
-      link: new FormControl("", [Validators.required]),
+      surveyName: new FormControl("", [Validators.required]),
+      surveyLink: new FormControl("", [Validators.required]),
       defaultSurvey: new FormControl(""),
+      bonusPoint: new FormControl("", [Validators.required]),
+      bonusScore: new FormControl("", [Validators.required]),
     });
     this.validatingForm.patchValue({
       defaultSurvey: "-",
     });
-    this.validationDefault = this.formBuilder.group({
-      dateFrom: new FormControl("", [Validators.required]),
-      dateTo: new FormControl("", [Validators.required]),
-      bonusPoint: new FormControl("", [Validators.required]),
-      bonusScore: new FormControl("", [Validators.required]),
-    });
     this.campaignService.getCampaignUsingGET(this.campaignId).subscribe((result)=>{
-      this.surveysMap = result.surveys;
-      this.defaultSurvey = result.specificData[DEFAULT_SURVEY_KEY]; 
-      if (this.surveysMap) {
-        const keys = Object.keys(this.surveysMap);
-        for (let item of keys) {
-          this.surveys.push({
-            surveyId: item,
-            link: this.surveysMap[item],
-            default: false,
-          });
-        }
-      }
-      if (!!this.defaultSurvey) {
-        this.surveys.push({
-          surveyId: this.defaultSurvey.surveyName,
-          link: this.defaultSurvey.surveyLink,
-          default: true,
-        });
-      }
+      this.surveys = result.surveys;
       this.setTableData();
     });
 
@@ -111,14 +86,14 @@ export class SurveyComponentComponent implements OnInit {
       width: "40%",
     });
     let instance = dialogRef.componentInstance;
-    instance.surveyId = element.surveyId;
+    instance.surveyName = element.surveyName;
     instance.campaignId = this.campaignId;
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== undefined) {
         let res = [];
         for (let item of this.surveys) {
-          if (item.surveyId !== result) {
+          if (item.surveyName !== result) {
             res.push(item);
           }
         }
@@ -133,8 +108,7 @@ export class SurveyComponentComponent implements OnInit {
       width: "55%",
     });
     let instance = dialogRef.componentInstance;
-    instance.surveyId = element.surveyId;
-    instance.surveyLink = element.link;
+    instance.survey = element;
     instance.campaignId = this.campaignId;
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -146,71 +120,29 @@ export class SurveyComponentComponent implements OnInit {
   addSurvey() {
     this.msgError = undefined;
     if (this.validatingForm.valid) {
-      if (this.validatingForm.get(this.defaultKey).value === this.defaultKey) {
-        if (!this.validationDefault.valid) {
-          this.validationDefault.markAllAsTouched();
-          return;
-        } else {
-          const start = this.validationDefault.get("dateFrom").value ? this.validationDefault.get("dateFrom").value.valueOf() : undefined;
-          const end = this.validationDefault.get("dateTo").value ? this.validationDefault.get("dateTo").value.valueOf() : undefined;
-          if(this.validDates(start,end)){
-            var body: SurveyRequest = {
-              data: {
-                bonusPointType: this.validationDefault.get("bonusPoint").value,
-                bonusScore: this.validationDefault.get("bonusScore").value,
-              },
-              end: end,
-              start: start,
-              surveyLink: this.validatingForm.get("link").value,
-              surveyName: this.validatingForm.get("surveyId").value,
-            };
-            this.campaignService
-              .getCampaignUsingGET(this.campaignId)
-              .subscribe((result) => {
-                result.specificData = {};
-                result.specificData[this.defaultKey] = body;
-                this.campaignService
-                  .updateCampaignUsingPUT(result)
-                  .subscribe(() => {
-                    this.newItem = {
-                      surveyId: body.surveyName,
-                      link: body.surveyLink,
-                      default: true,
-                    };
-                    let res = [];
-                    for(let i=0;i<this.surveys.length;i++){
-                      //remove from the survays the old default one 
-                      if(!this.surveys[i].default){
-                        res.push(this.surveys[i]);
-                      }
-                    }
-                    this.surveys = res;
-                    this.surveys.push(this.newItem);
-                    this.setTableData();
-                  },
-                  (error)=>{
-                    this.msgError = (error.error.ex ? error.error.ex : this.translate.instant('errorNotProvidedByresponse'));
-                  });
-              });
-          }else{
-            this.msgError = this.translate.instant("dateNotValid");
-          }
-
-        }
-      } else {
-        const body = {
-          surveyId: this.validatingForm.get("surveyId").value,
-          link: this.validatingForm.get("link").value,
-        };
+      if(this.defaultSurveyCheck && this.defaultSurveyExist()){
+        this.msgError = this.translate.instant("notPossibleToCreateAnotherDefaultSurvey");
+        return;
+      }
+      var surveryReq: SurveyRequest =  {
+        data: {
+          bonusPointType: this.validatingForm.get("bonusPoint").value ? this.validatingForm.get("bonusPoint").value : undefined,
+          bonusScore: this.validatingForm.get("bonusScore").value ? this.validatingForm.get("bonusScore").value : undefined,
+        },
+        defaultSurvey: this.defaultSurveyCheck,
+        end: undefined,
+        start: undefined,
+        surveyLink: this.validatingForm.get("surveyLink").value,
+        surveyName: this.validatingForm.get("surveyName").value
+      }
         this.survayService
           .addSurveyUsingPOST({
             campaignId: this.campaignId,
-            name: body.surveyId,
-            link: body.link,
+            body: surveryReq
           })
           .subscribe(
             () => {
-              this.newItem = body;
+              this.newItem = surveryReq;
               this.surveys.push(this.newItem);
               this.setTableData();
             },
@@ -222,17 +154,17 @@ export class SurveyComponentComponent implements OnInit {
                 : "error";
             }
           );
-      }
     } else {
       this.msgError = this.translate.instant("fillAllfields");
-      this.validationDefault.markAllAsTouched();
+      this.validatingForm.markAllAsTouched();
     }
+  }
+  defaultSurveyExist():boolean{
+    return (this.surveys.filter(item=>item.defaultSurvey)).length >0; 
   }
 
   setTableData() {
-    const l = this.surveys.map((x) => x);
-    l.reverse();
-    this.dataSource = new MatTableDataSource<any>(l);
+    this.dataSource = new MatTableDataSource<any>(this.surveys);
   }
 
   validDates(start: number, end: number) {

@@ -98,3 +98,13 @@ $bv-theme: mat-light-theme($bv-palette-primary, $bv-palette-accent);
 .mat-slider-thumb {
     background-color: #01579b !important;
 }
+
+.mat-checkbox-inner-container{
+    color: #01579b !important;
+    border: rgba(0, 0, 0, 0.616) solid 1px;
+    background-color: white;
+}
+
+.mat-checkbox-label{
+    color:rgb(0, 0, 0);
+}

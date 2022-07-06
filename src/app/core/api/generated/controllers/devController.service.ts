@@ -45,6 +45,32 @@ export class DevControllerService {
   }
 
   /**
+   * geteSurveyUrl
+   *
+   * @param campaignId campaignId
+   * @param playerId playerId
+   * @param surveyName surveyName
+   */
+  public geteSurveyUrlUsingGET(args: {
+    campaignId: string;
+    playerId: string;
+    surveyName: string;
+  }): Observable<string> {
+    const { campaignId, playerId, surveyName } = args;
+    return this.http.request<string>(
+      "get",
+      environment.serverUrl.api + `/playandgo/api/dev/survey/url`,
+      {
+        params: removeNullOrUndefined({
+          campaignId,
+          playerId,
+          surveyName,
+        }),
+      }
+    );
+  }
+
+  /**
    * subscribeAziendale
    *
    * @param campaignId campaignId
