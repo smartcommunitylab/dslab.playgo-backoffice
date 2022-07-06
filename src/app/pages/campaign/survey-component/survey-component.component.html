@@ -31,13 +31,13 @@
             <!-- <mat-grid-tile [colspan]="1"></mat-grid-tile> -->
             <mat-grid-tile [colspan]="1" [rowspan]="1">
                 <mat-form-field appearance="fill" class="full-width" style="margin-right:5px">
-                    <mat-label>{{'bonusPoint' | translate}} ({{'bonusPointType' | translate}})</mat-label>
+                    <mat-label>{{'bonusPoint' | translate}}</mat-label>
                     <input matInput type="text" id="bonusPoint" formControlName="bonusPoint">
                 </mat-form-field>
             </mat-grid-tile>
             <mat-grid-tile [colspan]="1" [rowspan]="1">
                 <mat-form-field appearance="fill" class="full-width">
-                    <mat-label>{{'bonusScore' | translate}} ({{'bonusScore' | translate}})</mat-label>
+                    <mat-label>{{'bonusScore' | translate}}</mat-label>
                     <input matInput type="number" id="bonusScore" formControlName="bonusScore">
                 </mat-form-field>
             </mat-grid-tile>
@@ -47,7 +47,7 @@
                 <p *ngIf="msgError" class="error" >{{msgError}}</p>
             </mat-grid-tile>
             <mat-grid-tile [colspan]="1" [rowspan]="1">
-                <button type="submit" class="add right-button" mat-flat-button color="primary"
+                <button type="submit" class="add" mat-flat-button color="primary"
                 (click)="addSurvey()">
                 <mat-icon>add</mat-icon>
                 {{'add' | translate}}

@@ -16,6 +16,8 @@
   .add{
       margin-left: 1%;
       top:-3px;
+      position: relative;
+      float:right;
   }
 
   .delete{
@@ -102,9 +104,4 @@
   width: 10%;
   height: 35px;
   margin-bottom: 0px;
-}
-
-.right-button{
-  position: relative;
-  float:right;
 }
