@@ -329,7 +329,7 @@ export class CampaignAddFormComponent implements OnInit {
             },
             (error) => {
               this.errorMsgValidation =
-                this.translate.instant("dataNotSavedForError") + (error.error.ex ? error.error.ex : this.translate.instant('errorNotProvidedByresponse'));
+                this.translate.instant("dataNotSavedForError") + ': '+(error.error.ex ? error.error.ex : this.translate.instant('errorNotProvidedByresponse'));
             }
           );
       }

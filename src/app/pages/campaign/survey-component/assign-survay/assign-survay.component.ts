@@ -26,9 +26,8 @@ import { MY_DATE_FORMATS, PRE_TEXT_JSON_ASSIGN_SURVAY } from 'src/app/shared/con
 })
 export class AssignSurvayComponent implements OnInit {
 
+  survey: SurveyRequest;
   campaignId:string;
-  surveyId:string;
-  surveyLink: string;
   validatingForm: FormGroup;
   msgError:string;
 
@@ -44,8 +43,6 @@ export class AssignSurvayComponent implements OnInit {
       playersId: new FormControl("" ),
       dateFrom: new FormControl("",[Validators.required]),
       dateTo: new FormControl("",[Validators.required]),
-      bonusPoint: new FormControl("",[Validators.required]),
-      bonusScore: new FormControl("",[Validators.required]),
     });
     this.validatingForm.patchValue({
       challengeDefinition: PRE_TEXT_JSON_ASSIGN_SURVAY
@@ -57,31 +54,31 @@ export class AssignSurvayComponent implements OnInit {
   }
 
   assign(){
-    //TODO stuff
     this.msgError = undefined;
     if(this.validatingForm.valid){
       const body:SurveyRequest = {
         start: this.validatingForm.get("dateFrom").value ? this.validatingForm.get("dateFrom").value.valueOf() : undefined,
         end: this.validatingForm.get("dateTo").value ? this.validatingForm.get("dateTo").value.valueOf() : undefined,
         data:{
-          bonusPointType: this.validatingForm.get("bonusPoint").value ? this.validatingForm.get("bonusPoint").value : undefined,
-          bonusScore: this.validatingForm.get("bonusScore").value ? this.validatingForm.get("bonusScore").value : undefined,
+          bonusPointType: this.survey.data.bonusPointType,
+          bonusScore: this.survey.data.bonusScore,
         },
-        surveyLink: this.surveyLink,
-        surveyName: this.surveyId
+        surveyLink: this.survey.surveyLink,
+        surveyName: this.survey.surveyName,
+        defaultSurvey: this.survey.defaultSurvey
       };
       if(!this.validDates(body.start,body.end)){
         this.msgError = 'dateNotValid';
         return;
       }
-      const players:string = this.validatingForm.get("playersId").value ? this.validatingForm.get("playersId").value : '';
+      const players:string = this.validatingForm.get("playersId").value ? this.validatingForm.get("playersId").value : undefined;
       //const idPlayers:string[]= players.split(',');
       this.survayService.assignSurveyChallengesUsingPOST({
         campaignId:this.campaignId,
         body:body,
         playerIds: players,
       }).subscribe(()=>{
-        this.onNoClick('',this.surveyId);
+        this.onNoClick('',this.survey.surveyName);
         const text = 'assigned';
         this._snackBar.openFromComponent(SnackbarSavedComponent,
           {
