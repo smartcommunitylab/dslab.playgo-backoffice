@@ -38,55 +38,33 @@
     left: 5px;
   }
 
-  .mat-column-defaultSurvey {
-    // word-wrap: break-word !important;
-    // white-space: unset !important;
-    // flex: 0 0 28% !important;
-    width: 8% !important;
-    // overflow-wrap: break-word;
-    // word-wrap: break-word;
-  
-    word-break: break-word;
-  
-    // -ms-hyphens: auto;
-    // -moz-hyphens: auto;
-    // -webkit-hyphens: auto;
-    // hyphens: auto;
-  }
+.mat-column-defaultSurvey {
+  width: 8% !important;
+  word-break: break-word;
+}
+
+.mat-column-type {
+  width: 7% !important;
+  word-break: break-word;
+}
+
+.mat-column-score {
+  width: 5% !important;
+  word-break: break-word;
+}
 
 .mat-column-link {
-  // word-wrap: break-word !important;
-  // white-space: unset !important;
-  // flex: 0 0 28% !important;
-  width: 45% !important;
-  // overflow-wrap: break-word;
-  // word-wrap: break-word;
-
+  width: 40% !important;
   word-break: break-word;
-
-  // -ms-hyphens: auto;
-  // -moz-hyphens: auto;
-  // -webkit-hyphens: auto;
-  // hyphens: auto;
 }
 
 .mat-column-surveyId {
-  // word-wrap: break-word !important;
-  // white-space: unset !important;
-  // flex: 0 0 28% !important;
-  width: 13% !important;
-  // overflow-wrap: break-word;
-  // word-wrap: break-word;
-
+  width: 15% !important;
   word-break: break-word;
-
-  // -ms-hyphens: auto;
-  // -moz-hyphens: auto;
-  // -webkit-hyphens: auto;
-  // hyphens: auto;
 }
 
 .mat-column-buttons {
+  width: 20% !important;
   margin-left: 10px;
 }
 

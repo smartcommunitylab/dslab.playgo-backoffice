@@ -12,63 +12,35 @@
         </div>
     </div>
     <form [formGroup]="validatingForm">
-        <mat-grid-list cols="5" rowHeight="50px">
+        <mat-grid-list cols="7" rowHeight="50px">
             <mat-grid-tile [colspan]="1" [rowspan]="1">
-                <mat-form-field appearance="fill" class="full-width" style="margin-right:10px">
-                    <mat-label>{{'defaultSurvey' | translate}}</mat-label>
-                    <mat-select id="defaultSurvey" formControlName="defaultSurvey">
-                        <mat-option *ngFor="let item of ['-','defaultSurvey']" value="{{item}}">
-                            {{item | translate}}
-                        </mat-option>
-                    </mat-select>
+                <mat-checkbox color="primary" [checked]="defaultSurveyCheck" (change)="defaultSurveyCheck = !defaultSurveyCheck">{{'defaultSurvey' | translate}}</mat-checkbox>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="2" [rowspan]="1">
+                <mat-form-field appearance="fill" class="full-width" style="margin-right:5px">
+                    <mat-label>{{'surveyName' | translate}}</mat-label>
+                    <input matInput id="surveyName" formControlName="surveyName">
                 </mat-form-field>
             </mat-grid-tile>
             <mat-grid-tile [colspan]="2" [rowspan]="1">
-                <mat-form-field appearance="fill" class="full-width" style="margin-right:10px">
-                    <mat-label>{{'surveyId' | translate}}</mat-label>
-                    <input matInput id="surveyId" formControlName="surveyId">
+                <mat-form-field appearance="fill" class="full-width" style="margin-right:5px">
+                    <mat-label>{{'surveyLink' | translate}}</mat-label>
+                    <input matInput id="surveyLink" formControlName="surveyLink">
                 </mat-form-field>
             </mat-grid-tile>
-            <mat-grid-tile [colspan]="2" [rowspan]="1">
+            <!-- <mat-grid-tile [colspan]="1"></mat-grid-tile> -->
+            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                <mat-form-field appearance="fill" class="full-width" style="margin-right:5px">
+                    <mat-label>{{'bonusPoint' | translate}} ({{'bonusPointType' | translate}})</mat-label>
+                    <input matInput type="text" id="bonusPoint" formControlName="bonusPoint">
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="1" [rowspan]="1">
                 <mat-form-field appearance="fill" class="full-width">
-                    <mat-label>{{'link' | translate}}</mat-label>
-                    <input matInput id="link" formControlName="link">
+                    <mat-label>{{'bonusScore' | translate}} ({{'bonusScore' | translate}})</mat-label>
+                    <input matInput type="number" id="bonusScore" formControlName="bonusScore">
                 </mat-form-field>
             </mat-grid-tile>
-        </mat-grid-list>
-        <mat-grid-list *ngIf="validatingForm.get('defaultSurvey').value ==='defaultSurvey'">
-            <form [formGroup]="validationDefault">
-                <mat-grid-list cols="4" rowHeight="50px">
-                    <mat-grid-tile [colspan]="1" [rowspan]="1">
-                        <mat-form-field appearance="fill" class="full-width" style="margin-right:10px">
-                            <mat-label>{{'dateFrom' | translate}}</mat-label>
-                            <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1">
-                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                            <mat-datepicker #picker1></mat-datepicker>
-                        </mat-form-field>
-                    </mat-grid-tile>
-                    <mat-grid-tile [colspan]="1" [rowspan]="1">
-                        <mat-form-field appearance="fill" class="full-width" style="margin-right:10px">
-                            <mat-label>{{'dateTo' | translate}}</mat-label>
-                            <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker2">
-                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                            <mat-datepicker #picker2></mat-datepicker>
-                        </mat-form-field>
-                    </mat-grid-tile>
-                    <mat-grid-tile [colspan]="1" [rowspan]="1">
-                        <mat-form-field appearance="fill" class="full-width" style="margin-right:10px">
-                            <mat-label>{{'bonusPoint' | translate}} ({{'bonusPointType' | translate}})</mat-label>
-                            <input matInput type="number" id="bonusPoint" formControlName="bonusPoint">
-                        </mat-form-field>
-                    </mat-grid-tile>
-                    <mat-grid-tile [colspan]="1" [rowspan]="1">
-                        <mat-form-field appearance="fill" class="full-width">
-                            <mat-label>{{'bonusScore' | translate}} ({{'bonusScore' | translate}})</mat-label>
-                            <input matInput type="number" id="bonusScore" formControlName="bonusScore">
-                        </mat-form-field>
-                    </mat-grid-tile>
-                </mat-grid-list>
-            </form>
         </mat-grid-list>
         <mat-grid-list cols="4" rowHeight="40px">
             <mat-grid-tile [colspan]="3" [rowspan]="1" >
@@ -86,16 +58,16 @@
 </div>
 <table mat-table [dataSource]="dataSource" class="full-width">
 
-    <ng-container matColumnDef="default">
+    <ng-container matColumnDef="defaultSurvey">
         <th mat-header-cell *matHeaderCellDef> {{
             'defaultSurvey'| translate}} </th>
         <td mat-cell *matCellDef="let element" class="bold"> 
-            <mat-icon *ngIf="element.default">
+            <mat-icon *ngIf="element.defaultSurvey">
                 <span class="material-icons-outlined">
                     done
                 </span>
             </mat-icon>
-            <mat-icon *ngIf="!element.default">
+            <mat-icon *ngIf="!element.defaultSurvey">
                 <span class="material-icons-outlined">
                     close
                 </span>
@@ -103,18 +75,28 @@
         </td>
     </ng-container>
 
-    <ng-container matColumnDef="surveyId">
+    <ng-container matColumnDef="surveyName">
         <th mat-header-cell *matHeaderCellDef> {{
-            'surveyId'| translate}} </th>
-        <td mat-cell *matCellDef="let element" class="bold"> {{element.surveyId}} </td>
+            'surveyName'| translate}} </th>
+        <td mat-cell *matCellDef="let element" class="bold"> {{element.surveyName}} </td>
     </ng-container>
 
-
-
-    <ng-container matColumnDef="link">
-        <th mat-header-cell *matHeaderCellDef> {{ 'link'|
+    <ng-container matColumnDef="surveyLink">
+        <th mat-header-cell *matHeaderCellDef> {{ 'surveyLink'|
             translate}} </th>
-        <td mat-cell *matCellDef="let element"><a href="{{element.link}}">{{element.link}}</a> </td>
+        <td mat-cell *matCellDef="let element"><a href="{{element.surveyLink}}">{{element.surveyLink}}</a> </td>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef> {{ 'type'|
+            translate}} </th>
+        <td mat-cell *matCellDef="let element">{{element.data.bonusPointType}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="score">
+        <th mat-header-cell *matHeaderCellDef> {{ 'score'|
+            translate}} </th>
+        <td mat-cell *matCellDef="let element">{{element.data.bonusScore}} </td>
     </ng-container>
 
     <ng-container matColumnDef="buttons">
@@ -128,12 +110,12 @@
                 </mat-icon>
                 {{'delete' | translate}}
             </button>
-            <button color="primary" type="button" mat-flat-button (click)="assignSurvey(element)">{{'assign' |
+            <button color="primary" type="button" mat-flat-button (click)="assignSurvey(element)" disabled="{{element.defaultSurvey}}">{{'assign' |
                 translate}}</button>
         </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row [ngClass]="{'newItem' : !!row && !! newItem &&  row.surveyId === newItem.surveyId}"
+    <tr mat-row [ngClass]="{'newItem' : !!row && !!newItem &&  row.surveyName === newItem.surveyName}"
         *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>

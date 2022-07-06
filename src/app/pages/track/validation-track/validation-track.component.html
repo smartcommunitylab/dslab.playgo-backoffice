@@ -112,7 +112,7 @@
                             'yellow-background' : element.trackedInstance.validationResult.travelValidity==='PENDING',
                             'red-background' : element.trackedInstance.validationResult.travelValidity==='INVALID',
                             'green-background' : element.trackedInstance.validationResult.travelValidity==='VALID'  }">
-                            <mat-grid-list cols="3" rowHeight="40px">
+                            <mat-grid-list cols="3" rowHeight="30px">
                                 <mat-grid-tile>
                                     <span class="full-width">
                                         {{getDateFromTimeStamp(element.trackedInstance.startTime)}}
@@ -130,7 +130,7 @@
                                     </span>
                                 </mat-grid-tile>
                             </mat-grid-list>
-                            <mat-grid-list cols="1" rowHeight="40px">
+                            <mat-grid-list cols="1" rowHeight="30px">
                                 <mat-grid-tile>
                                     <span class="left-text full-width">
                                         {{'player' | translate}}: {{element.playerInfo.nickname}}
