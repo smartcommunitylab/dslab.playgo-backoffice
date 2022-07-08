@@ -10,6 +10,7 @@ import { SurveyComponentComponent } from "../survey-component/survey-component.c
 import { AssignSurvayComponent } from "../survey-component/assign-survay/assign-survay.component";
 import { DeleteSurvayComponent } from "../survey-component/delete-survay/delete-survay.component";
 import { ConfirmCancelComponent } from "../campaign-add-form/confirm-cancel/confirm-cancel.component";
+import { RewardsComponent } from "../rewards/rewards.component";
 
 @NgModule({
   imports: [SharedModule, CampaignPageRouting],
@@ -22,7 +23,8 @@ import { ConfirmCancelComponent } from "../campaign-add-form/confirm-cancel/conf
     SurveyComponentComponent,
     AssignSurvayComponent,
     DeleteSurvayComponent,
-    ConfirmCancelComponent
+    ConfirmCancelComponent,
+    RewardsComponent
   ],
 })
 export class CampaignPageModule {}

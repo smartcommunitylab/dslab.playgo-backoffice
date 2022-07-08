@@ -1,6 +1,6 @@
 .input-half-left{
     width: 45%;
-    margin-right: 1%;
+    margin-right: 25px;
   }
   
   .input-half-right{
@@ -40,36 +40,6 @@
     left: 5px;
   }
 
-.mat-column-defaultSurvey {
-  width: 8% !important;
-  word-break: break-word;
-}
-
-.mat-column-type {
-  width: 7% !important;
-  word-break: break-word;
-}
-
-.mat-column-score {
-  width: 5% !important;
-  word-break: break-word;
-}
-
-.mat-column-link {
-  width: 40% !important;
-  word-break: break-word;
-}
-
-.mat-column-surveyId {
-  width: 8% !important;
-  word-break: break-word;
-}
-
-.mat-column-buttons {
-  width: 20% !important;
-  margin-left: 10px;
-}
-
 .header-bar-stick{
   background-color: white;
   position: sticky;
@@ -104,4 +74,12 @@
   width: 10%;
   height: 35px;
   margin-bottom: 0px;
+}
+
+.lable-file{
+    top:-10px;
+}
+
+.video-title > ::ng-deep figure {
+  justify-content: flex-start !important;
 }

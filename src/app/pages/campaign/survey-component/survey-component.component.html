@@ -99,6 +99,18 @@
         <td mat-cell *matCellDef="let element">{{element.data.bonusScore}} </td>
     </ng-container>
 
+    <!-- <ng-container matColumnDef="from">
+        <th mat-header-cell *matHeaderCellDef> {{ 'dateFrom'|
+            translate}} </th>
+        <td mat-cell *matCellDef="let element">{{fromTimestampToDate(element.start)}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="to">
+        <th mat-header-cell *matHeaderCellDef> {{ 'dateTo'|
+            translate}} </th>
+        <td mat-cell *matCellDef="let element">{{fromTimestampToDate(element.end)}} </td>
+    </ng-container> -->
+
     <ng-container matColumnDef="buttons">
         <th mat-header-cell *matHeaderCellDef> {{'actions' | translate}} </th>
         <td mat-cell *matCellDef="let element">
