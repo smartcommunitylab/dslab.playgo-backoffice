@@ -16,6 +16,7 @@ import { Logo } from "src/app/shared/classes/logo-class";
 import { Campaign } from "src/app/core/api/generated/model/campaign";
 import { SurveyComponentComponent } from "../survey-component/survey-component.component";
 import { TranslateService } from "@ngx-translate/core";
+import { RewardsComponent } from "../rewards/rewards.component";
 
 @Component({
   selector: "app-campaign-page",
@@ -94,6 +95,11 @@ export class CampaignPageComponent implements OnInit {
     this.dataSource = new MatTableDataSource<CampaignClass>(this.listCampaign);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = (item, property) => {
+      switch(property) {
+        case 'name': return item.name[this.languageDefault];
+      }
+    };
   }
 
   showTerritory(row: CampaignClass) {
@@ -217,6 +223,22 @@ export class CampaignPageComponent implements OnInit {
     // instance.defaultSurvey = !!this.selectedCampaign.specificData && !!this.selectedCampaign.specificData[DEFAULT_SURVEY_KEY] ? this.selectedCampaign.specificData[DEFAULT_SURVEY_KEY]  : undefined;
     // instance.surveysMap = this.selectedCampaign.surveys;
     instance.campaignId = this.selectedCampaign.campaignId;
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result !== undefined) {
+      }
+    });
+  }
+
+  rewards(){
+    const dialogRef = this.dialogUpdate.open(RewardsComponent, {
+      width: "80%",
+      minHeight: '300px',
+      maxHeight:'800px',
+      panelClass: 'custom-dialog-container' 
+    });
+    let instance = dialogRef.componentInstance;
+    instance.selectedLang = this.translate.currentLang;
+    instance.campaign = this.selectedCampaign;
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== undefined) {
       }

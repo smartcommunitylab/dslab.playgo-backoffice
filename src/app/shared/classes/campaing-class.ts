@@ -1,5 +1,6 @@
 import { Campaign } from "src/app/core/api/generated/model/campaign";
 import { CampaignDetail } from "src/app/core/api/generated/model/campaignDetail";
+import { CampaignWeekConf } from "src/app/core/api/generated/model/campaignWeekConf";
 import { Image } from "src/app/core/api/generated/model/image";
 import { SurveyRequest } from "src/app/core/api/generated/model/surveyRequest";
 
@@ -46,6 +47,7 @@ export class CampaignClass implements Campaign {
     territoryId?: string;
     type?: Campaign.TypeEnum;
     validationData?: any;
+    weekConfs?: Array<CampaignWeekConf>;
 }
 
 export class ImageClass implements Image {

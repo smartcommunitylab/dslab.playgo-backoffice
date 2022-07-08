@@ -113,6 +113,12 @@ export class SurveyComponentComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== undefined) {
+        // for(let i =0;i<this.surveys.length;i++){
+        //   if(this.surveys[i].surveyName === result.surveyName){
+        //     this.surveys[i] = result;
+        //   }
+        // }
+        // this.setTableData();
       }
     });
   }
@@ -173,5 +179,23 @@ export class SurveyComponentComponent implements OnInit {
     }
     return false;
   }
+
+  fromTimestampToDate(timestamp: any) : string{
+    if(timestamp===0){
+      return "-";
+    }
+    const a = new Date(timestamp);
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var year = a.getFullYear();
+    //var month = months[a.getMonth()+1];
+    var month = a.getMonth()+1
+    var date = a.getDate();
+    var hour = a.getHours();
+    var min = a.getMinutes();
+    var sec = a.getSeconds();
+    var time = date + '/' + month + '/' + year;
+    return time;
+  }
+
 
 }
