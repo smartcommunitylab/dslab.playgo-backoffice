@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 import { CampaignDetail } from "./campaignDetail";
+import { CampaignWeekConf } from "./campaignWeekConf";
 import { Image } from "./image";
 import { SurveyRequest } from "./surveyRequest";
 
@@ -31,6 +32,7 @@ export interface Campaign {
   territoryId?: string;
   type?: Campaign.TypeEnum;
   validationData?: any;
+  weekConfs?: Array<CampaignWeekConf>;
 }
 export namespace Campaign {
   export type TypeEnum = "city" | "company" | "personal" | "school";

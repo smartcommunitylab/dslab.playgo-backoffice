@@ -253,6 +253,52 @@ export class CampaignControllerService {
       }
     );
   }
+
+  /**
+   * uploadRewards
+   *
+   * @param campaignId campaignId
+   * @param body
+   */
+  public uploadRewardsUsingPOST(args: {
+    campaignId: string;
+    body?: Object;
+  }): Observable<Array<string>> {
+    const { campaignId, body } = args;
+    return this.http.request<Array<string>>(
+      "post",
+      environment.serverUrl.api +
+        `/playandgo/api/campaign/${encodeURIComponent(
+          String(campaignId)
+        )}/reward`,
+      {
+        body: body,
+      }
+    );
+  }
+
+  /**
+   * uploadWeekConfs
+   *
+   * @param campaignId campaignId
+   * @param body
+   */
+  public uploadWeekConfsUsingPOST(args: {
+    campaignId: string;
+    body?: Object;
+  }): Observable<Array<string>> {
+    const { campaignId, body } = args;
+    return this.http.request<Array<string>>(
+      "post",
+      environment.serverUrl.api +
+        `/playandgo/api/campaign/${encodeURIComponent(
+          String(campaignId)
+        )}/weekconf`,
+      {
+        body: body,
+      }
+    );
+  }
 }
 
 function removeNullOrUndefined(obj: any) {

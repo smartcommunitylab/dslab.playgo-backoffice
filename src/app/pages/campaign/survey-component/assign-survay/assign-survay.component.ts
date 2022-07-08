@@ -49,8 +49,8 @@ export class AssignSurvayComponent implements OnInit {
     })
   }
 
-  onNoClick(event: any,id?: String): void {
-    this.dialogRef.close(id);
+  onNoClick(event: any,body?:SurveyRequest): void {
+    this.dialogRef.close(body);
   }
 
   assign(){
@@ -78,7 +78,7 @@ export class AssignSurvayComponent implements OnInit {
         body:body,
         playerIds: players,
       }).subscribe(()=>{
-        this.onNoClick('',this.survey.surveyName);
+        this.onNoClick('',body);
         const text = 'assigned';
         this._snackBar.openFromComponent(SnackbarSavedComponent,
           {

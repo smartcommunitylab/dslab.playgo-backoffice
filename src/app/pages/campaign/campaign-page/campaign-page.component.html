@@ -142,6 +142,15 @@
                 </mat-card-content>
                 <div style="height:40px;">
                     <button color="primary" class='right-button' mat-raised-button type="submit"
+                    (click)="rewards()">
+                    {{'prizes' | translate}}
+                    <mat-icon>
+                        <span class="material-icons-outlined">
+                            stars
+                        </span>
+                    </mat-icon>
+                </button>
+                    <button color="primary" class='right-button' mat-raised-button type="submit"
                     (click)="survey()">
                     {{'surveys' | translate}}
                     <mat-icon>
