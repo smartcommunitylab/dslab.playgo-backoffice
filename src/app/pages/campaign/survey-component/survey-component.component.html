@@ -1,49 +1,46 @@
 <div class="header-bar-stick">
-    <div class="full-width" style="height: 35px;margin-bottom: 15px;">
-        <h1 class="header-div">{{ 'surveys'| translate}}</h1>
-        <div class="close-div">
-            <button class="right-button" type="button" mat-icon-button (click)="onNoClick($event)">
-                <mat-icon>
-                    <span class="material-symbols-outlined">
-                        close
-                    </span>
-                </mat-icon>
-            </button>
-        </div>
-    </div>
     <form [formGroup]="validatingForm">
-        <mat-grid-list cols="7" rowHeight="50px">
+        <mat-grid-list cols="8" rowHeight="50px">
+            <mat-grid-tile [colspan]="7" [rowspan]="1">
+                <h1 class="header-div">{{ 'surveys'| translate}}</h1>
+            </mat-grid-tile>
             <mat-grid-tile [colspan]="1" [rowspan]="1">
-                <mat-checkbox color="primary" [checked]="defaultSurveyCheck" (change)="defaultSurveyCheck = !defaultSurveyCheck">{{'defaultSurvey' | translate}}</mat-checkbox>
+                <button class="right-button" type="button" mat-icon-button (click)="onNoClick($event)">
+                    <mat-icon>
+                        <span class="material-symbols-outlined">
+                            close
+                        </span>
+                    </mat-icon>
+                </button>
             </mat-grid-tile>
             <mat-grid-tile [colspan]="2" [rowspan]="1">
+                <mat-checkbox style="position: absolute;" color="primary" [checked]="defaultSurveyCheck" (change)="defaultSurveyCheck = !defaultSurveyCheck">{{'defaultSurvey' | translate}}</mat-checkbox>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
                 <mat-form-field appearance="fill" class="full-width" style="margin-right:5px">
                     <mat-label>{{'surveyName' | translate}}</mat-label>
                     <input matInput id="surveyName" formControlName="surveyName">
                 </mat-form-field>
             </mat-grid-tile>
-            <mat-grid-tile [colspan]="2" [rowspan]="1">
-                <mat-form-field appearance="fill" class="full-width" style="margin-right:5px">
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+                <mat-form-field appearance="fill" class="full-width">
                     <mat-label>{{'surveyLink' | translate}}</mat-label>
                     <input matInput id="surveyLink" formControlName="surveyLink">
                 </mat-form-field>
             </mat-grid-tile>
-            <!-- <mat-grid-tile [colspan]="1"></mat-grid-tile> -->
-            <mat-grid-tile [colspan]="1" [rowspan]="1">
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
                 <mat-form-field appearance="fill" class="full-width" style="margin-right:5px">
                     <mat-label>{{'bonusPoint' | translate}}</mat-label>
                     <input matInput type="text" id="bonusPoint" formControlName="bonusPoint">
                 </mat-form-field>
             </mat-grid-tile>
-            <mat-grid-tile [colspan]="1" [rowspan]="1">
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
                 <mat-form-field appearance="fill" class="full-width">
                     <mat-label>{{'bonusScore' | translate}}</mat-label>
                     <input matInput type="number" id="bonusScore" formControlName="bonusScore">
                 </mat-form-field>
             </mat-grid-tile>
-        </mat-grid-list>
-        <mat-grid-list cols="4" rowHeight="40px">
-            <mat-grid-tile [colspan]="3" [rowspan]="1" >
+            <mat-grid-tile [colspan]="7" [rowspan]="1" >
                 <p *ngIf="msgError" class="error" >{{msgError}}</p>
             </mat-grid-tile>
             <mat-grid-tile [colspan]="1" [rowspan]="1">

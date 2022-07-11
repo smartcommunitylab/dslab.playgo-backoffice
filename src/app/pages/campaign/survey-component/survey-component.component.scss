@@ -76,6 +76,7 @@
   z-index: 1000;
   top: 0px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.116);
+  margin-top: 10px;
 }
 
 .title-left{
@@ -95,8 +96,9 @@
 .header-div{
   top: -5px;
   display: inline-block;
-  width: 88%;
+  width: 100%;
   margin-bottom: 0px;
+  position: absolute;
 }
 
 .close-div{

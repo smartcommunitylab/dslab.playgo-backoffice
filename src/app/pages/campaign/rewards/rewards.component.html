@@ -1,5 +1,5 @@
 <div class="header-bar-stick">
-    <div class="full-width" style="height: 35px;margin-bottom: 15px;">
+    <!-- <div class="full-width header-chunck">
         <h1 class="header-div">{{ 'weeklyPrizes'| translate}}</h1>
         <div class="close-div">
             <button class="right-button" type="button" mat-icon-button (click)="onNoClick($event)">
@@ -10,20 +10,28 @@
                 </mat-icon>
             </button>
         </div>
-    </div>
+    </div> -->
     <form [formGroup]="validatingForm">
-        <mat-grid-list cols="2" rowHeight="25px">
-            <mat-grid-tile [colspan]="1" [rowspan]="1">
-                <p class="full-width" style="margin-right:5px; margin-bottom: 0px;">{{'weeks' | translate}}</p>
+        <mat-grid-list cols="8" rowHeight="40px">
+            <mat-grid-tile [colspan]="7" [rowspan]="1">
+                <h1 class="full-width header-div">{{ 'weeklyPrizes'| translate}}</h1>
             </mat-grid-tile>
             <mat-grid-tile [colspan]="1" [rowspan]="1">
-                <p class="full-width" style="margin-right:5px; margin-bottom: 0px;">{{'prizes' | translate}}</p>
+                <button class="right-button" type="button" mat-icon-button (click)="onNoClick($event)">
+                    <mat-icon>
+                        <span class="material-symbols-outlined">
+                            close
+                        </span>
+                    </mat-icon>
+                </button>
             </mat-grid-tile>
-        </mat-grid-list>
-        <mat-grid-list cols="2" rowHeight="40px">
             <mat-grid-tile [colspan]="1" [rowspan]="1">
-                <div style="width: 100%; position:absolute">
-                    <button type="button" mat-flat-button color="primary" (click)="download('weekDownload')">
+                <p class="full-width title-mid">
+                    {{'weeks' | translate}}</p>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+                <div class="download-button">
+                    <button  type="button" mat-flat-button color="primary" (click)="download('weekDownload')">
                         <mat-icon>
                             <span class="material-symbols-outlined">
                                 file_download
@@ -34,7 +42,11 @@
                 </div>
             </mat-grid-tile>
             <mat-grid-tile [colspan]="1" [rowspan]="1">
-                <div style="width: 100%; position:absolute">
+                <p class="full-width title-mid">
+                    {{'prizes' | translate}}</p>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="3" [rowspan]="1">
+                <div class="download-button">
                     <button type="button" mat-flat-button color="primary" (click)="download('rewDownload')">
                         <mat-icon>
                             <span class="material-symbols-outlined">
@@ -45,27 +57,23 @@
                     </button>
                 </div>
             </mat-grid-tile>
-        </mat-grid-list>
-        <mat-grid-list cols="2" rowHeight="40px">
-            <mat-grid-tile [colspan]="1" [rowspan]="1">
-                <div style="width: 100%; position:absolute">
-                    <mat-form-field appearance="fill" style="width: 69%; margin-right:1%">
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <div class="download-button">
+                    <mat-form-field appearance="fill" class="input-class">
                         <input matInput type="file" accept=".csv" id="weeks" formControlName="weeks"
                             (change)="uploadWeeks($event)">
                     </mat-form-field>
                 </div>
             </mat-grid-tile>
-            <mat-grid-tile [colspan]="1" [rowspan]="1">
-                <div style="width: 100%; position:absolute">
-                    <mat-form-field appearance="fill" style="width: 69%;margin-right:1%">
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <div class="download-button">
+                    <mat-form-field appearance="fill" class="input-class">
                         <input matInput type="file" accept=".csv" id="prizes" formControlName="prizes"
                             (change)="uploadRewards($event)">
                     </mat-form-field>
                 </div>
             </mat-grid-tile>
-        </mat-grid-list>
-        <mat-grid-list cols="4" rowHeight="40px">
-            <mat-grid-tile [colspan]="3" [rowspan]="1">
+            <mat-grid-tile [colspan]="7" [rowspan]="1">
                 <p *ngIf="msgError" class="error">{{msgError}}</p>
             </mat-grid-tile>
             <mat-grid-tile [colspan]="1" [rowspan]="1">
