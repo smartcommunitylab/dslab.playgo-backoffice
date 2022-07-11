@@ -98,6 +98,10 @@ export class CampaignPageComponent implements OnInit {
     this.dataSource.sortingDataAccessor = (item, property) => {
       switch(property) {
         case 'name': return item.name[this.languageDefault];
+        case 'campaignId' : return item.campaignId;
+        case 'active' : return item.active ? 'A' : 'B';
+        case 'dateFrom' : return this.fromTimestampToDate(item.dateFrom);
+        case 'dateTo' : return this.fromTimestampToDate(item.dateTo);
       }
     };
   }
