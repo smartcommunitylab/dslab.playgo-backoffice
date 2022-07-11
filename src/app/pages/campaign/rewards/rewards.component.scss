@@ -46,6 +46,7 @@
   z-index: 1000;
   top: 0px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.116);
+  margin-top: 10px;
 }
 
 .title-left{
@@ -63,10 +64,7 @@
   float: right;
 }
 .header-div{
-  top: -5px;
-  display: inline-block;
-  width: 88%;
-  margin-bottom: 0px;
+  position: absolute;
 }
 
 .close-div{
@@ -82,4 +80,24 @@
 
 .video-title > ::ng-deep figure {
   justify-content: flex-start !important;
+}
+
+.title-mid{
+  font-size:large; 
+  margin-right:5px; 
+  margin-bottom: 0px;
+}
+
+.download-button{
+  width: 100%; 
+  position:absolute;
+}
+.input-class{
+  width: 95%;
+  margin-right:5%
+}
+.header-chunck{
+  height: 35px;
+  margin-bottom: 15px; 
+  margin-top: 10px;
 }

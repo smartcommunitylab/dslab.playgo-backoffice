@@ -41,7 +41,10 @@
                             <ng-container matColumnDef="name">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header
                                     sortActionDescription="Sort by name"> {{ 'name'| translate}} </th>
-                                <td mat-cell *matCellDef="let element"> {{element.name[languageDefault]}} </td>
+                                <td mat-cell *matCellDef="let element">
+                                    <p style="font-size:large">{{element.name[languageDefault]}}</p>
+                                    <p style="font-style:italic"> {{element.type | translate}}</p>
+                                </td>
                             </ng-container>
 
                             <ng-container matColumnDef="active">
@@ -58,7 +61,7 @@
                                             close
                                         </span>
                                     </mat-icon>
-                                    </td>
+                                </td>
                             </ng-container>
 
                             <ng-container matColumnDef="dateFrom">
@@ -121,11 +124,12 @@
                         <img *ngIf="selectedCampaign.logo" class="img-logo" src="{{ selectedCampaign.logo.url }}">
                     </div>
                 </div>
-                    <img *ngIf="selectedCampaign.banner" class="img-banner" src="{{ selectedCampaign.banner.url }}">
+                <img *ngIf="selectedCampaign.banner" class="img-banner" src="{{ selectedCampaign.banner.url }}">
                 <!-- old <img class="img-logo" src="{{PREFIX_SRC_IMG_C + selectedCampaign.banner.contentType + BASE64_SRC_IMG_C + selectedCampaign.banner.image}}"> -->
                 <mat-card-content>
                     <div style="margin-top: 10px">
-                        <p class="bold">{{'dateFrom' |translate }}: {{fromTimestampToDate(selectedCampaign.dateFrom)}} {{'dateTo' |translate }}:
+                        <p class="bold">{{'dateFrom' |translate }}: {{fromTimestampToDate(selectedCampaign.dateFrom)}}
+                            {{'dateTo' |translate }}:
                             {{fromTimestampToDate(selectedCampaign.dateTo)}}</p>
                         <h3>{{'means' | translate}}</h3>
                         <ul>
@@ -133,60 +137,72 @@
                                 {{mean | translate}}
                             </li>
                         </ul>
-                        <drop-down-card-info [title]="'description' | translate" [content]="selectedCampaign.description[languageDefault]">
+                        <drop-down-card-info [title]="'description' | translate"
+                            [content]="selectedCampaign.description[languageDefault]">
                         </drop-down-card-info>
                         <span *ngFor="let detail of selectedCampaign.details[languageDefault]">
-                            <drop-down-card-info [title]="detail.type | translate" [content]="detail.content"></drop-down-card-info>
+                            <drop-down-card-info [title]="detail.type | translate" [content]="detail.content">
+                            </drop-down-card-info>
                         </span>
                     </div>
                 </mat-card-content>
-                <div style="height:40px;">
-                    <button color="primary" class='right-button' mat-raised-button type="submit"
-                    (click)="rewards()">
-                    {{'prizes' | translate}}
-                    <mat-icon>
-                        <span class="material-icons-outlined">
-                            stars
-                        </span>
-                    </mat-icon>
-                </button>
-                    <button color="primary" class='right-button' mat-raised-button type="submit"
-                    (click)="survey()">
-                    {{'surveys' | translate}}
-                    <mat-icon>
-                        <span class="material-icons-outlined">
-                            description
-                        </span>
-                    </mat-icon>
-                </button>
-                    <button color="primary" class='right-button' mat-raised-button type="submit"
-                        (click)="handleManager()">
-                        {{'handleManager' | translate}}
-                        <mat-icon>
-                            <span class="material-icons-outlined">
-                                supervisor_account
-                            </span>
-                        </mat-icon>
-                    </button>
-                    <button color="primary" class='right-button' mat-raised-button type="submit"
-                        (click)="updateCampaign()">
-                        {{'modify' | translate}}
-                        <mat-icon>
-                            <span class="material-icons-outlined">
-                                edit
-                            </span>
-                        </mat-icon>
-                    </button>
-                    <button class='right-button delete-button' mat-raised-button (click)="deleteCampaign()">
-                        {{'delete' |translate}}
-                        <mat-icon>
-                            <span class="material-icons-outlined">
-                                delete
-                            </span>
-                        </mat-icon>
-                    </button>
-                </div>
-
+                <mat-grid-list cols="3" rowHeight="40px">
+                    <mat-grid-tile [colspan]="1">
+                        <button color="primary" class='right-button full-width' mat-raised-button type="submit"
+                            (click)="updateCampaign()">
+                            {{'modify' | translate}}
+                            <mat-icon>
+                                <span class="material-icons-outlined">
+                                    edit
+                                </span>
+                            </mat-icon>
+                        </button>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="1">
+                        <button color="primary" class='right-button full-width' mat-raised-button type="submit"
+                            (click)="handleManager()">
+                            {{'handleManager' | translate}}
+                            <mat-icon>
+                                <span class="material-icons-outlined">
+                                    supervisor_account
+                                </span>
+                            </mat-icon>
+                        </button>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="1">
+                        <button class='right-button delete-button full-width' mat-raised-button
+                            (click)="deleteCampaign()">
+                            {{'delete' |translate}}
+                            <mat-icon>
+                                <span class="material-icons-outlined">
+                                    delete
+                                </span>
+                            </mat-icon>
+                        </button>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="1">
+                        <button color="primary" class='right-button full-width' mat-raised-button type="submit"
+                            (click)="rewards()">
+                            {{'prizes' | translate}}
+                            <mat-icon>
+                                <span class="material-icons-outlined">
+                                    stars
+                                </span>
+                            </mat-icon>
+                        </button>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="1">
+                        <button color="primary" class='right-button full-width' mat-raised-button type="submit"
+                            (click)="survey()">
+                            {{'surveys' | translate}}
+                            <mat-icon>
+                                <span class="material-icons-outlined">
+                                    description
+                                </span>
+                            </mat-icon>
+                        </button>
+                    </mat-grid-tile>
+                </mat-grid-list>
             </mat-card>
         </div>
     </div>

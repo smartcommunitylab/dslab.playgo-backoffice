@@ -78,6 +78,7 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
     this.dataSource.sortingDataAccessor = (item, property) => {
       switch(property) {
         case 'name': return item.name[this.language];
+        case 'territoryId': return item.territoryId;
       }
     };
   }
