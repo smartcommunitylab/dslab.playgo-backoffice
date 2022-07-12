@@ -82,6 +82,12 @@ export class ManagerHandlerComponent implements OnInit {
     this.dataSource = new MatTableDataSource<ExtendedUserClass>(this.listManagers);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = (item, property) => {
+      switch(property) {
+        case 'email': return item.manager.preferredUsername;
+        case 'role' : return item.manager.role;
+      }
+    };
   }
 
   announceSortChange(sortState: Sort) {

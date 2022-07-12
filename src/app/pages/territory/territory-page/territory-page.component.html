@@ -81,17 +81,9 @@
 
                     </div>
                 </mat-card-content>
-                <div style="height:40px;">
-                    <button color="primary" class='right-button' mat-raised-button type="button"
-                        (click)="handleManager()">
-                        {{'handleManager' | translate}}
-                        <mat-icon>
-                            <span class="material-icons-outlined">
-                                supervisor_account
-                            </span>
-                        </mat-icon>
-                    </button>
-                    <button color="primary" class='right-button' mat-raised-button type="button"
+                <mat-grid-list cols="7" rowHeight="40px">
+                    <mat-grid-tile [colspan]="2">
+                        <button color="primary" class='full-width right-button' mat-raised-button type="button"
                         (click)="updateTerritory()">
                         {{'modify' | translate}}
                         <mat-icon>
@@ -100,7 +92,20 @@
                             </span>
                         </mat-icon>
                     </button>
-                    <button class='right-button delete-button' mat-raised-button type="button"
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="3">
+                        <button color="primary" class='full-width right-button' mat-raised-button type="button"
+                        (click)="handleManager()">
+                        {{'handleManager' | translate}}
+                        <mat-icon>
+                            <span class="material-icons-outlined">
+                                supervisor_account
+                            </span>
+                        </mat-icon>
+                    </button>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="2">
+                        <button class='full-width right-button delete-button' mat-raised-button type="button"
                         (click)="deleteTerritory()">
                         {{'delete' |translate}}
                         <mat-icon>
@@ -109,7 +114,8 @@
                             </span>
                         </mat-icon>
                     </button>
-                </div>
+                    </mat-grid-tile>
+                </mat-grid-list>
             </mat-card>
         </div>
     </div>

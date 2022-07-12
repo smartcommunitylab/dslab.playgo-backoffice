@@ -117,7 +117,8 @@ export class CampaignPageComponent implements OnInit {
   addCampaign() {
     const dialogRef = this.dialogCreate.open(CampaignAddFormComponent, {
       width: "80%",
-      height: '820px',
+      minHeight: '700px',
+      height:'88%',
       disableClose: true,
       panelClass: 'custom-dialog-container' 
     });
@@ -159,7 +160,8 @@ export class CampaignPageComponent implements OnInit {
   updateCampaign() {
     const dialogRef = this.dialogUpdate.open(CampaignAddFormComponent, {
       width: "80%",
-      height: '900px',
+      minHeight: '700px',
+      height:'88%',
       disableClose: true,
       panelClass: 'custom-dialog-container' 
     });
@@ -205,6 +207,8 @@ export class CampaignPageComponent implements OnInit {
   handleManager() {
     const dialogRef = this.dialogUpdate.open(ManagerHandlerComponent, {
       width: "80%",
+      minHeight: '300px',
+      maxHeight:'700px',
     });
     let instance = dialogRef.componentInstance;
     instance.name = this.selectedCampaign.name[this.translate.currentLang];
@@ -219,7 +223,7 @@ export class CampaignPageComponent implements OnInit {
     const dialogRef = this.dialogUpdate.open(SurveyComponentComponent, {
       width: "80%",
       minHeight: '300px',
-      maxHeight:'800px',
+      maxHeight:'700px',
       panelClass: 'custom-dialog-container' 
     });
     let instance = dialogRef.componentInstance;
@@ -237,7 +241,7 @@ export class CampaignPageComponent implements OnInit {
     const dialogRef = this.dialogUpdate.open(RewardsComponent, {
       width: "80%",
       minHeight: '300px',
-      maxHeight:'800px',
+      maxHeight:'700px',
       panelClass: 'custom-dialog-container' 
     });
     let instance = dialogRef.componentInstance;
