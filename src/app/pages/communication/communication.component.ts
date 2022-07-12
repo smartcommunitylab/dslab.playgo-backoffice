@@ -68,6 +68,13 @@ export class CommunicationComponent implements OnInit {
     );
     this.dataSource.paginator = this.matPaginator;
     this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = (item, property) => {
+      switch(property) {
+        case 'title': return item.title;
+        case 'when': return item.timestamp;
+        case 'channel': return item.channels.toString();
+      }
+    };
   }
 
   addComunication() {
