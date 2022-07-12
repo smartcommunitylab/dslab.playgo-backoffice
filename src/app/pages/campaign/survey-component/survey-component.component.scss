@@ -45,28 +45,29 @@
   word-break: break-word;
 }
 
-.mat-column-type {
-  width: 7% !important;
-  word-break: break-word;
-}
+// .mat-column-type {
+//   width: 7% !important;
+//   word-break: break-word;
+// }
 
-.mat-column-score {
-  width: 5% !important;
-  word-break: break-word;
-}
+// .mat-column-score {
+//   width: 5% !important;
+//   word-break: break-word;
+// }
 
-.mat-column-link {
-  width: 40% !important;
-  word-break: break-word;
-}
+// .mat-column-link {
+//   width: 40% !important;
+//   word-break: break-word;
+// }
 
-.mat-column-surveyId {
-  width: 8% !important;
-  word-break: break-word;
-}
+// .mat-column-surveyName {
+//   width: 8% !important;
+//   word-break: break-word;
+// }
 
 .mat-column-buttons {
-  width: 20% !important;
+  min-width: 100px !important;
+  width: 7% !important;
   margin-left: 10px;
 }
 
@@ -106,4 +107,19 @@
   width: 10%;
   height: 35px;
   margin-bottom: 0px;
+}
+
+.newItem{
+  background-color: #E0F5FF; 
+}
+
+.button-action-class{
+  min-width: 35px;
+  max-width: 35px;
+  min-height: 35px;
+  max-height: 35px;
+}
+
+.survey-table{
+  min-width: 350px;
 }
