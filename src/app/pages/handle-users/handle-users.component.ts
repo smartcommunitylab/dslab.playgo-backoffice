@@ -9,6 +9,7 @@ import { Clipboard } from "@angular/cdk/clipboard";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ConsoleControllerService } from "src/app/core/api/generated/controllers/consoleController.service";
 import { PagePlayer } from "src/app/shared/classes/PagePlayerInfoConsole-class";
+import { SnackbarSavedComponent } from "src/app/shared/components/snackbar-saved/snackbar-saved.component";
 
 @Component({
   selector: "app-handle-users",
@@ -19,7 +20,7 @@ export class HandleUsersComponent implements OnInit {
   pageSizesOnTable = [50];
   territoryId: string;
   searchString: string ="";
-  displayedColumns: string[] = ["playerId","nickname","mail", "name", "surname", "campaings", "notifications"];
+  displayedColumns: string[] = ["playerId","copyPlayerId","nickname","copyNickname","mail","copyMail", "name", "surname", "campaings", "notifications"];
   dataSource: MatTableDataSource<PlayerCampaignClass>;
   currentPageNumber: number;
   sorting: string = "";
@@ -141,9 +142,10 @@ export class HandleUsersComponent implements OnInit {
 
   copy(element: string) {
     this.clipboard.copy(element);
-    this._snackBar.openFromComponent(CopiedComponent, {
+    this._snackBar.openFromComponent(SnackbarSavedComponent, {
       panelClass: 'snackBar-small',
-      duration: 4999,
+      data:{copy: true, text: element},
+      duration: 1999,
     });
   }
 

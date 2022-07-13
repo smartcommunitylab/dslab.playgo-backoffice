@@ -30,6 +30,41 @@
   .hover-copy-icon:hover{
     background-color: rgba(0, 0, 0, 0.363);
   }
+
+  .mat-column-playerId {
+    width: 330px !important;
+    //max-width: 340px !important;
+    word-break: break-word;
+  }
+  .mat-column-nickname {
+    width: 120px !important;
+    //max-width: 150px !important;
+    word-break: break-word;
+  }
+  .mat-column-mail {
+    width: 180px !important;
+    //max-width: 180px !important;
+    word-break: break-word;
+  }
+
+
+  .mat-column-copyPlayerId {
+    width: 100px !important;
+    word-break: break-word;
+  }
+  .mat-column-copyMail {
+    width: 100px !important;
+    word-break: break-word;
+  }
+
+  .mat-column-copyNickname {
+    width: 100px !important;
+    word-break: break-word;
+  }
+
+
+
+  
   
   .table{
     width: 55%;

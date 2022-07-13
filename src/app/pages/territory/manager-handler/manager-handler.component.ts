@@ -132,6 +132,8 @@ export class ManagerHandlerTerritoryComponent implements OnInit {
     catch(error){
       this.errorMsgNewManager = "Error while adding new Manager: " + error.toString();
     }
+  }else{
+    this.errorMsgNewManager = 'fillAllfields';
   }
   }
 
