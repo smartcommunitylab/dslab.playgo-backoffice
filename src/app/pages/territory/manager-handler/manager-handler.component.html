@@ -1,49 +1,61 @@
-<div class="full-width" style="height: 50px">
-    <h1 class="header-div">{{"handleManagerTerritory" | translate}} - {{name}}</h1>
-    <div class="close-div">
-        <button class="right-button" type="button" mat-icon-button (click)="onNoClick($event)">
-            <mat-icon>
-                <span class="material-symbols-outlined">
-                    close
-                </span>
-            </mat-icon>
+<mat-grid-list [cols]="8" rowHeight="40px">
+    <mat-grid-tile [colspan]="7">
+        <h1 style="width: 100%;">{{"handleManagerTerritory" | translate}} - {{name}}</h1>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="1">
+        <button class="grey-background" type="button" mat-flat-button (click)="onNoClick($event)">
+            {{'cancel'|translate}}
         </button>
-    </div>
-</div>
-<h4 class="header-div" style="margin-top: 4px;">{{"territoryId" | translate}} - {{territoryId}}</h4>
-<div class="add-button-div">
-    <button type="button" style="width: 150px;" mat-raised-button color="primary" class="add-button"
-        (click)="addManager()">
-        <span *ngIf="!addNewManager"><mat-icon style="margin-top:11px;">add</mat-icon></span> <span *ngIf="!addNewManager"> {{'add' | translate}}</span>
-        <span *ngIf="addNewManager"><mat-icon style="margin-top:11px;">remove</mat-icon></span> <span *ngIf="addNewManager"> {{'hide' | translate}}</span>
-    </button>
-</div>
-<div *ngIf="addNewManager">
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="4">
+        <h4 style="width: 100%;">{{"territoryId" | translate}} - {{territoryId}}</h4>
+    </mat-grid-tile>
     <form [formGroup]="newManagerForm">
-        <div class="in-line-forms">
-            <mat-form-field class="full-dimension" appearance="fill">
-                <mat-label>{{'email' | translate}}</mat-label>
-                <input matInput id="email" formControlName="email">
-            </mat-form-field>
-        </div>
-        <p *ngIf="!!errorMsgNewManager" class="full-dimension red">{{errorMsgNewManager | translate}}</p>
-        <button type="submit" mat-raised-button color="primary" class="add-button" (click)="saveNewManager()">
-            {{'save' | translate}}
-        </button>
+        <mat-grid-tile colspan="8">
+            <div class="full-width">
+                <mat-form-field class="full-dimension" appearance="fill">
+                    <mat-label>{{'email' | translate}}</mat-label>
+                    <input matInput id="email" formControlName="email">
+                </mat-form-field>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="7">
+            <p *ngIf="!!errorMsgNewManager" class="red" style="width: 100%;">{{errorMsgNewManager | translate}}</p>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="1">
+            <button color="primary" type="submit" mat-flat-button (click)="saveNewManager()">
+                <mat-icon>
+                    <span class="material-symbols-outlined">
+                        save
+                    </span>
+                </mat-icon>
+                {{'save' |translate}}
+            </button>
+        </mat-grid-tile>
+        <!-- <mat-grid-tile colspan="1">
+            <button type="submit" mat-raised-button color="primary" class="add-button" (click)=" addManager()">
+                <mat-icon>
+                    <span class="material-symbols-outlined">
+                        add
+                    </span>
+                </mat-icon>
+                {{'add' | translate}}
+            </button>
+        </mat-grid-tile> -->
     </form>
+</mat-grid-list>
 
-</div>
 <div class="full-width">
     <table mat-table [dataSource]="dataSource" class="full-width" matSort (matSortChange)="announceSortChange($event)">
 
         <ng-container matColumnDef="email">
             <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by email">
-                 {{ 'email'| translate}} </th>
+                {{ 'email'| translate}} </th>
             <td mat-cell *matCellDef="let element"> {{element.manager.preferredUsername}} </td>
         </ng-container>
 
         <ng-container matColumnDef="role">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by role"> 
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by role">
                 {{ 'role'| translate}} </th>
             <td mat-cell *matCellDef="let element"> {{element.manager.role | translate}} </td>
         </ng-container>

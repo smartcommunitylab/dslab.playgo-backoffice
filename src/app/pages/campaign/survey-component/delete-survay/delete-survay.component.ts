@@ -37,7 +37,7 @@ export class DeleteSurvayComponent implements OnInit {
       name: this.surveyName
     }).subscribe(()=>{
       this.onNoClick('',this.surveyName);
-      const text = 'deleted';
+      const text = this.translate.instant('deleted');
       this._snackBar.openFromComponent(SnackbarSavedComponent,
         {
          data:{displayText: text},

@@ -6,7 +6,7 @@
             <input matInput id="playersId" formControlName="playersId">
         </mat-form-field>
     </div>
-    <p class="warning">{{'assignSurvayWarning' | translate}}</p>
+    <p class="awarness">{{'assignSurvayWarning' | translate}}</p>
     <div class="in-line-forms">
         <mat-form-field appearance="fill" class="input-half-left">
             <mat-label>{{'dateFrom' | translate}}</mat-label>
@@ -39,5 +39,5 @@
     </div> -->
     <p *ngIf="!!msgError" class="warning">{{msgError | translate}}</p>
     <button type="submit" class="right-button" color="primary" mat-flat-button (click)="assign()">{{'assign' | translate}}</button>
-    <button type="button" class="right-button"  mat-flat-button (click)="onNoClick('')">{{'close' | translate}}</button>
+    <button type="button" class="grey-background right-button" style="margin-right:20px; margin-left: 20px"  mat-flat-button (click)="onNoClick('')">{{'close' | translate}}</button>
 </form>

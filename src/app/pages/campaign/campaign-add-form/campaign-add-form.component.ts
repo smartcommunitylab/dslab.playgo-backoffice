@@ -656,7 +656,7 @@ export class CampaignAddFormComponent implements OnInit {
   }
 
   hasBeenModified():boolean{
-    return true;
+    return this.validatingForm.touched;
   }
 
   setDetails(details: {
