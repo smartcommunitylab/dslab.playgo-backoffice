@@ -146,9 +146,9 @@
                         </span>
                     </div>
                 </mat-card-content>
-                <mat-grid-list cols="3" rowHeight="40px">
+                <mat-grid-list cols="4" rowHeight="40px">
                     <mat-grid-tile [colspan]="1">
-                        <button color="primary" class='right-button full-width' mat-raised-button type="submit"
+                        <button color="primary" class='action-button' mat-raised-button type="submit"
                             (click)="updateCampaign()">
                             {{'modify' | translate}}
                             <mat-icon>
@@ -159,7 +159,7 @@
                         </button>
                     </mat-grid-tile>
                     <mat-grid-tile [colspan]="1">
-                        <button color="primary" class='right-button full-width' mat-raised-button type="submit"
+                        <button color="primary" class='action-button' mat-raised-button type="submit"
                             (click)="handleManager()">
                             {{'handleManager' | translate}}
                             <mat-icon>
@@ -170,7 +170,7 @@
                         </button>
                     </mat-grid-tile>
                     <mat-grid-tile [colspan]="1">
-                        <button class='right-button delete-button full-width' mat-raised-button
+                        <button class='delete-button action-button' mat-raised-button
                             (click)="deleteCampaign()">
                             {{'delete' |translate}}
                             <mat-icon>
@@ -181,7 +181,7 @@
                         </button>
                     </mat-grid-tile>
                     <mat-grid-tile [colspan]="1">
-                        <button color="primary" class='right-button full-width' mat-raised-button type="submit"
+                        <button color="primary" class='action-button' mat-raised-button type="submit"
                             (click)="rewards()">
                             {{'prizes' | translate}}
                             <mat-icon>
@@ -192,7 +192,7 @@
                         </button>
                     </mat-grid-tile>
                     <mat-grid-tile [colspan]="1">
-                        <button color="primary" class='right-button full-width' mat-raised-button type="submit"
+                        <button color="primary" class='action-button' mat-raised-button type="submit"
                             (click)="survey()">
                             {{'surveys' | translate}}
                             <mat-icon>

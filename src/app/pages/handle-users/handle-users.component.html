@@ -30,6 +30,12 @@
                                 'playerId'| translate}} </th>
                             <td mat-cell *matCellDef="let element">
                                 {{element.player.playerId}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="copyPlayerId">
+                            <th mat-header-cell *matHeaderCellDef></th>
+                            <td mat-cell *matCellDef="let element">
                                 <mat-icon class="cursor-pointer hover-copy-icon font-lighter"
                                     (click)="copy(element.player.playerId)">
                                     <span class="material-symbols-outlined">
@@ -45,6 +51,12 @@
                                 'nickname'| translate}} </th>
                             <td mat-cell *matCellDef="let element">
                                 {{element.player.nickname}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="copyNickname">
+                            <th mat-header-cell  *matHeaderCellDef> </th>
+                            <td mat-cell *matCellDef="let element">
                                 <mat-icon class="cursor-pointer hover-copy-icon font-lighter"
                                     (click)="copy(element.player.nickname)">
                                     <span class="material-symbols-outlined">
@@ -54,18 +66,24 @@
                             </td>
                         </ng-container>
 
+
                         <ng-container matColumnDef="mail">
                             <th mat-header-cell mat-sort-header *matHeaderCellDef sortActionDescription="Sort by mail">
                                 {{ 'mail'|
                                 translate}} </th>
                             <td mat-cell *matCellDef="let element">
                                 {{element.player.mail}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="copyMail">
+                            <th mat-header-cell *matHeaderCellDef > </th>
+                            <td mat-cell *matCellDef="let element">
                                 <mat-icon class="cursor-pointer hover-copy-icon font-lighter" (click)="copy(element.player.mail)">
                                     <span class="material-symbols-outlined">
                                         content_copy
                                     </span>
                                 </mat-icon>
-
                             </td>
                         </ng-container>
 

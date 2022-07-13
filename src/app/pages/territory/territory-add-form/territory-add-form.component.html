@@ -14,7 +14,7 @@
                     </mat-icon>
                     {{'save' |translate}}
                 </button>
-                <button class="right-button" mat-flat-button (click)="onNoClick($event)">{{'cancel'
+                <button class="grey-background right-button" mat-flat-button (click)="onNoClick($event)">{{'cancel'
                     |translate}}</button>
             </div>
         </div>
@@ -41,7 +41,7 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <p class="warning">{{'warningTextBoxesSelectedLanguage' | translate}}</p>
+                    <p class="awarness">{{'warningTextBoxesSelectedLanguage' | translate}}</p>
                     <div *ngFor="let l of languagesSupported">
                         <mat-form-field appearance="fill" class="input-custom-half-left" *ngIf="l===languageSelected">
                             <mat-label>{{'nameTerritory' | translate}} - {{l | translate}}</mat-label>
@@ -115,7 +115,7 @@
                     </mat-icon>
                     {{'save' | translate}}
                 </button>
-                <button class="right-button" mat-flat-button (click)="onNoClick($event)">{{'cancel'
+                <button class="grey-background right-button" mat-flat-button (click)="onNoClick($event)">{{'cancel'
                     |translate}}</button>
             </div>
         </div>
@@ -139,7 +139,7 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <p class="warning">{{'warningTextBoxesSelectedLanguage' | translate}}</p>
+                    <p class="awarness">{{'warningTextBoxesSelectedLanguage' | translate}}</p>
                     <div *ngFor="let l of languagesSupported">
                         <mat-card class="card" *ngIf="l===languageSelected">
                             <mat-card-title>{{'description' | translate}} - {{l | translate}}</mat-card-title>

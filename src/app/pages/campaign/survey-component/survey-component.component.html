@@ -122,7 +122,8 @@
                     </button>
                 </mat-grid-tile>
                 <mat-grid-tile [colspan]="1" rowspan="1">
-                    <button color="primary" type="button" mat-icon-button (click)="assignSurvey(element)" disabled="{{element.defaultSurvey}}">
+                    <button color="primary" type="button" mat-icon-button (click)="assignSurvey(element)" disabled="{{element.defaultSurvey}}"
+                    matTooltip="{{'assign' | translate}}">
                         <mat-icon>
                             <span class="material-symbols-outlined">
                                 edit
