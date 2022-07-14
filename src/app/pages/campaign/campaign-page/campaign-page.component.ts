@@ -209,6 +209,7 @@ export class CampaignPageComponent implements OnInit {
       width: "80%",
       minHeight: '300px',
       maxHeight:'700px',
+      panelClass: 'custom-dialog-container' 
     });
     let instance = dialogRef.componentInstance;
     instance.name = this.selectedCampaign.name[this.translate.currentLang];

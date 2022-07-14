@@ -194,6 +194,7 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
     const dialogRef = this.dialogUpdate.open(ManagerHandlerTerritoryComponent, {
       width: "80%",
       height: "90%",
+      panelClass: 'custom-dialog-container' 
     });
     let instance = dialogRef.componentInstance;
     instance.name = this.selectedTerritory.name[this.translate.currentLang];

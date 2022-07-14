@@ -27,25 +27,18 @@ export class DeleteSurvayComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onNoClick(event: any,id?: String): void {
-    this.dialogRef.close(id);
+  onNoClick(event: any,deletee: boolean): void {
+    this.dialogRef.close(deletee);
   }
 
   delete(){
-    this.survayService.deleteSurveyUsingDELETE({
-      campaignId: this.campaignId,
-      name: this.surveyName
-    }).subscribe(()=>{
-      this.onNoClick('',this.surveyName);
       const text = this.translate.instant('deleted');
       this._snackBar.openFromComponent(SnackbarSavedComponent,
         {
          data:{displayText: text},
          duration: 4999
        });
-    },(error)=>{
-      this.msgError = error ? (error.error ? error.error.ex : error) : 'error';
-    });
+    this.onNoClick('',true);
   }
 
 }

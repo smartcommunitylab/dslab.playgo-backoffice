@@ -36,8 +36,6 @@
 
   .error{
     color: red;
-    position: absolute;
-    left: 5px;
   }
 
 .mat-column-defaultSurvey {
@@ -112,6 +110,9 @@
 .newItem{
   background-color: #E0F5FF; 
 }
+.grey-background{
+  background-color: rgb(197, 197, 197);
+}
 
 .button-action-class{
   min-width: 35px;
@@ -122,4 +123,9 @@
 
 .survey-table{
   min-width: 350px;
+}
+
+.black-box{
+  border: black solid 1px;
+  padding: 7px;
 }

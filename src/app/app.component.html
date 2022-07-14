@@ -17,7 +17,7 @@
         </mat-option>
     </mat-select> -->
     <button mat-icon-button class="example-icon favorite-icon manage-user-button"
-        aria-label="Example icon-button with heart icon" (click)="openDialogAccount($event)">
+        aria-label="Example icon-button with heart icon" [matMenuTriggerFor]="menu">
         <mat-icon>
             <span class="material-icons-outlined">
                 manage_accounts
@@ -45,3 +45,33 @@
         </div>
     </div>
 </div>
+<mat-menu #menu="matMenu">
+    <div style="padding: 5px;">
+        <h1>{{"account" | translate}} <span *ngIf="account.email">- {{"username" | translate}}: {{account.email}}</span></h1>
+        <h3 *ngIf="account.firstName || account.lastName">{{"name" | translate}}: {{account.firstName}} {{account.lastName}}</h3>
+        <div>
+            <mat-form-field appearance="fill" class="lang">
+                <mat-label>{{'selectLanguage' | translate}}</mat-label>
+                <mat-select [(ngModel)]="selectedLanguage" id="lang">
+                    <mat-option *ngFor="let lang of languagesSelectable"
+                        [value]="lang" (click)="changeLanguage(lang)">
+                        {{lang | translate}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <h3>{{"roles" | translate}}</h3>
+        <ul *ngFor="let role of rolesMenu">
+            <li><span *ngIf="role.entityId"> {{role.entityId}}: </span>{{role.role | translate}} </li>
+        </ul>
+        <button class="button-margin" mat-raised-button color="primary" (click)="logout($event)">
+            <mat-icon>
+                <span class="material-symbols-outlined">
+                    logout
+                    </span>
+            </mat-icon>
+            {{"logout" | translate}}
+        </button>
+    </div>
+
+  </mat-menu>
