@@ -1,26 +1,20 @@
-<mat-grid-list [cols]="8" rowHeight="40px">
+<mat-grid-list [cols]="8" rowHeight="50px">
     <mat-grid-tile [colspan]="7">
-        <h1 style="width: 100%;">{{"handleManagerTerritory" | translate}} - {{name}}</h1>
+        <h1 style="width: 100%;">{{"handleManager" | translate}} {{name}} ({{territoryId}})</h1>
     </mat-grid-tile>
     <mat-grid-tile [colspan]="1">
         <button class="grey-background" type="button" mat-flat-button (click)="onNoClick($event)">
             {{'cancel'|translate}}
         </button>
     </mat-grid-tile>
-    <mat-grid-tile [colspan]="4">
-        <h4 style="width: 100%;">{{"territoryId" | translate}} - {{territoryId}}</h4>
-    </mat-grid-tile>
     <form [formGroup]="newManagerForm">
-        <mat-grid-tile colspan="8">
+        <mat-grid-tile [colspan]="7">
             <div class="full-width">
                 <mat-form-field class="full-dimension" appearance="fill">
                     <mat-label>{{'email' | translate}}</mat-label>
                     <input matInput id="email" formControlName="email">
                 </mat-form-field>
             </div>
-        </mat-grid-tile>
-        <mat-grid-tile colspan="7">
-            <p *ngIf="!!errorMsgNewManager" class="red" style="width: 100%;">{{errorMsgNewManager | translate}}</p>
         </mat-grid-tile>
         <mat-grid-tile [colspan]="1">
             <button color="primary" type="submit" mat-flat-button (click)="saveNewManager()">
@@ -32,18 +26,9 @@
                 {{'save' |translate}}
             </button>
         </mat-grid-tile>
-        <!-- <mat-grid-tile colspan="1">
-            <button type="submit" mat-raised-button color="primary" class="add-button" (click)=" addManager()">
-                <mat-icon>
-                    <span class="material-symbols-outlined">
-                        add
-                    </span>
-                </mat-icon>
-                {{'add' | translate}}
-            </button>
-        </mat-grid-tile> -->
     </form>
 </mat-grid-list>
+<p *ngIf="!!errorMsgNewManager" class="red" style="width: 100%;">{{errorMsgNewManager | translate}}</p>
 
 <div class="full-width">
     <table mat-table [dataSource]="dataSource" class="full-width" matSort (matSortChange)="announceSortChange($event)">

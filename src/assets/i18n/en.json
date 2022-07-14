@@ -228,6 +228,8 @@
   "errorWhileLoadingRewards":"Error while loading rewards",
   "errorWhileLoadingWeeks":"Error while loading weeks",
   "deleted":"Deleted",
+  "emailAlreadyPresentManager":"It's not possible to add the email since it's already used",
+  "errorAddingManager":"Error while adding the manager: ",
   "":"",
   "":"",
   "":"",
