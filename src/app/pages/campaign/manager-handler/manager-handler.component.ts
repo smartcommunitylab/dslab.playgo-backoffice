@@ -10,6 +10,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import {  trigger,  state,  style,  transition,  animate,} from "@angular/animations";
 import { ManagerDeleteComponent } from './manager-delete/manager-delete.component';
 import { ConsoleControllerService } from 'src/app/core/api/generated/controllers/consoleController.service';
+import { TranslateService } from '@ngx-translate/core';
 
 const LIST_MANAGERS = [
   {
@@ -63,6 +64,7 @@ export class ManagerHandlerComponent implements OnInit {
     public dialogRef: MatDialogRef<ManagerHandlerComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _liveAnnouncer: LiveAnnouncer,
+    private translate: TranslateService,
     private managerService: ConsoleControllerService,
     private formBuilder: FormBuilder,
     private dialogDelete: MatDialog,) { }
@@ -108,30 +110,41 @@ export class ManagerHandlerComponent implements OnInit {
     this.addNewManager = !this.addNewManager;
   }
 
-  saveNewManager(){
-    if(this.newManagerForm.valid){
-      this.errorMsgNewManager= "";
-    try{
-      this.newManager = new ExtendedUserClass();
-      this.newManager.manager = new UserClass();
-      this.newManager.manager.preferredUsername = this.newManagerForm.get("email").value;
-      this.managerService.addCampaignManagerUsingPOST({
-        userName:this.newManager.manager.preferredUsername,
-        campaignId: this.campaignId
+
+  saveNewManager() {
+    if (this.newManagerForm.valid) {
+      this.errorMsgNewManager = "";
+      if (
+        this.checkEmailAlreadyPresent(this.newManagerForm.get("email").value)
+      ) {
+        this.errorMsgNewManager = this.translate.instant(
+          "emailAlreadyPresentManager"
+        );
+        return;
+      } else {
+        this.newManager = new ExtendedUserClass();
+        this.newManager.manager = new UserClass();
+        this.newManager.manager.preferredUsername =
+          this.newManagerForm.get("email").value;
+        this.managerService.addCampaignManagerUsingPOST({
+          userName:this.newManager.manager.preferredUsername,
+          campaignId: this.campaignId
+        })
+          .subscribe(
+            (res) => {
+              this.listManagers = [this.newManager].concat(this.listManagers);
+              this.setTableData();
+              //this.addNewManager = false;
+            },
+            (error) => {
+              this.errorMsgNewManager =
+                this.translate.instant("errorAddingManager") + error.toString();
+            }
+          );
       }
-        ).subscribe((res)=>{
-        this.listManagers.push(this.newManager);
-        this.setTableData();
-        //this.addNewManager = false;
-      },
-      (error)=>{
-        this.errorMsgNewManager = "Error while adding new Manager subscription: " + error.toString();
-      });
+    } else {
+      this.errorMsgNewManager = "fillAllfields";
     }
-    catch(error){
-      this.errorMsgNewManager = "Error while adding new Manager: " + error.toString();
-    }
-  }
   }
 
   deleteManager(manager: ExtendedUserClass){
@@ -172,7 +185,17 @@ export class ManagerHandlerComponent implements OnInit {
     return result;
   }
 
+
+checkEmailAlreadyPresent(preferredUsername: string):boolean{
+  for(let item of this.listManagers){
+    if(item.manager.preferredUsername === preferredUsername){
+      return true;
+    }
+  }
+ return false;
 }
+}
+
 
 
 class ExtendedUserClass {
