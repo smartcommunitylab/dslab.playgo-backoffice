@@ -1,28 +1,12 @@
 <div class="header-bar-stick">
-    <!-- <div class="full-width header-chunck">
-        <h1 class="header-div">{{ 'weeklyPrizes'| translate}}</h1>
-        <div class="close-div">
-            <button class="right-button" type="button" mat-icon-button (click)="onNoClick($event)">
-                <mat-icon>
-                    <span class="material-symbols-outlined">
-                        close
-                    </span>
-                </mat-icon>
-            </button>
-        </div>
-    </div> -->
     <form [formGroup]="validatingForm">
         <mat-grid-list cols="8" rowHeight="45px">
             <mat-grid-tile [colspan]="7" [rowspan]="1">
                 <h1 class="full-width header-div">{{ 'weeklyPrizes'| translate}}</h1>
             </mat-grid-tile>
             <mat-grid-tile [colspan]="1" [rowspan]="1">
-                <button class="right-button" type="button" mat-icon-button (click)="onNoClick($event)">
-                    <mat-icon>
-                        <span class="material-symbols-outlined">
-                            close
-                        </span>
-                    </mat-icon>
+                <button class="grey-background" type="button" mat-flat-button (click)="onNoClick($event)">
+                    {{'cancel'|translate}}
                 </button>
             </mat-grid-tile>
             <mat-grid-tile [colspan]="1" [rowspan]="1">

@@ -1,64 +1,82 @@
 <div class="header-bar-stick">
-    <form [formGroup]="validatingForm">
-        <mat-grid-list cols="8" rowHeight="50px">
-            <mat-grid-tile [colspan]="7" [rowspan]="1">
-                <h1 class="header-div">{{ 'surveys'| translate}}</h1>
-            </mat-grid-tile>
-            <mat-grid-tile [colspan]="1" [rowspan]="1">
-                <button class="right-button" type="button" mat-icon-button (click)="onNoClick($event)">
-                    <mat-icon>
-                        <span class="material-symbols-outlined">
-                            close
-                        </span>
-                    </mat-icon>
-                </button>
-            </mat-grid-tile>
-            <mat-grid-tile [colspan]="2" [rowspan]="1">
-                <mat-checkbox style="position: absolute;" color="primary" [checked]="defaultSurveyCheck" (change)="defaultSurveyCheck = !defaultSurveyCheck">{{'defaultSurvey' | translate}}</mat-checkbox>
-            </mat-grid-tile>
-            <mat-grid-tile [colspan]="3" [rowspan]="1">
-                <mat-form-field appearance="fill" class="full-width" style="margin-right:5px">
-                    <mat-label>{{'surveyName' | translate}}</mat-label>
-                    <input matInput id="surveyName" formControlName="surveyName">
-                </mat-form-field>
-            </mat-grid-tile>
-            <mat-grid-tile [colspan]="3" [rowspan]="1">
-                <mat-form-field appearance="fill" class="full-width">
-                    <mat-label>{{'surveyLink' | translate}}</mat-label>
-                    <input matInput id="surveyLink" formControlName="surveyLink">
-                </mat-form-field>
-            </mat-grid-tile>
-            <mat-grid-tile [colspan]="4" [rowspan]="1">
-                <mat-form-field appearance="fill" class="full-width" style="margin-right:5px">
-                    <mat-label>{{'bonusPoint' | translate}}</mat-label>
-                    <input matInput type="text" id="bonusPoint" formControlName="bonusPoint">
-                </mat-form-field>
-            </mat-grid-tile>
-            <mat-grid-tile [colspan]="4" [rowspan]="1">
-                <mat-form-field appearance="fill" class="full-width">
-                    <mat-label>{{'bonusScore' | translate}}</mat-label>
-                    <input matInput type="number" id="bonusScore" formControlName="bonusScore">
-                </mat-form-field>
-            </mat-grid-tile>
-            <mat-grid-tile [colspan]="6" [rowspan]="1" >
-                <p *ngIf="msgError" class="error" >{{msgError}}</p>
-            </mat-grid-tile>
-            <mat-grid-tile [colspan]="2" [rowspan]="1">
-                <button type="submit" class="add full-width" mat-flat-button color="primary"
-                (click)="addSurvey()">
-                <mat-icon>add</mat-icon>
-                {{'add' | translate}}
+    <mat-grid-list cols="8" rowHeight="50px">
+        <mat-grid-tile [colspan]="6" [rowspan]="1">
+            <h1 class="header-div">{{ 'surveys'| translate}}</h1>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="1" [rowspan]="1">
+            <button class="grey-background" type="button" mat-flat-button (click)="onNoClick($event)">
+                {{'cancel'|translate}}
             </button>
-            </mat-grid-tile>
-        </mat-grid-list>
-    </form>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="1" [rowspan]="1">
+            <button color="primary" type="button" mat-flat-button (click)="saveData(listActions)">
+                <mat-icon>
+                    <span class="material-symbols-outlined">
+                        save
+                    </span>
+                </mat-icon>
+                {{'save' |translate}}
+            </button>
+        </mat-grid-tile>
+    </mat-grid-list>
+    <ul *ngIf="errorMsgNewSurveyList.length >0">
+        <li class="error" *ngFor="let item of errorMsgNewSurveyList">
+            {{item}}
+        </li>
+    </ul>
 </div>
+    <div class="black-box">
+        <form [formGroup]="validatingForm">
+            <mat-grid-list cols="8" rowHeight="50px">
+                <mat-grid-tile [colspan]="6" [rowspan]="1">
+                    <p class="full-width">{{'addNewSurvey' | translate}}</p>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="2" [rowspan]="1">
+                    <mat-checkbox style="position: absolute;" color="primary" [checked]="defaultSurveyCheck"
+                        (change)="defaultSurveyCheck = !defaultSurveyCheck">{{'defaultSurvey' | translate}}
+                    </mat-checkbox>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="3" [rowspan]="1">
+                    <mat-form-field appearance="fill" class="full-width" style="margin-right:5px">
+                        <mat-label>{{'surveyName' | translate}}</mat-label>
+                        <input matInput id="surveyName" formControlName="surveyName">
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="3" [rowspan]="1">
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>{{'surveyLink' | translate}}</mat-label>
+                        <input matInput id="surveyLink" formControlName="surveyLink">
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="2" [rowspan]="1"></mat-grid-tile>
+                <mat-grid-tile [colspan]="3" [rowspan]="1">
+                    <mat-form-field appearance="fill" class="full-width" style="margin-right:5px">
+                        <mat-label>{{'bonusPoint' | translate}}</mat-label>
+                        <input matInput type="text" id="bonusPoint" formControlName="bonusPoint">
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="3" [rowspan]="1">
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>{{'bonusScore' | translate}}</mat-label>
+                        <input matInput type="number" id="bonusScore" formControlName="bonusScore">
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="2" [rowspan]="1">
+                    <button type="submit" class="add full-width" mat-flat-button color="primary" (click)="addSurvey()">
+                        <mat-icon>add</mat-icon>
+                        {{'add' | translate}}
+                    </button>
+                </mat-grid-tile>
+            </mat-grid-list>
+        </form>
+        <p *ngIf="errorAddNewSurvey" class="error">{{errorAddNewSurvey}}</p>
+    </div>
 <table mat-table [dataSource]="dataSource" class="survey-table">
 
     <ng-container matColumnDef="defaultSurvey">
         <th mat-header-cell *matHeaderCellDef> {{
             'defaultSurvey'| translate}} </th>
-        <td mat-cell *matCellDef="let element" class="bold"> 
+        <td mat-cell *matCellDef="let element" class="bold">
             <mat-icon *ngIf="element.defaultSurvey">
                 <span class="material-icons-outlined">
                     done
@@ -111,7 +129,7 @@
     <ng-container matColumnDef="buttons">
         <th mat-header-cell *matHeaderCellDef> {{'actions' | translate}} </th>
         <td mat-cell *matCellDef="let element">
-            <mat-grid-list cols="2" rowHeight="50px"> 
+            <mat-grid-list cols="2" rowHeight="50px">
                 <mat-grid-tile [colspan]="1" rowspan="1">
                     <button type="button" mat-icon-button (click)="deleteSurvey(element)">
                         <mat-icon>
@@ -122,8 +140,8 @@
                     </button>
                 </mat-grid-tile>
                 <mat-grid-tile [colspan]="1" rowspan="1">
-                    <button color="primary" type="button" mat-icon-button (click)="assignSurvey(element)" disabled="{{element.defaultSurvey}}"
-                    matTooltip="{{'assign' | translate}}">
+                    <button color="primary" type="button" mat-icon-button (click)="assignSurvey(element)"
+                        disabled="{{element.defaultSurvey}}" matTooltip="{{'assign' | translate}}">
                         <mat-icon>
                             <span class="material-symbols-outlined">
                                 edit

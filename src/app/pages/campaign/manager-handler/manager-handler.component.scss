@@ -35,3 +35,17 @@
   .newItem{
     background-color: #E0F5FF; 
   }
+
+  .black-box{
+    border: black solid 1px;
+    padding: 7px;
+  }
+
+  .header-bar-stick{
+    background-color: white;
+    position: sticky;
+    z-index: 1000;
+    top: 0px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.116);
+    margin-top: 10px;
+  }

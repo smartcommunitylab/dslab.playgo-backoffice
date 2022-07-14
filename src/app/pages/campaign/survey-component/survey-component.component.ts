@@ -12,14 +12,18 @@ import {
   MAT_DATE_LOCALE,
 } from "@angular/material/core";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatTableDataSource } from "@angular/material/table";
 import { TranslateService } from "@ngx-translate/core";
 import { CampaignControllerService } from "src/app/core/api/generated/controllers/campaignController.service";
 import { SurveyRequest } from "src/app/core/api/generated/model/surveyRequest";
+import { ActionSurveyClass, TypeActionSurvey } from "src/app/shared/classes/actionsurvey-class";
+import { SnackbarSavedComponent } from "src/app/shared/components/snackbar-saved/snackbar-saved.component";
 import {
   DEFAULT_SURVEY_KEY,
   MY_DATE_FORMATS,
 } from "src/app/shared/constants/constants";
+import { ConfirmCloseComponent } from "../manager-handler/confirm-close/confirm-close.component";
 import { AssignSurvayComponent } from "./assign-survay/assign-survay.component";
 import { DeleteSurvayComponent } from "./delete-survay/delete-survay.component";
 
@@ -46,8 +50,10 @@ export class SurveyComponentComponent implements OnInit {
   dataSource: MatTableDataSource<any>;
   displayedColumns: string[] = ["defaultSurvey", "surveyName", "surveyLink","type","score", "buttons"];
   newItem: SurveyRequest;
-  msgError: string;
+  errorMsgNewSurveyList: string[] = [];
+  errorAddNewSurvey: string;
   validatingForm: FormGroup;
+  listActions: ActionSurveyClass[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<SurveyComponentComponent>,
@@ -56,7 +62,8 @@ export class SurveyComponentComponent implements OnInit {
     private survayService: CampaignControllerService,
     private campaignService: CampaignControllerService,
     private dialogAssign: MatDialog,
-    private dialogDelete: MatDialog
+    private dialogDelete: MatDialog,
+    private _snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -78,22 +85,89 @@ export class SurveyComponentComponent implements OnInit {
   }
 
   onNoClick(event: any): void {
-    this.dialogRef.close();
+    if (this.listActions.length > 0) {
+      const dialogRef = this.dialogDelete.open(ConfirmCloseComponent, {
+        width: "40%",
+      });
+      dialogRef.afterClosed().subscribe((result) => {
+        if(result){
+          this.dialogRef.close();
+        }        
+      });
+    }else{
+      this.dialogRef.close();
+    }
+  }
+
+  saveData(actions: any[]){
+    this.errorMsgNewSurveyList = [];
+    this.fullfillActions(actions);
+  }
+
+  fullfillActions(actions: ActionSurveyClass[]) {
+    if (actions.length === 0) {
+      if (this.errorMsgNewSurveyList.length === 0) {
+        this.onNoClick("");
+        const text = this.translate.instant('savedData');
+        this._snackBar.openFromComponent(SnackbarSavedComponent,
+          {
+           data:{displayText: text},
+           duration: 4999
+         });
+      } else {
+        //do not close show errors;
+      }
+    } else {
+      const item = actions.pop();
+      if (item.type === TypeActionSurvey.TypeEnum.Add) {
+        this.survayService
+          .addSurveyUsingPOST({
+            campaignId: item.id,
+            body: item.survey
+          })
+          .subscribe(
+            () => {
+              this.fullfillActions(actions);
+            },
+            (error) => {
+              const text =
+              this.translate.instant("errorAddSurvey") +": " +item.survey.surveyName + ", " + (error.error.ex ? error.error.ex : error.toString());
+            this.errorMsgNewSurveyList.push(text);
+            this.fullfillActions(actions);
+            }
+          );
+      } else if (item.type === TypeActionSurvey.TypeEnum.Delete) {
+        this.survayService.deleteSurveyUsingDELETE({
+          campaignId: item.id,
+          name: item.survey.surveyName
+        }).subscribe(()=>{
+              this.fullfillActions(actions);
+            },
+            (error) => {
+              const text =
+              this.translate.instant("errorDeleteSurvey") +": " +item.survey.surveyName + ", " + (error.error.ex ? error.error.ex : error.toString());
+            this.errorMsgNewSurveyList.push(text);
+            this.fullfillActions(actions);
+            }
+          );
+      }
+    }
   }
 
   deleteSurvey(element: any) {
     const dialogRef = this.dialogDelete.open(DeleteSurvayComponent, {
       width: "40%",
     });
-    let instance = dialogRef.componentInstance;
-    instance.surveyName = element.surveyName;
-    instance.campaignId = this.campaignId;
-
     dialogRef.afterClosed().subscribe((result) => {
-      if (result !== undefined) {
+      if (result) {
+        var action = new ActionSurveyClass();
+        action.id = this.campaignId;
+        action.survey = element;
+        action.type = TypeActionSurvey.TypeEnum.Delete;
+        this.listActions.push(action);
         let res = [];
         for (let item of this.surveys) {
-          if (item.surveyName !== result) {
+          if (item.surveyName !== element.surveyName) {
             res.push(item);
           }
         }
@@ -124,10 +198,10 @@ export class SurveyComponentComponent implements OnInit {
   }
 
   addSurvey() {
-    this.msgError = undefined;
+    this.errorAddNewSurvey = undefined;
     if (this.validatingForm.valid) {
       if(this.defaultSurveyCheck && this.defaultSurveyExist()){
-        this.msgError = this.translate.instant("notPossibleToCreateAnotherDefaultSurvey");
+        this.errorAddNewSurvey = this.translate.instant("notPossibleToCreateAnotherDefaultSurvey");
         return;
       }
       var surveryReq: SurveyRequest =  {
@@ -141,30 +215,21 @@ export class SurveyComponentComponent implements OnInit {
         surveyLink: this.validatingForm.get("surveyLink").value,
         surveyName: this.validatingForm.get("surveyName").value
       }
-        this.survayService
-          .addSurveyUsingPOST({
-            campaignId: this.campaignId,
-            body: surveryReq
-          })
-          .subscribe(
-            () => {
-              this.newItem = surveryReq;
-              this.surveys.push(this.newItem);
-              this.setTableData();
-            },
-            (error) => {
-              this.msgError = error
-                ? error.error
-                  ? error.error.ex
-                  : "error"
-                : "error";
-            }
-          );
+      var action = new ActionSurveyClass();
+      action.id = this.campaignId;
+      action.survey = surveryReq;
+      action.type = TypeActionSurvey.TypeEnum.Add;
+      this.listActions.push(action);
+      this.newItem = surveryReq;
+      this.surveys = [this.newItem].concat(this.surveys)
+      this.setTableData();
+
     } else {
-      this.msgError = this.translate.instant("fillAllfields");
+      this.errorAddNewSurvey = this.translate.instant("fillAllfields");
       this.validatingForm.markAllAsTouched();
     }
   }
+
   defaultSurveyExist():boolean{
     return (this.surveys.filter(item=>item.defaultSurvey)).length >0; 
   }

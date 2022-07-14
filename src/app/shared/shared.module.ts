@@ -31,6 +31,7 @@ import { RoundPipe } from "./services/decimal.pipe";
 import {MatTabsModule} from '@angular/material/tabs';
 import { SnackbarSavedModule } from "./components/snackbar-saved/snakbar-save.module";
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatMenuModule} from '@angular/material/menu';
 
 
 @NgModule({
@@ -64,7 +65,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     MatTabsModule,
     SnackbarSavedModule,
     MatCheckboxModule,
-
+    MatMenuModule
   ],
   declarations: [ManagerHandlerTerritoryComponent,ManagerDeleteTerritoryComponent,RoundPipe],
   entryComponents: [],
@@ -98,7 +99,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     RoundPipe,
     MatTabsModule,
     SnackbarSavedModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatMenuModule
   ],
 })
 export class SharedModule {}

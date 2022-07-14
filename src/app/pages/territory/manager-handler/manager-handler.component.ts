@@ -26,6 +26,10 @@ import {
 import { ManagerDeleteTerritoryComponent } from "./manager-delete/manager-delete.component";
 import { ConsoleControllerService } from "src/app/core/api/generated/controllers/consoleController.service";
 import { TranslateService } from "@ngx-translate/core";
+import { ActionManagerClass, TypeActionManager } from "src/app/shared/classes/actionsManager-class";
+import { ConfirmCloseComponent } from "../../campaign/manager-handler/confirm-close/confirm-close.component";
+import { SnackbarSavedComponent } from "src/app/shared/components/snackbar-saved/snackbar-saved.component";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 const LIST_MANAGERS = [
   {
@@ -71,8 +75,11 @@ export class ManagerHandlerTerritoryComponent implements OnInit {
   selectedRowIndex = "";
   addNewManager = false;
   newManagerForm: FormGroup;
+  errorMsgNewManagerList: string[] = [];
+  errorAddNewManager: string;
   errorMsgNewManager: string;
   msgErrorDelete: string;
+  listActions: ActionManagerClass[] = []; // work as a stack push
   newManager: ExtendedUserClass;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -84,7 +91,8 @@ export class ManagerHandlerTerritoryComponent implements OnInit {
     private translate: TranslateService,
     private managerService: ConsoleControllerService,
     private formBuilder: FormBuilder,
-    private dialogDelete: MatDialog
+    private dialogDelete: MatDialog,
+    private _snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -133,13 +141,80 @@ export class ManagerHandlerTerritoryComponent implements OnInit {
     this.addNewManager = !this.addNewManager;
   }
 
-  saveNewManager() {
+
+  saveData(actions: ActionManagerClass[]) {
+    this.errorMsgNewManagerList = [];
+    this.fullfillActions(actions);
+  }
+
+  fullfillActions(actions: ActionManagerClass[]) {
+    if (actions.length === 0) {
+      if (this.errorMsgNewManagerList.length === 0) {
+        this.onNoClick("");
+        const text = this.translate.instant('savedData');
+        this._snackBar.openFromComponent(SnackbarSavedComponent,
+          {
+           data:{displayText: text},
+           duration: 4999
+         });
+      } else {
+        //do not close show errors;
+      }
+    } else {
+      const item = actions.pop();
+      if (item.type === TypeActionManager.TypeEnum.Add) {
+        this.managerService
+          .addTerritoryManagerUsingPOST({
+            userName: item.email,
+            territoryId: item.id,
+          })
+          .subscribe(
+            (res) => {
+              this.fullfillActions(actions);
+            },
+            (error) => {
+              const text =
+                this.translate.instant("errorSavingManager") +
+                ": " +
+                item.email +
+                ", " +
+                (error.error.ex ? error.error.ex : error.toString());
+              this.errorMsgNewManagerList.push(text);
+              this.fullfillActions(actions);
+            }
+          );
+      } else if (item.type === TypeActionManager.TypeEnum.Delete) {
+        this.managerService
+          .removeTerritoryManagerUsingDELETE({
+            userName: item.email,
+            territoryId: item.id,
+          })
+          .subscribe(
+            () => {
+              this.fullfillActions(actions);
+            },
+            (error) => {
+              const text =
+                this.translate.instant("errorDeleteManager") +
+                ": " +
+                item.email +
+                ", " +
+                (error.error.ex ? error.error.ex : error.toString());
+              this.errorMsgNewManagerList.push(text);
+              this.fullfillActions(actions);
+            }
+          );
+      }
+    }
+  }
+
+  addNewManagerFunc() {
     if (this.newManagerForm.valid) {
-      this.errorMsgNewManager = "";
+      this.errorAddNewManager = "";
       if (
         this.checkEmailAlreadyPresent(this.newManagerForm.get("email").value)
       ) {
-        this.errorMsgNewManager = this.translate.instant(
+        this.errorAddNewManager = this.translate.instant(
           "emailAlreadyPresentManager"
         );
         return;
@@ -148,25 +223,16 @@ export class ManagerHandlerTerritoryComponent implements OnInit {
         this.newManager.manager = new UserClass();
         this.newManager.manager.preferredUsername =
           this.newManagerForm.get("email").value;
-        this.managerService
-          .addTerritoryManagerUsingPOST({
-            userName: this.newManager.manager.preferredUsername,
-            territoryId: this.territoryId,
-          })
-          .subscribe(
-            (res) => {
-              this.listManagers = [this.newManager].concat(this.listManagers);
-              this.setTableData();
-              //this.addNewManager = false;
-            },
-            (error) => {
-              this.errorMsgNewManager =
-                this.translate.instant("errorAddingManager") + error.toString();
-            }
-          );
+        var action = new ActionManagerClass();
+        action.email = this.newManager.manager.preferredUsername;
+        action.id = this.territoryId;
+        action.type = TypeActionManager.TypeEnum.Add;
+        this.listActions.push(action);
+        this.listManagers = [this.newManager].concat(this.listManagers);
+        this.setTableData();
       }
     } else {
-      this.errorMsgNewManager = "fillAllfields";
+      this.errorAddNewManager = "fillAllfields";
     }
   }
 
@@ -189,6 +255,11 @@ export class ManagerHandlerTerritoryComponent implements OnInit {
             newList.push(man);
           }
         }
+        var action = new ActionManagerClass();
+        action.email = manager.manager.preferredUsername;
+        action.id = this.territoryId;
+        action.type = TypeActionManager.TypeEnum.Delete;
+        this.listActions.push(action);
         this.listManagers = newList;
         this.setTableData();
       }
@@ -196,7 +267,18 @@ export class ManagerHandlerTerritoryComponent implements OnInit {
   }
 
   onNoClick(event: any): void {
-    this.dialogRef.close();
+    if (this.listActions.length > 0) {
+      const dialogRef = this.dialogDelete.open(ConfirmCloseComponent, {
+        width: "40%",
+      });
+      dialogRef.afterClosed().subscribe((result) => {
+        if(result){
+          this.dialogRef.close();
+        }        
+      });
+    }else{
+      this.dialogRef.close();
+    }
   }
 
   createExtendedUserClassList(listManager: UserClass[]): ExtendedUserClass[] {

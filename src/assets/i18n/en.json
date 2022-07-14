@@ -230,6 +230,8 @@
   "deleted":"Deleted",
   "emailAlreadyPresentManager":"It's not possible to add the email since it's already used",
   "errorAddingManager":"Error while adding the manager: ",
+  "addNewManager":"Aggiungi nuovo manager",
+  "addNewSurvey":"Add new survey",
   "":"",
   "":"",
   "":"",

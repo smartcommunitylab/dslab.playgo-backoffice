@@ -11,6 +11,8 @@ import { AssignSurvayComponent } from "../survey-component/assign-survay/assign-
 import { DeleteSurvayComponent } from "../survey-component/delete-survay/delete-survay.component";
 import { ConfirmCancelComponent } from "../campaign-add-form/confirm-cancel/confirm-cancel.component";
 import { RewardsComponent } from "../rewards/rewards.component";
+import { ConfirmCloseComponent } from "../manager-handler/confirm-close/confirm-close.component";
+
 
 @NgModule({
   imports: [SharedModule, CampaignPageRouting],
@@ -24,7 +26,8 @@ import { RewardsComponent } from "../rewards/rewards.component";
     AssignSurvayComponent,
     DeleteSurvayComponent,
     ConfirmCancelComponent,
-    RewardsComponent
+    RewardsComponent,
+    ConfirmCloseComponent,
   ],
 })
 export class CampaignPageModule {}
