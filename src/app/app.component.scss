@@ -119,3 +119,8 @@
   top: 0; /* Sets the sticky toolbar to be on top */
   z-index: 1001; /* Ensure that your app's content doesn't overlap the toolbar */
 }
+
+.lang{
+  width: 60%;
+  max-width: 200px;
+}

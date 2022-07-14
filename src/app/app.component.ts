@@ -7,12 +7,16 @@ import { AccountDialogComponent } from "./shared/components/account-dialog/accou
 import { TerritoryClass } from "./shared/classes/territory-class";
 import {
   ADMIN,
+  CONST_LANGUAGES_SUPPORTED,
   LANGUAGE_DEFAULT,
   LANGUAGE_LOCAL_STORAGE,
   TERRITORY_ID_LOCAL_STORAGE_KEY,
 } from "./shared/constants/constants";
 import { RoleService } from "./shared/services/role.service";
 import { TerritoryControllerService } from "./core/api/generated/controllers/territoryController.service";
+import { Account } from "./shared/user/account.model";
+import { PlayerRole } from "./core/api/generated/model/playerRole";
+import { AuthService } from "./core/auth/auth.service";
 
 export interface Tile {
   color: string;
@@ -33,17 +37,23 @@ export class AppComponent implements OnInit {
   globalSelectedTerritory: string;
   userEnabledToVisualize: boolean = true;
   roles: string[] = [];
-  localStorageLanguage: string;
+  localStorageLanguage: string;  
+  account: Account;
+  rolesMenu: PlayerRole[];
+  languagesSelectable = CONST_LANGUAGES_SUPPORTED;
+  selectedLanguage: string;
 
   constructor(
     private translate: TranslateService,
     private _loading: LoadingService,
     private dialogCreate: MatDialog,
+    private authService: AuthService,
     private territoryService: TerritoryControllerService,
     private roleService: RoleService
   ) {}
 
   ngOnInit() {
+    this.account = this.authService.getAccount();
     this.roleService.getInitializedJustOncePerUserSecond().subscribe(
       (roles) => {
         //listRoles = ["campaign"]; // used for testing different roles
@@ -52,6 +62,8 @@ export class AppComponent implements OnInit {
         this.listenToLoading();
         this.initLanguage();
         this.initTerritory();
+        this.selectedLanguage = this.translate.currentLang;
+        this.rolesMenu = this.roleService.getRoles();
       },
       (error) => {
         console.log(error);
@@ -162,6 +174,18 @@ export class AppComponent implements OnInit {
         }
       }
     });
+  }
+
+  changeLanguage(event){
+    this.selectedLanguage = event;
+    localStorage.setItem(LANGUAGE_LOCAL_STORAGE, event);
+    this.translate.setDefaultLang(event);
+    this.translate.use(event); //TODO get language from browser
+    window.location.reload();
+  }
+
+  logout(event: any){
+    this.authService.logout();
   }
 
 }

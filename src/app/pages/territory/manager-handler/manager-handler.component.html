@@ -1,23 +1,18 @@
-<mat-grid-list [cols]="8" rowHeight="50px">
-    <mat-grid-tile [colspan]="7">
-        <h1 style="width: 100%;">{{"handleManager" | translate}} {{name}} ({{territoryId}})</h1>
-    </mat-grid-tile>
-    <mat-grid-tile [colspan]="1">
-        <button class="grey-background" type="button" mat-flat-button (click)="onNoClick($event)">
-            {{'cancel'|translate}}
-        </button>
-    </mat-grid-tile>
-    <form [formGroup]="newManagerForm">
-        <mat-grid-tile [colspan]="7">
-            <div class="full-width">
-                <mat-form-field class="full-dimension" appearance="fill">
-                    <mat-label>{{'email' | translate}}</mat-label>
-                    <input matInput id="email" formControlName="email">
-                </mat-form-field>
-            </div>
+<div class="header-bar-stick">
+    <mat-grid-list [cols]="8" rowHeight="60px">
+        <mat-grid-tile [colspan]="6">
+            <mat-grid-list [cols]="1" rowHeight="30px" style="width: 100%;">
+                <mat-grid-tile [colspan]="1"><h1 style="width: 100%;margin-bottom: 0px;">{{"handleManager" | translate}} - {{name}} </h1></mat-grid-tile>
+                <mat-grid-tile [colspan]="1"><p style="width: 100%; height: 18px;">{{'campaignId' | translate}} - {{territoryId}}</p></mat-grid-tile>
+            </mat-grid-list>
         </mat-grid-tile>
         <mat-grid-tile [colspan]="1">
-            <button color="primary" type="submit" mat-flat-button (click)="saveNewManager()">
+            <button class="grey-background" type="button" mat-flat-button (click)="onNoClick($event)">
+                {{'cancel'|translate}}
+            </button>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="1">
+            <button color="primary" type="submit" mat-flat-button (click)="saveData(listActions)">
                 <mat-icon>
                     <span class="material-symbols-outlined">
                         save
@@ -26,10 +21,42 @@
                 {{'save' |translate}}
             </button>
         </mat-grid-tile>
-    </form>
-</mat-grid-list>
-<p *ngIf="!!errorMsgNewManager" class="red" style="width: 100%;">{{errorMsgNewManager | translate}}</p>
+    </mat-grid-list>
+    <ul *ngIf="errorMsgNewManagerList.length >0">
+        <li class="red" *ngFor="let item of errorMsgNewManagerList">
+            {{item}}
+        </li>
+    </ul>
+</div>
 
+<div class="black-box">
+    <mat-grid-list [cols]="8" rowHeight="60px" >
+        <form [formGroup]="newManagerForm">
+            <mat-grid-tile [colspan]="8">
+                <p class="full-width">{{'addNewManager' | translate}}</p>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="6">
+                <div class="full-width">
+                    <mat-form-field class="full-dimension" appearance="fill">
+                        <mat-label>{{'email' | translate}}</mat-label>
+                        <input matInput id="email" formControlName="email">
+                    </mat-form-field>
+                </div>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="2">
+                <button color="primary" type="submit" mat-flat-button (click)="addNewManagerFunc()">
+                    <mat-icon>
+                        <span class="material-symbols-outlined">
+                            add
+                        </span>
+                    </mat-icon>
+                    {{'add' |translate}}
+                </button>
+            </mat-grid-tile>
+        </form>
+    </mat-grid-list>
+    <p *ngIf="!!errorAddNewManager" class="red full-width">{{errorAddNewManager | translate}}</p>
+</div>
 <div class="full-width">
     <table mat-table [dataSource]="dataSource" class="full-width" matSort (matSortChange)="announceSortChange($event)">
 

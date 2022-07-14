@@ -31,36 +31,13 @@ export class ManagerDeleteTerritoryComponent implements OnInit {
   }
 
   delete(){
-    this.msgErrorDelete= "";
-    try{
-      this.managerService.removeTerritoryManagerUsingDELETE({userName: this.email,territoryId: this.territoryId}).subscribe(
-        () =>{
-          this.dialogRef.close(true);
-          
-          const text = this.translate.instant('deletedManager') + ': ' + this.email;
-          this._snackBar.openFromComponent(SnackbarSavedComponent,
-            {
-             data:{displayText: text},
-             duration: 4999
-           });
-        },
-        (error) =>{
-          if(!!error.error && !!error.error.ex){
-            this.error = error.error.ex.toString();
-          }else{
-            this.error = error.toString();
-          }
-          this.msgErrorDelete = "cannotDeleteTerritory";
-        }
-      );
-    }catch(error){
-      if(!!error.error && !!error.error.ex){
-        this.error = error.error.ex.toString();
-      }else{
-        this.error = error.toString();
-      }
-      this.msgErrorDelete = "cannotDeleteTerritory";
-    }
+    this.dialogRef.close(true);
+    const text = this.translate.instant('deletedManager') + ': ' + this.email;
+    this._snackBar.openFromComponent(SnackbarSavedComponent,
+      {
+       data:{displayText: text},
+       duration: 4999
+     });
   }
 
 }
