@@ -288,6 +288,19 @@
                     </mat-card-content>
                 </mat-card>
             </div>
+            <mat-card class="card-normal table-details" >
+                <ul *ngIf="selectedTrack.campaigns.length>0">
+                    <li *ngFor="let campaign of selectedTrack.campaigns" class="light-background">
+                        <h3 style="margin-bottom: 0px;">{{campaign.campaignName[selectedLanguage]}} - {{campaign.campaignId}} </h3>
+                        <p style="font-style:italic">{{campaign.type | translate}}</p>
+                        <p>{{(campaign.valid? 'valid' : 'invalid') | translate}}, {{'score' | translate}}: {{campaign.score}}, {{'distance' | translate}}: {{campaign.distance | round}}</p>
+                        <p *ngIf="!!campaign.errorCode" class="red">
+                            {{'errors' | translate}}: {{campaign.errorCode}} 
+                        </p>
+                    </li>
+                </ul>
+                <p *ngIf="!!!selectedTrack.campaigns || selectedTrack.campaigns.length===0">{{'noGameDataPerCampaignFound' | translate}}</p>
+            </mat-card>
             <mat-card class="table-details card-normal">
                 <mat-card-content>
                     <table mat-table [dataSource]="dataSourceInfoTrack" class="full-dimension">
@@ -340,7 +353,6 @@
                             </td>
                         </ng-container>
 
-
                         <ng-container matColumnDef="long">
                             <th mat-header-cell *matHeaderCellDef class="center-text">
                                 {{ 'longitude'| translate}} </th>
@@ -364,9 +376,6 @@
                                 {{element.speed}}
                             </td>
                         </ng-container>
-
-
-
 
                         <tr mat-header-row *matHeaderRowDef="displayedColumnsTrack"></tr>
                         <tr mat-row class="cursor-pointer" (click)="showPoint(i,row)"
