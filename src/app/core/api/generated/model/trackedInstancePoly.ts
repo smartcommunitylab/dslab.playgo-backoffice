@@ -9,10 +9,12 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import { CampaignTripInfo } from "./campaignTripInfo";
 import { PlayerInfo } from "./playerInfo";
 import { TrackedInstance } from "./trackedInstance";
 
 export interface TrackedInstancePoly {
+  campaigns?: Array<CampaignTripInfo>;
   playerInfo?: PlayerInfo;
   routesPolylines?: any;
   trackPolyline?: string;

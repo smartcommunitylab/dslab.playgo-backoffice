@@ -32,7 +32,7 @@
   background-color: rgba(102, 226, 102, 0.7);
 }
 
-.red-text{
+.red{
   color:red;
 }
 
@@ -64,7 +64,7 @@
 }
 
 .warning{
-  color: red;
+  color: #01579b;
 }
 
 .grey-background{
@@ -79,11 +79,11 @@
 
 .header-bar-stick{
   background-color: white;
-  height: 100px;
   position: sticky;
   z-index: 1000;
   top: 0px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.116);
+  margin-top: 10px;
 }
 
 .title-left{
