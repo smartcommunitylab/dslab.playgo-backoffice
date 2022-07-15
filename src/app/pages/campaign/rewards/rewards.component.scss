@@ -63,9 +63,6 @@
   height: 100%;
   float: right;
 }
-.header-div{
-  position: absolute;
-}
 
 .close-div{
   display: inline-block;
@@ -108,4 +105,10 @@
 
 .grey-background{
   background-color: rgb(197, 197, 197);
+}
+
+.norm-border{
+  margin-top: 10px;
+  border: black solid 1px;
+  padding: 10px;
 }

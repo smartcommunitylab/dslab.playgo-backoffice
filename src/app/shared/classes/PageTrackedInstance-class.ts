@@ -7,6 +7,9 @@ import { ValidationResult } from "src/app/core/api/generated/model/validationRes
 import { PlayerClass } from "./PagePlayerInfoConsole-class";
 import { PageTrackedInstanceConsole } from "src/app/core/api/generated/model/pageTrackedInstanceConsole";
 import { TrackedInstanceConsole } from "src/app/core/api/generated/model/trackedInstanceConsole";
+import { TrackedInstancePoly } from "src/app/core/api/generated/model/trackedInstancePoly";
+import { PlayerInfo } from "src/app/core/api/generated/model/playerInfo";
+import { CampaignTripInfo } from "src/app/core/api/generated/model/campaignTripInfo";
 
 export class  PageTrackedInstanceClass implements PageTrackedInstanceConsole {
     content?: Array<TrackedInstanceConsoleClass>;
@@ -22,9 +25,12 @@ export class  PageTrackedInstanceClass implements PageTrackedInstanceConsole {
     totalPages?: number;
   }
 
-export class TrackedInstanceConsoleClass implements TrackedInstanceConsole{
-    playerInfo?: PlayerClass;
-    trackedInstance?: TrackedInstanceClass;
+export class TrackedInstanceConsoleClass implements TrackedInstancePoly{
+    campaigns?: Array<CampaignTripInfo>;
+    playerInfo?: PlayerInfo;
+    routesPolylines?: any;
+    trackPolyline?: string;
+    trackedInstance?: TrackedInstance;
 }
 
 export class TrackedInstanceClass implements TrackedInstance{

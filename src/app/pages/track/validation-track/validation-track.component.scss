@@ -41,6 +41,10 @@
   color: red;
 }
 
+.light-background{
+  background-color: rgba(112, 192, 245, 0.178);
+}
+
 .card-invalid {
   border: solid 1px red;
 }
@@ -194,4 +198,5 @@
 .text-ellips{
   text-overflow: ellipsis;
 }
+
 

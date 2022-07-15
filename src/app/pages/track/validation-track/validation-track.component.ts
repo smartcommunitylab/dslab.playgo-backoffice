@@ -42,6 +42,7 @@ import { ConsoleControllerInternalService } from "src/app/shared/services/consol
 import { MatDialog } from "@angular/material/dialog";
 import { StatusDialogComponent } from "../status-dialog/status-dialog.component";
 import { CampaignControllerService } from "src/app/core/api/generated/controllers/campaignController.service";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-validation-track",
@@ -99,6 +100,7 @@ export class ValidationTrackComponent implements OnInit {
   dateToModified= false;
   resetSearchFieldsComponents=false;
   SORTING = "startTime, ASC";
+  selectedLanguage:string;
 
   validatingForm: FormGroup;
   constructor(
@@ -108,6 +110,7 @@ export class ValidationTrackComponent implements OnInit {
     private trackingServiceInternal: ConsoleControllerService,
     private campaignService: CampaignControllerService,
     private dialogStatus: MatDialog,
+    private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -144,6 +147,7 @@ export class ValidationTrackComponent implements OnInit {
     this.campaignService.getCampaignsUsingGET({territoryId: this.territoryId}).subscribe((campaigns)=>{
       campaigns.forEach((item)=>{this.listCampaings.push(item.campaignId)});
     });
+    this.selectedLanguage = this.translate.currentLang;
   }
 
   initializaValidatingForm() {

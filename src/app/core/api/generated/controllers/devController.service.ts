@@ -45,13 +45,13 @@ export class DevControllerService {
   }
 
   /**
-   * geteSurveyUrl
+   * getSurveyUrl
    *
    * @param campaignId campaignId
    * @param playerId playerId
    * @param surveyName surveyName
    */
-  public geteSurveyUrlUsingGET(args: {
+  public getSurveyUrlUsingGET(args: {
     campaignId: string;
     playerId: string;
     surveyName: string;
