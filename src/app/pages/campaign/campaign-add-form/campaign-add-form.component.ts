@@ -111,6 +111,7 @@ export class CampaignAddFormComponent implements OnInit {
   languagesSupported = CONST_LANGUAGES_SUPPORTED;
   languageSelected: string;
 
+
   @Input() set formTerritory(value: CampaignClass) {
     this.campaignUpdated = value;
     this.selectedLogo = value.logo;

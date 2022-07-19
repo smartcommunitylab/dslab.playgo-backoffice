@@ -34,25 +34,6 @@ import { ConfirmCloseComponent } from "./confirm-close/confirm-close.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { SnackbarSavedComponent } from "src/app/shared/components/snackbar-saved/snackbar-saved.component";
 
-const LIST_MANAGERS = [
-  {
-    id: "1",
-    email: "asd1@asd.it",
-  },
-  {
-    id: "2",
-    email: "asd2@asd.it",
-  },
-  {
-    id: "3",
-    email: "asd3@asd.it",
-  },
-  {
-    id: "4",
-    email: "asd4@asd.it",
-  },
-];
-
 @Component({
   selector: "app-manager-handler",
   templateUrl: "./manager-handler.component.html",
@@ -110,7 +91,6 @@ export class ManagerHandlerComponent implements OnInit {
   }
 
   setTableData() {
-    console.log(this.listManagers);
     this.dataSource = new MatTableDataSource<ExtendedUserClass>(
       this.listManagers
     );

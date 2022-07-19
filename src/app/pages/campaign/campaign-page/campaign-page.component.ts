@@ -6,7 +6,7 @@ import { CampaignAddFormComponent } from "../campaign-add-form/campaign-add-form
 import { CampaignDeleteComponent } from "../campaign-delete/campaign-delete.component";
 import { CampaignClass, ImageClass, ValidationData,  } from "src/app/shared/classes/campaing-class";
 import { TerritoryClass } from "src/app/shared/classes/territory-class";
-import { BASE64_SRC_IMG, CONST_LANGUAGES_SUPPORTED, DEFAULT_SURVEY_KEY, LANGUAGE_DEFAULT, PREFIX_SRC_IMG, TERRITORY_ID_LOCAL_STORAGE_KEY } from "src/app/shared/constants/constants";
+import { BASE64_SRC_IMG, CONST_LANGUAGES_SUPPORTED, DAILY_LIMIT, DEFAULT_SURVEY_KEY, LANGUAGE_DEFAULT, MONTHLY_LIMIT, PREFIX_SRC_IMG, TERRITORY_ID_LOCAL_STORAGE_KEY, WEEKLY_LIMIT } from "src/app/shared/constants/constants";
 import {MatSort, Sort} from '@angular/material/sort';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import { ManagerHandlerComponent } from "../manager-handler/manager-handler.component";
@@ -39,6 +39,11 @@ export class CampaignPageComponent implements OnInit {
   languageDefault:any;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
+
+
+  dailyLimitString = DAILY_LIMIT;
+  monthlyLimitString = MONTHLY_LIMIT;
+  weekLimit = WEEKLY_LIMIT;
 
   constructor(
     private dialogCreate: MatDialog,
