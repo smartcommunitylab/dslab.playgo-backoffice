@@ -137,6 +137,24 @@
                                 {{mean | translate}}
                             </li>
                         </ul>
+                        <div style="margin-top: 10px" 
+                        *ngIf="!!selectedCampaign.specificData[dailyLimitString] || !!selectedCampaign.specificData[weekLimit] || !!selectedCampaign.specificData[monthlyLimitString]">
+                            <h3>{{'limits' | translate}}</h3>
+                            <ul>
+                                <li *ngIf="!!selectedCampaign.specificData[dailyLimitString]">
+                                    <p>{{'dailyLimitString' | translate}}: {{selectedCampaign.specificData[dailyLimitString]}}</p>
+                                </li>
+                                <li *ngIf="!!selectedCampaign.specificData[weekLimit]">
+                                    <p>{{'weekLimit' | translate}}: {{selectedCampaign.specificData[weekLimit]}}</p>
+                                </li>
+                                <li *ngIf="!!selectedCampaign.specificData[monthlyLimitString]">
+                                    <p>{{'monthlyLimitString' | translate}}: {{selectedCampaign.specificData[monthlyLimitString]}}</p>
+                                </li>
+                            </ul>
+                            
+                            
+                            
+                        </div>
                         <drop-down-card-info [title]="'description' | translate"
                             [content]="selectedCampaign.description[languageDefault]">
                         </drop-down-card-info>
@@ -145,6 +163,7 @@
                             </drop-down-card-info>
                         </span>
                     </div>
+
                 </mat-card-content>
                 <mat-grid-list cols="4" rowHeight="40px">
                     <mat-grid-tile [colspan]="1">
