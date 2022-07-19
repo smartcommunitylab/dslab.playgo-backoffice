@@ -47,8 +47,8 @@
 </div>
 <mat-menu #menu="matMenu">
     <div style="padding: 5px;">
-        <h1>{{"account" | translate}} <span *ngIf="account.email">- {{"username" | translate}}: {{account.email}}</span></h1>
-        <h3 *ngIf="account.firstName || account.lastName">{{"name" | translate}}: {{account.firstName}} {{account.lastName}}</h3>
+        <h3>{{"account" | translate}} <span *ngIf="account.email">: {{"username" | translate}}: {{account.email}}</span></h3>
+        <h5 *ngIf="account.firstName || account.lastName">{{"name" | translate}}: {{account.firstName}} {{account.lastName}}</h5>
         <div>
             <mat-form-field appearance="fill" class="lang">
                 <mat-label>{{'selectLanguage' | translate}}</mat-label>
