@@ -11,6 +11,7 @@ import { ManagerHandlerTerritoryComponent } from '../manager-handler/manager-han
 import { CONST_LANGUAGES_SUPPORTED, LANGUAGE_DEFAULT, TERRITORY_ID_LOCAL_STORAGE_KEY } from 'src/app/shared/constants/constants';
 import { TerritoryControllerService } from 'src/app/core/api/generated/controllers/territoryController.service';
 import { TranslateService } from '@ngx-translate/core';
+import { MapPoint } from 'src/app/shared/classes/map-point';
 
 @Component({
   selector: 'app-territory-page',
@@ -22,6 +23,7 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
   size=[50];
   dataSource : MatTableDataSource<TerritoryClass>;
   selectedTerritory?: TerritoryClass = null;
+  selectedTerritoryPoint?: MapPoint = null;
   listTerriotory: TerritoryClass[];
   listAllTerriotory: TerritoryClass[];
   searchString: string;
@@ -86,6 +88,9 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
   showTerritory(row : TerritoryClass){
       this.selectedRowIndex = row.territoryId;
       this.selectedTerritory = row;
+      this.selectedTerritoryPoint = new MapPoint();
+      this.selectedTerritoryPoint.latitude = +this.selectedTerritory.territoryData.area[0].lat;
+      this.selectedTerritoryPoint.longitude = +this.selectedTerritory.territoryData.area[0].long;
   }
 
   addTerritory(){

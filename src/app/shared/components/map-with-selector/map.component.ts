@@ -33,8 +33,7 @@ export class MapComponent implements OnInit,OnChanges {
   @Input() set ray(value: string) {
     // console.log("ray from map", value);
     this._ray = value;
-    this.drawCircle();
- 
+    this.drawCircle(); 
  }
 
   @Output() mapPointOutput: EventEmitter<MapPoint> = new EventEmitter();
@@ -48,6 +47,7 @@ export class MapComponent implements OnInit,OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.drawCircle();
+    this.zoomingOnRay();
   }
 
   drawCircle(){
@@ -155,6 +155,46 @@ export class MapComponent implements OnInit,OnChanges {
   private clearMap(): void {
     if(!!this.map){
       if (this.map.hasLayer(this.lastLayer)) this.map.removeLayer(this.lastLayer);
+    }
+  }
+
+
+  zoomingOnRay(){
+    if(!!!this.map || !!!this._ray){
+      return;
+    }
+    var newZoom = this.map.getZoom();
+    const defaultZoom = 7;
+    const baseVal = 160000;
+    const baseVal2 = 40000
+    const k = +this._ray;
+    //0 - 40'000 , 40'001 - 80'000, 80'001 - 120'000, 120'001 - 160'000, 
+    //  9                 8                7                  6
+    //160'001 - 320'000,320'001 - oo 
+    //        5                 4
+    if(k<=baseVal2){
+      this.map.setZoom(9);
+    }
+    if(k>baseVal2 && k<=2*baseVal2){
+      this.map.setZoom(8);
+    }
+    if(k>2*baseVal2 && k<=baseVal){
+      this.map.setZoom(7);
+    }
+    if(k>baseVal && k<=2*baseVal){
+      this.map.setZoom(6);
+    }
+    if(k>2*baseVal && k<=4*baseVal){
+      this.map.setZoom(5);
+    }
+    if(k>4*baseVal && k<=6*baseVal){
+      this.map.setZoom(4);
+    }
+    if(k>6*baseVal && k<=8*baseVal){
+      this.map.setZoom(3);
+    }  
+    if(k>8*baseVal){
+      this.map.setZoom(1);
     }
   }
 
