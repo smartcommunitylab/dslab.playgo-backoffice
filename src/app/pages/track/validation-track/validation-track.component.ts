@@ -260,7 +260,7 @@ export class ValidationTrackComponent implements OnInit {
             dateFrom: this.validatingForm.get("dateFrom").value? this.validatingForm.get("dateFrom").value.valueOf() : undefined,
             dateTo: this.validatingForm.get("dateTo").value ? this.validatingForm.get("dateTo").value.valueOf() + this.day : today,
             campaignId: this.validatingForm.get("campaignId").value ? this.validatingForm.get("campaignId").value : undefined,
-            status: this.validatingForm.get("status").value ? this.validatingForm.get("status").value.toUpperCase() : undefined
+            status: this.validatingForm.get("status").value ? (this.validatingForm.get("status").value === "all"? undefined : this.validatingForm.get("status").value.toUpperCase()) : undefined
           }
         )
         .subscribe((res) => {
