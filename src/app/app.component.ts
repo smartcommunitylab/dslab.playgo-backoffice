@@ -17,6 +17,7 @@ import { TerritoryControllerService } from "./core/api/generated/controllers/ter
 import { Account } from "./shared/user/account.model";
 import { PlayerRole } from "./core/api/generated/model/playerRole";
 import { AuthService } from "./core/auth/auth.service";
+import { TerritoryListService } from "./shared/services/territory-list.service";
 
 export interface Tile {
   color: string;
@@ -49,7 +50,8 @@ export class AppComponent implements OnInit {
     private dialogCreate: MatDialog,
     private authService: AuthService,
     private territoryService: TerritoryControllerService,
-    private roleService: RoleService
+    private roleService: RoleService,
+    private updateTerritoryList: TerritoryListService
   ) {}
 
   ngOnInit() {
@@ -69,6 +71,12 @@ export class AppComponent implements OnInit {
         console.log(error);
       }
     );
+    this.updateTerritoryList.list.subscribe(data=>{
+      this.territories = data;
+      this.findTerritoriesPerRoles();
+    });
+
+
   }
 
   findTerritoriesPerRoles(): void {
