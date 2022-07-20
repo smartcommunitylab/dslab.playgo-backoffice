@@ -13,7 +13,7 @@
                     <mat-grid-tile [colspan]="1">
                         <div class="full-dimension" style="text-align: left;">
                             <mat-card-title>
-                                {{'territory' | translate}}
+                                {{'territories' | translate}}
                             </mat-card-title>
                         </div>
                     </mat-grid-tile>
@@ -70,52 +70,56 @@
                 </mat-card-subtitle>
                 <mat-card-content>
                     <div>
-                        <h3>{{'means' | translate}}</h3>
-                        <ul>
-                            <li *ngFor="let mean of selectedTerritory.territoryData.means">
+                        <p>
+                            <span>{{'means' | translate}}: </span>
+                            <span *ngFor="let mean of selectedTerritory.territoryData.means;let i=index">
                                 {{mean | translate}}
-                            </li>
-                        </ul>
+                            <span *ngIf="i!=selectedTerritory.territoryData.means.length-1">,</span>
+                            </span>
+                        </p>
+                        <mat-grid-list cols="7" rowHeight="40px" style="margin-bottom: 10px;">
+                            <mat-grid-tile [colspan]="2">
+                                <button color="primary" class='action-button' mat-raised-button type="button"
+                                (click)="updateTerritory()">
+                                {{'modify' | translate}}
+                                <mat-icon>
+                                    <span class="material-icons-outlined">
+                                        edit
+                                    </span>
+                                </mat-icon>
+                            </button>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="3">
+                                <button color="primary" class='action-button' mat-raised-button type="button"
+                                (click)="handleManager()">
+                                {{'handleManager' | translate}}
+                                <mat-icon>
+                                    <span class="material-icons-outlined">
+                                        supervisor_account
+                                    </span>
+                                </mat-icon>
+                            </button>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="2">
+                                <button class='action-button delete-button' mat-raised-button type="button"
+                                (click)="deleteTerritory()">
+                                {{'delete' |translate}}
+                                <mat-icon>
+                                    <span class="material-icons-outlined">
+                                        delete
+                                    </span>
+                                </mat-icon>
+                            </button>
+                            </mat-grid-tile>
+                        </mat-grid-list>
                         <drop-down-card-info [title]="'description' | translate"
                             [content]="selectedTerritory.description[language]"></drop-down-card-info>
 
                     </div>
+                    <jhi-app-map [ray]="selectedTerritory.territoryData.area[0].radius" [mapPoint]="selectedTerritoryPoint">
+                    </jhi-app-map>
                 </mat-card-content>
-                <mat-grid-list cols="7" rowHeight="40px">
-                    <mat-grid-tile [colspan]="2">
-                        <button color="primary" class='action-button' mat-raised-button type="button"
-                        (click)="updateTerritory()">
-                        {{'modify' | translate}}
-                        <mat-icon>
-                            <span class="material-icons-outlined">
-                                edit
-                            </span>
-                        </mat-icon>
-                    </button>
-                    </mat-grid-tile>
-                    <mat-grid-tile [colspan]="3">
-                        <button color="primary" class='action-button' mat-raised-button type="button"
-                        (click)="handleManager()">
-                        {{'handleManager' | translate}}
-                        <mat-icon>
-                            <span class="material-icons-outlined">
-                                supervisor_account
-                            </span>
-                        </mat-icon>
-                    </button>
-                    </mat-grid-tile>
-                    <mat-grid-tile [colspan]="2">
-                        <button class='action-button delete-button' mat-raised-button type="button"
-                        (click)="deleteTerritory()">
-                        {{'delete' |translate}}
-                        <mat-icon>
-                            <span class="material-icons-outlined">
-                                delete
-                            </span>
-                        </mat-icon>
-                    </button>
-                    </mat-grid-tile>
-                </mat-grid-list>
+
             </mat-card>
         </div>
     </div>

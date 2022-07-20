@@ -17,7 +17,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 export class DropDownCardInfoComponent implements OnInit {
   @Input() title:string;
   @Input() content:string;
-  state: string="expanded";
+  state: string="collapsed";
   constructor() {}
 
   ngOnInit() {

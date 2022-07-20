@@ -105,6 +105,9 @@
                         <div class="bold" style="margin-top: 7px;">
                             {{'type' | translate}}: {{selectedCampaign.type | translate}}
                         </div>
+                        <div class="bold" style="margin-top: 7px;"> {{'dateFrom' |translate }}: {{fromTimestampToDate(selectedCampaign.dateFrom)}}
+                            {{'dateTo' |translate }}:
+                            {{fromTimestampToDate(selectedCampaign.dateTo)}}</div>
                         <div style="margin-top: 7px;">
                             {{'active' | translate}}:
                             <mat-icon *ngIf="selectedCampaign.active">
@@ -124,47 +127,6 @@
                         <img *ngIf="selectedCampaign.logo" class="img-logo" src="{{ selectedCampaign.logo.url }}">
                     </div>
                 </div>
-                <img *ngIf="selectedCampaign.banner" class="img-banner" src="{{ selectedCampaign.banner.url }}">
-                <!-- old <img class="img-logo" src="{{PREFIX_SRC_IMG_C + selectedCampaign.banner.contentType + BASE64_SRC_IMG_C + selectedCampaign.banner.image}}"> -->
-                <mat-card-content>
-                    <div style="margin-top: 10px">
-                        <p class="bold">{{'dateFrom' |translate }}: {{fromTimestampToDate(selectedCampaign.dateFrom)}}
-                            {{'dateTo' |translate }}:
-                            {{fromTimestampToDate(selectedCampaign.dateTo)}}</p>
-                        <h3>{{'means' | translate}}</h3>
-                        <ul>
-                            <li *ngFor="let mean of selectedCampaign.validationData.means">
-                                {{mean | translate}}
-                            </li>
-                        </ul>
-                        <div style="margin-top: 10px" 
-                        *ngIf="!!selectedCampaign.specificData[dailyLimitString] || !!selectedCampaign.specificData[weekLimit] || !!selectedCampaign.specificData[monthlyLimitString]">
-                            <h3>{{'limits' | translate}}</h3>
-                            <ul>
-                                <li *ngIf="!!selectedCampaign.specificData[dailyLimitString]">
-                                    <p>{{'dailyLimitString' | translate}}: {{selectedCampaign.specificData[dailyLimitString]}}</p>
-                                </li>
-                                <li *ngIf="!!selectedCampaign.specificData[weekLimit]">
-                                    <p>{{'weekLimit' | translate}}: {{selectedCampaign.specificData[weekLimit]}}</p>
-                                </li>
-                                <li *ngIf="!!selectedCampaign.specificData[monthlyLimitString]">
-                                    <p>{{'monthlyLimitString' | translate}}: {{selectedCampaign.specificData[monthlyLimitString]}}</p>
-                                </li>
-                            </ul>
-                            
-                            
-                            
-                        </div>
-                        <drop-down-card-info [title]="'description' | translate"
-                            [content]="selectedCampaign.description[languageDefault]">
-                        </drop-down-card-info>
-                        <span *ngFor="let detail of selectedCampaign.details[languageDefault]">
-                            <drop-down-card-info [title]="detail.type | translate" [content]="detail.content">
-                            </drop-down-card-info>
-                        </span>
-                    </div>
-
-                </mat-card-content>
                 <mat-grid-list cols="4" rowHeight="40px">
                     <mat-grid-tile [colspan]="1">
                         <button color="primary" class='action-button' mat-raised-button type="submit"
@@ -222,6 +184,43 @@
                         </button>
                     </mat-grid-tile>
                 </mat-grid-list>
+                <!-- old <img class="img-logo" src="{{PREFIX_SRC_IMG_C + selectedCampaign.banner.contentType + BASE64_SRC_IMG_C + selectedCampaign.banner.image}}"> -->
+                <mat-card-content>
+                    <div style="margin-top: 10px">
+
+                        <h3>{{'means' | translate}}</h3>
+                        <ul>
+                            <li *ngFor="let mean of selectedCampaign.validationData.means">
+                                {{mean | translate}}
+                            </li>
+                        </ul>
+                        <div style="margin-top: 10px" 
+                        *ngIf="!!selectedCampaign.specificData[dailyLimitString] || !!selectedCampaign.specificData[weekLimit] || !!selectedCampaign.specificData[monthlyLimitString]">
+                            <h3>{{'limits' | translate}}</h3>
+                            <ul>
+                                <li *ngIf="!!selectedCampaign.specificData[dailyLimitString]">
+                                    <p>{{'dailyLimitString' | translate}}: {{selectedCampaign.specificData[dailyLimitString]}}</p>
+                                </li>
+                                <li *ngIf="!!selectedCampaign.specificData[weekLimit]">
+                                    <p>{{'weekLimit' | translate}}: {{selectedCampaign.specificData[weekLimit]}}</p>
+                                </li>
+                                <li *ngIf="!!selectedCampaign.specificData[monthlyLimitString]">
+                                    <p>{{'monthlyLimitString' | translate}}: {{selectedCampaign.specificData[monthlyLimitString]}}</p>
+                                </li>
+                            </ul>                           
+                            
+                        </div>
+                        <drop-down-card-info [title]="'description' | translate"
+                            [content]="selectedCampaign.description[languageDefault]">
+                        </drop-down-card-info>
+                        <span *ngFor="let detail of selectedCampaign.details[languageDefault]">
+                            <drop-down-card-info [title]="detail.type | translate" [content]="detail.content">
+                            </drop-down-card-info>
+                        </span>
+                    </div>
+                </mat-card-content>
+                <img *ngIf="selectedCampaign.banner" class="img-banner" src="{{ selectedCampaign.banner.url }}">
+
             </mat-card>
         </div>
     </div>

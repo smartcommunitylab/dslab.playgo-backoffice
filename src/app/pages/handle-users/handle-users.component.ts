@@ -71,6 +71,17 @@ export class HandleUsersComponent implements OnInit {
 
   setTableData() {
     this.dataSource.data = this.listUserCampaign;
+    this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = (item, property) => {
+      switch(property) {
+        case 'playerId': return item.player.playerId;
+        case 'nickname' : return item.player.nickname;
+        case 'mail' : return item.player.mail;
+        case 'name' : return item.player.givenName;
+        case 'surname' : return item.player.familyName;
+        case 'notifications' : return item.player.sendMail? 'A' : 'B';
+      }
+    };
   }
 
 
