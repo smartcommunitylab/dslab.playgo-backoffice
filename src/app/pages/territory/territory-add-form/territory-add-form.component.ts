@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from "@angular/core";
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from "@angular/core";
 import {
   FormBuilder,
   FormControl,
@@ -23,6 +23,7 @@ import { TerritoryControllerService } from "src/app/core/api/generated/controlle
 import { DEFAULT_LANGUAGE, TranslateService } from "@ngx-translate/core";
 import { CONST_LANGUAGES_SUPPORTED, LANGUAGE_DEFAULT } from "src/app/shared/constants/constants";
 import { SnackbarSavedComponent } from "src/app/shared/components/snackbar-saved/snackbar-saved.component";
+import { TerritoryListService } from "src/app/shared/services/territory-list.service";
 
 @Component({
   selector: "app-territory-add-form",
@@ -56,6 +57,7 @@ export class TerritoryAddFormComponent implements OnInit {
     private translate: TranslateService,
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<TerritoryAddFormComponent>,
+    private updateTerritoryList: TerritoryListService,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _snackBar: MatSnackBar
   ) {}
@@ -213,6 +215,7 @@ export class TerritoryAddFormComponent implements OnInit {
           .saveTerritoryUsingPOST(this.terrotyCreated)
           .subscribe(
             () => {
+              this.updateTerritoryList.uploadList();
               this.onNoClick("", this.terrotyCreated);
             this._snackBar.openFromComponent(SnackbarSavedComponent,
               {

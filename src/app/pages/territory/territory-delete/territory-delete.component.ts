@@ -4,6 +4,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { TerritoryControllerService } from "src/app/core/api/generated/controllers/territoryController.service";
 import { TranslateService } from "@ngx-translate/core";
 import { SnackbarSavedComponent } from "src/app/shared/components/snackbar-saved/snackbar-saved.component";
+import { TerritoryListService } from "src/app/shared/services/territory-list.service";
 
 @Component({
   selector: "app-territory-delete",
@@ -18,6 +19,7 @@ export class TerritoryDeleteComponent implements OnInit {
     private territoryService: TerritoryControllerService,
     private translate: TranslateService,
     public dialogRef: MatDialogRef<TerritoryDeleteComponent>,
+    private updateTerritoryList: TerritoryListService,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _snackBar: MatSnackBar
   ) {}
@@ -33,6 +35,7 @@ export class TerritoryDeleteComponent implements OnInit {
       .deleteTerritoryUsingDELETE(this.territoryId)
       .subscribe(
         () => {
+          this.updateTerritoryList.uploadList();
           this.onNoClick("", this.territoryId);
           this._snackBar.openFromComponent(SnackbarSavedComponent,
             {
