@@ -103,7 +103,7 @@
                             {{'campaignId' | translate}}: {{selectedCampaign.campaignId}}
                         </div>
                         <div class="bold" style="margin-top: 7px;">
-                            {{'type' | translate}}: {{selectedCampaign.type | translate}}
+                            {{'typology' | translate}}: {{selectedCampaign.type | translate}}
                         </div>
                         <div class="bold" style="margin-top: 7px;"> {{'dateFrom' |translate }}: {{fromTimestampToDate(selectedCampaign.dateFrom)}}
                             {{'dateTo' |translate }}:
@@ -217,6 +217,9 @@
                             <drop-down-card-info [title]="detail.type | translate" [content]="detail.content">
                             </drop-down-card-info>
                         </span>
+                        <drop-down-card-info [title]="'managers' | translate"
+                        [content]="managers">
+                    </drop-down-card-info>
                     </div>
                 </mat-card-content>
                 <img *ngIf="selectedCampaign.banner" class="img-banner" src="{{ selectedCampaign.banner.url }}">

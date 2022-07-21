@@ -59,6 +59,7 @@
                     </mat-form-field>
                 </div>
                 <div class="in-line-forms" *ngIf="emailEnabled()">
+                    <p class="awarness">{{'assignSurvayWarning' | translate}}</p>
                     <mat-form-field appearance="fill" class="full-width">
                         <mat-label>{{'users' | translate}}, ({{'addUserModalityCommunication' | translate}})</mat-label>
                         <textarea matInput id="users" formControlName="users"></textarea>

@@ -4,8 +4,13 @@
             <mat-grid-list [cols]="8" rowHeight="60px">
                 <mat-grid-tile [colspan]="6">
                     <mat-grid-list [cols]="1" rowHeight="30px" style="width: 100%;">
-                        <mat-grid-tile [colspan]="1"><h1 style="width: 100%;margin-bottom: 0px;">{{'addCampaign' | translate}}</h1></mat-grid-tile>
-                        <mat-grid-tile [colspan]="1"><p *ngIf="!!errorMsgValidation" class="red" style="width: 100%;margin-bottom: 0px;">{{errorMsgValidation | translate}}</p></mat-grid-tile>
+                        <mat-grid-tile [colspan]="1">
+                            <h1 style="width: 100%;margin-bottom: 0px;">{{'addCampaign' | translate}}</h1>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="1">
+                            <p *ngIf="!!errorMsgValidation" class="red" style="width: 100%;margin-bottom: 0px;">
+                                {{errorMsgValidation | translate}}</p>
+                        </mat-grid-tile>
                     </mat-grid-list>
                 </mat-grid-tile>
                 <mat-grid-tile [colspan]="1">
@@ -23,7 +28,7 @@
                     </button>
                 </mat-grid-tile>
             </mat-grid-list>
-        </div>        
+        </div>
         <div class="col-12 full-width" style="margin-top: 15px;">
             <div class="full-height">
                 <div class="in-line-forms">
@@ -37,33 +42,59 @@
                     </mat-form-field>
                 </div>
                 <div class="in-line-forms" style="margin-top: 20px;">
-                    <!-- <mat-form-field appearance="fill" class="input-half-left">
-                        <mat-label>{{'campaignId' | translate}}</mat-label>
-                        <input matInput id="campaignId" formControlName="campaignId">
-                    </mat-form-field> -->
                     <mat-form-field appearance="fill" class="input-half-left">
-                        <mat-label>{{'type' | translate}}</mat-label>
+                        <mat-label>{{'typology' | translate}}</mat-label>
                         <mat-select id="type" formControlName="type">
                             <mat-option *ngFor="let val of typeCampaign" [value]="val">{{val |translate}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-half-right">
+                        <mat-label>{{'active' | translate}}</mat-label>
+                        <mat-select id="active" formControlName="active">
+                            <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val)
+                                |translate}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-half-left">
+                        <mat-label>{{'dateFrom' | translate}}</mat-label>
+                        <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1">
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-half-right">
+                        <mat-label>{{'dateTo' | translate}}</mat-label>
+                        <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-half-left">
+                        <mat-label>{{'means' | translate}}</mat-label>
+                        <mat-select id="means" formControlName="means" multiple>
+                            <mat-option *ngFor="let mean of means" [value]="mean">{{mean |translate}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
                 <mat-grid-list [cols]="3" rowHeight="50px" style="margin-bottom: 10px">
                     <mat-grid-tile>
                         <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
-                            <mat-label>{{'dailyLimit' | translate}}</mat-label>
+                            <mat-label>{{'dailyLimitString' | translate}}</mat-label>
                             <input type="number" matInput id="dailyLimit" formControlName="dailyLimit">
                         </mat-form-field>
                     </mat-grid-tile>
                     <mat-grid-tile>
                         <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
-                            <mat-label>{{'weeklyLimit' | translate}}</mat-label>
+                            <mat-label>{{'weeklyLimitString' | translate}}</mat-label>
                             <input type="number" matInput id="weeklyLimit" formControlName="weeklyLimit">
                         </mat-form-field>
                     </mat-grid-tile>
                     <mat-grid-tile>
                         <mat-form-field appearance="fill" class="grid-tile-limit">
-                            <mat-label>{{'monthlyLimit' | translate}}</mat-label>
+                            <mat-label>{{'monthlyLimitString' | translate}}</mat-label>
                             <input type="number" matInput id="monthlyLimit" formControlName="monthlyLimit">
                         </mat-form-field>
                     </mat-grid-tile>
@@ -78,34 +109,6 @@
                     <mat-form-field appearance="fill" class="input-half-right">
                         <mat-label>{{'gameId' | translate}}</mat-label>
                         <input matInput id="gameId" formControlName="gameId">
-                    </mat-form-field>
-                </div>
-                <div class="in-line-forms">
-                    <mat-form-field appearance="fill" class="input-half-left">
-                        <mat-label>{{'means' | translate}}</mat-label>
-                        <mat-select id="means" formControlName="means" multiple>
-                            <mat-option *ngFor="let mean of means" [value]="mean">{{mean |translate}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <mat-form-field appearance="fill" class="input-half-right">
-                        <mat-label>{{'active' | translate}}</mat-label>
-                        <mat-select id="active" formControlName="active">
-                            <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val) |translate}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="in-line-forms">
-                    <mat-form-field appearance="fill" class="input-half-left">
-                        <mat-label>{{'dateFrom' | translate}}</mat-label>
-                        <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1">
-                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                        <mat-datepicker #picker1></mat-datepicker>
-                    </mat-form-field>
-                    <mat-form-field appearance="fill" class="input-half-right">
-                        <mat-label>{{'dateTo' | translate}}</mat-label>
-                        <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker">
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
                     </mat-form-field>
                 </div>
                 <div class="multilanguage-box">
@@ -234,8 +237,15 @@
             <mat-grid-list [cols]="8" rowHeight="60px">
                 <mat-grid-tile [colspan]="6">
                     <mat-grid-list [cols]="1" rowHeight="30px" style="width: 100%;">
-                        <mat-grid-tile [colspan]="1"><h1 style="width: 100%;margin-bottom: 0px;">{{'modifyCampaign' | translate}} - {{campaignUpdated.name[languageDefault]}}, {{'campaignId' | translate}}: {{campaignUpdated.campaignId}}</h1></mat-grid-tile>
-                        <mat-grid-tile [colspan]="1"><p *ngIf="!!errorMsgValidation" class="red" style="width: 100%;margin-bottom: 0px;">{{errorMsgValidation | translate}}</p></mat-grid-tile>
+                        <mat-grid-tile [colspan]="1">
+                            <h1 style="width: 100%;margin-bottom: 0px;">{{'modifyCampaign' | translate}} -
+                                {{campaignUpdated.name[languageDefault]}}, {{'campaignId' | translate}}:
+                                {{campaignUpdated.campaignId}}</h1>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="1">
+                            <p *ngIf="!!errorMsgValidation" class="red" style="width: 100%;margin-bottom: 0px;">
+                                {{errorMsgValidation | translate}}</p>
+                        </mat-grid-tile>
                     </mat-grid-list>
                 </mat-grid-tile>
                 <mat-grid-tile [colspan]="1">
@@ -253,47 +263,37 @@
                     </button>
                 </mat-grid-tile>
             </mat-grid-list>
-        </div>  
+        </div>
 
         <div class="col-12 full-width" style="margin-top: 15px;">
             <div class="full-height">
-                <div class="in-line-forms">
+                <div class="in-line-forms" style="margin-top: 20px;">
                     <mat-form-field appearance="fill" class="input-half-left">
-                        <mat-label>{{'type' | translate}}</mat-label>
+                        <mat-label>{{'typology' | translate}}</mat-label>
                         <mat-select id="type" formControlName="type">
                             <mat-option *ngFor="let val of typeCampaign" [value]="val">{{val |translate}}</mat-option>
                         </mat-select>
                     </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-half-right">
+                        <mat-label>{{'active' | translate}}</mat-label>
+                        <mat-select id="active" formControlName="active">
+                            <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val)
+                                |translate}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
                 </div>
-                <mat-grid-list [cols]="3" rowHeight="50px" style="margin-bottom: 10px">
-                    <mat-grid-tile>
-                        <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
-                            <mat-label>{{'dailyLimit' | translate}}</mat-label>
-                            <input type="number" matInput id="dailyLimit" formControlName="dailyLimit">
-                        </mat-form-field>
-                    </mat-grid-tile>
-                    <mat-grid-tile>
-                        <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
-                            <mat-label>{{'weeklyLimit' | translate}}</mat-label>
-                            <input type="number" matInput id="weeklyLimit" formControlName="weeklyLimit">
-                        </mat-form-field>
-                    </mat-grid-tile>
-                    <mat-grid-tile>
-                        <mat-form-field appearance="fill" class="grid-tile-limit">
-                            <mat-label>{{'monthlyLimit' | translate}}</mat-label>
-                            <input type="number" matInput id="monthlyLimit" formControlName="monthlyLimit">
-                        </mat-form-field>
-                    </mat-grid-tile>
-                </mat-grid-list>
-                <div class="in-line-forms"
-                    *ngIf="!!validatingForm.get('type').value && validatingForm.get('type').value!=='company'">
+                <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-half-left">
-                        <mat-label>{{'startDayOfWeek' | translate}}</mat-label>
-                        <input matInput id="startDayOfWeek" formControlName="startDayOfWeek">
+                        <mat-label>{{'dateFrom' | translate}}</mat-label>
+                        <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1">
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="input-half-right">
-                        <mat-label>{{'gameId' | translate}}</mat-label>
-                        <input matInput id="gameId" formControlName="gameId">
+                        <mat-label>{{'dateTo' | translate}}</mat-label>
+                        <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
                     </mat-form-field>
                 </div>
                 <div class="in-line-forms">
@@ -303,27 +303,37 @@
                             <mat-option *ngFor="let mean of means" [value]="mean">{{mean |translate}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field appearance="fill" class="input-half-right">
-                        <mat-label>{{'active' | translate}}</mat-label>
-                        <mat-select id="active" formControlName="active">
-                            <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val) |translate}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
                 </div>
-                <div class="in-line-forms">
+                <mat-grid-list [cols]="3" rowHeight="50px" style="margin-bottom: 10px">
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                            <mat-label>{{'dailyLimitString' | translate}}</mat-label>
+                            <input type="number" matInput id="dailyLimit" formControlName="dailyLimit">
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                            <mat-label>{{'weeklyLimitString' | translate}}</mat-label>
+                            <input type="number" matInput id="weeklyLimit" formControlName="weeklyLimit">
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="grid-tile-limit">
+                            <mat-label>{{'monthlyLimitString' | translate}}</mat-label>
+                            <input type="number" matInput id="monthlyLimit" formControlName="monthlyLimit">
+                        </mat-form-field>
+                    </mat-grid-tile>
+                </mat-grid-list>
+                <div class="in-line-forms"
+                    *ngIf="!!validatingForm.get('type').value && validatingForm.get('type').value!=='company'">
                     <mat-form-field appearance="fill" class="input-half-left">
-                        <mat-label>{{'dateFrom' | translate}}</mat-label>
-                        <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1">
-                        <mat-hint>{{'dateFormat' |translate}}</mat-hint>
-                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                        <mat-datepicker #picker1></mat-datepicker>
+                        <mat-label>{{'startDayOfWeek' | translate}}</mat-label>
+                        <input matInput id="startDayOfWeek" formControlName="startDayOfWeek">
+                        <mat-hint>{{"hintStartDayOfWeek" | translate}}</mat-hint>
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="input-half-right">
-                        <mat-label>{{'dateTo' | translate}}</mat-label>
-                        <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker">
-                        <mat-hint>{{'dateFormat' |translate}}</mat-hint>
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
+                        <mat-label>{{'gameId' | translate}}</mat-label>
+                        <input matInput id="gameId" formControlName="gameId">
                     </mat-form-field>
                 </div>
                 <div class="multilanguage-box">

@@ -24,27 +24,6 @@
                     <table mat-table [dataSource]="dataSource" class="full-width" matSort
                         (matSortChange)="sortData($event)">
 
-                        <ng-container matColumnDef="playerId">
-                            <th mat-header-cell mat-sort-header *matHeaderCellDef
-                                sortActionDescription="Sort by playerId"> {{
-                                'playerId'| translate}} </th>
-                            <td mat-cell *matCellDef="let element">
-                                {{element.player.playerId}}
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="copyPlayerId">
-                            <th mat-header-cell *matHeaderCellDef></th>
-                            <td mat-cell *matCellDef="let element">
-                                <mat-icon class="cursor-pointer hover-copy-icon font-lighter"
-                                    (click)="copy(element.player.playerId)">
-                                    <span class="material-symbols-outlined">
-                                        content_copy
-                                    </span>
-                                </mat-icon>
-                            </td>
-                        </ng-container>
-
                         <ng-container matColumnDef="nickname">
                             <th mat-header-cell mat-sort-header *matHeaderCellDef
                                 sortActionDescription="Sort by nickname"> {{
@@ -132,6 +111,27 @@
                                 <mat-icon *ngIf="!element.player.sendMail">
                                     <span class="material-icons-outlined">
                                         close
+                                    </span>
+                                </mat-icon>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="playerId">
+                            <th mat-header-cell mat-sort-header *matHeaderCellDef
+                                sortActionDescription="Sort by playerId"> {{
+                                'playerId'| translate}} </th>
+                            <td mat-cell *matCellDef="let element">
+                                {{element.player.playerId}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="copyPlayerId">
+                            <th mat-header-cell *matHeaderCellDef></th>
+                            <td mat-cell *matCellDef="let element">
+                                <mat-icon class="cursor-pointer hover-copy-icon font-lighter"
+                                    (click)="copy(element.player.playerId)">
+                                    <span class="material-symbols-outlined">
+                                        content_copy
                                     </span>
                                 </mat-icon>
                             </td>

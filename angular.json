@@ -39,7 +39,8 @@
               "theme.scss"
 
             ],
-            "scripts": []
+            "scripts": [],
+            "webWorkerTsConfig": "tsconfig.worker.json"
           },
           "configurations": {
             "production": {
@@ -160,7 +161,8 @@
               "src/styles.scss",
               "theme.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "webWorkerTsConfig": "tsconfig.worker.json"
           }
         },
         "e2e": {

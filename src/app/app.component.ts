@@ -75,7 +75,7 @@ export class AppComponent implements OnInit {
       this.territories = data;
       this.findTerritoriesPerRoles();
     });
-
+    this.waitForRoles();
 
   }
 
@@ -195,5 +195,17 @@ export class AppComponent implements OnInit {
   logout(event: any){
     this.authService.logout();
   }
+
+
+  waitForRoles() {
+    if (typeof Worker !== 'undefined') {
+       //
+       const worker = new Worker('../src/app/shared/workers/role.worker.ts', { type: 'module' });
+       worker.onmessage = ({ data }) => {
+       this.roles = data;
+       };
+    } else {
+    }
+ }
 
 }
