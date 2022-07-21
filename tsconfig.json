@@ -9,9 +9,11 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es6",
+    "target": "es2015",
     "module": "es2020",
     "lib": [
+      "es5",
+      "es6",
       "es2018",
       "dom"
     ]
