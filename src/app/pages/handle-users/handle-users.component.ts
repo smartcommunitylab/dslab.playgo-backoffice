@@ -20,7 +20,7 @@ export class HandleUsersComponent implements OnInit {
   pageSizesOnTable = [50];
   territoryId: string;
   searchString: string ="";
-  displayedColumns: string[] = ["playerId","copyPlayerId","nickname","copyNickname","mail","copyMail", "name", "surname", "campaings", "notifications"];
+  displayedColumns: string[] = ["nickname","copyNickname","mail","copyMail", "name", "surname", "campaings", "notifications","playerId","copyPlayerId"];
   dataSource: MatTableDataSource<PlayerCampaignClass>;
   currentPageNumber: number;
   sorting: string = "";

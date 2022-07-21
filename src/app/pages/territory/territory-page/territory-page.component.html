@@ -114,10 +114,12 @@
                         </mat-grid-list>
                         <drop-down-card-info [title]="'description' | translate"
                             [content]="selectedTerritory.description[language]"></drop-down-card-info>
+                        <drop-down-card-info [title]="'managers' | translate"
+                            [content]="managers"></drop-down-card-info>
 
                     </div>
-                    <jhi-app-map [ray]="selectedTerritory.territoryData.area[0].radius" [mapPoint]="selectedTerritoryPoint">
-                    </jhi-app-map>
+                    <app-map-show class="leaflet-div" [mapArea]="selectedTerritoryArea">
+                    </app-map-show>
                 </mat-card-content>
 
             </mat-card>

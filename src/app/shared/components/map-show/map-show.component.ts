@@ -1,57 +1,45 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '../../constants/constants';
 import { FeatureGroup, icon, latLng, LeafletMouseEvent, Map, MapOptions, marker, tileLayer } from 'leaflet';
-import { MapPoint } from './map.model';
 import * as L from 'leaflet';
-
+import { MapPoint } from '../map-with-selector/map.model';
+import { GameArea } from '../../classes/map-point';
 @Component({
-  selector: 'jhi-app-map',
-  templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss']
+  selector: 'app-map-show',
+  templateUrl: './map-show.component.html',
+  styleUrls: ['./map-show.component.scss']
 })
-export class MapComponent implements OnInit,OnChanges {
+export class MapShowComponent implements OnInit {
   mapOptions: MapOptions;
   map: Map;
   lastLayer: any;
-  _mapPoint: MapPoint;
-  @Input() set mapPoint(value : MapPoint){
+  _mapArea: GameArea;
+  @Input() set mapArea(value : GameArea){
     // console.log("My point inside map", value);
-      if(this._mapPoint === undefined){
+      if(this._mapArea === undefined){
         // undefined
-        this._mapPoint = new MapPoint();
-        this._mapPoint.latitude = 123123123;
-        this._mapPoint.longitude = 123123123;
+        this._mapArea = new GameArea();
+        this._mapArea.latitude = 123123123;
+        this._mapArea.longitude = 123123123;
+        this._mapArea.radius = 123123123;
       }
-      if(this._mapPoint.latitude !== value.latitude || this._mapPoint.longitude !== value.longitude){
+      if(this._mapArea.latitude !== value.latitude || this._mapArea.longitude !== value.longitude){
         //stop looping
-        this._mapPoint = value;
-        this.onInputCoords(value);
+        this._mapArea = value;
+        this._ray = ''+value.radius;
+        this.onInputCoords();
     }
   }
   layer: FeatureGroup;
   _ray: string;
-  @Input() set ray(value: string) {
-    // console.log("ray from map", value);
-    this._ray = value;
-    this.drawCircle(); 
- }
-
-  @Output() mapPointOutput: EventEmitter<MapPoint> = new EventEmitter();
 
   constructor() {}
 
   ngOnInit(): void {
-    //console.log("here");
-    this.initializeMapOptions();
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    this.drawCircle();
-    this.zoomingOnRay();
   }
 
   drawCircle(){
-    if(!this._mapPoint || !this._mapPoint.latitude || !this._mapPoint.longitude){
+    if(!this._mapArea || !this._mapArea.latitude || !this._mapArea.longitude){
       return;
     }
     if(this.layer!==undefined){
@@ -61,8 +49,8 @@ export class MapComponent implements OnInit,OnChanges {
     const numberRay = +this._ray;
     this.layer = L.featureGroup(); 
     if( numberRay >0){
-      if(this._mapPoint.latitude){
-        L.circle([this._mapPoint.latitude,this._mapPoint.longitude], numberRay).addTo(this.layer);
+      if(this._mapArea.latitude){
+        L.circle([this._mapArea.latitude,this._mapArea.longitude], numberRay).addTo(this.layer);
       }
     }
     if(!!this.map){
@@ -70,29 +58,22 @@ export class MapComponent implements OnInit,OnChanges {
     }
   }
 
-
-  public onMapClick(e: LeafletMouseEvent): void {
-    this.clearMap();
-    this.updateMapPoint(e.latlng.lat, e.latlng.lng, '');
+  public onInputCoords(): void {
+    this.initializeMapOptions();
     this.createMarker();
     this.drawCircle();
-  }
-
-  public onInputCoords(e: MapPoint): void {
-    this.clearMap();
-    this.updateMapPoint(e.latitude, e.longitude, '');
-    this.createMarker();
-    this.drawCircle();
+    this.zoomingOnRay();
   }
 
   public initializeMap(map: Map): void {
     this.map = map;
-    this.createMarker();
+    this.onInputCoords();
   }
+
   private initializeMapOptions(): void {
     this.mapOptions = {
-      center: latLng(DEFAULT_LATITUDE, DEFAULT_LONGITUDE),
-      zoom: 7,
+      center: latLng(this._mapArea.latitude, this._mapArea.longitude),
+      zoom: this.zoomResult(this._mapArea.radius),
       layers: [
         tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           maxZoom: 18,
@@ -102,41 +83,16 @@ export class MapComponent implements OnInit,OnChanges {
     };
   }
 
-  private updateMapPoint(latitude: number, longitude: number, name: string): void {
-    if (!this._mapPoint) {
-      this._mapPoint = {
-        name: '',
-        latitude: DEFAULT_LATITUDE,
-        longitude: DEFAULT_LONGITUDE
-      };
-    }
-    this._mapPoint = {
-      latitude,
-      longitude,
-      name: name ? name : ''
-    };
-    this.mapPointOutput.emit(this._mapPoint);
-  }
-
   private createMarker(): void {
     this.clearMap();
-    if (this._mapPoint) {
+    if (this._mapArea) {
       const mapIcon = this.getDefaultIcon();
-      if(!!this._mapPoint.latitude && !!this._mapPoint.longitude){
-        const coordinates = latLng([this._mapPoint.latitude, this._mapPoint.longitude]);
+      if(!!this._mapArea.latitude && !!this._mapArea.longitude){
+        const coordinates = latLng([this._mapArea.latitude, this._mapArea.longitude]);
         if(!!this.map){
           this.lastLayer = marker(coordinates)
           .setIcon(mapIcon)
           .addTo(this.map);
-        this.lastLayer
-          .bindPopup(
-            (this._mapPoint.name ? '<b>Indirizzo</b>: ' + this._mapPoint.name : '') +
-              '<br><b>lat</b>: ' +
-              this._mapPoint.latitude +
-              '<br><b>long:</b> ' +
-              this._mapPoint.longitude
-          )
-          .openPopup();
         this.map.setView(coordinates, this.map.getZoom());
         }
       }
@@ -159,8 +115,6 @@ export class MapComponent implements OnInit,OnChanges {
   }
 
   zoomResult(ray: number): number{
-    var newZoom = this.map.getZoom();
-    const defaultZoom = 7;
     const baseVal = 160000;
     const baseVal2 = 40000
     const k = +this._ray;
@@ -194,12 +148,11 @@ export class MapComponent implements OnInit,OnChanges {
     }
   }
 
-
   zoomingOnRay(){
-    if(!!!this.map || !!!this._ray){
+    if(!!!this.map || !!!this._mapArea){
       return;
     }else{
-      this.map.flyTo([this._mapPoint.latitude,this._mapPoint.longitude],this.zoomResult(+this._ray));
+      this.map.flyTo([this._mapArea.latitude,this._mapArea.longitude],this.zoomResult(this._mapArea.radius));
     }
   }
 

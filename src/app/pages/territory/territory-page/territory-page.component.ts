@@ -11,7 +11,8 @@ import { ManagerHandlerTerritoryComponent } from '../manager-handler/manager-han
 import { CONST_LANGUAGES_SUPPORTED, LANGUAGE_DEFAULT, TERRITORY_ID_LOCAL_STORAGE_KEY } from 'src/app/shared/constants/constants';
 import { TerritoryControllerService } from 'src/app/core/api/generated/controllers/territoryController.service';
 import { TranslateService } from '@ngx-translate/core';
-import { MapPoint } from 'src/app/shared/classes/map-point';
+import { GameArea, MapPoint } from 'src/app/shared/classes/map-point';
+import { ConsoleControllerService } from 'src/app/core/api/generated/controllers/consoleController.service';
 
 @Component({
   selector: 'app-territory-page',
@@ -23,13 +24,14 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
   size=[50];
   dataSource : MatTableDataSource<TerritoryClass>;
   selectedTerritory?: TerritoryClass = null;
-  selectedTerritoryPoint?: MapPoint = null;
+  selectedTerritoryArea?: GameArea = null;
   listTerriotory: TerritoryClass[];
   listAllTerriotory: TerritoryClass[];
   searchString: string;
   selectedRowIndex = "";
   newTerritory: TerritoryClass;
   language: any;
+  managers: string;
   @ViewChild(MatSort) sort: MatSort;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -40,6 +42,7 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
     private dialogUpdate: MatDialog,
      private dialogDelete: MatDialog,
      private translate: TranslateService,
+     private managerService: ConsoleControllerService,
       private territoryService: TerritoryControllerService,
     private _liveAnnouncer: LiveAnnouncer){// private dialog: MatDialog
 
@@ -88,9 +91,21 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
   showTerritory(row : TerritoryClass){
       this.selectedRowIndex = row.territoryId;
       this.selectedTerritory = row;
-      this.selectedTerritoryPoint = new MapPoint();
-      this.selectedTerritoryPoint.latitude = +this.selectedTerritory.territoryData.area[0].lat;
-      this.selectedTerritoryPoint.longitude = +this.selectedTerritory.territoryData.area[0].long;
+      this.selectedTerritoryArea = new GameArea();
+      this.selectedTerritoryArea.latitude = +this.selectedTerritory.territoryData.area[0].lat;
+      this.selectedTerritoryArea.longitude = +this.selectedTerritory.territoryData.area[0].long;
+      this.selectedTerritoryArea.radius = +this.selectedTerritory.territoryData.area[0].radius;
+      this.updateManagers();
+  }
+
+  updateManagers(){
+    this.managerService.getTerritoryManagerUsingGET(this.selectedTerritory.territoryId).subscribe((res)=>{
+      var p = "";
+      for(let item of res){
+        p+= '- '+item.preferredUsername + ': ' + this.translate.instant(item.role)  +'<br />';
+      }
+      this.managers = p;
+    });
   }
 
   addTerritory(){
@@ -205,8 +220,7 @@ export class TerritoryPageComponent implements OnInit,AfterViewInit {
     instance.name = this.selectedTerritory.name[this.translate.currentLang];
     instance.territoryId = this.selectedTerritory.territoryId;
     dialogRef.afterClosed().subscribe((result) => {
-      if (result !== undefined) {
-      }
+      this.updateManagers();
     });
 
   }

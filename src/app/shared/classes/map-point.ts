@@ -9,3 +9,10 @@ export class MapPoint {
     }
 
   }
+
+export class GameArea{
+  latitude: number;
+  longitude: number;
+  radius: number;
+
+}

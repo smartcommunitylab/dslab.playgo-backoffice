@@ -17,6 +17,7 @@ import { Campaign } from "src/app/core/api/generated/model/campaign";
 import { SurveyComponentComponent } from "../survey-component/survey-component.component";
 import { TranslateService } from "@ngx-translate/core";
 import { RewardsComponent } from "../rewards/rewards.component";
+import { ConsoleControllerService } from "src/app/core/api/generated/controllers/consoleController.service";
 
 @Component({
   selector: "app-campaign-page",
@@ -37,6 +38,7 @@ export class CampaignPageComponent implements OnInit {
   BASE64_SRC_IMG_C =BASE64_SRC_IMG;
   highlightCampaign: CampaignClass;
   languageDefault:any;
+  managers: string;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -51,6 +53,7 @@ export class CampaignPageComponent implements OnInit {
     private dialogDelete: MatDialog,
     private translate: TranslateService,
     private campaignService: CampaignControllerService,
+    private managerService: ConsoleControllerService,
     private territoryService:TerritoryControllerService,
     private _liveAnnouncer: LiveAnnouncer
   ) {
@@ -117,6 +120,17 @@ export class CampaignPageComponent implements OnInit {
     this.selectedRowIndex = row.campaignId;
     this.selectedCampaign = new CampaignClass();
     this.selectedCampaign = row;//this.setClassWithourError(row);
+    this.updateManagers();
+  }
+
+  updateManagers(){
+    this.managerService.getCampaignManagerUsingGET(this.selectedCampaign.campaignId).subscribe((res)=>{
+      var p = "";
+      for(let item of res){
+        p+= '- '+item.preferredUsername + ': ' + this.translate.instant(item.role)  +'<br />';
+      }
+      this.managers = p;
+    });
   }
 
   addCampaign() {
@@ -220,8 +234,7 @@ export class CampaignPageComponent implements OnInit {
     instance.name = this.selectedCampaign.name[this.translate.currentLang];
     instance.campaignId = this.selectedCampaign.campaignId;
     dialogRef.afterClosed().subscribe((result) => {
-      if (result !== undefined) {
-      }
+      this.updateManagers();
     });
   }
 

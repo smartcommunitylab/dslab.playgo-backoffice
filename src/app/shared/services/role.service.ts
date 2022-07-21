@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHandler } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import { ConsoleControllerService } from "src/app/core/api/generated/controllers/consoleController.service";
@@ -12,8 +12,7 @@ export class RoleService {
   private rolesSubject = new Subject<PlayerRole[]>();
   private simpleRoles: PlayerRole[] = [];
 
-  constructor(private http: HttpClient,
-    private roleService: ConsoleControllerService) {}
+  constructor(private roleService: ConsoleControllerService) {}
 
   getInitializedJustOncePerUserSecond(): Observable<PlayerRole[]> {
     return this.roleService.getMyRolesUsingGET();
@@ -37,5 +36,6 @@ export class RoleService {
   setSimpleRoles(obj: PlayerRole[]){
     this.simpleRoles = obj;
   }
+
 
 }
