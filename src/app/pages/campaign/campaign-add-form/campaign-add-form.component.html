@@ -49,7 +49,7 @@
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="input-half-right">
-                        <mat-label>{{'active' | translate}}</mat-label>
+                        <mat-label>{{'state' | translate}}</mat-label>
                         <mat-select id="active" formControlName="active">
                             <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val)
                                 |translate}}</mat-option>
@@ -275,7 +275,7 @@
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="input-half-right">
-                        <mat-label>{{'active' | translate}}</mat-label>
+                        <mat-label>{{'state' | translate}}</mat-label>
                         <mat-select id="active" formControlName="active">
                             <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val)
                                 |translate}}</mat-option>
