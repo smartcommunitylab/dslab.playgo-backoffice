@@ -43,6 +43,8 @@ import { MatDialog } from "@angular/material/dialog";
 import { StatusDialogComponent } from "../status-dialog/status-dialog.component";
 import { CampaignControllerService } from "src/app/core/api/generated/controllers/campaignController.service";
 import { TranslateService } from "@ngx-translate/core";
+import { TrackedInstance } from "src/app/core/api/generated/model/trackedInstance";
+import { Geolocation } from "src/app/core/api/generated/model/geolocation";
 
 @Component({
   selector: "app-validation-track",
@@ -74,7 +76,7 @@ export class ValidationTrackComponent implements OnInit {
   territoryId: string;
   mapOptions: MapOptions;
   map: Map;
-  stateValidationTrack: string = "collapsed";
+  stateValidationTrack: string = "expanded";
   size: number[] = [50];
   paginatorData: PageTrackedInstanceClass = new PageTrackedInstanceClass();
   dataSourceInfoTrack: MatTableDataSource<any[]>; //GeolocationClass 
@@ -101,6 +103,17 @@ export class ValidationTrackComponent implements OnInit {
   resetSearchFieldsComponents=false;
   SORTING = "startTime, ASC";
   selectedLanguage:string;
+  statisticsTracks: StatisticsTracks = {'invalid': 0, 'valid':0, 'pending':0};
+  statisticsSelectedTrack: SelectedTrackStatistic = {
+    start: '',
+    end: '',
+    distance: 0,
+    validity: '',
+    avrgSpeed: 0,
+    maxSpeed: 0,
+  };
+  showAllPoints = true;
+  innerHtmlValidation ='';
 
   validatingForm: FormGroup;
   constructor(
@@ -143,9 +156,11 @@ export class ValidationTrackComponent implements OnInit {
     this.initializeMapOptions();
     this.territoryService.getTerritoryUsingGET(this.territoryId).subscribe((territory)=>{
       this.listModelType = territory.territoryData.means;
+      this.listModelType.push('all');
     });
     this.campaignService.getCampaignsUsingGET({territoryId: this.territoryId}).subscribe((campaigns)=>{
       campaigns.forEach((item)=>{this.listCampaings.push(item.campaignId)});
+      this.listCampaings.push('all');
     });
     this.selectedLanguage = this.translate.currentLang;
   }
@@ -197,6 +212,7 @@ export class ValidationTrackComponent implements OnInit {
 
   setTableData() {
     this.dataSource = new MatTableDataSource<any>(this.listTrack);
+    this.setStatisticsListTracks();
   }
 
   private initializeMapOptions(): void {
@@ -256,19 +272,60 @@ export class ValidationTrackComponent implements OnInit {
             sort: this.SORTING,
             trackId: this.validatingForm.get("trackId").value ? this.validatingForm.get("trackId").value : undefined ,
             playerId: this.validatingForm.get("playerId").value ? this.validatingForm.get("playerId").value : undefined,
-            modeType: this.validatingForm.get("modeType").value ? this.validatingForm.get("modeType").value : undefined,
+            modeType: this.validatingForm.get("modeType").value ? (this.validatingForm.get("modeType").value === "all"? undefined : this.validatingForm.get("modeType").value) : undefined,
             dateFrom: this.validatingForm.get("dateFrom").value? this.validatingForm.get("dateFrom").value.valueOf() : undefined,
             dateTo: this.validatingForm.get("dateTo").value ? this.validatingForm.get("dateTo").value.valueOf() + this.day : today,
-            campaignId: this.validatingForm.get("campaignId").value ? this.validatingForm.get("campaignId").value : undefined,
+            campaignId: this.validatingForm.get("campaignId").value ? (this.validatingForm.get("campaignId").value === "all"? undefined : this.validatingForm.get("campaignId").value) : undefined,
             status: this.validatingForm.get("status").value ? (this.validatingForm.get("status").value === "all"? undefined : this.validatingForm.get("status").value.toUpperCase()) : undefined
           }
         )
         .subscribe((res) => {
           this.paginatorData = res;
           this.listTrack = res.content;
+          
           this.setTableData();
           //this.dataSource.paginator = this.paginator;
         });
+    }
+  }
+
+  setStatisticsListTracks(){
+    var invalid =0;
+    var valid =0;
+    var pending =0;
+    if(this.listTrack.length >0){
+      this.listTrack.forEach(item=>{
+        if(item.trackedInstance.validationResult.travelValidity === TrackedInstance.ChangedValidityEnum.INVALID){
+          invalid++;
+        }
+        if(item.trackedInstance.validationResult.travelValidity === TrackedInstance.ChangedValidityEnum.VALID){
+          valid++;
+        }
+        if(item.trackedInstance.validationResult.travelValidity === TrackedInstance.ChangedValidityEnum.PENDING){
+          pending++;
+        }
+      });
+    }
+    this.statisticsTracks ={'invalid': invalid, 'valid':valid, 'pending':pending};
+  }
+
+  setStatisticsSelectedTrack(){
+    var maxSpeed =0;
+    var avrgSpeed = 0;
+    var geolocations: any[] = this.selectedTrack.trackedInstance.geolocationEvents; //assume already ordered
+    if(geolocations.length>0){
+      this.statisticsSelectedTrack.validity = this.selectedTrack.trackedInstance.validationResult.travelValidity;
+      for(let item of geolocations){
+        avrgSpeed+= item.speed;
+        if(maxSpeed<item.speed){
+          maxSpeed = item.speed;
+        }
+      }
+      this.statisticsSelectedTrack.avrgSpeed = avrgSpeed/geolocations.length;
+      this.statisticsSelectedTrack.maxSpeed = maxSpeed;
+      this.statisticsSelectedTrack.start = this.createDate(geolocations[0].recorded_at) ; 
+      this.statisticsSelectedTrack.end = this.createDate(geolocations[geolocations.length-1].recorded_at);
+      this.statisticsSelectedTrack.distance = this.selectedTrack.trackedInstance.validationResult.validationStatus.distance;
     }
   }
 
@@ -288,7 +345,9 @@ export class ValidationTrackComponent implements OnInit {
       }
       ).subscribe((fullDetails)=>{
       this.selectedTrack = fullDetails;
+      this.setInnerHtmlvalidation(this.selectedTrack.trackedInstance.validationResult.validationStatus); 
       this.orderPoints();
+      this.setStatisticsSelectedTrack(); // always after orderPoints
       this.selectedRowIndex = this.selectedTrack.trackedInstance.id;
       this.dataSourceInfoTrack = new MatTableDataSource<any>(
         this.selectedTrack.trackedInstance.geolocationEvents
@@ -307,7 +366,37 @@ export class ValidationTrackComponent implements OnInit {
         this.addEndMarker(end);
       }
     });
+  }
 
+  setInnerHtmlvalidation(obj: any){
+    this.innerHtmlValidation = this.setInnerHtmlvalidationRecursive(obj,0);
+  }
+
+  setInnerHtmlvalidationRecursive(obj: any,depth:number):string{
+    const keys =  Object.keys(obj);
+    var res  ='';
+    for(let key of keys){
+      if(obj[key]){
+        if(typeof obj[key] === 'object' ){
+          res+=key+ ': {<br />&emsp;'+ this.setInnerHtmlvalidationRecursive(obj[key],depth+1) +'}<br />';
+        }else{
+          for(let i=0;i<depth;i++){
+            res+='&emsp;';
+          }
+          if(key==='startTime'){
+            res += key+': ' + this.createDate(obj[key])  +',<br />';
+          }else if(key==='endTime')
+          {
+            res += key+': ' + this.createDate(obj[key])  +',<br />';
+          }else{
+            res += key+': ' + obj[key].toString()  +',<br />';
+          }
+          
+        }
+        
+      }
+    }
+    return res;
   }
 
   orderPoints(){
@@ -508,6 +597,31 @@ export class ValidationTrackComponent implements OnInit {
   }
 }
 
+showAllDataOnMap(){
+  this.showAllPoints = !this.showAllPoints;
+  var i=0;
+  for(let item of this.selectedTrack.trackedInstance.geolocationEvents){
+    this.showPoint(i, item);
+    i++;
+  }
+}
+
+restShowedPoints(){
+  this.showAllPoints=true;
+  let i=0;
+  for(let item of this.selectedTrack.trackedInstance.geolocationEvents){
+    try{
+      if(this.markerLayers[i]){
+        this.map.removeLayer(this.markerLayers[i]["layer"]);
+        this.markerLayers[i] = undefined;
+      }
+      i++;
+    }
+    catch{
+    }
+  }
+}
+
   changeStatus(){
       const dialogRef = this.dialogStatus.open(StatusDialogComponent, {
         width: "60%",
@@ -566,4 +680,20 @@ export class ValidationTrackComponent implements OnInit {
   }
 
 
+}
+
+
+interface StatisticsTracks{
+  pending?: number;
+  valid?: number;
+  invalid?: number;
+}
+
+interface SelectedTrackStatistic{
+  start?: string;
+  end?: string;
+  distance?: number;
+  validity?: string;
+  avrgSpeed?: number;
+  maxSpeed?: number;
 }

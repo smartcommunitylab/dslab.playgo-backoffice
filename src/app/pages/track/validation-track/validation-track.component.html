@@ -63,7 +63,7 @@
                                 <mat-form-field appearance="fill" class="full-width margin-form">
                                     <mat-label>{{'campaignId' | translate}}</mat-label>
                                     <mat-select id="campaignId" formControlName="campaignId" (ngModelChange)="resetPageNumber()">
-                                        <mat-option *ngFor="let val of listCampaings" [value]="val">{{val}}
+                                        <mat-option *ngFor="let val of listCampaings" [value]="val">{{val | translate}}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -98,10 +98,21 @@
         </div>
         <div class="map-class" style="border: solid 1px black;" id="map" leaflet [leafletOptions]="mapOptions"
             (leafletMapReady)="initializeMap($event)">
-            ></div>
+        </div>
     </div>
     <div class="bottom-div" style="margin-top: 20px;">
         <div class="filter-class">
+            <mat-grid-list [cols]="3" rowHeight="50px" >
+                <mat-grid-tile [colspan]="1">
+                    <span>{{'valids' | translate}}: {{statisticsTracks.valid}}</span>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="1">
+                    <span>{{'invalids' | translate}}: {{statisticsTracks.invalid}}</span>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="1">
+                    <span>{{'pending' | translate}}: {{statisticsTracks.pending}}</span>
+                </mat-grid-tile>
+            </mat-grid-list>
             <table mat-table [dataSource]="dataSource" class="full-width">
 
                 <ng-container matColumnDef="tracks">
@@ -240,7 +251,8 @@
                             </button>
                         </mat-card-content>
                     </mat-card>
-
+                </div>
+                <div style="width: 38%; height:100%; float:left;margin-left: 2%;">
                     <mat-card class="card-normal devaice-details">
                         <mat-card-title>{{'device' | translate}}</mat-card-title>
                         <mat-card-content *ngIf="!!selectedTrack.trackedInstance.deviceInfo">
@@ -255,7 +267,7 @@
                                         {{deviceInfo.manufacturer}} <span *ngIf="deviceInfo.isVirtual"
                                             class="red">({{deviceInfo.isVirtual | translate}})</span>
                                     </span>
-
+    
                                 </mat-grid-tile>
                                 <mat-grid-tile>
                                     <span class="full-width left-text">
@@ -266,29 +278,9 @@
                         </mat-card-content>
                     </mat-card>
                 </div>
-
-                <mat-card class="validation card-normal expandable-content">
-                    <mat-card-title class="cursor-pointer" (click)="toggle()">
-                        {{'validation' | translate}}
-                        <mat-card-actions class="right-button top-button">
-                            <mat-icon *ngIf="stateValidationTrack==='collapsed'">
-                                <span class="material-symbols-outlined">
-                                    expand_more
-                                </span>
-                            </mat-icon>
-                            <mat-icon *ngIf="stateValidationTrack==='expanded'">
-                                <span class="material-symbols-outlined">
-                                    expand_less
-                                </span>
-                            </mat-icon>
-                        </mat-card-actions>
-                    </mat-card-title>
-                    <mat-card-content [@bodyExpansion]="stateValidationTrack" class="expandable-content">
-                        {{selectedTrack.trackedInstance.validationResult.validationStatus | json}}
-                    </mat-card-content>
-                </mat-card>
             </div>
             <mat-card class="card-normal table-details" >
+                <mat-card-title>{{'pointsPerCampaign' | translate}}</mat-card-title>
                 <ul *ngIf="selectedTrack.campaigns.length>0">
                     <li *ngFor="let campaign of selectedTrack.campaigns" class="light-background">
                         <h3 style="margin-bottom: 0px;">{{campaign.campaignName[selectedLanguage]}} - {{campaign.campaignId}} </h3>
@@ -303,6 +295,29 @@
             </mat-card>
             <mat-card class="table-details card-normal">
                 <mat-card-content>
+                    <mat-grid-list [cols]="3" rowHeight="50px">
+                        <mat-grid-tile [colspan]="1">{{'start' | translate}}: {{statisticsSelectedTrack.start}}</mat-grid-tile>
+                        <mat-grid-tile [colspan]="1">{{'end' | translate}}: {{statisticsSelectedTrack.end}}</mat-grid-tile>
+                        <mat-grid-tile [colspan]="1">{{'maxSpeed' | translate}}: {{statisticsSelectedTrack.maxSpeed | round}} (m/s)</mat-grid-tile>
+                        <mat-grid-tile [colspan]="1">{{'avrgSpeed' | translate}}: {{statisticsSelectedTrack.avrgSpeed | round}} (m/s)</mat-grid-tile>
+                        <mat-grid-tile [colspan]="1">{{'status' | translate}}: {{statisticsSelectedTrack.validity | translate}}</mat-grid-tile>
+                        <mat-grid-tile [colspan]="1">{{'distance' | translate}}: {{statisticsSelectedTrack.distance | round}}</mat-grid-tile>
+                    </mat-grid-list>
+                    <button mat-flat-button type="button" color="primary" (click)="showAllDataOnMap()" style="margin-right:20px;">
+                        <span *ngIf="showAllPoints">
+                            {{'showAllPoints' | translate}}
+                        </span>
+                        <span *ngIf="!showAllPoints">
+                            {{'hideAllPoints' | translate}}
+                        </span>
+                    </button>
+                    <button mat-flat-button type="button" color="primary" (click)="restShowedPoints()">
+                        <mat-icon>
+                            <span class="material-symbols-outlined">
+                                cached
+                            </span>
+                        </mat-icon>
+                        {{'reset' | translate}}</button>
                     <table mat-table [dataSource]="dataSourceInfoTrack" class="full-dimension">
 
                         <ng-container matColumnDef="index">
@@ -384,6 +399,28 @@
                     </table>
                 </mat-card-content>
             </mat-card>
+            <mat-card class="validation card-normal expandable-content">
+                <mat-card-title class="cursor-pointer" (click)="toggle()">
+                    {{'validation' | translate}}
+                    <mat-card-actions class="right-button top-button">
+                        <mat-icon *ngIf="stateValidationTrack==='collapsed'">
+                            <span class="material-symbols-outlined">
+                                expand_more
+                            </span>
+                        </mat-icon>
+                        <mat-icon *ngIf="stateValidationTrack==='expanded'">
+                            <span class="material-symbols-outlined">
+                                expand_less
+                            </span>
+                        </mat-icon>
+                    </mat-card-actions>
+                </mat-card-title>
+                <mat-card-content [@bodyExpansion]="stateValidationTrack" class="expandable-content">
+                    <p [innerHtml]="innerHtmlValidation"></p>
+                    <!-- <p>{{selectedTrack.trackedInstance.validationResult.validationStatus | json}}</p> -->
+                    
+                </mat-card-content>
+        </mat-card>
 
         </mat-card>
     </div>
