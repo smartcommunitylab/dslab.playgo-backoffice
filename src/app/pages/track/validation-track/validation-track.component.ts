@@ -33,7 +33,7 @@ import {
   DEFAULT_LATITUDE,
   DEFAULT_LONGITUDE,
 } from "../../../shared/constants/constants";
-import { latLng, Map, MapOptions, tileLayer } from "leaflet"; // Draw
+import { FeatureGroup, latLng, Map, MapOptions, tileLayer } from "leaflet"; // Draw
 import * as L from "leaflet";
 import { means } from "src/app/shared/constants/means";
 import * as moment from "moment";
@@ -45,6 +45,7 @@ import { CampaignControllerService } from "src/app/core/api/generated/controller
 import { TranslateService } from "@ngx-translate/core";
 import { TrackedInstance } from "src/app/core/api/generated/model/trackedInstance";
 import { Geolocation } from "src/app/core/api/generated/model/geolocation";
+import { GameArea } from "src/app/shared/classes/map-point";
 
 @Component({
   selector: "app-validation-track",
@@ -71,16 +72,25 @@ import { Geolocation } from "src/app/core/api/generated/model/geolocation";
   ],
 })
 export class ValidationTrackComponent implements OnInit {
-
-  day = 60*60*24*1000;
+  day = 60 * 60 * 24 * 1000;
   territoryId: string;
   mapOptions: MapOptions;
   map: Map;
   stateValidationTrack: string = "expanded";
   size: number[] = [50];
   paginatorData: PageTrackedInstanceClass = new PageTrackedInstanceClass();
-  dataSourceInfoTrack: MatTableDataSource<any[]>; //GeolocationClass 
-  displayedColumnsTrack: string[] = ["index","date","accuracy", "activity","activityConfidence","lat","long","isMoving","speed"];
+  dataSourceInfoTrack: MatTableDataSource<any[]>; //GeolocationClass
+  displayedColumnsTrack: string[] = [
+    "index",
+    "date",
+    "accuracy",
+    "activity",
+    "activityConfidence",
+    "lat",
+    "long",
+    "isMoving",
+    "speed",
+  ];
   dataSource: MatTableDataSource<TrackedInstanceConsoleClass>;
   displayedColumns: string[] = ["tracks"];
   selectedTrack: TrackedInstanceConsoleClass;
@@ -95,25 +105,28 @@ export class ValidationTrackComponent implements OnInit {
   layerGroup: L.Layer;
   startMarker: L.Layer;
   stopMarker: L.Layer;
+  circleLayer: FeatureGroup;
   markerLayers: any[];
   deviceInfo: any;
   listCampaings: string[] = [];
-  dateFromModified= false;
-  dateToModified= false;
-  resetSearchFieldsComponents=false;
+  dateFromModified = false;
+  dateToModified = false;
+  resetSearchFieldsComponents = false;
   SORTING = "startTime, ASC";
-  selectedLanguage:string;
-  statisticsTracks: StatisticsTracks = {'invalid': 0, 'valid':0, 'pending':0};
+  selectedLanguage: string;
+  selectedTerritoryArea: GameArea;
+  statisticsTracks: StatisticsTracks = { invalid: 0, valid: 0, pending: 0 };
   statisticsSelectedTrack: SelectedTrackStatistic = {
-    start: '',
-    end: '',
+    start: "",
+    end: "",
     distance: 0,
-    validity: '',
+    validity: "",
     avrgSpeed: 0,
     maxSpeed: 0,
   };
   showAllPoints = true;
-  innerHtmlValidation ='';
+  innerHtmlValidation = "";
+  restoreMap: Map;
 
   validatingForm: FormGroup;
   constructor(
@@ -123,7 +136,7 @@ export class ValidationTrackComponent implements OnInit {
     private trackingServiceInternal: ConsoleControllerService,
     private campaignService: CampaignControllerService,
     private dialogStatus: MatDialog,
-    private translate: TranslateService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -137,16 +150,24 @@ export class ValidationTrackComponent implements OnInit {
         size: this.size[0],
         territoryId: this.territoryId,
         sort: this.SORTING,
-        trackId: this.validatingForm.get("trackId").value ? this.validatingForm.get("trackId").value : undefined ,
-        playerId: this.validatingForm.get("playerId").value ? this.validatingForm.get("playerId").value : undefined,
-        modeType: this.validatingForm.get("modeType").value ? this.validatingForm.get("modeType").value : undefined,
+        trackId: this.validatingForm.get("trackId").value
+          ? this.validatingForm.get("trackId").value
+          : undefined,
+        playerId: this.validatingForm.get("playerId").value
+          ? this.validatingForm.get("playerId").value
+          : undefined,
+        modeType: this.validatingForm.get("modeType").value
+          ? this.validatingForm.get("modeType").value
+          : undefined,
         dateFrom: this.validatingForm.get("dateFrom").value.valueOf(),
         dateTo: this.validatingForm.get("dateTo").value.valueOf(),
-        campaignId: this.validatingForm.get("campaignId").value ? this.validatingForm.get("campaignId").value : undefined,
-        status: this.validatingForm.get("status").value ? this.validatingForm.get("status").value.toUpperCase() : undefined
-      }
-
-      )
+        campaignId: this.validatingForm.get("campaignId").value
+          ? this.validatingForm.get("campaignId").value
+          : undefined,
+        status: this.validatingForm.get("status").value
+          ? this.validatingForm.get("status").value.toUpperCase()
+          : undefined,
+      })
       .subscribe((res) => {
         this.paginatorData = res;
         this.listTrack = res.content;
@@ -154,14 +175,20 @@ export class ValidationTrackComponent implements OnInit {
         this.dataSource.paginator = this.paginator;
       });
     this.initializeMapOptions();
-    this.territoryService.getTerritoryUsingGET(this.territoryId).subscribe((territory)=>{
-      this.listModelType = territory.territoryData.means;
-      this.listModelType.push('all');
-    });
-    this.campaignService.getCampaignsUsingGET({territoryId: this.territoryId}).subscribe((campaigns)=>{
-      campaigns.forEach((item)=>{this.listCampaings.push(item.campaignId)});
-      this.listCampaings.push('all');
-    });
+    this.territoryService
+      .getTerritoryUsingGET(this.territoryId)
+      .subscribe((territory) => {
+        this.listModelType = territory.territoryData.means;
+        this.listModelType.push("all");
+      });
+    this.campaignService
+      .getCampaignsUsingGET({ territoryId: this.territoryId })
+      .subscribe((campaigns) => {
+        campaigns.forEach((item) => {
+          this.listCampaings.push(item.campaignId);
+        });
+        this.listCampaings.push("all");
+      });
     this.selectedLanguage = this.translate.currentLang;
   }
 
@@ -180,7 +207,7 @@ export class ValidationTrackComponent implements OnInit {
     const sunday = this.getNextSunday();
     this.validatingForm.patchValue({
       dateFrom: moment(monday, "YYYY-MM-DD"),
-      dateTo: moment(sunday, "YYYY-MM-DD")
+      dateTo: moment(sunday, "YYYY-MM-DD"),
     });
   }
 
@@ -237,23 +264,31 @@ export class ValidationTrackComponent implements OnInit {
       "/" +
       date.getFullYear() +
       " " +
-      (date.getHours().toString().length ===1 ?  date.getHours().toString().length ===0 ? "00" :  "0"+date.getHours().toString() : date.getHours().toString()) +
+      (date.getHours().toString().length === 1
+        ? date.getHours().toString().length === 0
+          ? "00"
+          : "0" + date.getHours().toString()
+        : date.getHours().toString()) +
       ":" +
-      (date.getMinutes().toString().length ===1 ?  date.getMinutes().toString().length ===0 ? "00" :  "0"+date.getMinutes().toString() : date.getMinutes().toString())  
+      (date.getMinutes().toString().length === 1
+        ? date.getMinutes().toString().length === 0
+          ? "00"
+          : "0" + date.getMinutes().toString()
+        : date.getMinutes().toString())
     );
   }
 
   searchSubmit() {
     if (this.validatingForm.valid) {
-      if(this.resetSearchFieldsComponents){
+      if (this.resetSearchFieldsComponents) {
         this.allowResetOnsearch();
         this.resetSearchFieldsComponents = false;
       }
       // var dateFromString;
       // if(this.dateFromModified){
-      //   dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value,false); 
+      //   dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value,false);
       // }else{
-      //   dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value,true); 
+      //   dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value,true);
       // }
       // var dateToString;
       // if(this.dateToModified){
@@ -261,71 +296,122 @@ export class ValidationTrackComponent implements OnInit {
       // }else{
       //   dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value,true);
       // }
-      // dateToString = dateToString ? dateToString :this.transformDateToString(moment());  
-      const today:number = (new Date()).getTime();
+      // dateToString = dateToString ? dateToString :this.transformDateToString(moment());
+      const today: number = new Date().getTime();
       this.trackingServiceInternal
-        .searchTrackedInstanceUsingGET(
-          {
-            page: this.currentPageNumber,
-            size: this.size[0],
-            territoryId: this.territoryId,
-            sort: this.SORTING,
-            trackId: this.validatingForm.get("trackId").value ? this.validatingForm.get("trackId").value : undefined ,
-            playerId: this.validatingForm.get("playerId").value ? this.validatingForm.get("playerId").value : undefined,
-            modeType: this.validatingForm.get("modeType").value ? (this.validatingForm.get("modeType").value === "all"? undefined : this.validatingForm.get("modeType").value) : undefined,
-            dateFrom: this.validatingForm.get("dateFrom").value? this.validatingForm.get("dateFrom").value.valueOf() : undefined,
-            dateTo: this.validatingForm.get("dateTo").value ? this.validatingForm.get("dateTo").value.valueOf() + this.day : today,
-            campaignId: this.validatingForm.get("campaignId").value ? (this.validatingForm.get("campaignId").value === "all"? undefined : this.validatingForm.get("campaignId").value) : undefined,
-            status: this.validatingForm.get("status").value ? (this.validatingForm.get("status").value === "all"? undefined : this.validatingForm.get("status").value.toUpperCase()) : undefined
-          }
-        )
+        .searchTrackedInstanceUsingGET({
+          page: this.currentPageNumber,
+          size: this.size[0],
+          territoryId: this.territoryId,
+          sort: this.SORTING,
+          trackId: this.validatingForm.get("trackId").value
+            ? this.validatingForm.get("trackId").value
+            : undefined,
+          playerId: this.validatingForm.get("playerId").value
+            ? this.validatingForm.get("playerId").value
+            : undefined,
+          modeType: this.validatingForm.get("modeType").value
+            ? this.validatingForm.get("modeType").value === "all"
+              ? undefined
+              : this.validatingForm.get("modeType").value
+            : undefined,
+          dateFrom: this.validatingForm.get("dateFrom").value
+            ? this.validatingForm.get("dateFrom").value.valueOf()
+            : undefined,
+          dateTo: this.validatingForm.get("dateTo").value
+            ? this.validatingForm.get("dateTo").value.valueOf() + this.day
+            : today,
+          campaignId: this.validatingForm.get("campaignId").value
+            ? this.validatingForm.get("campaignId").value === "all"
+              ? undefined
+              : this.validatingForm.get("campaignId").value
+            : undefined,
+          status: this.validatingForm.get("status").value
+            ? this.validatingForm.get("status").value === "all"
+              ? undefined
+              : this.validatingForm.get("status").value.toUpperCase()
+            : undefined,
+        })
         .subscribe((res) => {
           this.paginatorData = res;
           this.listTrack = res.content;
-          
+          this.selectedTrack = undefined;
+          try {
+            if (this.layerGroup) {
+              this.map.removeLayer(this.layerGroup);
+              this.map.removeLayer(this.startMarker);
+              this.map.removeLayer(this.stopMarker);
+              this.map.flyTo(latLng(DEFAULT_LATITUDE, DEFAULT_LONGITUDE), 7);
+              this.layerGroup = undefined;
+              this.markerLayers.forEach((item) => {
+                if (!!item) this.map.removeLayer(item["layer"]);
+              });
+            }
+          } catch (error) {}
+
           this.setTableData();
           //this.dataSource.paginator = this.paginator;
         });
     }
   }
 
-  setStatisticsListTracks(){
-    var invalid =0;
-    var valid =0;
-    var pending =0;
-    if(this.listTrack.length >0){
-      this.listTrack.forEach(item=>{
-        if(item.trackedInstance.validationResult.travelValidity === TrackedInstance.ChangedValidityEnum.INVALID){
+  setStatisticsListTracks() {
+    var invalid = 0;
+    var valid = 0;
+    var pending = 0;
+    if (this.listTrack.length > 0) {
+      this.listTrack.forEach((item) => {
+        if (
+          item.trackedInstance.validationResult.travelValidity ===
+          TrackedInstance.ChangedValidityEnum.INVALID
+        ) {
           invalid++;
         }
-        if(item.trackedInstance.validationResult.travelValidity === TrackedInstance.ChangedValidityEnum.VALID){
+        if (
+          item.trackedInstance.validationResult.travelValidity ===
+          TrackedInstance.ChangedValidityEnum.VALID
+        ) {
           valid++;
         }
-        if(item.trackedInstance.validationResult.travelValidity === TrackedInstance.ChangedValidityEnum.PENDING){
+        if (
+          item.trackedInstance.validationResult.travelValidity ===
+          TrackedInstance.ChangedValidityEnum.PENDING
+        ) {
           pending++;
         }
       });
     }
-    this.statisticsTracks ={'invalid': invalid, 'valid':valid, 'pending':pending};
+    this.statisticsTracks = {
+      invalid: invalid,
+      valid: valid,
+      pending: pending,
+    };
   }
 
-  setStatisticsSelectedTrack(){
-    var maxSpeed =0;
+  setStatisticsSelectedTrack() {
+    var maxSpeed = 0;
     var avrgSpeed = 0;
-    var geolocations: any[] = this.selectedTrack.trackedInstance.geolocationEvents; //assume already ordered
-    if(geolocations.length>0){
-      this.statisticsSelectedTrack.validity = this.selectedTrack.trackedInstance.validationResult.travelValidity;
-      for(let item of geolocations){
-        avrgSpeed+= item.speed;
-        if(maxSpeed<item.speed){
+    var geolocations: any[] =
+      this.selectedTrack.trackedInstance.geolocationEvents; //assume already ordered
+    if (geolocations.length > 0) {
+      this.statisticsSelectedTrack.validity =
+        this.selectedTrack.trackedInstance.validationResult.travelValidity;
+      for (let item of geolocations) {
+        avrgSpeed += item.speed;
+        if (maxSpeed < item.speed) {
           maxSpeed = item.speed;
         }
       }
-      this.statisticsSelectedTrack.avrgSpeed = avrgSpeed/geolocations.length;
+      this.statisticsSelectedTrack.avrgSpeed = avrgSpeed / geolocations.length;
       this.statisticsSelectedTrack.maxSpeed = maxSpeed;
-      this.statisticsSelectedTrack.start = this.createDate(geolocations[0].recorded_at) ; 
-      this.statisticsSelectedTrack.end = this.createDate(geolocations[geolocations.length-1].recorded_at);
-      this.statisticsSelectedTrack.distance = this.selectedTrack.trackedInstance.validationResult.validationStatus.distance;
+      this.statisticsSelectedTrack.start = this.createDate(
+        geolocations[0].recorded_at
+      );
+      this.statisticsSelectedTrack.end = this.createDate(
+        geolocations[geolocations.length - 1].recorded_at
+      );
+      this.statisticsSelectedTrack.distance =
+        this.selectedTrack.trackedInstance.validationResult.validationStatus.distance;
     }
   }
 
@@ -338,70 +424,102 @@ export class ValidationTrackComponent implements OnInit {
   }
 
   showTrack(row: TrackedInstanceConsoleClass) {
-    this.trackingService.getTrackedInstanceDetailUsingGET(
-      {
+    this.trackingService
+      .getTrackedInstanceDetailUsingGET({
         territoryId: this.territoryId,
-        trackId: row.trackedInstance.id
-      }
-      ).subscribe((fullDetails)=>{
-      this.selectedTrack = fullDetails;
-      this.setInnerHtmlvalidation(this.selectedTrack.trackedInstance.validationResult.validationStatus); 
-      this.orderPoints();
-      this.setStatisticsSelectedTrack(); // always after orderPoints
-      this.selectedRowIndex = this.selectedTrack.trackedInstance.id;
-      this.dataSourceInfoTrack = new MatTableDataSource<any>(
-        this.selectedTrack.trackedInstance.geolocationEvents
-      );
-      this.deviceInfo = this.obejectFromString(this.selectedTrack.trackedInstance.deviceInfo);
-      this.drawPolyline(this.selectedTrack.trackedInstance.geolocationEvents);
-      this.markerLayers = [];
-      for (let i = 0; i < this.selectedTrack.trackedInstance.geolocationEvents.length; i++) {
-        this.markerLayers.push(undefined);
-      }
-      var start = [this.selectedTrack.trackedInstance.geolocationEvents[0].geocoding[1],this.selectedTrack.trackedInstance.geolocationEvents[0].geocoding[0]];
-      this.addStartMarker(start);
-      const length = this.selectedTrack.trackedInstance.geolocationEvents.length;
-      if(length >1){
-        var end = [this.selectedTrack.trackedInstance.geolocationEvents[length-1].geocoding[1],this.selectedTrack.trackedInstance.geolocationEvents[length-1].geocoding[0]];
-        this.addEndMarker(end);
-      }
-    });
+        trackId: row.trackedInstance.id,
+      })
+      .subscribe((fullDetails) => {
+        this.selectedTrack = fullDetails;
+        this.setInnerHtmlvalidation(
+          this.selectedTrack.trackedInstance.validationResult.validationStatus
+        );
+        this.orderPoints();
+        this.setStatisticsSelectedTrack(); // always after orderPoints
+        this.selectedRowIndex = this.selectedTrack.trackedInstance.id;
+        this.dataSourceInfoTrack = new MatTableDataSource<any>(
+          this.selectedTrack.trackedInstance.geolocationEvents
+        );
+        this.deviceInfo = this.obejectFromString(
+          this.selectedTrack.trackedInstance.deviceInfo
+        );
+        try {
+          this.drawRayOnMap();
+          this.drawPolyline(
+            this.selectedTrack.trackedInstance.geolocationEvents
+          );
+          this.markerLayers = [];
+          for (
+            let i = 0;
+            i < this.selectedTrack.trackedInstance.geolocationEvents.length;
+            i++
+          ) {
+            this.markerLayers.push(undefined);
+          }
+          var start = [
+            this.selectedTrack.trackedInstance.geolocationEvents[0]
+              .geocoding[1],
+            this.selectedTrack.trackedInstance.geolocationEvents[0]
+              .geocoding[0],
+          ];
+          this.addStartMarker(start);
+          const length =
+            this.selectedTrack.trackedInstance.geolocationEvents.length;
+          if (length > 1) {
+            var end = [
+              this.selectedTrack.trackedInstance.geolocationEvents[length - 1]
+                .geocoding[1],
+              this.selectedTrack.trackedInstance.geolocationEvents[length - 1]
+                .geocoding[0],
+            ];
+            this.addEndMarker(end);
+          }
+        } catch {}
+      });
   }
 
-  setInnerHtmlvalidation(obj: any){
-    this.innerHtmlValidation = this.setInnerHtmlvalidationRecursive(obj,0);
+  setInnerHtmlvalidation(obj: any) {
+    this.innerHtmlValidation = this.setInnerHtmlvalidationRecursive(obj, 0);
   }
 
-  setInnerHtmlvalidationRecursive(obj: any,depth:number):string{
-    const keys =  Object.keys(obj);
-    var res  ='';
-    for(let key of keys){
-      if(obj[key]){
-        if(typeof obj[key] === 'object' ){
-          res+=key+ ': {<br />&emsp;'+ this.setInnerHtmlvalidationRecursive(obj[key],depth+1) +'}<br />';
-        }else{
-          for(let i=0;i<depth;i++){
-            res+='&emsp;';
+  setInnerHtmlvalidationRecursive(obj: any, depth: number): string {
+    const keys = Object.keys(obj);
+    var res = "";
+    for (let key of keys) {
+      if (obj[key]) {
+        if (typeof obj[key] === "object") {
+          res +=
+            key +
+            ": {<br />&emsp;" +
+            this.setInnerHtmlvalidationRecursive(obj[key], depth + 1) +
+            "}<br />";
+        } else {
+          for (let i = 0; i < depth; i++) {
+            res += "&emsp;";
           }
-          if(key==='startTime'){
-            res += key+': ' + this.createDate(obj[key])  +',<br />';
-          }else if(key==='endTime')
-          {
-            res += key+': ' + this.createDate(obj[key])  +',<br />';
-          }else{
-            res += key+': ' + obj[key].toString()  +',<br />';
+          if (key === "startTime") {
+            res += key + ": " + this.createDate(obj[key]) + ",<br />";
+          } else if (key === "endTime") {
+            res += key + ": " + this.createDate(obj[key]) + ",<br />";
+          } else if (key === "error") {
+            res +=
+              '<span style="colod:red";>' +
+              key +
+              ": " +
+              obj[key].toString() +
+              "</span>,<br />";
+          } else {
+            res += key + ": " + obj[key].toString() + ",<br />";
           }
-          
         }
-        
       }
     }
     return res;
   }
 
-  orderPoints(){
-    this.selectedTrack.trackedInstance.geolocationEvents.sort((a: any,b: any)=>
-      (a.recorded_at >b.recorded_at ? 1 : -1)
+  orderPoints() {
+    this.selectedTrack.trackedInstance.geolocationEvents.sort(
+      (a: any, b: any) => (a.recorded_at > b.recorded_at ? 1 : -1)
     );
   }
 
@@ -417,14 +535,14 @@ export class ValidationTrackComponent implements OnInit {
       status: new FormControl(""),
     });
     this.validatingForm.patchValue({
-      sort: '',
-      trackId: '',
-      playerId: '',
-      modeType: '',
-      dateFrom: '',
-      dateTo: '',
-      campaignId: '',
-      status: '',
+      sort: "",
+      trackId: "",
+      playerId: "",
+      modeType: "",
+      dateFrom: "",
+      dateTo: "",
+      campaignId: "",
+      status: "",
     });
     this.resetPageNumber();
   }
@@ -437,9 +555,9 @@ export class ValidationTrackComponent implements OnInit {
         const list: Track[] = [];
         // var dateFromString;
         // if(this.dateFromModified){
-        //   dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value,false); 
+        //   dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value,false);
         // }else{
-        //   dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value,true); 
+        //   dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value,true);
         // }
         // var dateToString;
         // if(this.dateToModified){
@@ -447,24 +565,36 @@ export class ValidationTrackComponent implements OnInit {
         // }else{
         //   dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value,true);
         // }
-        // dateToString = dateToString ? dateToString :this.transformDateToString(moment());  
-        const today:number = (new Date()).getTime();
+        // dateToString = dateToString ? dateToString :this.transformDateToString(moment());
+        const today: number = new Date().getTime();
         this.trackingServiceInternal
-          .searchTrackedInstanceUsingGET(
-            {
-              page: this.currentPageNumber,
-              size: this.size[0],
-              territoryId: this.territoryId,
-              sort: this.SORTING,
-              trackId: this.validatingForm.get("trackId").value ? this.validatingForm.get("trackId").value : undefined ,
-              playerId: this.validatingForm.get("playerId").value ? this.validatingForm.get("playerId").value : undefined,
-              modeType: this.validatingForm.get("modeType").value ? this.validatingForm.get("modeType").value : undefined,
-              dateFrom: this.validatingForm.get("dateFrom").value? this.validatingForm.get("dateFrom").value.valueOf() : undefined,
-              dateTo: this.validatingForm.get("dateTo").value ? this.validatingForm.get("dateTo").value.valueOf() + this.day : today,
-              campaignId: this.validatingForm.get("campaignId").value ? this.validatingForm.get("campaignId").value : undefined,
-              status: this.validatingForm.get("status").value ? this.validatingForm.get("status").value.toUpperCase() : undefined
-            }
-          )
+          .searchTrackedInstanceUsingGET({
+            page: this.currentPageNumber,
+            size: this.size[0],
+            territoryId: this.territoryId,
+            sort: this.SORTING,
+            trackId: this.validatingForm.get("trackId").value
+              ? this.validatingForm.get("trackId").value
+              : undefined,
+            playerId: this.validatingForm.get("playerId").value
+              ? this.validatingForm.get("playerId").value
+              : undefined,
+            modeType: this.validatingForm.get("modeType").value
+              ? this.validatingForm.get("modeType").value
+              : undefined,
+            dateFrom: this.validatingForm.get("dateFrom").value
+              ? this.validatingForm.get("dateFrom").value.valueOf()
+              : undefined,
+            dateTo: this.validatingForm.get("dateTo").value
+              ? this.validatingForm.get("dateTo").value.valueOf() + this.day
+              : today,
+            campaignId: this.validatingForm.get("campaignId").value
+              ? this.validatingForm.get("campaignId").value
+              : undefined,
+            status: this.validatingForm.get("status").value
+              ? this.validatingForm.get("status").value.toUpperCase()
+              : undefined,
+          })
           .subscribe((res) => {
             this.listTrack = res.content;
             this.setTableData();
@@ -475,20 +605,20 @@ export class ValidationTrackComponent implements OnInit {
     }
   }
 
-  changeDateFrom(){
+  changeDateFrom() {
     this.resetPageNumber();
     this.dateFromModified = true;
   }
-  changeDateTo(){
+  changeDateTo() {
     this.resetPageNumber();
     this.dateToModified = true;
   }
 
-  resetPageNumber(){
+  resetPageNumber() {
     this.resetSearchFieldsComponents = true;
   }
 
-  allowResetOnsearch(){
+  allowResetOnsearch() {
     this.currentPageNumber = 0;
     this.dataSource.paginator = this.paginator;
   }
@@ -506,15 +636,15 @@ export class ValidationTrackComponent implements OnInit {
     return year + "-" + month + "-" + day;
   }
 
-  drawPolyline(arrayPoints: any[]) { // any[] = GeolocationClass
+  drawPolyline(arrayPoints: any[]) {
+    // any[] = GeolocationClass
     var latlngs = [];
     try {
       if (this.layerGroup) {
         this.map.removeLayer(this.layerGroup);
         this.layerGroup = undefined;
-        this.markerLayers.forEach((item)=>{
-          if(!!item)
-            this.map.removeLayer(item["layer"]);
+        this.markerLayers.forEach((item) => {
+          if (!!item) this.map.removeLayer(item["layer"]);
         });
       }
     } catch (error) {}
@@ -528,18 +658,45 @@ export class ValidationTrackComponent implements OnInit {
   }
 
   public initializeMap(map: Map): void {
+    this.restoreMap = map;
     this.map = map;
+    this.drawRayOnMap();
+    this.drawPolyline(this.selectedTrack.trackedInstance.geolocationEvents);
+    this.markerLayers = [];
+    for (
+      let i = 0;
+      i < this.selectedTrack.trackedInstance.geolocationEvents.length;
+      i++
+    ) {
+      this.markerLayers.push(undefined);
+    }
+    var start = [
+      this.selectedTrack.trackedInstance.geolocationEvents[0].geocoding[1],
+      this.selectedTrack.trackedInstance.geolocationEvents[0].geocoding[0],
+    ];
+    this.addStartMarker(start);
+    const length = this.selectedTrack.trackedInstance.geolocationEvents.length;
+    if (length > 1) {
+      var end = [
+        this.selectedTrack.trackedInstance.geolocationEvents[length - 1]
+          .geocoding[1],
+        this.selectedTrack.trackedInstance.geolocationEvents[length - 1]
+          .geocoding[0],
+      ];
+      this.addEndMarker(end);
+    }
   }
 
-  showPoint(index: number, row: any) { //row => GeolocationClass
+  showPoint(index: number, row: any) {
+    //row => GeolocationClass
     var icon = L.divIcon({
       className: "number-icon",
       iconSize: [25, 41],
       iconAnchor: [12, 43],
-      html: (index+1).toString()
-    });  
+      html: (index + 1).toString(),
+    });
 
-    if (!!this.markerLayers[index]){
+    if (!!this.markerLayers[index]) {
       //defined
       try {
         this.map.removeLayer(this.markerLayers[index]["layer"]);
@@ -547,21 +704,36 @@ export class ValidationTrackComponent implements OnInit {
       } catch {}
     } else {
       //undefined
-      const popup = "<h3>point number: "+ (index+1)+ "</h3></br><h4>lat: " + row.geocoding[1] + " - long: " + row.geocoding[0]+"</h4>";
-      var marker = L.marker([row.geocoding[1], row.geocoding[0]], { icon: icon });
-      const markers = this.markerLayers[index] ? this.markerLayers[index]["markers"].push(marker) : [marker];
-      this.markerLayers[index] = {"layer": new L.LayerGroup(markers),"markers": markers, "popup": popup  };
+      const popup =
+        "<h3>point number: " +
+        (index + 1) +
+        "</h3></br><h4>lat: " +
+        row.geocoding[1] +
+        " - long: " +
+        row.geocoding[0] +
+        "</h4>";
+      var marker = L.marker([row.geocoding[1], row.geocoding[0]], {
+        icon: icon,
+      });
+      const markers = this.markerLayers[index]
+        ? this.markerLayers[index]["markers"].push(marker)
+        : [marker];
+      this.markerLayers[index] = {
+        layer: new L.LayerGroup(markers),
+        markers: markers,
+        popup: popup,
+      };
       this.markerLayers[index]["layer"].addTo(this.map);
     }
   }
 
-  addStartMarker(point: any){
+  addStartMarker(point: any) {
     var icon = L.icon({
-      iconUrl: '/../../../assets/images/start-marker.png', // /dslab.playgo-backoffice/src/assets/images/start-marker.png
+      iconUrl: "/../../../assets/images/start-marker.png", // /dslab.playgo-backoffice/src/assets/images/start-marker.png
       iconSize: [25, 41],
       iconAnchor: [12, 43],
     });
-    if (!!this.startMarker){
+    if (!!this.startMarker) {
       //defined
       try {
         this.map.removeLayer(this.startMarker);
@@ -573,16 +745,16 @@ export class ValidationTrackComponent implements OnInit {
       var marker = L.marker([point[0], point[1]], { icon: icon });
       this.startMarker = new L.LayerGroup([marker]);
       this.startMarker.addTo(this.map);
+    }
   }
-}
 
-  addEndMarker(point:any){
+  addEndMarker(point: any) {
     var icon = L.icon({
-      iconUrl: '/../../../assets/images/stop-marker.png', // /dslab.playgo-backoffice/src/assets/images/stop-marker.png
+      iconUrl: "/../../../assets/images/stop-marker.png", // /dslab.playgo-backoffice/src/assets/images/stop-marker.png
       iconSize: [25, 41],
       iconAnchor: [12, 43],
     });
-    if (!!this.stopMarker){
+    if (!!this.stopMarker) {
       //defined
       try {
         this.map.removeLayer(this.stopMarker);
@@ -594,102 +766,162 @@ export class ValidationTrackComponent implements OnInit {
       var marker = L.marker([point[0], point[1]], { icon: icon });
       this.stopMarker = new L.LayerGroup([marker]);
       this.stopMarker.addTo(this.map);
+    }
   }
-}
 
-showAllDataOnMap(){
-  this.showAllPoints = !this.showAllPoints;
-  var i=0;
-  for(let item of this.selectedTrack.trackedInstance.geolocationEvents){
-    this.showPoint(i, item);
-    i++;
-  }
-}
-
-restShowedPoints(){
-  this.showAllPoints=true;
-  let i=0;
-  for(let item of this.selectedTrack.trackedInstance.geolocationEvents){
-    try{
-      if(this.markerLayers[i]){
-        this.map.removeLayer(this.markerLayers[i]["layer"]);
-        this.markerLayers[i] = undefined;
-      }
+  showAllDataOnMap() {
+    this.showAllPoints = !this.showAllPoints;
+    var i = 0;
+    for (let item of this.selectedTrack.trackedInstance.geolocationEvents) {
+      this.showPoint(i, item);
       i++;
     }
-    catch{
+  }
+
+  restShowedPoints() {
+    this.showAllPoints = true;
+    let i = 0;
+    for (let item of this.selectedTrack.trackedInstance.geolocationEvents) {
+      try {
+        if (this.markerLayers[i]) {
+          this.map.removeLayer(this.markerLayers[i]["layer"]);
+          this.markerLayers[i] = undefined;
+        }
+        i++;
+      } catch {}
     }
   }
-}
 
-  changeStatus(){
-      const dialogRef = this.dialogStatus.open(StatusDialogComponent, {
-        width: "60%",
-      });
-      let instance = dialogRef.componentInstance;
-      instance.selectedTrack = this.selectedTrack;
-  
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result !== undefined) {
-        }
-      });
+  changeStatus() {
+    const dialogRef = this.dialogStatus.open(StatusDialogComponent, {
+      width: "60%",
+    });
+    let instance = dialogRef.componentInstance;
+    instance.selectedTrack = this.selectedTrack;
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result !== undefined) {
+        this.trackingService
+          .getTrackedInstanceDetailUsingGET({
+            territoryId: this.territoryId,
+            trackId: this.selectedTrack.trackedInstance.id,
+          })
+          .subscribe((fullDetails) => {
+            this.selectedTrack = fullDetails;
+          });
+      }
+    });
   }
 
   selectedRowOnTrack(index: number): boolean {
-    if(this.markerLayers){
-      if(!!this.markerLayers[index]){
+    if (this.markerLayers) {
+      if (!!this.markerLayers[index]) {
         return true;
       }
     }
     return false;
   }
 
-  obejectFromString(s: string) :any{
-    if(s==='null'){
-      return {'available':false,'platform':'-','version':'-','uuid':'-','cordova':'-','model':'-','manufacturer':'-','isVirtual':false,'serial':'-','appVersion':'-'};
+  obejectFromString(s: string): any {
+    if (s === "null") {
+      return {
+        available: false,
+        platform: "-",
+        version: "-",
+        uuid: "-",
+        cordova: "-",
+        model: "-",
+        manufacturer: "-",
+        isVirtual: false,
+        serial: "-",
+        appVersion: "-",
+      };
     }
 
-    try{
-      if(!!s && s!== null)
-        return JSON.parse(s);
-    }
-    catch{}
-    return {'available':true,'platform':'-','version':'-','uuid':'-','cordova':'-','model':'-','manufacturer':'-','isVirtual':false,'serial':'-','appVersion':'-'};
+    try {
+      if (!!s && s !== null) return JSON.parse(s);
+    } catch {}
+    return {
+      available: true,
+      platform: "-",
+      version: "-",
+      uuid: "-",
+      cordova: "-",
+      model: "-",
+      manufacturer: "-",
+      isVirtual: false,
+      serial: "-",
+      appVersion: "-",
+    };
   }
 
-  transformDateToString(date: Moment,startDay? :boolean): string{
+  transformDateToString(date: Moment, startDay?: boolean): string {
     const dateFormat: Date = date ? date.toDate() : undefined;
-    var dateString = dateFormat?  dateFormat.toISOString().replace('Z','').replace('T', ' ') : undefined;
-    if(startDay){
-      if(dateString)
-        return dateString.substring(0,dateString.length-'00:00:00.000'.length) + '00:00:00'
-      else
-        return undefined;
-      }
-      if(dateString)
-        return dateString.substring(0,dateString.length-'00:00:00.000'.length) + '23:59:59';
-      else
-        return undefined;
+    var dateString = dateFormat
+      ? dateFormat.toISOString().replace("Z", "").replace("T", " ")
+      : undefined;
+    if (startDay) {
+      if (dateString)
+        return (
+          dateString.substring(0, dateString.length - "00:00:00.000".length) +
+          "00:00:00"
+        );
+      else return undefined;
+    }
+    if (dateString)
+      return (
+        dateString.substring(0, dateString.length - "00:00:00.000".length) +
+        "23:59:59"
+      );
+    else return undefined;
   }
 
-  createDate(timestamp : number) : string{
+  createDate(timestamp: number): string {
     const date = new Date(timestamp);
-    const midDate = date.toISOString().replace('Z','').replace('T', ' ')
+    const midDate = date.toISOString().replace("Z", "").replace("T", " ");
     //return midDate.substring(0,midDate.length-4); // full date
-    return midDate.substring(midDate.length-12,midDate.length-4);
+    return midDate.substring(midDate.length - 12, midDate.length - 4);
   }
 
-
+  drawRayOnMap() {
+    this.territoryService
+      .getTerritoryUsingGET(this.territoryId)
+      .subscribe((selectedTerritory) => {
+        this.selectedTerritoryArea = new GameArea();
+        this.selectedTerritoryArea.latitude =
+          +selectedTerritory.territoryData.area[0].lat;
+        this.selectedTerritoryArea.longitude =
+          +selectedTerritory.territoryData.area[0].long;
+        this.selectedTerritoryArea.radius =
+          +selectedTerritory.territoryData.area[0].radius;
+        if (this.circleLayer !== undefined) {
+          if (!!this.map) this.map.removeLayer(this.circleLayer);
+        }
+        const numberRay = this.selectedTerritoryArea.radius;
+        this.circleLayer = L.featureGroup();
+        if (numberRay > 0) {
+          L.circle(
+            [
+              this.selectedTerritoryArea.latitude,
+              this.selectedTerritoryArea.longitude,
+            ],
+            numberRay
+          ).addTo(this.circleLayer);
+        }
+        if (!!this.map) {
+          this.map.addLayer(this.circleLayer);
+        }
+      });
+  }
 }
 
-
-interface StatisticsTracks{
+interface StatisticsTracks {
   pending?: number;
   valid?: number;
   invalid?: number;
 }
 
-interface SelectedTrackStatistic{
+interface SelectedTrackStatistic {
   start?: string;
   end?: string;
   distance?: number;

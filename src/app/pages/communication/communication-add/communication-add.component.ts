@@ -10,6 +10,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from "@angular/materia
 import { MatDialogRef } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { TranslateService } from "@ngx-translate/core";
+import * as moment from "moment";
 import { CampaignControllerService } from "src/app/core/api/generated/controllers/campaignController.service";
 import { NotificationControllerService } from "src/app/core/api/generated/controllers/notificationController.service";
 import { Announcement } from "src/app/core/api/generated/model/announcement";
@@ -61,8 +62,10 @@ export class CommunicationAddComponent implements OnInit {
       users: new FormControl(""),
       title: new FormControl("", [Validators.required]),
     });
+    const today = new Date();
     this.validatingForm.patchValue({
       territoryId: this.territoryId,
+      dateFrom: moment(today, "YYYY-MM-DD"),
     });
     this.campaignService
       .getCampaignsUsingGET({ territoryId: this.territoryId })

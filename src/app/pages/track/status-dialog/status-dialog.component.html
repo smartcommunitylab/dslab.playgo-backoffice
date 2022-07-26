@@ -12,7 +12,7 @@
             </mat-select>
         </mat-form-field>
         <mat-form-field *ngIf="validatingForm.get('status').value==='invalid'" appearance="fill" class="input-custom-half-right">
-            <mat-label>{{'newStatus' | translate}}</mat-label>
+            <mat-label>{{'motivation' | translate}}*</mat-label>
             <mat-select id="error" formControlName="error" >
                 <mat-option *ngFor="let val of listErrors" [value]="val">
                     {{val}}: {{val | translate}}
@@ -35,7 +35,7 @@
         <div class="in-line-forms input-custom-half-left" style="float: left;">{{'currentDistance' | translate}}: {{selectedTrack.trackedInstance.validationResult.validationStatus.distance | round}} {{'meters' | translate}}</div>
         <div class="in-line-forms">
             <mat-form-field appearance="fill" class="input-custom-half-left">
-                <mat-label>{{'newDistance' | translate}}</mat-label>
+                <mat-label>{{'newDistance' | translate}} (m)</mat-label>
                 <input matInput  type="number" min="0" id="distance" formControlName="distance">
             </mat-form-field>
         </div>
@@ -48,11 +48,11 @@
         </div>
         <div class="in-line-forms">
             <mat-form-field appearance="fill" class="input-custom-half-left">
-                <mat-label>{{'newTime' | translate}}</mat-label>
+                <mat-label>{{'newTime' | translate}} (s)</mat-label>
                 <input matInput  type="number" min="0" id="time" formControlName="time">
             </mat-form-field>
             <mat-form-field appearance="fill" class="input-custom-half-right">
-                <mat-label>{{'newDistance' | translate}}</mat-label>
+                <mat-label>{{'newDistance' | translate}} (m)</mat-label>
                 <input matInput  type="number" min="0" id="distance" formControlName="distance">
             </mat-form-field>
         </div>
@@ -72,7 +72,7 @@
     <div class="full-width" style="height: 40px">
         <button color="primary" class="right-button" mat-raised-button type="submit" (click)="validate()">
             {{'save' | translate}}</button>
-        <button class="right-button grey-background" mat-flat-button (click)="onNoClick($event)">
+        <button class="right-button grey-background" mat-flat-button (click)="onNoClick(false)">
             {{'cancel'|translate}}</button>
     </div>
 </form>

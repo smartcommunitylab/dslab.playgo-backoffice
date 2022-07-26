@@ -92,17 +92,31 @@
 }
 
 .filter-class{
-  width: 40%;
+  width: 55%;
   height: 100%;
   float: left;
 }
 
-
-.map-class{
-  margin-left: 2%;
-  width: 58%;
+.list-tracks{
+  width: 40%;
   height: 100%;
   float: left;
+}
+.info-track{
+  width: 60%;
+  height: 100%;
+  float: left;}
+
+.filter-spacer{
+  width: 35%;
+  height: 100%;
+  float: left;}
+
+.map-class{
+  margin: 2%;
+  width: 96%;
+  height: 400px;
+  //float: left;
 }
 
 .bold{
@@ -125,7 +139,7 @@
 
 .header-detatils{
   width: 96%;
-  height: 250px;
+  height: 550px;
   margin: 2%;
 }
 
@@ -190,7 +204,7 @@
 }
 
 .left-header{
-  width: 60%;
+  width: 100%;
   height: 100%;
   float: left;
 }
