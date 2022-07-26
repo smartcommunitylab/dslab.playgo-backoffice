@@ -73,7 +73,7 @@
 }
 
 .map{
-    margin-left: 2%;
+    margin-left: 1%;
     width: 66%;
     height: 87%;
     float: right;
@@ -113,11 +113,10 @@
   height: 100%;
   float: left;}
 
-.map-class{
-  margin: 2%;
-  width: 96%;
+.map-class{    
+  margin: 1%;
+  width: 98%;
   height: 400px;
-  //float: left;
 }
 
 .bold{
@@ -132,16 +131,16 @@
 }
 
 .validation{
-  margin-left: 2%;
-  margin-right: 2%;
-  width: 96%;
+  margin-top: 20px;
+  margin-left: 1%;
+  width: 98%;
   height: 100%;
 }
 
 .header-detatils{
-  width: 96%;
+  width: 99%;
   height: 550px;
-  margin: 2%;
+  margin-left: 1%;
 }
 
 .devaice-details{
@@ -156,8 +155,9 @@
 }
 
 .table-details{
-  width: 96%;
-  margin: 2%;
+  width: 98%;
+  height: 100%;
+  margin-left: 1%;
 }
 
 .margin-5{
@@ -205,7 +205,12 @@
 }
 
 .left-header{
-  width: 100%;
+  width: 50%;
+  height: 100%;
+  float: left;
+}
+.right-header{
+  width: 50%;
   height: 100%;
   float: left;
 }
