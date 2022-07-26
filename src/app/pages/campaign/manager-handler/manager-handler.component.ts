@@ -52,6 +52,7 @@ import { SnackbarSavedComponent } from "src/app/shared/components/snackbar-saved
 export class ManagerHandlerComponent implements OnInit {
   @Input() name: string;
   @Input() campaignId: string;
+  @Input() territoryId: string;
   displayedColumns: string[] = ["email", "role", "delete"];
   dataSource: MatTableDataSource<ExtendedUserClass>;
   listManagers: ExtendedUserClass[];

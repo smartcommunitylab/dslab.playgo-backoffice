@@ -32,6 +32,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import { SnackbarSavedModule } from "./components/snackbar-saved/snakbar-save.module";
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatMenuModule} from '@angular/material/menu';
+import {ScrollingModule} from '@angular/cdk/scrolling';
 
 
 @NgModule({
@@ -65,7 +66,8 @@ import {MatMenuModule} from '@angular/material/menu';
     MatTabsModule,
     SnackbarSavedModule,
     MatCheckboxModule,
-    MatMenuModule
+    MatMenuModule,
+    ScrollingModule
   ],
   declarations: [ManagerHandlerTerritoryComponent,ManagerDeleteTerritoryComponent,RoundPipe],
   entryComponents: [],
@@ -100,7 +102,8 @@ import {MatMenuModule} from '@angular/material/menu';
     MatTabsModule,
     SnackbarSavedModule,
     MatCheckboxModule,
-    MatMenuModule
+    MatMenuModule,
+    ScrollingModule
   ],
 })
 export class SharedModule {}

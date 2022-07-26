@@ -26,6 +26,7 @@ export class SideNavComponent implements OnInit {
   roleAdmin = false;
   roleTerritory = false;
   roleCampaign = false;
+  selected: string;
 
   constructor(private roleService: RoleService) {}
 

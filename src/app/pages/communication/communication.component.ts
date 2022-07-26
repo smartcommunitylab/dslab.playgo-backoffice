@@ -150,7 +150,7 @@ export class CommunicationComponent implements OnInit {
 
   getNotificationUsingGet(){
     var searchStrinNull = false;
-    if(this.searchString ==='-'){
+    if(this.searchString ===VALUE_EMPTY_SELECT_LIST){
       searchStrinNull = true;
       this.searchString = undefined;
     }
@@ -159,13 +159,13 @@ export class CommunicationComponent implements OnInit {
       page: this.page,
       size: this.size[0],
       territoryId: this.territoryId,
-      campaignId: this.selectedCampaign,
+      campaignId: this.selectedCampaign ===VALUE_EMPTY_SELECT_LIST? undefined : this.selectedCampaign,
       channels: this.searchString,
     })
     .subscribe(
       (result) => {
         if(searchStrinNull){
-          this.searchString ='-';
+          this.searchString =VALUE_EMPTY_SELECT_LIST;
         }
         if (!!result.content) {
           this.communications = result.content;
