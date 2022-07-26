@@ -174,7 +174,7 @@
             <mat-card class="card-normal full-dimension" style="height: auto;" *ngIf="!!selectedTrack">
                 <div class="header-detatils">
                     <div class="left-header">
-                        <mat-card class="card-normal"
+                        <mat-card class="card-normal full-dimension"
                             [ngClass]="{
                                     'yellow-background' : selectedTrack.trackedInstance.validationResult.travelValidity==='PENDING',
                                     'red-background' : selectedTrack.trackedInstance.validationResult.travelValidity==='INVALID',
@@ -364,27 +364,28 @@
                             </mat-card-content>
                         </mat-card>
                     </div>
+                    <div class="right-header">
+                        <mat-card class="card-normal table-details">
+                            <mat-card-title>{{'pointsPerCampaign' | translate}}</mat-card-title>
+                            <ul *ngIf="selectedTrack.campaigns.length>0">
+                                <li *ngFor="let campaign of selectedTrack.campaigns" class="light-background">
+                                    <h3 style="margin-bottom: 0px;">{{campaign.campaignName[selectedLanguage]}} -
+                                        {{campaign.campaignId}} </h3>
+                                    <p style="font-style:italic">{{campaign.type | translate}}</p>
+                                    <p>{{(campaign.valid? 'valid' : 'invalid') | translate}}, {{'score' | translate}}:
+                                        {{campaign.score}}, {{'distance' | translate}}: {{campaign.distance | round}} (m)</p>
+                                    <p *ngIf="!!campaign.errorCode" class="red">
+                                        {{'errors' | translate}}: {{campaign.errorCode}}
+                                    </p>
+                                </li>
+                            </ul>
+                            <p style="color: red"
+                                *ngIf="selectedTrack.trackedInstance.validationResult.travelValidity==='INVALID'">
+                                {{'error' | translate}}:
+                                {{selectedTrack.trackedInstance.validationResult.validationStatus.error}}</p>
+                        </mat-card>
+                    </div>
                 </div>
-
-                <mat-card class="card-normal table-details">
-                    <mat-card-title>{{'pointsPerCampaign' | translate}}</mat-card-title>
-                    <ul *ngIf="selectedTrack.campaigns.length>0">
-                        <li *ngFor="let campaign of selectedTrack.campaigns" class="light-background">
-                            <h3 style="margin-bottom: 0px;">{{campaign.campaignName[selectedLanguage]}} -
-                                {{campaign.campaignId}} </h3>
-                            <p style="font-style:italic">{{campaign.type | translate}}</p>
-                            <p>{{(campaign.valid? 'valid' : 'invalid') | translate}}, {{'score' | translate}}:
-                                {{campaign.score}}, {{'distance' | translate}}: {{campaign.distance | round}} (m)</p>
-                            <p *ngIf="!!campaign.errorCode" class="red">
-                                {{'errors' | translate}}: {{campaign.errorCode}}
-                            </p>
-                        </li>
-                    </ul>
-                    <p style="color: red"
-                        *ngIf="selectedTrack.trackedInstance.validationResult.travelValidity==='INVALID'">
-                        {{'error' | translate}}:
-                        {{selectedTrack.trackedInstance.validationResult.validationStatus.error}}</p>
-                </mat-card>
                 <div class="map-class" style="border: solid 1px black;" id="map" leaflet [leafletOptions]="mapOptions"
                     (leafletMapReady)="initializeMap($event)">
                 </div>
@@ -414,14 +415,14 @@
                             {{'reset' | translate}}
                         </button>
 
-                        <cdk-virtual-scroll-viewport tvsItemSize="48" headerHeight="5" style="height: 300px;">
+                        <cdk-virtual-scroll-viewport tvsItemSize="48" headerHeight="5" style="height: 350px;">
                             <table mat-table [dataSource]="dataSourceInfoTrack" class="full-dimension">
 
                                 <ng-container matColumnDef="index">
                                     <th mat-header-cell *matHeaderCellDef class="center-text">
                                         {{ 'index'| translate}} </th>
                                     <td mat-cell *matCellDef="let element" class="center-text">
-                                        {{element.index}}
+                                        {{element.index+1}}
                                     </td>
                                 </ng-container>
 
@@ -490,9 +491,9 @@
                                 </ng-container>
 
                                 <tr mat-header-row *matHeaderRowDef="displayedColumnsTrack"></tr>
-                                <tr mat-row class="cursor-pointer" (click)="showPoint(i,row)"
-                                    [ngClass]="{'highlight-table': selectedRowOnTrack(i)}"
-                                    *matRowDef="let row;let i=index; columns: displayedColumnsTrack;"></tr>
+                                <tr mat-row class="cursor-pointer" (click)="showPoint(row)"
+                                    [ngClass]="{'highlight-table': selectedRowOnTrack(row.index)}"
+                                    *matRowDef="let row; columns: displayedColumnsTrack;"></tr>
                             </table>
                         </cdk-virtual-scroll-viewport>
                     </mat-card-content>
