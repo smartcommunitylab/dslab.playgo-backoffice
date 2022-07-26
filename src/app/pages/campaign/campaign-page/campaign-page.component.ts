@@ -233,6 +233,7 @@ export class CampaignPageComponent implements OnInit {
     let instance = dialogRef.componentInstance;
     instance.name = this.selectedCampaign.name[this.translate.currentLang];
     instance.campaignId = this.selectedCampaign.campaignId;
+    instance.territoryId = this.selectedCampaign.territoryId;
     dialogRef.afterClosed().subscribe((result) => {
       this.updateManagers();
     });

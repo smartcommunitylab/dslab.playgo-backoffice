@@ -30,7 +30,7 @@
                     <mat-grid-tile style="height: 65px;">
                         <form class="example-form">
                             <mat-form-field class="example-full-width" appearance="fill">
-                                <mat-label>{{'search' | translate}}</mat-label>
+                                <mat-label>{{'channel' | translate}}</mat-label>
                                 <mat-select [(ngModel)]="searchString" (closed)="searchCommunication($event)" >
                                     <mat-option *ngFor="let val of listComunications" [value]="val">{{val | translate}}
                                     </mat-option>

@@ -16,10 +16,10 @@
                     <button color="primary" mat-raised-button type="submit" (click)="validate()">
                         <mat-icon>
                             <span class="material-symbols-outlined">
-                                save
+                                send
                             </span>
                         </mat-icon>
-                        {{'save' |translate}}
+                        {{'send' |translate}}
                     </button>
                 </mat-grid-tile>
             </mat-grid-list>
@@ -27,13 +27,13 @@
         <div class="col-12 full-width" style="margin-top: 15px;">
             <div class="full-height">
                 <div class="in-line-forms">
+                    <p class="input-custom-half-left awarness">{{"hintIdTerritoryAddCampaign" | translate}}</p>
                     <mat-form-field appearance="fill" class="input-custom-half-left">
                         <mat-label>{{'territoryId' | translate}}</mat-label>
                         <mat-select id="territoryId" formControlName="territoryId" [disabled]="true">
                             <mat-option *ngFor="let val of territories" [value]="val">{{val}}
                             </mat-option>
                         </mat-select>
-                        <mat-hint>{{"hintIdTerritoryAddCampaign" | translate}}</mat-hint>
                     </mat-form-field>
                 </div>
                 <div class="in-line-forms">
@@ -59,7 +59,7 @@
                     </mat-form-field>
                 </div>
                 <div class="in-line-forms" *ngIf="emailEnabled()">
-                    <p class="awarness">{{'assignSurvayWarning' | translate}}</p>
+                    <p class="awarness">{{'assignCommunicationWarning' | translate}}</p>
                     <mat-form-field appearance="fill" class="full-width">
                         <mat-label>{{'users' | translate}}, ({{'addUserModalityCommunication' | translate}})</mat-label>
                         <textarea matInput id="users" formControlName="users"></textarea>
@@ -74,7 +74,7 @@
                 <div class="in-line-forms">
                     <mat-card class="card-expandable card-normal">
                         <mat-card-title class="cursor-pointer">
-                            {{'richDescription' | translate}}
+                            {{'text' | translate}}
                         </mat-card-title>
                         <mat-card-content class="expandable-content">
                             <rich-text-editor [control]="descriptionRichControl"></rich-text-editor>
@@ -84,7 +84,7 @@
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-custom-half-left">
                         <mat-label>{{'dateFrom' | translate}}</mat-label>
-                        <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1">
+                        <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1" >
                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                         <mat-datepicker #picker1></mat-datepicker>
                     </mat-form-field>

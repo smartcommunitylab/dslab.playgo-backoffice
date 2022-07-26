@@ -41,6 +41,7 @@ export class StatusDialogComponent implements OnInit {
     this.initializaValidatingForm();
     if(this.selectedTrack.trackedInstance.validationResult.travelValidity !== "VALID")
       this.listStatus = this.listStatus.filter(item=>item.toUpperCase()!==this.selectedTrack.trackedInstance.validationResult.travelValidity);
+    this.listStatus = this.listStatus.filter(item=>item.toUpperCase()!=='ALL');
     
   }
 
@@ -63,7 +64,7 @@ export class StatusDialogComponent implements OnInit {
   }
 
   onNoClick(event: any): void {
-    this.dialogRef.close();
+    this.dialogRef.close(event);
   }
 
   validate(){
@@ -80,7 +81,7 @@ export class StatusDialogComponent implements OnInit {
       }
 
       ).subscribe(()=>{
-        this.onNoClick('');
+        this.onNoClick(true);
         this._snackBar.openFromComponent(SnackbarSavedComponent,
           {
            data:{displayText: "updatedData"},
@@ -88,7 +89,7 @@ export class StatusDialogComponent implements OnInit {
          });
       },
       (error)=>{
-        this.errorMsgValidation = "There was an error: " + error + "\n";
+        this.errorMsgValidation = this.translate.instant('dataNotUpdatedForError')+': ' + (error?  error.error.ex : error) + "\n";
       });
     }
   }
