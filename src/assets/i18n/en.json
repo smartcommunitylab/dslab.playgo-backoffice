@@ -262,7 +262,7 @@
   "virtual":"Virtual",
   "platformAndVersion":"Platform adn version",
   "trackDetails":"Track details",
-  "tripValidation":"Trip validation",
+  "tripValidation":"Validation data",
   "motivation":"Motivation",
   "assignCommunicationWarning":" WARNING! If playerID not given, the email will be sent to ALL the players",
   "send":"Send",

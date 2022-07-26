@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
-import { Track } from "src/app/shared/classes/track-class";
+import { GeoLocationEvent, Track } from "src/app/shared/classes/track-class";
 import {
   LIST_STATES_TRACK,
   MY_DATE_FORMATS,
@@ -46,6 +46,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { TrackedInstance } from "src/app/core/api/generated/model/trackedInstance";
 import { Geolocation } from "src/app/core/api/generated/model/geolocation";
 import { GameArea } from "src/app/shared/classes/map-point";
+import { TableVirtualScrollDataSource } from "ng-table-virtual-scroll";
 
 @Component({
   selector: "app-validation-track",
@@ -79,7 +80,7 @@ export class ValidationTrackComponent implements OnInit {
   stateValidationTrack: string = "expanded";
   size: number[] = [50];
   paginatorData: PageTrackedInstanceClass = new PageTrackedInstanceClass();
-  dataSourceInfoTrack: MatTableDataSource<any[]>; //GeolocationClass
+  dataSourceInfoTrack: TableVirtualScrollDataSource<any[]>; //GeolocationClass
   displayedColumnsTrack: string[] = [
     "index",
     "date",
@@ -91,7 +92,7 @@ export class ValidationTrackComponent implements OnInit {
     "isMoving",
     "speed",
   ];
-  dataSource: MatTableDataSource<TrackedInstanceConsoleClass>;
+  dataSource: TableVirtualScrollDataSource<any>;//TrackedInstanceConsoleClass
   displayedColumns: string[] = ["tracks"];
   selectedTrack: TrackedInstanceConsoleClass;
   selectedRowIndex: string;
@@ -238,7 +239,7 @@ export class ValidationTrackComponent implements OnInit {
   }
 
   setTableData() {
-    this.dataSource = new MatTableDataSource<any>(this.listTrack);
+    this.dataSource = new TableVirtualScrollDataSource<any>(this.listTrack);
     this.setStatisticsListTracks();
   }
 
@@ -437,8 +438,17 @@ export class ValidationTrackComponent implements OnInit {
         this.orderPoints();
         this.setStatisticsSelectedTrack(); // always after orderPoints
         this.selectedRowIndex = this.selectedTrack.trackedInstance.id;
-        this.dataSourceInfoTrack = new MatTableDataSource<any>(
-          this.selectedTrack.trackedInstance.geolocationEvents
+        var events: GeolocationEventsClass[] = [];
+        let i=1;
+        for(let item of this.selectedTrack.trackedInstance.geolocationEvents){
+          var event: GeolocationEventsClass = item;
+          event.index = i;
+          events.push(event);
+          i++;
+
+        } 
+        this.dataSourceInfoTrack = new TableVirtualScrollDataSource<any>(
+          events
         );
         this.deviceInfo = this.obejectFromString(
           this.selectedTrack.trackedInstance.deviceInfo
@@ -929,3 +939,30 @@ interface SelectedTrackStatistic {
   avrgSpeed?: number;
   maxSpeed?: number;
 }
+ 
+class GeolocationEventsClass implements GeoLocationEvent{
+  accuracy?: number;
+  activityConfidence?: number;
+  activityType?: string;
+  altitude?: number;
+  batteryIsCharging?: boolean;
+  batteryLevel?: number;
+  certificate?: string;
+  createdAt?: number;
+  deviceId?: string;
+  deviceModel?: string;
+  geocoding?: Array<number>;
+  geofence?: any;
+  heading?: number;
+  isMoving?: boolean;
+  latitude?: number;
+  longitude?: number;
+  multimodalId?: string;
+  recordedAt?: number;
+  sharedTravelId?: string;
+  speed?: number;
+  travelId?: string;
+  userId?: string;
+  uuid?: string;
+  index?: number;
+} 
