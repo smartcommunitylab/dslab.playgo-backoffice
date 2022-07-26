@@ -439,7 +439,7 @@ export class ValidationTrackComponent implements OnInit {
         this.setStatisticsSelectedTrack(); // always after orderPoints
         this.selectedRowIndex = this.selectedTrack.trackedInstance.id;
         var events: GeolocationEventsClass[] = [];
-        let i=1;
+        let i=0;
         for(let item of this.selectedTrack.trackedInstance.geolocationEvents){
           var event: GeolocationEventsClass = item;
           event.index = i;
@@ -697,26 +697,26 @@ export class ValidationTrackComponent implements OnInit {
     }
   }
 
-  showPoint(index: number, row: any) {
+  showPoint( row: GeolocationEventsClass) {
     //row => GeolocationClass
     var icon = L.divIcon({
       className: "number-icon",
       iconSize: [25, 41],
       iconAnchor: [12, 43],
-      html: (index + 1).toString(),
+      html: (row.index + 1).toString(),
     });
 
-    if (!!this.markerLayers[index]) {
+    if (!!this.markerLayers[row.index]) {
       //defined
       try {
-        this.map.removeLayer(this.markerLayers[index]["layer"]);
-        this.markerLayers[index] = undefined;
+        this.map.removeLayer(this.markerLayers[row.index]["layer"]);
+        this.markerLayers[row.index] = undefined;
       } catch {}
     } else {
       //undefined
       const popup =
         "<h3>point number: " +
-        (index + 1) +
+        (row.index + 1) +
         "</h3></br><h4>lat: " +
         row.geocoding[1] +
         " - long: " +
@@ -725,15 +725,15 @@ export class ValidationTrackComponent implements OnInit {
       var marker = L.marker([row.geocoding[1], row.geocoding[0]], {
         icon: icon,
       });
-      const markers = this.markerLayers[index]
-        ? this.markerLayers[index]["markers"].push(marker)
+      const markers = this.markerLayers[row.index]
+        ? this.markerLayers[row.index]["markers"].push(marker)
         : [marker];
-      this.markerLayers[index] = {
+      this.markerLayers[row.index] = {
         layer: new L.LayerGroup(markers),
         markers: markers,
         popup: popup,
       };
-      this.markerLayers[index]["layer"].addTo(this.map);
+      this.markerLayers[row.index]["layer"].addTo(this.map);
     }
   }
 
@@ -783,7 +783,7 @@ export class ValidationTrackComponent implements OnInit {
     this.showAllPoints = !this.showAllPoints;
     var i = 0;
     for (let item of this.selectedTrack.trackedInstance.geolocationEvents) {
-      this.showPoint(i, item);
+      this.showPoint(item);
       i++;
     }
   }
