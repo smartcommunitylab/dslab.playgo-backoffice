@@ -1,109 +1,197 @@
 <div class="maring-20">
-    <mat-grid-list cols="3" rowHeight="400px">
-        <mat-grid-tile [colspan]="2">
-            <mat-card class="card-normal full-dimension" id="search-card">
-                <mat-card-title>
-                    {{'tracks' | translate}}
-                </mat-card-title>
-                <mat-card-content id="content" class="expandable-content">
-                    <form [formGroup]="validatingForm">
-                        <mat-grid-list cols="2" rowHeight="60px" style="margin: 5px;">
-                            <mat-grid-tile>
-                                <mat-form-field appearance="fill" class="full-width margin-form">
-                                    <mat-label>{{'dateFrom' | translate}}</mat-label>
-                                    <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1"
-                                        (ngModelChange)="changeDateFrom()">
-                                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                                    <mat-datepicker #picker1></mat-datepicker>
-                                </mat-form-field>
-                            </mat-grid-tile>
-                            <mat-grid-tile>
-                                <mat-form-field appearance="fill" class="full-width margin-form">
-                                    <mat-label>{{'dateTo' | translate}}</mat-label>
-                                    <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker"
-                                        (ngModelChange)="changeDateTo()">
-                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                    <mat-datepicker #picker></mat-datepicker>
-                                </mat-form-field>
-                            </mat-grid-tile>
+    <button style="margin-bottom: 20px;" color="primary" mat-flat-button type="button"
+        (click)="switchTrackToRanking()">{{(showTierFilter? 'tracks' :'ranking') | translate }}</button>
+    <mat-card class="card-normal full-dimension" id="search-card" *ngIf="!showTierFilter">
+        <mat-card-title>
+            {{'tracks' | translate}}
+        </mat-card-title>
+        <mat-card-content id="content" class="expandable-content">
+            <form [formGroup]="validatingForm">
+                <mat-grid-list cols="3" rowHeight="60px" style="margin: 5px;">
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="full-width margin-form">
+                            <mat-label>{{'dateFrom' | translate}}</mat-label>
+                            <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1"
+                                (ngModelChange)="changeDateFrom()">
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="full-width margin-form">
+                            <mat-label>{{'dateTo' | translate}}</mat-label>
+                            <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker"
+                                (ngModelChange)="changeDateTo()">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                    </mat-grid-tile>
 
-                            <mat-grid-tile>
-                                <mat-form-field appearance="fill" class="full-width margin-form">
-                                    <mat-label>{{'means' | translate}}</mat-label>
-                                    <mat-select id="modeType" formControlName="modeType"
-                                        (ngModelChange)="resetPageNumber()">
-                                        <mat-option *ngFor="let val of listModelType" [value]="val">{{val | translate}}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </mat-grid-tile>
-                            <mat-grid-tile>
-                                <mat-form-field appearance="fill" class="full-width margin-form">
-                                    <mat-label>{{'status' | translate}}</mat-label>
-                                    <mat-select id="status" formControlName="status"
-                                        (ngModelChange)="resetPageNumber()">
-                                        <mat-option *ngFor="let val of listStates" [value]="val">{{val | translate}}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="full-width margin-form">
+                            <mat-label>{{'means' | translate}}</mat-label>
+                            <mat-select id="modeType" formControlName="modeType" (ngModelChange)="resetPageNumber()">
+                                <mat-option *ngFor="let val of listModelType" [value]="val">{{val | translate}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="full-width margin-form">
+                            <mat-label>{{'status' | translate}}</mat-label>
+                            <mat-select id="status" formControlName="status" (ngModelChange)="resetPageNumber()">
+                                <mat-option *ngFor="let val of listStates" [value]="val">{{val | translate}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </mat-grid-tile>
 
 
-                            <mat-grid-tile>
-                                <mat-form-field appearance="fill" class="full-width margin-form">
-                                    <mat-label>{{'playerId' | translate}}</mat-label>
-                                    <input matInput id="playerId" formControlName="playerId"
-                                        (ngModelChange)="resetPageNumber()">
-                                </mat-form-field>
-                            </mat-grid-tile>
-                            <mat-grid-tile>
-                                <mat-form-field appearance="fill" class="full-width margin-form">
-                                    <mat-label>{{'trackId' | translate}}</mat-label>
-                                    <input matInput id="trackId" formControlName="trackId"
-                                        (ngModelChange)="resetPageNumber()">
-                                </mat-form-field>
-                            </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="full-width margin-form">
+                            <mat-label>{{'playerId' | translate}}</mat-label>
+                            <input matInput id="playerId" formControlName="playerId"
+                                (ngModelChange)="resetPageNumber()">
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="full-width margin-form">
+                            <mat-label>{{'trackId' | translate}}</mat-label>
+                            <input matInput id="trackId" formControlName="trackId" (ngModelChange)="resetPageNumber()">
+                        </mat-form-field>
+                    </mat-grid-tile>
 
-                            <mat-grid-tile>
-                                <mat-form-field appearance="fill" class="full-width margin-form">
-                                    <mat-label>{{'campaignId' | translate}}</mat-label>
-                                    <mat-select id="campaignId" formControlName="campaignId"
-                                        (ngModelChange)="resetPageNumber()">
-                                        <mat-option *ngFor="let val of listCampaings" [value]="val">{{val | translate}}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </mat-grid-tile>
-                            <mat-grid-tile></mat-grid-tile>
-                            <mat-grid-tile>
-                                <button class="full-width margin-form" mat-flat-button type="submit"
-                                    (click)="searchSubmit()" color="primary">
-                                    <mat-icon>
-                                        <span class="material-symbols-outlined">
-                                            search
-                                        </span>
-                                    </mat-icon>
-                                    {{"search" | translate}}
-                                </button>
-                            </mat-grid-tile>
-                            <mat-grid-tile>
-                                <button class="full-width margin-form" mat-flat-button type="button" mat-flat-button
-                                    color="primary" (click)="resetSearchFields()">
-                                    <mat-icon>
-                                        <span class="material-symbols-outlined">
-                                            cached
-                                        </span>
-                                    </mat-icon>
-                                    {{"resetSearchFields" | translate}}
-                                </button>
-                            </mat-grid-tile>
-                        </mat-grid-list>
-                    </form>
-                </mat-card-content>
-            </mat-card>
-        </mat-grid-tile>
-        <mat-grid-tile [colspan]="1"></mat-grid-tile>
-    </mat-grid-list>
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="full-width margin-form">
+                            <mat-label>{{'campaignId' | translate}}</mat-label>
+                            <mat-select id="campaignId" formControlName="campaignId"
+                                (ngModelChange)="resetPageNumber()">
+                                <mat-option *ngFor="let val of listCampaings" [value]="val">{{val | translate}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile></mat-grid-tile>
+                    <mat-grid-tile></mat-grid-tile>
+                    <mat-grid-tile>
+                        <button class="margin-form" mat-flat-button type="submit" (click)="searchSubmit()"
+                            color="primary">
+                            <mat-icon>
+                                <span class="material-symbols-outlined">
+                                    search
+                                </span>
+                            </mat-icon>
+                            {{"search" | translate}}
+                        </button>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <button class="margin-form" mat-flat-button type="button" mat-flat-button color="primary"
+                            (click)="resetSearchFields()">
+                            <mat-icon>
+                                <span class="material-symbols-outlined">
+                                    cached
+                                </span>
+                            </mat-icon>
+                            {{"resetSearchFields" | translate}}
+                        </button>
+                    </mat-grid-tile>
+                </mat-grid-list>
+            </form>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="card-normal full-dimension" id="search-card" *ngIf="showTierFilter">
+        <mat-card-title>
+            {{'ranking' | translate}}
+        </mat-card-title>
+        <mat-card-content id="content" class="expandable-content">
+            <form [formGroup]="validatingFormRanking">
+                <mat-grid-list cols="3" rowHeight="60px" style="margin: 5px;">
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="full-width margin-form">
+                            <mat-label>{{'campaignId' | translate}}</mat-label>
+                            <mat-select id="campaignId" formControlName="campaignId"
+                                (ngModelChange)="resetPageNumber()">
+                                <mat-option *ngFor="let val of listCampaingsClean" [value]="val">{{val |
+                                    translate}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="full-width margin-form">
+                            <mat-label>{{'dateFrom' | translate}}</mat-label>
+                            <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1"
+                                (ngModelChange)="changeDateFrom()">
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="full-width margin-form">
+                            <mat-label>{{'dateTo' | translate}}</mat-label>
+                            <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker"
+                                (ngModelChange)="changeDateTo()">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="1">
+                        <button class="margin-form" mat-flat-button type="submit" (click)="searchSubmitRanking()"
+                            color="primary">
+                            <mat-icon>
+                                <span class="material-symbols-outlined">
+                                    search
+                                </span>
+                            </mat-icon>
+                            {{"search" | translate}}
+                        </button>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="1">
+                        <button class="margin-form" mat-flat-button type="button" mat-flat-button color="primary"
+                            (click)="resetSearchFieldsRanking()">
+                            <mat-icon>
+                                <span class="material-symbols-outlined">
+                                    cached
+                                </span>
+                            </mat-icon>
+                            {{"resetSearchFields" | translate}}
+                        </button>
+                    </mat-grid-tile>
+            </mat-grid-list>
+            </form>
+            <cdk-virtual-scroll-viewport tvsItemSize="48" headerHeight="5" style="height: 350px;width: 100%;">
+                <table mat-table [dataSource]="dataSourceRankingUsersList" class="full-width">
+                    <ng-container matColumnDef="position">
+                        <th mat-header-cell *matHeaderCellDef>
+                            {{'position' | translate}}
+                        </th>
+                        <td class="margin-20" mat-cell *matCellDef="let element">
+                            {{element.position}}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="nickname">
+                        <th mat-header-cell *matHeaderCellDef>
+                            {{'nickname' | translate}}
+                        </th>
+                        <td class="margin-20" mat-cell *matCellDef="let element">
+                            {{element.nickname}}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="playerId">
+                        <th mat-header-cell *matHeaderCellDef>
+                            {{'playerId' | translate}}
+                        </th>
+                        <td class="margin-20" mat-cell *matCellDef="let element">
+                            {{element.playerId}}
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsRankingUsers"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsRankingUsers;" (click)="onSelectUserFromRankingList(row)"
+                    [ngClass]="{'highlight-table': !!row && !!selectedRankingUser && row.position===selectedRankingUser.position}"></tr>
+                </table>
+            </cdk-virtual-scroll-viewport>
+        </mat-card-content>
+    </mat-card>
     <div class="bottom-div" style="margin-top: 20px;">
         <div class="list-tracks">
             <mat-grid-list [cols]="3" rowHeight="50px">
@@ -114,7 +202,7 @@
                     <span>{{'invalids' | translate}}: {{statisticsTracks.invalid}}</span>
                 </mat-grid-tile>
                 <mat-grid-tile [colspan]="1">
-                    <span>{{'pending' | translate}}: {{statisticsTracks.pending}}</span>
+                    <span>{{'validWithReserve' | translate}}: {{statisticsTracks.pending}}</span>
                 </mat-grid-tile>
             </mat-grid-list>
             <cdk-virtual-scroll-viewport tvsItemSize="94" headerHeight="5" style="height: 800px;">
@@ -141,7 +229,7 @@
                                     </mat-grid-tile>
                                     <mat-grid-tile>
                                         <span class="full-width text-ellips">
-                                            {{element.trackedInstance.validationResult.travelValidity | translate}}
+                                            {{(element.trackedInstance.validationResult.travelValidity==='PENDING'? 'validWithReserve': element.trackedInstance.validationResult.travelValidity) | translate}}
                                         </span>
                                     </mat-grid-tile>
                                 </mat-grid-list>
@@ -181,8 +269,8 @@
                                     'green-background' : selectedTrack.trackedInstance.validationResult.travelValidity==='VALID'  }">
                             <mat-card-title>{{'travelInfo'|translate}}</mat-card-title>
                             <mat-card-content>
-                                <mat-grid-list cols="2" rowHeight="50px" style="margin: 5px;">
-                                    <mat-grid-tile>
+                                <mat-grid-list cols="3" rowHeight="50px" style="margin: 5px;">
+                                    <mat-grid-tile [colspan]="2">
                                         <div class="wrapper">
                                             <span class="info-title">
                                                 <span class="bold"> {{'trackId' | translate}}: </span> <br />
@@ -192,60 +280,18 @@
                                             </span>
                                         </div>
                                     </mat-grid-tile>
-                                    <mat-grid-tile>
-                                        <div class="wrapper">
-                                            <span class="info-title">
-                                                <span class="bold"> {{'date' | translate}}: </span> <br />
-                                                <span>
-                                                    {{getDateFromTimeStamp(selectedTrack.trackedInstance.startTime)}}
-                                                </span>
-                                            </span>
-                                        </div>
-                                    </mat-grid-tile>
-                                    <mat-grid-tile>
-                                        <div class="wrapper">
-                                            <span class="info-title">
-                                                <span class="bold"> {{'validation' | translate}}: </span> <br />
-                                                <span>
-                                                    {{selectedTrack.trackedInstance.validationResult.travelValidity |
-                                                    translate}}
-                                                </span>
-                                            </span>
-                                        </div>
-                                    </mat-grid-tile>
-                                    <mat-grid-tile>
-                                        <div class="wrapper">
-                                            <span class="info-title">
-                                                <span class="bold"> {{'mean' | translate}}: </span> <br />
-                                                <span>
-                                                    {{selectedTrack.trackedInstance.validationResult.validationStatus.modeType
-                                                    |
-                                                    translate}}
-                                                </span>
-                                            </span>
-                                        </div>
-                                    </mat-grid-tile>
-                                    <mat-grid-tile>
-                                        <div class="wrapper">
-                                            <span class="info-title">
-                                                <span class="bold">{{'playerId' | translate}}:</span> <br />
-                                                <span class="text-ellips">
-                                                    {{selectedTrack.playerInfo.playerId}}
-                                                </span>
-                                            </span>
-                                        </div>
-                                    </mat-grid-tile>
-                                    <mat-grid-tile>
-                                        <div class="wrapper">
-                                            <span class="info-title">
-                                                <span class="bold">{{'nickname' | translate}}:</span> <br />
-                                                <span>
-                                                    {{selectedTrack.playerInfo.nickname}}
-                                                </span>
-                                            </span>
-                                        </div>
-                                    </mat-grid-tile>
                                     <mat-grid-tile [colspan]="1">
+                                        <div class="wrapper">
+                                            <span class="info-title">
+                                                <span class="bold">
+                                                    {{'status' | translate}}:</span> <br />
+                                                <span>
+                                                    {{(statisticsSelectedTrack.validity==='PENDING'? 'validWithReserve': statisticsSelectedTrack.validity)  | translate}}
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </mat-grid-tile>
+                                    <mat-grid-tile [colspan]="2">
                                         <div class="wrapper">
                                             <span class="info-title">
                                                 <span class="bold">
@@ -256,7 +302,6 @@
                                             </span>
                                         </div>
                                     </mat-grid-tile>
-
                                     <mat-grid-tile [colspan]="1">
                                         <div class="wrapper">
                                             <span class="info-title">
@@ -268,43 +313,18 @@
                                             </span>
                                         </div>
                                     </mat-grid-tile>
-
-                                    <mat-grid-tile [colspan]="1">
+                                    <mat-grid-tile [colspan]="2">
                                         <div class="wrapper">
                                             <span class="info-title">
-                                                <span class="bold">
-                                                    {{'maxSpeed' | translate}}:</span> <br />
+                                                <span class="bold"> {{'mean' | translate}}: </span> <br />
                                                 <span>
-                                                    {{statisticsSelectedTrack.maxSpeed | round}} (m/s)
+                                                    {{selectedTrack.trackedInstance.validationResult.validationStatus.modeType
+                                                    |
+                                                    translate}}
                                                 </span>
                                             </span>
                                         </div>
                                     </mat-grid-tile>
-
-                                    <mat-grid-tile [colspan]="1">
-                                        <div class="wrapper">
-                                            <span class="info-title">
-                                                <span class="bold">
-                                                    {{'avrgSpeed' | translate}}:</span> <br />
-                                                <span>
-                                                    {{statisticsSelectedTrack.avrgSpeed | round}} (m/s)
-                                                </span>
-                                            </span>
-                                        </div>
-                                    </mat-grid-tile>
-
-                                    <mat-grid-tile [colspan]="1">
-                                        <div class="wrapper">
-                                            <span class="info-title">
-                                                <span class="bold">
-                                                    {{'status' | translate}}:</span> <br />
-                                                <span>
-                                                    {{statisticsSelectedTrack.validity | translate}}
-                                                </span>
-                                            </span>
-                                        </div>
-                                    </mat-grid-tile>
-
                                     <mat-grid-tile [colspan]="1">
                                         <div class="wrapper">
                                             <span class="info-title">
@@ -316,14 +336,78 @@
                                             </span>
                                         </div>
                                     </mat-grid-tile>
+                                    <mat-grid-tile [colspan]="2">
+                                        <div class="wrapper">
+                                            <span class="info-title">
+                                                <span class="bold">
+                                                    {{'maxSpeed' | translate}}:</span> <br />
+                                                <span>
+                                                    {{statisticsSelectedTrack.maxSpeed | round}} (m/s)
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </mat-grid-tile>
+                                    <mat-grid-tile [colspan]="1">
+                                        <div class="wrapper">
+                                            <span class="info-title">
+                                                <span class="bold">
+                                                    {{'avrgSpeed' | translate}}:</span> <br />
+                                                <span>
+                                                    {{statisticsSelectedTrack.avrgSpeed | round}} (m/s)
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </mat-grid-tile>
+                                    <mat-grid-tile [colspan]="2">
+                                        <div class="wrapper">
+                                            <span class="info-title">
+                                                <span class="bold">{{'playerId' | translate}}:</span> <br />
+                                                <span class="text-ellips">
+                                                    {{selectedTrack.playerInfo.playerId}}
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </mat-grid-tile>
+                                    <mat-grid-tile [colspan]="1">
+                                        <div class="wrapper">
+                                            <span class="info-title">
+                                                <span class="bold">{{'nickname' | translate}}:</span> <br />
+                                                <span>
+                                                    {{selectedTrack.playerInfo.nickname}}
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </mat-grid-tile>
                                     <div *ngIf="!!selectedTrack.trackedInstance.deviceInfo">
+                                        <mat-grid-tile [colspan]="2">
+                                            <div class="wrapper">
+                                                <span class="info-title">
+                                                    <span class="bold">
+                                                        {{'deviceModel' | translate}}:</span> <br />
+                                                    <span>
+                                                        {{deviceInfo.model}}
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </mat-grid-tile>
                                         <mat-grid-tile [colspan]="1">
                                             <div class="wrapper">
                                                 <span class="info-title">
                                                     <span class="bold">
-                                                        {{'platformAndVersion' | translate}}:</span> <br />
+                                                        {{'platform' | translate}}:</span> <br />
                                                     <span>
-                                                        {{deviceInfo.platform}} {{deviceInfo.version}}
+                                                        {{deviceInfo.platform }} {{deviceInfo.osVersion}}
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </mat-grid-tile>
+                                        <mat-grid-tile [colspan]="2">
+                                            <div class="wrapper">
+                                                <span class="info-title">
+                                                    <span class="bold">
+                                                        {{'appVersion' | translate}}:</span> <br />
+                                                    <span>
+                                                        {{deviceInfo.version}}
                                                     </span>
                                                 </span>
                                             </div>
@@ -333,20 +417,21 @@
                                                 <span class="info-title">
                                                     <span class="bold">
                                                         {{'virtual' | translate}}:</span> <br />
-                                                    <span *ngIf="deviceInfo.isVirtual"
-                                                        class="red">({{deviceInfo.isVirtual |
+                                                    <span *ngIf="deviceInfo.isVirtual" class="red"
+                                                        style="background-color: white;">({{ 'virtual' |
+                                                        translate}})</span>
+                                                    <span *ngIf="!deviceInfo.isVirtual">({{ 'notVirtual' |
                                                         translate}})</span>
                                                 </span>
                                             </div>
                                         </mat-grid-tile>
-                                        <mat-grid-tile [colspan]="1">
+                                        <mat-grid-tile [colspan]="2">
                                             <div class="wrapper">
                                                 <span class="info-title">
                                                     <span class="bold">
-                                                        {{'appVersion' | translate}}:</span> <br />
-                                                    <span>
-                                                        {{deviceInfo.appVersion}}
-                                                    </span>
+                                                        {{'changedValidity' | translate}}:</span> <br />
+                                                    <span>{{ (selectedTrack.trackedInstance.changedValidity==='VALID'?
+                                                        'changedValidity' : 'notChangedValidity') | translate}}</span>
                                                 </span>
                                             </div>
                                         </mat-grid-tile>
@@ -367,22 +452,27 @@
                     <div class="right-header">
                         <mat-card class="card-normal table-details">
                             <mat-card-title>{{'pointsPerCampaign' | translate}}</mat-card-title>
-                            <ul *ngIf="selectedTrack.campaigns.length>0">
-                                <li *ngFor="let campaign of selectedTrack.campaigns" class="light-background">
-                                    <h3 style="margin-bottom: 0px;">{{campaign.campaignName[selectedLanguage]}} -
-                                        {{campaign.campaignId}} </h3>
-                                    <p style="font-style:italic">{{campaign.type | translate}}</p>
-                                    <p>{{(campaign.valid? 'valid' : 'invalid') | translate}}, {{'score' | translate}}:
-                                        {{campaign.score}}, {{'distance' | translate}}: {{campaign.distance | round}} (m)</p>
-                                    <p *ngIf="!!campaign.errorCode" class="red">
-                                        {{'errors' | translate}}: {{campaign.errorCode}}
-                                    </p>
-                                </li>
-                            </ul>
-                            <p style="color: red"
-                                *ngIf="selectedTrack.trackedInstance.validationResult.travelValidity==='INVALID'">
-                                {{'error' | translate}}:
-                                {{selectedTrack.trackedInstance.validationResult.validationStatus.error}}</p>
+                            <mat-card-content>
+                                <p style="color: red"
+                                    *ngIf="selectedTrack.trackedInstance.validationResult.travelValidity==='INVALID'">
+                                    {{'error' | translate}}:
+                                    {{selectedTrack.trackedInstance.validationResult.validationStatus.error}}</p>
+                                <ul *ngIf="selectedTrack.campaigns.length>0">
+                                    <li *ngFor="let campaign of selectedTrack.campaigns" class="light-background">
+                                        <h3 style="margin-bottom: 0px;">{{campaign.campaignName[selectedLanguage]}} -
+                                            {{campaign.campaignId}} </h3>
+                                        <p style="font-style:italic">{{campaign.type | translate}}</p>
+                                        <p>{{(campaign.valid? 'valid' : 'invalid') | translate}}, {{'score' |
+                                            translate}}:
+                                            {{campaign.score}}, {{'distance' | translate}}: {{campaign.distance |
+                                            round}} (m)</p>
+                                        <p *ngIf="!!campaign.errorCode" class="red">
+                                            {{'errors' | translate}}: {{campaign.errorCode}}
+                                        </p>
+                                    </li>
+                                </ul>
+                            </mat-card-content>
+
                         </mat-card>
                     </div>
                 </div>
@@ -515,10 +605,7 @@
                         </mat-card-actions>
                     </mat-card-title>
                     <mat-card-content [@bodyExpansion]="stateValidationTrack" class="expandable-content">
-                        <!-- <p style="color: red"
-                                *ngIf="selectedTrack.trackedInstance.validationResult.travelValidity==='INVALID'">
-                                {{'error' | translate}}:
-                                {{selectedTrack.trackedInstance.validationResult.validationStatus.error}}</p> -->
+
                         <p [innerHtml]="innerHtmlValidation"></p>
                         <!-- <p>{{selectedTrack.trackedInstance.validationResult.validationStatus | json}}</p> -->
 
