@@ -54,11 +54,11 @@ export class CommunicationAddComponent implements OnInit {
       territoryId: new FormControl("", [Validators.required]),
       campaignId: new FormControl("", [Validators.required]),
       channels: new FormControl("", [Validators.required]),
-      briefDescription: new FormControl("", [Validators.required]),
+      briefDescription: new FormControl(""),
       richDescription: new FormControl(""),
       activityDate: new FormControl(""),
       dateFrom: new FormControl("", [Validators.required]),
-      dateTo: new FormControl("", [Validators.required]),
+      dateTo: new FormControl(""),
       users: new FormControl(""),
       title: new FormControl("", [Validators.required]),
     });
@@ -88,9 +88,12 @@ export class CommunicationAddComponent implements OnInit {
       const dateTo: number = this.validatingForm.get("dateTo").value
         ? this.validatingForm.get("dateTo").value.valueOf()
         : undefined;
-      if (!this.validDates(dateFrom, dateTo)) {
-        this.errorMsgValidation = "dateNotValid";
-        return;
+      if(dateTo){
+        if (!this.validDates(dateFrom, dateTo)) {
+          this.errorMsgValidation = "dateNotValid";
+          return;
+      }
+
       }
 
       let announce: any;
@@ -120,7 +123,7 @@ export class CommunicationAddComponent implements OnInit {
       body.title = this.validatingForm.get("title").value
         ? this.validatingForm.get("title").value
         : "";
-      body.to = dateTo.toString();
+      body.to = dateTo ? dateTo.toString() : '';
       this.communicationService
         .notifyCampaignUsingPOST({
           territoryId: this.territoryId,
@@ -167,7 +170,11 @@ export class CommunicationAddComponent implements OnInit {
     return false;
   }
 
-  validDates(start: number, end: number) {
+  validDates(start: number, end: any) {
+    if(end===undefined){
+      //not inserted
+      return true;
+    }
     if (start < end) {
       return true;
     }

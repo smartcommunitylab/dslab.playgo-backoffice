@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { GeoLocationEvent, Track } from "src/app/shared/classes/track-class";
 import {
   LIST_STATES_TRACK,
@@ -47,6 +47,8 @@ import { TrackedInstance } from "src/app/core/api/generated/model/trackedInstanc
 import { Geolocation } from "src/app/core/api/generated/model/geolocation";
 import { GameArea } from "src/app/shared/classes/map-point";
 import { TableVirtualScrollDataSource } from "ng-table-virtual-scroll";
+import { ReportControllerService } from "src/app/core/api/generated/controllers/reportController.service";
+import { CampaignPlacing } from "src/app/core/api/generated/model/campaignPlacing";
 
 @Component({
   selector: "app-validation-track",
@@ -110,6 +112,7 @@ export class ValidationTrackComponent implements OnInit {
   markerLayers: any[];
   deviceInfo: any;
   listCampaings: string[] = [];
+  listCampaingsClean: string[] = [];
   dateFromModified = false;
   dateToModified = false;
   resetSearchFieldsComponents = false;
@@ -128,7 +131,13 @@ export class ValidationTrackComponent implements OnInit {
   showAllPoints = true;
   innerHtmlValidation = "";
   restoreMap: Map;
+  showTierFilter = false;
+  dataSourceRankingUsersList: TableVirtualScrollDataSource<any>;
+  rankingUsersList:CampaignPlacing[] =[];
+  displayedColumnsRankingUsers= ["position","nickname","playerId"];
+  selectedRankingUser: CampaignPlacing;
 
+  validatingFormRanking: FormGroup;
   validatingForm: FormGroup;
   constructor(
     private formBuilder: FormBuilder,
@@ -136,6 +145,7 @@ export class ValidationTrackComponent implements OnInit {
     private territoryService: TerritoryControllerService,
     private trackingServiceInternal: ConsoleControllerService,
     private campaignService: CampaignControllerService,
+    private rankingService: ReportControllerService,
     private dialogStatus: MatDialog,
     private translate: TranslateService
   ) {}
@@ -143,6 +153,7 @@ export class ValidationTrackComponent implements OnInit {
   ngOnInit(): void {
     this.territoryId = localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY);
     this.initializaValidatingForm();
+    this.initializaValidatingFormRanking();
     // var dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value, true);
     // var dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value, true);
     this.trackingServiceInternal
@@ -187,6 +198,7 @@ export class ValidationTrackComponent implements OnInit {
       .subscribe((campaigns) => {
         campaigns.forEach((item) => {
           this.listCampaings.push(item.campaignId);
+          this.listCampaingsClean.push(item.campaignId);
         });
         this.listCampaings.push("all");
       });
@@ -207,6 +219,20 @@ export class ValidationTrackComponent implements OnInit {
     const monday = this.getPreviousMonday();
     const sunday = this.getNextSunday();
     this.validatingForm.patchValue({
+      dateFrom: moment(monday, "YYYY-MM-DD"),
+      dateTo: moment(sunday, "YYYY-MM-DD"),
+    });
+  }
+
+  initializaValidatingFormRanking() {
+    this.validatingFormRanking = this.formBuilder.group({
+      dateFrom: new FormControl(""),
+      dateTo: new FormControl(""),
+      campaignId: new FormControl("",[Validators.required]),
+    });
+    const monday = this.getPreviousMonday();
+    const sunday = this.getNextSunday();
+    this.validatingFormRanking.patchValue({
       dateFrom: moment(monday, "YYYY-MM-DD"),
       dateTo: moment(sunday, "YYYY-MM-DD"),
     });
@@ -243,6 +269,10 @@ export class ValidationTrackComponent implements OnInit {
     this.setStatisticsListTracks();
   }
 
+  setTableDataRankingUsers() {
+    this.dataSourceRankingUsersList = new TableVirtualScrollDataSource<any>(this.rankingUsersList);
+  }
+
   private initializeMapOptions(): void {
     this.mapOptions = {
       center: latLng(DEFAULT_LATITUDE, DEFAULT_LONGITUDE),
@@ -258,6 +288,8 @@ export class ValidationTrackComponent implements OnInit {
 
   getDateFromTimeStamp(timestamp: any) {
     var date = new Date(timestamp);
+    const gmtDiff = 2;
+    date.setHours(date.getHours()-gmtDiff);
     return (
       date.getDate() +
       "/" +
@@ -277,6 +309,45 @@ export class ValidationTrackComponent implements OnInit {
           : "0" + date.getMinutes().toString()
         : date.getMinutes().toString())
     );
+  }
+
+  searchSubmitRanking(){
+    if (this.validatingFormRanking.valid) {
+      if (this.resetSearchFieldsComponents) {
+        this.allowResetOnsearch();
+        this.resetSearchFieldsComponents = false;
+      }
+      const today: number = new Date().getTime();
+      this.rankingService.
+        getCampaingPlacingByGameUsingGET({
+          page: this.currentPageNumber,
+          size: this.size[0],
+          campaignId: this.validatingFormRanking.get("campaignId").value,
+          sort: this.SORTING,
+          dateFrom: this.validatingFormRanking.get("dateFrom").value,
+          dateTo: this.validatingFormRanking.get("dateTo").value
+        })
+        .subscribe((res) => {
+          this.rankingUsersList = res.content;
+          //TODO replace sample data with real data delete the ones below
+          this.rankingUsersList =[];
+          let k:CampaignPlacing[] =[
+            {'position':1,'nickname':'spartan','playerId':'u_fe939cab-1638-45b3-a604-80a3fb018e54'},
+            {'position':2,'nickname':'mino','playerId':'u_b061c167-0054-4a00-878e-3278b7ec5e9c'},
+            {'position':3,'nickname':'matteochini','playerId':'u_c2016c30-20a4-47bd-8c7a-266995c0ff9e'},
+            {'position':4,'nickname':'alattaruolo','playerId':'u_f74b1e34-463e-45af-a940-0c87a6d21838'},
+            {'position':5,'nickname':'urca','playerId':'u_78dbd97d-5136-460c-a1a7-c67210236745'},
+            {'position':6,'nickname':'chin8','playerId':'u_5eae76b8-2828-4932-a821-a16a4811a9c7'},
+            {'position':7,'nickname':'udhfuhdf','playerId':'u_765393ce-c502-418a-a10d-000eb2c901d7'},
+            {'position':8,'nickname':'blubla81','playerId':'u_6c5b5cd2-4e15-4267-9991-546d81829ef5'},
+            {'position':9,'nickname':'tania','playerId':'u_f3c61cdea7254ae3bc5581c822b374d0'},
+            {'position':10,'nickname':'Taty','playerId':'u_6ffd65deab654f0ab19985154f3939ae'},
+            {'position':11,'nickname':'mau','playerId':'u_d995fe2ae909486399d89861aef2f450'}];
+          this.rankingUsersList = k;
+          //delete till here
+          this.setTableDataRankingUsers();
+        });
+    }
   }
 
   searchSubmit() {
@@ -425,6 +496,7 @@ export class ValidationTrackComponent implements OnInit {
   }
 
   showTrack(row: TrackedInstanceConsoleClass) {
+    this.showAllPoints = true;
     this.trackingService
       .getTrackedInstanceDetailUsingGET({
         territoryId: this.territoryId,
@@ -483,6 +555,9 @@ export class ValidationTrackComponent implements OnInit {
                 .geocoding[0],
             ];
             this.addEndMarker(end);
+          }else{
+            if(this.stopMarker)
+              this.map.removeLayer(this.stopMarker);
           }
         } catch {}
       });
@@ -553,6 +628,20 @@ export class ValidationTrackComponent implements OnInit {
       dateTo: "",
       campaignId: "",
       status: "",
+    });
+    this.resetPageNumber();
+  }
+
+  resetSearchFieldsRanking() {
+    this.validatingFormRanking = this.formBuilder.group({
+      dateFrom: new FormControl(""),
+      dateTo: new FormControl(""),
+      campaignId: new FormControl("",[Validators.required]),
+    });
+    this.validatingForm.patchValue({
+      dateFrom: '',
+      dateTo: '',
+      campaignId: '',
     });
     this.resetPageNumber();
   }
@@ -631,6 +720,22 @@ export class ValidationTrackComponent implements OnInit {
   allowResetOnsearch() {
     this.currentPageNumber = 0;
     this.dataSource.paginator = this.paginator;
+  }
+
+  onSelectUserFromRankingList(row: any){
+    this.selectedRankingUser = row;
+    //set search fields;
+    this.validatingForm.patchValue({
+      trackId: undefined,
+      playerId: row.playerId,
+      modeType: undefined,
+      dateFrom: this.validatingFormRanking.get('dateFrom').value,
+      dateTo: this.validatingFormRanking.get('dateTo').value,
+      campaignId: this.validatingFormRanking.get('campaignId').value,
+      status: undefined,
+    });
+    this.currentPageNumber = 0;
+    this.searchSubmit();
   }
 
   formatDate(datee: Moment): string {
@@ -844,7 +949,8 @@ export class ValidationTrackComponent implements OnInit {
         manufacturer: "-",
         isVirtual: false,
         serial: "-",
-        appVersion: "-",
+        codePushLabel: '-',
+        osVersion: '-'
       };
     }
 
@@ -861,7 +967,8 @@ export class ValidationTrackComponent implements OnInit {
       manufacturer: "-",
       isVirtual: false,
       serial: "-",
-      appVersion: "-",
+      codePushLabel: '-',
+      osVersion: '-'
     };
   }
 
@@ -884,6 +991,43 @@ export class ValidationTrackComponent implements OnInit {
         "23:59:59"
       );
     else return undefined;
+  }
+
+  switchTrackToRanking(){
+    this.showTierFilter = !this.showTierFilter;
+    this.currentPageNumber = 0;
+    this.validatingForm.patchValue({
+      trackId: undefined,
+      playerId: undefined,
+      modeType: undefined,
+      dateFrom: undefined,
+      dateTo: undefined,
+      campaignId: undefined,
+      status: undefined,
+    });
+    this.selectedTrack = undefined;
+    const monday = this.getPreviousMonday();
+    const sunday = this.getNextSunday();
+    if(!this.showTierFilter){
+      //enter trip filter
+      this.validatingForm.patchValue({
+        dateFrom: moment(monday, "YYYY-MM-DD"),
+        dateTo: moment(sunday, "YYYY-MM-DD"),
+      });
+      this.searchSubmit();
+      this.rankingUsersList =[];
+      this.setTableDataRankingUsers();
+    }else{
+      //enter ranking filter
+      //reset searched tracks
+      this.validatingFormRanking.patchValue({
+        dateFrom: moment(monday, "YYYY-MM-DD"),
+        dateTo: moment(sunday, "YYYY-MM-DD"),
+        campaignId: undefined
+      });
+      this.listTrack= [];
+      this.setTableData();
+    }
   }
 
   createDate(timestamp: number): string {

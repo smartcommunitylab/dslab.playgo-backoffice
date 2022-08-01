@@ -2,7 +2,9 @@
 
 <form [formGroup]="validatingForm">
     <div class="in-line-forms">
-        <p class="input-custom-half-left">{{'currentStatus' | translate}}: {{selectedTrack.trackedInstance.validationResult.travelValidity | translate}}</p>
+        <div class="input-custom-half-left" style="float: left;">{{'currentStatus' | translate}}: {{selectedTrack.trackedInstance.validationResult.travelValidity | translate}}</div>
+        <div class="input-custom-half-right" style="float: left;" *ngIf="validatingForm.get('status').value==='valid' && selectedTrack.trackedInstance.validationResult.travelValidity !=='VALID'" >{{'currentModeType' | translate}}: {{selectedTrack.trackedInstance.validationResult.validationStatus.modeType | translate}}</div>
+        <div class="input-custom-half-right" style="float: left;" *ngIf="!(validatingForm.get('status').value==='valid' && selectedTrack.trackedInstance.validationResult.travelValidity !=='VALID')"><br> </div>
     </div>
     <div class="in-line-forms">
         <mat-form-field appearance="fill" class="input-custom-half-left">
@@ -56,9 +58,9 @@
                 <input matInput  type="number" min="0" id="distance" formControlName="distance">
             </mat-form-field>
         </div>
-        <div class="in-line-forms">
+        <!-- <div class="in-line-forms">
             <p class="input-custom-half-left">{{'currentModeType' | translate}}: {{selectedTrack.trackedInstance.validationResult.validationStatus.modeType | translate}}</p>
-        </div>
+        </div> -->
         <div class="in-line-forms">
             <mat-form-field appearance="fill" class="full-width">
                 <mat-label>{{'notes' | translate}}</mat-label>
