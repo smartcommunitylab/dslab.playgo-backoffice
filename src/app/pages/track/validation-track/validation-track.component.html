@@ -46,7 +46,6 @@
                         </mat-form-field>
                     </mat-grid-tile>
 
-
                     <mat-grid-tile>
                         <mat-form-field appearance="fill" class="full-width margin-form">
                             <mat-label>{{'playerId' | translate}}</mat-label>
@@ -73,27 +72,27 @@
                     </mat-grid-tile>
                     <mat-grid-tile></mat-grid-tile>
                     <mat-grid-tile></mat-grid-tile>
-                    <mat-grid-tile>
-                        <button class="margin-form" mat-flat-button type="submit" (click)="searchSubmit()"
-                            color="primary">
-                            <mat-icon>
-                                <span class="material-symbols-outlined">
-                                    search
-                                </span>
-                            </mat-icon>
-                            {{"search" | translate}}
-                        </button>
-                    </mat-grid-tile>
-                    <mat-grid-tile>
-                        <button class="margin-form" mat-flat-button type="button" mat-flat-button color="primary"
-                            (click)="resetSearchFields()">
-                            <mat-icon>
-                                <span class="material-symbols-outlined">
-                                    cached
-                                </span>
-                            </mat-icon>
-                            {{"resetSearchFields" | translate}}
-                        </button>
+                    <mat-grid-tile [colspan]="2">
+                        <div class="search-container">
+                            <button class="margin-form" mat-flat-button type="submit" (click)="searchSubmit()"
+                                color="primary">
+                                <mat-icon>
+                                    <span class="material-symbols-outlined">
+                                        search
+                                    </span>
+                                </mat-icon>
+                                {{"search" | translate}}
+                            </button>
+                            <button class="margin-form" mat-flat-button type="button" mat-flat-button color="primary"
+                                (click)="resetSearchFields()">
+                                <mat-icon>
+                                    <span class="material-symbols-outlined">
+                                        cached
+                                    </span>
+                                </mat-icon>
+                                {{"resetSearchFields" | translate}}
+                            </button>
+                        </div>
                     </mat-grid-tile>
                 </mat-grid-list>
             </form>
@@ -135,31 +134,31 @@
                             <mat-datepicker #picker></mat-datepicker>
                         </mat-form-field>
                     </mat-grid-tile>
-                    <mat-grid-tile [colspan]="1">
-                        <button class="margin-form" mat-flat-button type="submit" (click)="searchSubmitRanking()"
-                            color="primary">
-                            <mat-icon>
-                                <span class="material-symbols-outlined">
-                                    search
-                                </span>
-                            </mat-icon>
-                            {{"search" | translate}}
-                        </button>
+                    <mat-grid-tile [colspan]="2">
+                        <div class="search-container">
+                            <button class="margin-form" mat-flat-button type="submit" (click)="searchSubmitRanking()"
+                                color="primary">
+                                <mat-icon>
+                                    <span class="material-symbols-outlined">
+                                        search
+                                    </span>
+                                </mat-icon>
+                                {{"search" | translate}}
+                            </button>
+                            <button class="margin-form" mat-flat-button type="button" mat-flat-button color="primary"
+                                (click)="resetSearchFieldsRanking()">
+                                <mat-icon>
+                                    <span class="material-symbols-outlined">
+                                        cached
+                                    </span>
+                                </mat-icon>
+                                {{"resetSearchFields" | translate}}
+                            </button>
+                        </div>
                     </mat-grid-tile>
-                    <mat-grid-tile [colspan]="1">
-                        <button class="margin-form" mat-flat-button type="button" mat-flat-button color="primary"
-                            (click)="resetSearchFieldsRanking()">
-                            <mat-icon>
-                                <span class="material-symbols-outlined">
-                                    cached
-                                </span>
-                            </mat-icon>
-                            {{"resetSearchFields" | translate}}
-                        </button>
-                    </mat-grid-tile>
-            </mat-grid-list>
+                </mat-grid-list>
             </form>
-            <cdk-virtual-scroll-viewport tvsItemSize="48" headerHeight="5" style="height: 350px;width: 100%;">
+            <cdk-virtual-scroll-viewport [tvsItemSize]="48" headerHeight="5" style="height: 350px;width: 100%;">
                 <table mat-table [dataSource]="dataSourceRankingUsersList" class="full-width">
                     <ng-container matColumnDef="position">
                         <th mat-header-cell *matHeaderCellDef>
@@ -186,8 +185,10 @@
                         </td>
                     </ng-container>
                     <tr mat-header-row *matHeaderRowDef="displayedColumnsRankingUsers"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumnsRankingUsers;" (click)="onSelectUserFromRankingList(row)"
-                    [ngClass]="{'highlight-table': !!row && !!selectedRankingUser && row.position===selectedRankingUser.position}"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsRankingUsers;"
+                        (click)="onSelectUserFromRankingList(row)"
+                        [ngClass]="{'highlight-table': !!row && !!selectedRankingUser && row.position===selectedRankingUser.position}">
+                    </tr>
                 </table>
             </cdk-virtual-scroll-viewport>
         </mat-card-content>
@@ -205,7 +206,7 @@
                     <span>{{'validWithReserve' | translate}}: {{statisticsTracks.pending}}</span>
                 </mat-grid-tile>
             </mat-grid-list>
-            <cdk-virtual-scroll-viewport tvsItemSize="94" headerHeight="5" style="height: 800px;">
+            <cdk-virtual-scroll-viewport [tvsItemSize]="94" headerHeight="5" style="height: 800px;">
                 <table mat-table [dataSource]="dataSource" class="full-width">
                     <ng-container matColumnDef="tracks">
                         <th mat-header-cell *matHeaderCellDef></th>
@@ -229,7 +230,9 @@
                                     </mat-grid-tile>
                                     <mat-grid-tile>
                                         <span class="full-width text-ellips">
-                                            {{(element.trackedInstance.validationResult.travelValidity==='PENDING'? 'validWithReserve': element.trackedInstance.validationResult.travelValidity) | translate}}
+                                            {{(element.trackedInstance.validationResult.travelValidity==='PENDING'?
+                                            'validWithReserve': element.trackedInstance.validationResult.travelValidity)
+                                            | translate}}
                                         </span>
                                     </mat-grid-tile>
                                 </mat-grid-list>
@@ -286,7 +289,8 @@
                                                 <span class="bold">
                                                     {{'status' | translate}}:</span> <br />
                                                 <span>
-                                                    {{(statisticsSelectedTrack.validity==='PENDING'? 'validWithReserve': statisticsSelectedTrack.validity)  | translate}}
+                                                    {{(statisticsSelectedTrack.validity==='PENDING'? 'validWithReserve':
+                                                    statisticsSelectedTrack.validity) | translate}}
                                                 </span>
                                             </span>
                                         </div>
@@ -462,9 +466,13 @@
                                         <h3 style="margin-bottom: 0px;">{{campaign.campaignName[selectedLanguage]}} -
                                             {{campaign.campaignId}} </h3>
                                         <p style="font-style:italic">{{campaign.type | translate}}</p>
-                                        <p>{{(campaign.valid? 'valid' : 'invalid') | translate}}, {{'score' |
-                                            translate}}:
-                                            {{campaign.score}}, {{'distance' | translate}}: {{campaign.distance |
+                                        <p>{{(campaign.valid? 'valid' : 'invalid') | translate}},
+                                            <span *ngIf="campaign.type==='school' || campaign.type==='city'">
+                                                {{'score' |
+                                                translate}}:
+                                                {{campaign.score}},
+                                            </span>
+                                            {{'distance' | translate}}: {{campaign.distance |
                                             round}} (m)</p>
                                         <p *ngIf="!!campaign.errorCode" class="red">
                                             {{'errors' | translate}}: {{campaign.errorCode}}
@@ -505,7 +513,7 @@
                             {{'reset' | translate}}
                         </button>
 
-                        <cdk-virtual-scroll-viewport tvsItemSize="48" headerHeight="5" style="height: 350px;">
+                        <cdk-virtual-scroll-viewport [tvsItemSize]="48" headerHeight="5" style="height: 350px;">
                             <table mat-table [dataSource]="dataSourceInfoTrack" class="full-dimension">
 
                                 <ng-container matColumnDef="index">

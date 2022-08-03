@@ -84,7 +84,8 @@ const moment = _moment;
 export class CampaignAddFormComponent implements OnInit {
   @Input() type: string; // can be add or modify
   quillContent = "";
-
+  meansSelected: string[]=[];
+  selectedLimits: SelectedLimits;
   validatingForm: FormGroup;
   campaignCreated: CampaignClass;
   campaignUpdated: CampaignClass;
@@ -110,7 +111,6 @@ export class CampaignAddFormComponent implements OnInit {
   languageDefault: any;
   languagesSupported = CONST_LANGUAGES_SUPPORTED;
   languageSelected: string;
-
 
   @Input() set formTerritory(value: CampaignClass) {
     this.campaignUpdated = value;
@@ -159,8 +159,16 @@ export class CampaignAddFormComponent implements OnInit {
       .subscribe((result) => {
         this.territorySelected = result;
         this.means = this.territorySelected.territoryData.means;
+        if(this.type ==='add'){
+          this.selectedLimits = new SelectedLimits();
+          for(let mean of this.means){
+            this.selectedLimits[mean] = new LimitsClass();
+          }
+        }else{
+          this.means = this.campaignUpdated.validationData.means;
+        }
       });
-    this.initDetailsType();
+      this.initDetailsType();
   }
 
   initializaValidatingForm() {
@@ -179,9 +187,6 @@ export class CampaignAddFormComponent implements OnInit {
         type: new FormControl("", [Validators.required]),
         gameId: new FormControl(""),
         startDayOfWeek: new FormControl("", [Validators.pattern("^[1-7]")]),
-        dailyLimit: new FormControl(""),
-        weeklyLimit: new FormControl(""),
-        monthlyLimit: new FormControl("")
       });
       this.validatingForm.patchValue({
         territoryId: localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY),
@@ -197,10 +202,7 @@ export class CampaignAddFormComponent implements OnInit {
         dateTo: new FormControl("", [Validators.required]),
         type: new FormControl("", [Validators.required]),
         gameId: new FormControl(""),
-        startDayOfWeek: new FormControl(""),
-        dailyLimit: new FormControl(""),
-        weeklyLimit: new FormControl(""),
-        monthlyLimit: new FormControl("")
+        startDayOfWeek: new FormControl("")
       });
       this.validatingForm.patchValue({
         means: this.campaignUpdated.validationData.means,
@@ -209,11 +211,10 @@ export class CampaignAddFormComponent implements OnInit {
         dateTo: moment(this.campaignUpdated.dateTo), //moment(this.campaignUpdated.dateTo, "YYYY-MM-DD"),
         type: this.campaignUpdated.type,
         gameId: this.campaignUpdated.gameId,
-        startDayOfWeek: this.campaignUpdated.startDayOfWeek,
-        dailyLimit: this.campaignUpdated.specificData[DAILY_LIMIT] ? this.campaignUpdated.specificData[DAILY_LIMIT] : undefined,
-        weeklyLimit: this.campaignUpdated.specificData[WEEKLY_LIMIT] ? this.campaignUpdated.specificData[WEEKLY_LIMIT] : undefined,
-        monthlyLimit: this.campaignUpdated.specificData[MONTHLY_LIMIT] ? this.campaignUpdated.specificData[MONTHLY_LIMIT] : undefined,
+        startDayOfWeek: this.campaignUpdated.startDayOfWeek
       });
+      this.meansSelected = this.campaignUpdated.validationData.means;
+      this.selectedLimits = this.campaignUpdated.specificData;
     }
     // language common for add and update
     this.addFormControlMultilanguage();
@@ -237,6 +238,36 @@ export class CampaignAddFormComponent implements OnInit {
     }
 
     return value;
+  }
+
+  chengeSelectedMeans(event:any){
+    if(this.type!=='add'){
+      if(this.meansSelected.length>this.validatingForm.get('means').value.length){
+        // a mean was deleted
+        const found = this.findDiffInArray(this.validatingForm.get('means').value,this.meansSelected);
+        this.selectedLimits[found] = new LimitsClass();
+      }
+    }
+    this.meansSelected = this.validatingForm.get('means')?  this.validatingForm.get('means').value : [];
+  }
+
+  findDiffInArray(shortArr: any[],longArr: any[]): any{
+    var result;
+    var found = true;
+    for(let i=0;i<longArr.length;i++){
+      var checkThisValue =false;
+      for(let j=0;j<shortArr.length;j++){
+        if(shortArr[j]===longArr[i]){
+          checkThisValue= true;
+        }
+      }
+      if(!checkThisValue){
+        //if not found in short array it's the result
+        result = longArr[i];
+        break;
+      }
+    }
+    return result;
   }
 
   validate(): void {
@@ -460,10 +491,13 @@ export class CampaignAddFormComponent implements OnInit {
       // make it better copy every map and then override
       this.campaignCreated.specificData[DEFAULT_SURVEY_KEY] = this.campaignUpdated.specificData[DEFAULT_SURVEY_KEY];
     }
-
-    this.campaignCreated.specificData[DAILY_LIMIT] = this.validatingForm.get(DAILY_LIMIT) ? this.validatingForm.get(DAILY_LIMIT).value : undefined;
-    this.campaignCreated.specificData[WEEKLY_LIMIT] = this.validatingForm.get(WEEKLY_LIMIT) ? this.validatingForm.get(WEEKLY_LIMIT).value : undefined;
-    this.campaignCreated.specificData[MONTHLY_LIMIT] = this.validatingForm.get(MONTHLY_LIMIT) ? this.validatingForm.get(MONTHLY_LIMIT).value : undefined;  
+    this.campaignCreated.specificData = new SelectedLimits();
+    for(let mean of this.validatingForm.get('means').value){
+      this.campaignCreated.specificData[mean] = new LimitsClass();
+      this.campaignCreated.specificData[mean][DAILY_LIMIT] = this.selectedLimits[mean][DAILY_LIMIT] ;
+      this.campaignCreated.specificData[mean][WEEKLY_LIMIT] = this.selectedLimits[mean][WEEKLY_LIMIT] ;
+      this.campaignCreated.specificData[mean][MONTHLY_LIMIT] = this.selectedLimits[mean][MONTHLY_LIMIT] ;
+    }
   }
 
   uploadLogo(event: any): void {
@@ -807,4 +841,19 @@ export class CampaignAddFormComponent implements OnInit {
     }
   }
 
+}
+
+export class SelectedLimits{
+  walk?: LimitsClass;
+  bike?:LimitsClass;
+  bus?:LimitsClass;
+  car?:LimitsClass;
+  train?:LimitsClass;
+  boat?:LimitsClass;
+}
+
+export class LimitsClass{
+  dailyLimit?: number=0;
+  weeklyLimit?: number=0;
+  monthlyLimit?: number=0;
 }
