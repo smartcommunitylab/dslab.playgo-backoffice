@@ -187,29 +187,18 @@
                 <!-- old <img class="img-logo" src="{{PREFIX_SRC_IMG_C + selectedCampaign.banner.contentType + BASE64_SRC_IMG_C + selectedCampaign.banner.image}}"> -->
                 <mat-card-content>
                     <div style="margin-top: 10px">
-
-                        <h3>{{'means' | translate}}</h3>
-                        <ul>
-                            <li *ngFor="let mean of selectedCampaign.validationData.means">
-                                {{mean | translate}}
-                            </li>
-                        </ul>
-                        <div style="margin-top: 10px" 
-                        *ngIf="!!selectedCampaign.specificData[dailyLimitString] || !!selectedCampaign.specificData[weekLimit] || !!selectedCampaign.specificData[monthlyLimitString]">
-                            <h3>{{'limits' | translate}}</h3>
-                            <ul>
-                                <li *ngIf="!!selectedCampaign.specificData[dailyLimitString]">
-                                    <p>{{'dailyLimitString' | translate}}: {{selectedCampaign.specificData[dailyLimitString]}}</p>
-                                </li>
-                                <li *ngIf="!!selectedCampaign.specificData[weekLimit]">
-                                    <p>{{'weekLimit' | translate}}: {{selectedCampaign.specificData[weekLimit]}}</p>
-                                </li>
-                                <li *ngIf="!!selectedCampaign.specificData[monthlyLimitString]">
-                                    <p>{{'monthlyLimitString' | translate}}: {{selectedCampaign.specificData[monthlyLimitString]}}</p>
-                                </li>
-                            </ul>                           
-                            
-                        </div>
+                        <mat-grid-list cols="4" rowHeight="30px" style="margin-bottom:10px;">
+                            <mat-grid-tile><h3>{{'means' | translate}}</h3></mat-grid-tile>
+                            <mat-grid-tile><h3>{{'dailyLimitString' | translate}}</h3></mat-grid-tile>
+                            <mat-grid-tile><h3>{{'weeklyLimitString' | translate}}</h3></mat-grid-tile>
+                            <mat-grid-tile><h3>{{'monthlyLimitString' | translate}}</h3></mat-grid-tile>
+                            <span *ngFor="let mean of selectedCampaign.validationData.means">
+                                <mat-grid-tile>{{mean | translate}}</mat-grid-tile>
+                                <mat-grid-tile>{{selectedCampaign.specificData[mean].dailyLimit}}</mat-grid-tile>
+                                <mat-grid-tile>{{selectedCampaign.specificData[mean].weeklyLimit}}</mat-grid-tile>
+                                <mat-grid-tile>{{selectedCampaign.specificData[mean].monthlyLimit}}</mat-grid-tile>
+                            </span>
+                        </mat-grid-list>
                         <drop-down-card-info [title]="'description' | translate"
                             [content]="selectedCampaign.description[languageDefault]">
                         </drop-down-card-info>

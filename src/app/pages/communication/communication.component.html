@@ -89,27 +89,32 @@
                 <mat-card-content>
                     <div style="margin-top: 10px">
                         <p class="bold">{{'dateFrom' |translate }}: {{fromTimestampToDate(communicationSelected.from)}}
-                            {{'dateTo' |translate }}:
-                            {{fromTimestampToDate(communicationSelected.to)}}</p>
+                            <span *ngIf="!!communicationSelected.to">
+                                {{'dateTo' |translate }}: {{fromTimestampToDate(communicationSelected.to)}}
+                            </span>
+                        </p>
                         <h3 class="bold">{{'channels' | translate}}</h3>
                         <ul>
                             <li *ngFor="let mean of communicationSelected.channels">
                                 {{mean | translate}}
                             </li>
                         </ul>
-                        <div *ngIf="!!communicationSelected.players && communicationSelected.players!==[]">
+                        <span *ngIf="communicationSelected.players!==[]">
                             <h3 class="bold">{{'players' | translate}}</h3>
                             <ul>
                                 <li *ngFor="let player of communicationSelected.players">
                                     {{player | translate}}
                                 </li>
                             </ul>
-                        </div>
-                        <p class="bold">{{"description" | translate}}</p>
-                        <p>{{communicationSelected.description}}</p>
-                        <p class="bold">{{"text" | translate}}</p>
-                        <p [innerHTML]="communicationSelected.html">
-                        </p>
+                        </span>
+                        <span *ngIf="!!communicationSelected.description">
+                            <p class="bold">{{"description" | translate}}</p>
+                            <p>{{communicationSelected.description}}</p>
+                        </span>
+                        <span *ngIf="!!communicationSelected.html">
+                            <p class="bold">{{"text" | translate}}</p>
+                            <p [innerHTML]="communicationSelected.html"></p>
+                        </span>
                     </div>
                 </mat-card-content>
             </mat-card>

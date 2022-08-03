@@ -74,30 +74,35 @@
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'means' | translate}}</mat-label>
-                        <mat-select id="means" formControlName="means" multiple>
+                        <mat-select id="means" formControlName="means" multiple (selectionChange)="chengeSelectedMeans($event)">
                             <mat-option *ngFor="let mean of means" [value]="mean">{{mean |translate}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <mat-grid-list [cols]="3" rowHeight="50px" style="margin-bottom: 10px">
-                    <mat-grid-tile>
-                        <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
-                            <mat-label>{{'dailyLimitString' | translate}}</mat-label>
-                            <input type="number" matInput id="dailyLimit" formControlName="dailyLimit">
-                        </mat-form-field>
-                    </mat-grid-tile>
-                    <mat-grid-tile>
-                        <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
-                            <mat-label>{{'weeklyLimitString' | translate}}</mat-label>
-                            <input type="number" matInput id="weeklyLimit" formControlName="weeklyLimit">
-                        </mat-form-field>
-                    </mat-grid-tile>
-                    <mat-grid-tile>
-                        <mat-form-field appearance="fill" class="grid-tile-limit">
-                            <mat-label>{{'monthlyLimitString' | translate}}</mat-label>
-                            <input type="number" matInput id="monthlyLimit" formControlName="monthlyLimit">
-                        </mat-form-field>
-                    </mat-grid-tile>
+                <mat-grid-list [cols]="4" rowHeight="50px" style="margin-bottom: 10px">
+                    <div *ngFor="let mean of meansSelected">
+                        <mat-grid-tile>
+                            {{mean | translate}}
+                        </mat-grid-tile>
+                        <mat-grid-tile>
+                            <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                <mat-label>{{'dailyLimitString' | translate}}</mat-label>
+                                <input [ngModelOptions]="{standalone: true}" type="number" matInput id="{{'dailyLimit'+mean}}" name="{{'dailyLimit'+mean}}"  [(ngModel)]="selectedLimits[mean].dailyLimit">
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile>
+                            <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                <mat-label>{{'weeklyLimitString' | translate}}</mat-label>
+                                <input [ngModelOptions]="{standalone: true}" type="number" matInput id="{{'weeklyLimit'+mean}}" name="{{'weeklyLimit'+mean}}" [(ngModel)]="selectedLimits[mean].weeklyLimit">
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile>
+                            <mat-form-field appearance="fill" class="grid-tile-limit">
+                                <mat-label>{{'monthlyLimitString' | translate}}</mat-label>
+                                <input [ngModelOptions]="{standalone: true}" type="number" matInput id="{{'monthlyLimit'+mean}}" name="{{'monthlyLimit'+mean}}" [(ngModel)]="selectedLimits[mean].monthlyLimit">
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </div>
                 </mat-grid-list>
                 <div class="in-line-forms"
                     *ngIf="!!validatingForm.get('type').value && validatingForm.get('type').value!=='company'">
@@ -299,30 +304,35 @@
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'means' | translate}}</mat-label>
-                        <mat-select id="means" formControlName="means" multiple>
+                        <mat-select id="means" formControlName="means" multiple (selectionChange)="chengeSelectedMeans($event)">
                             <mat-option *ngFor="let mean of means" [value]="mean">{{mean |translate}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <mat-grid-list [cols]="3" rowHeight="50px" style="margin-bottom: 10px">
-                    <mat-grid-tile>
-                        <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
-                            <mat-label>{{'dailyLimitString' | translate}}</mat-label>
-                            <input type="number" matInput id="dailyLimit" formControlName="dailyLimit">
-                        </mat-form-field>
-                    </mat-grid-tile>
-                    <mat-grid-tile>
-                        <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
-                            <mat-label>{{'weeklyLimitString' | translate}}</mat-label>
-                            <input type="number" matInput id="weeklyLimit" formControlName="weeklyLimit">
-                        </mat-form-field>
-                    </mat-grid-tile>
-                    <mat-grid-tile>
-                        <mat-form-field appearance="fill" class="grid-tile-limit">
-                            <mat-label>{{'monthlyLimitString' | translate}}</mat-label>
-                            <input type="number" matInput id="monthlyLimit" formControlName="monthlyLimit">
-                        </mat-form-field>
-                    </mat-grid-tile>
+                <mat-grid-list [cols]="4" rowHeight="50px" style="margin-bottom: 10px">
+                    <div *ngFor="let mean of meansSelected">
+                        <mat-grid-tile>
+                            {{mean | translate}}
+                        </mat-grid-tile>
+                        <mat-grid-tile>
+                            <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                <mat-label>{{'dailyLimitString' | translate}}</mat-label>
+                                <input [ngModelOptions]="{standalone: true}" type="number" matInput id="{{'dailyLimit'+mean}}" name="{{'dailyLimit'+mean}}"  [(ngModel)]="selectedLimits[mean].dailyLimit">
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile>
+                            <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                <mat-label>{{'weeklyLimitString' | translate}}</mat-label>
+                                <input [ngModelOptions]="{standalone: true}" type="number" matInput id="{{'weeklyLimit'+mean}}" name="{{'weeklyLimit'+mean}}" [(ngModel)]="selectedLimits[mean].weeklyLimit">
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile>
+                            <mat-form-field appearance="fill" class="grid-tile-limit">
+                                <mat-label>{{'monthlyLimitString' | translate}}</mat-label>
+                                <input [ngModelOptions]="{standalone: true}" type="number" matInput id="{{'monthlyLimit'+mean}}" name="{{'monthlyLimit'+mean}}" [(ngModel)]="selectedLimits[mean].monthlyLimit">
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </div>
                 </mat-grid-list>
                 <div class="in-line-forms"
                     *ngIf="!!validatingForm.get('type').value && validatingForm.get('type').value!=='company'">
