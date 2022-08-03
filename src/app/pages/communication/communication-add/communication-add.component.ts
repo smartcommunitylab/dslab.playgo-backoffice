@@ -16,7 +16,7 @@ import { NotificationControllerService } from "src/app/core/api/generated/contro
 import { Announcement } from "src/app/core/api/generated/model/announcement";
 import { AnnouncementClass } from "src/app/shared/classes/announcment-class";
 import { SnackbarSavedComponent } from "src/app/shared/components/snackbar-saved/snackbar-saved.component";
-import { CHANNELS_COMMUNICATION, MY_DATE_FORMATS } from "src/app/shared/constants/constants";
+import { CHANNELS_COMMUNICATION, MY_DATE_FORMATS, VALUE_EMPTY_SELECT_LIST } from "src/app/shared/constants/constants";
 
 @Component({
   selector: "app-communication-add",
@@ -73,6 +73,7 @@ export class CommunicationAddComponent implements OnInit {
         campaigns.forEach((item) => {
           this.listCampaings.push(item.campaignId);
         });
+        this.listCampaings.push(this.translate.instant(VALUE_EMPTY_SELECT_LIST));
       });
   }
 
@@ -104,7 +105,7 @@ export class CommunicationAddComponent implements OnInit {
           ? Announcement.ChannelsEnum.Push
           : Announcement.ChannelsEnum.News;
       const campaignId = this.validatingForm.get("campaignId").value
-        ? this.validatingForm.get("campaignId").value
+        ? (this.validatingForm.get("campaignId").value === VALUE_EMPTY_SELECT_LIST? undefined : this.validatingForm.get("campaignId").value)
         : undefined;
       const channels = this.tranformChannels();
       let body:AnnouncementClass = new AnnouncementClass();

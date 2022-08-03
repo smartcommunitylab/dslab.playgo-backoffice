@@ -54,6 +54,7 @@ export class CommunicationComponent implements OnInit {
         if(this.listCampaings.length>0){
           this.selectedCampaign = this.listCampaings[0];
         }
+        this.listCampaings.push(this.translate.instant(VALUE_EMPTY_SELECT_LIST));
         this.getNotificationUsingGet();
       });
      Object.keys(Announcement.ChannelsEnum).forEach((item)=>{
