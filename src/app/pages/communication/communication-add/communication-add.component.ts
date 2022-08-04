@@ -105,7 +105,7 @@ export class CommunicationAddComponent implements OnInit {
           ? Announcement.ChannelsEnum.Push
           : Announcement.ChannelsEnum.News;
       const campaignId = this.validatingForm.get("campaignId").value
-        ? (this.validatingForm.get("campaignId").value === VALUE_EMPTY_SELECT_LIST? undefined : this.validatingForm.get("campaignId").value)
+        ? (this.validatingForm.get("campaignId").value === this.translate.instant(VALUE_EMPTY_SELECT_LIST) ? undefined : this.validatingForm.get("campaignId").value)
         : undefined;
       const channels = this.tranformChannels();
       let body:AnnouncementClass = new AnnouncementClass();
