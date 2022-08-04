@@ -1033,8 +1033,8 @@ export class ValidationTrackComponent implements OnInit {
   createDate(timestamp: number): string {
     const date = new Date(timestamp);
     const midDate = date.toISOString().replace("Z", "").replace("T", " ");
-    //return midDate.substring(0,midDate.length-4); // full date
-    return midDate.substring(midDate.length - 12, midDate.length - 4);
+    return midDate.substring(0,midDate.length-4); // full date
+    //return midDate.substring(midDate.length - 12, midDate.length - 4); // just hours 
   }
 
   drawRayOnMap() {

@@ -150,30 +150,24 @@ export class CommunicationComponent implements OnInit {
   }
 
   getNotificationUsingGet(){
-    var searchStrinNull = false;
-    if(this.searchString ===VALUE_EMPTY_SELECT_LIST){
-      searchStrinNull = true;
-      this.searchString = undefined;
-    }
     this.communicationService
     .getNotificationsUsingGET({
       page: this.page,
       size: this.size[0],
       territoryId: this.territoryId,
-      campaignId: this.selectedCampaign ===VALUE_EMPTY_SELECT_LIST? undefined : this.selectedCampaign,
-      channels: this.searchString,
+      campaignId: this.selectedCampaign ===this.translate.instant(VALUE_EMPTY_SELECT_LIST)? undefined : this.selectedCampaign,
+      channels: this.searchString===  VALUE_EMPTY_SELECT_LIST? undefined: this.searchString,
     })
     .subscribe(
       (result) => {
-        if(searchStrinNull){
-          this.searchString =VALUE_EMPTY_SELECT_LIST;
-        }
         if (!!result.content) {
           this.communications = result.content;
           this.setTableData();
         }
       },
       (error) => {
+        this.communications = [];
+        this.setTableData();
         console.error("myError: ", error);
       }
     );
