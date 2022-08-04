@@ -271,7 +271,7 @@
   "changedValidity":"Validity edited",
   "notChangedValidity":"Validity not edited",
   "ranking":"Ranking",
-  "validWithReserve": "Valid (with reserve)",
+  "pending": "Valid (with reserve)",
   "":"",
   "":"",
   "":"",

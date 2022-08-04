@@ -19,6 +19,23 @@
                     </mat-grid-tile>
                     <mat-grid-tile>
                         <mat-form-field appearance="fill" class="full-width margin-form">
+                            <mat-label>{{'status' | translate}}</mat-label>
+                            <mat-select id="status" formControlName="status" (ngModelChange)="resetPageNumber()">
+                                <mat-option *ngFor="let val of listStates" [value]="val">{{val | translate}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="full-width margin-form">
+                            <mat-label>{{'playerId' | translate}}</mat-label>
+                            <input matInput id="playerId" formControlName="playerId"
+                                (ngModelChange)="resetPageNumber()">
+                        </mat-form-field>
+                    </mat-grid-tile>
+
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="full-width margin-form">
                             <mat-label>{{'dateTo' | translate}}</mat-label>
                             <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker"
                                 (ngModelChange)="changeDateTo()">
@@ -36,23 +53,7 @@
                             </mat-select>
                         </mat-form-field>
                     </mat-grid-tile>
-                    <mat-grid-tile>
-                        <mat-form-field appearance="fill" class="full-width margin-form">
-                            <mat-label>{{'status' | translate}}</mat-label>
-                            <mat-select id="status" formControlName="status" (ngModelChange)="resetPageNumber()">
-                                <mat-option *ngFor="let val of listStates" [value]="val">{{val | translate}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </mat-grid-tile>
 
-                    <mat-grid-tile>
-                        <mat-form-field appearance="fill" class="full-width margin-form">
-                            <mat-label>{{'playerId' | translate}}</mat-label>
-                            <input matInput id="playerId" formControlName="playerId"
-                                (ngModelChange)="resetPageNumber()">
-                        </mat-form-field>
-                    </mat-grid-tile>
                     <mat-grid-tile>
                         <mat-form-field appearance="fill" class="full-width margin-form">
                             <mat-label>{{'trackId' | translate}}</mat-label>
@@ -197,13 +198,13 @@
         <div class="list-tracks">
             <mat-grid-list [cols]="3" rowHeight="50px">
                 <mat-grid-tile [colspan]="1">
-                    <span>{{'valids' | translate}}: {{statisticsTracks.valid}}</span>
+                    <span>{{'valids' | translate}}: {{statisticsTracks.valid}} </span>
                 </mat-grid-tile>
                 <mat-grid-tile [colspan]="1">
                     <span>{{'invalids' | translate}}: {{statisticsTracks.invalid}}</span>
                 </mat-grid-tile>
                 <mat-grid-tile [colspan]="1">
-                    <span>{{'validWithReserve' | translate}}: {{statisticsTracks.pending}}</span>
+                    <span>{{'pending' | translate}}: {{statisticsTracks.pending}}</span>
                 </mat-grid-tile>
             </mat-grid-list>
             <cdk-virtual-scroll-viewport [tvsItemSize]="94" headerHeight="5" style="height: 800px;">
@@ -231,9 +232,11 @@
                                     <mat-grid-tile>
                                         <span class="full-width text-ellips">
                                             {{(element.trackedInstance.validationResult.travelValidity==='PENDING'?
-                                            'validWithReserve': element.trackedInstance.validationResult.travelValidity)
-                                            | translate}}
+                                            'pending': element.trackedInstance.validationResult.travelValidity)
+                                            | translate}} 
+                                            <span *ngIf="!!element.trackedInstance.toCheck">{{'validWithReserve' | translate}}</span>
                                         </span>
+                                        
                                     </mat-grid-tile>
                                 </mat-grid-list>
                                 <mat-grid-list cols="1" rowHeight="30px">
@@ -289,8 +292,9 @@
                                                 <span class="bold">
                                                     {{'status' | translate}}:</span> <br />
                                                 <span>
-                                                    {{(statisticsSelectedTrack.validity==='PENDING'? 'validWithReserve':
-                                                    statisticsSelectedTrack.validity) | translate}}
+                                                    {{(statisticsSelectedTrack.validity==='PENDING'? 'pending':
+                                                    statisticsSelectedTrack.validity) | translate}} 
+                                                    <span *ngIf="!!selectedTrack.trackedInstance.toCheck">{{'validWithReserve' | translate}}</span>
                                                 </span>
                                             </span>
                                         </div>
@@ -434,7 +438,8 @@
                                                 <span class="info-title">
                                                     <span class="bold">
                                                         {{'changedValidity' | translate}}:</span> <br />
-                                                    <span>{{ (selectedTrack.trackedInstance.changedValidity==='VALID'?
+                                                        <!-- here if different from null it was modified-->
+                                                    <span>{{ (selectedTrack.trackedInstance.changedValidity?
                                                         'changedValidity' : 'notChangedValidity') | translate}}</span>
                                                 </span>
                                             </div>
