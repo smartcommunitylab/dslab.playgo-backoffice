@@ -116,7 +116,7 @@ export class ValidationTrackComponent implements OnInit {
   dateFromModified = false;
   dateToModified = false;
   resetSearchFieldsComponents = false;
-  SORTING = "startTime, ASC";
+  SORTING = "startTime,desc";
   selectedLanguage: string;
   selectedTerritoryArea: GameArea;
   statisticsTracks: StatisticsTracks = { invalid: 0, valid: 0, pending: 0 };
