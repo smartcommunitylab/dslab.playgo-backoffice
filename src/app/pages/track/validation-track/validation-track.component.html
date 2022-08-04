@@ -1,13 +1,11 @@
 <div class="maring-20">
-    <button style="margin-bottom: 20px;" color="primary" mat-flat-button type="button"
-        (click)="switchTrackToRanking()">{{(showTierFilter? 'tracks' :'ranking') | translate }}</button>
     <mat-card class="card-normal full-dimension" id="search-card" *ngIf="!showTierFilter">
         <mat-card-title>
             {{'tracks' | translate}}
         </mat-card-title>
         <mat-card-content id="content" class="expandable-content">
             <form [formGroup]="validatingForm">
-                <mat-grid-list cols="3" rowHeight="60px" style="margin: 5px;">
+                <mat-grid-list cols="4" rowHeight="60px" style="margin: 5px;">
                     <mat-grid-tile>
                         <mat-form-field appearance="fill" class="full-width margin-form">
                             <mat-label>{{'dateFrom' | translate}}</mat-label>
@@ -33,7 +31,16 @@
                                 (ngModelChange)="resetPageNumber()">
                         </mat-form-field>
                     </mat-grid-tile>
-
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="full-width margin-form">
+                            <mat-label>{{'campaignId' | translate}}</mat-label>
+                            <mat-select id="campaignId" formControlName="campaignId"
+                                (ngModelChange)="resetPageNumber()">
+                                <mat-option *ngFor="let val of listCampaings" [value]="val">{{val | translate}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </mat-grid-tile>
                     <mat-grid-tile>
                         <mat-form-field appearance="fill" class="full-width margin-form">
                             <mat-label>{{'dateTo' | translate}}</mat-label>
@@ -55,24 +62,15 @@
                     </mat-grid-tile>
 
                     <mat-grid-tile>
-                        <mat-form-field appearance="fill" class="full-width margin-form">
+                        <mat-form-field appearance="fill" class="full-width margin-form" >
                             <mat-label>{{'trackId' | translate}}</mat-label>
                             <input matInput id="trackId" formControlName="trackId" (ngModelChange)="resetPageNumber()">
                         </mat-form-field>
                     </mat-grid-tile>
-
                     <mat-grid-tile>
-                        <mat-form-field appearance="fill" class="full-width margin-form">
-                            <mat-label>{{'campaignId' | translate}}</mat-label>
-                            <mat-select id="campaignId" formControlName="campaignId"
-                                (ngModelChange)="resetPageNumber()">
-                                <mat-option *ngFor="let val of listCampaings" [value]="val">{{val | translate}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
+                        <button style="margin-bottom: 20px;" color="primary" mat-flat-button type="button"
+                        (click)="switchTrackToRanking()">{{(!showTierFilter? 'ranking' : 'tracks' ) | translate }}</button>
                     </mat-grid-tile>
-                    <mat-grid-tile></mat-grid-tile>
-                    <mat-grid-tile></mat-grid-tile>
                     <mat-grid-tile [colspan]="2">
                         <div class="search-container">
                             <button class="margin-form" mat-flat-button type="submit" (click)="searchSubmit()"
@@ -105,7 +103,28 @@
         </mat-card-title>
         <mat-card-content id="content" class="expandable-content">
             <form [formGroup]="validatingFormRanking">
-                <mat-grid-list cols="3" rowHeight="60px" style="margin: 5px;">
+                <mat-grid-list cols="4" rowHeight="60px" style="margin: 5px;">
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="full-width margin-form">
+                            <mat-label>{{'dateFrom' | translate}}</mat-label>
+                            <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1"
+                                (ngModelChange)="changeDateFrom()">
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="full-width margin-form">
+                            <mat-select [disabled]="true">
+                            </mat-select>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="full-width margin-form">
+                            <mat-select [disabled]="true">
+                            </mat-select>
+                        </mat-form-field>
+                    </mat-grid-tile>
                     <mat-grid-tile>
                         <mat-form-field appearance="fill" class="full-width margin-form">
                             <mat-label>{{'campaignId' | translate}}</mat-label>
@@ -119,21 +138,28 @@
                     </mat-grid-tile>
                     <mat-grid-tile>
                         <mat-form-field appearance="fill" class="full-width margin-form">
-                            <mat-label>{{'dateFrom' | translate}}</mat-label>
-                            <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1"
-                                (ngModelChange)="changeDateFrom()">
-                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                            <mat-datepicker #picker1></mat-datepicker>
-                        </mat-form-field>
-                    </mat-grid-tile>
-                    <mat-grid-tile>
-                        <mat-form-field appearance="fill" class="full-width margin-form">
                             <mat-label>{{'dateTo' | translate}}</mat-label>
                             <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker"
                                 (ngModelChange)="changeDateTo()">
                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                             <mat-datepicker #picker></mat-datepicker>
                         </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="full-width margin-form">
+                            <mat-select [disabled]="true">
+                            </mat-select>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field appearance="fill" class="full-width margin-form">
+                            <mat-select [disabled]="true">
+                            </mat-select>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <button style="margin-bottom: 20px;" color="primary" mat-flat-button type="button"
+                        (click)="switchTrackToRanking()">{{(!showTierFilter? 'ranking' : 'tracks' ) | translate }}</button>
                     </mat-grid-tile>
                     <mat-grid-tile [colspan]="2">
                         <div class="search-container">
@@ -159,6 +185,7 @@
                     </mat-grid-tile>
                 </mat-grid-list>
             </form>
+            <p class="awarness">{{'selectPlayerToShowTracks' | translate}}</p>
             <cdk-virtual-scroll-viewport [tvsItemSize]="48" headerHeight="5" style="height: 350px;width: 100%;">
                 <table mat-table [dataSource]="dataSourceRankingUsersList" class="full-width">
                     <ng-container matColumnDef="position">
@@ -186,7 +213,7 @@
                         </td>
                     </ng-container>
                     <tr mat-header-row *matHeaderRowDef="displayedColumnsRankingUsers"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumnsRankingUsers;"
+                    <tr mat-row class="cursor-pointer" *matRowDef="let row; columns: displayedColumnsRankingUsers;"
                         (click)="onSelectUserFromRankingList(row)"
                         [ngClass]="{'highlight-table': !!row && !!selectedRankingUser && row.position===selectedRankingUser.position}">
                     </tr>
