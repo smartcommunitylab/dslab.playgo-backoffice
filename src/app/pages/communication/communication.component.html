@@ -74,7 +74,7 @@
                                 *matRowDef="let row; columns: displayedColumns;"></tr>
                         </table>
 
-                        <mat-paginator [pageSizeOptions]="size" showFirstLastButtons [length]="paginatorData.totalElements"
+                        <mat-paginator [pageSizeOptions]="size" showFirstLastButtons [length]="paginator.totalElements"
                         (page)="selectedPageSize($event)">
                         </mat-paginator>
                     </div>

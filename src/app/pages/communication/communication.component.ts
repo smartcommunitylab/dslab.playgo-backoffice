@@ -24,8 +24,7 @@ export class CommunicationComponent implements OnInit {
   size = [50];
   territoryId: string;
   sorting: string = "from,desc";
-  paginator: PageAnnouncement;
-  paginatorData: PageTrackedInstanceClass = new PageTrackedInstanceClass();
+  paginator: PageAnnouncement = {};
   communications: AnnouncementClass[] = [];
   newItem: AnnouncementClass;
   communicationSelected: AnnouncementClass;
@@ -56,8 +55,8 @@ export class CommunicationComponent implements OnInit {
         if(this.listCampaings.length>0){
           this.selectedCampaign = this.listCampaings[0];
         }
-        
         this.getNotificationUsingGet();
+        this.setTableDataInit();
       });
      Object.keys(Announcement.ChannelsEnum).forEach((item)=>{
       this.listComunications.push(Announcement.ChannelsEnum[item]);
@@ -65,7 +64,7 @@ export class CommunicationComponent implements OnInit {
 
   }
 
-  setTableData() {
+  setTableDataInit() {
     this.dataSource = new MatTableDataSource<AnnouncementClass>(
       this.communications
     );
@@ -79,6 +78,15 @@ export class CommunicationComponent implements OnInit {
       }
     };
   }
+
+
+  setTableData() {
+    this.dataSource = new MatTableDataSource<AnnouncementClass>(
+      this.communications
+    );
+  }
+
+
 
   addComunication() {
     const dialogRef = this.dialogCreate.open(CommunicationAddComponent, {
@@ -145,7 +153,7 @@ export class CommunicationComponent implements OnInit {
     if (!!event) {
       const pageIndex = event.pageIndex;
       this.page = pageIndex;
-      this.getNotificationUsingGet();
+      this.getNotificationUsingGetOnPageChange();
     }
   }
 
@@ -154,6 +162,33 @@ export class CommunicationComponent implements OnInit {
   }
 
   getNotificationUsingGet(){
+    this.communicationService
+    .getNotificationsUsingGET({
+      page: this.page,
+      size: this.size[0],
+      sort: this.sorting,
+      territoryId: this.territoryId,
+      campaignId: this.selectedCampaign ===this.translate.instant(VALUE_EMPTY_SELECT_LIST)? undefined : this.selectedCampaign,
+      channels: this.searchString===  VALUE_EMPTY_SELECT_LIST? undefined: this.searchString,
+    })
+    .subscribe(
+      (result) => {
+        console.log(result);
+        this.paginator = result;
+        if (!!result.content) {
+          this.communications = result.content;
+          this.setTableData();
+        }
+      },
+      (error) => {
+        this.communications = [];
+        this.setTableData();
+        console.error("myError: ", error);
+      }
+    );
+  }
+
+  getNotificationUsingGetOnPageChange(){
     this.communicationService
     .getNotificationsUsingGET({
       page: this.page,
@@ -177,6 +212,8 @@ export class CommunicationComponent implements OnInit {
       }
     );
   }
+
+  
 
   translateList(list:any[]):string{
     let result =[];
