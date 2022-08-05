@@ -17,6 +17,7 @@ import { Observable } from "rxjs";
 
 import { ChallengeChoice } from "../model/challengeChoice";
 import { ChallengeConceptInfo } from "../model/challengeConceptInfo";
+import { ChallengeStatsInfo } from "../model/challengeStatsInfo";
 import { Invitation } from "../model/invitation";
 import { Reward } from "../model/reward";
 
@@ -168,16 +169,45 @@ export class ChallengeControllerService {
   }
 
   /**
-   * getChallengables
+   * getChallengeStats
+   *
+   * @param campaignId campaignId
+   * @param playerId playerId
+   * @param dateFrom dateFrom
+   * @param dateTo dateTo
+   */
+  public getChallengeStatsUsingGET(args: {
+    campaignId: string;
+    playerId: string;
+    dateFrom: number;
+    dateTo: number;
+  }): Observable<Array<ChallengeStatsInfo>> {
+    const { campaignId, playerId, dateFrom, dateTo } = args;
+    return this.http.request<Array<ChallengeStatsInfo>>(
+      "get",
+      environment.serverUrl.api + `/playandgo/api/challenge/stats`,
+      {
+        params: removeNullOrUndefined({
+          campaignId,
+          playerId,
+          dateFrom,
+          dateTo,
+        }),
+      }
+    );
+  }
+
+  /**
+   * getChallengeables
    *
    * @param campaignId campaignId
    */
-  public getChallengablesUsingGET(
+  public getChallengeablesUsingGET(
     campaignId: string
   ): Observable<Array<{ [key: string]: string }>> {
     return this.http.request<Array<{ [key: string]: string }>>(
       "get",
-      environment.serverUrl.api + `/playandgo/api/challenge/challengables`,
+      environment.serverUrl.api + `/playandgo/api/challenge/challengeables`,
       {
         params: removeNullOrUndefined({
           campaignId,
