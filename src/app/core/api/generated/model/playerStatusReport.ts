@@ -9,16 +9,15 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { BadgeCollectionConcept } from "./badgeCollectionConcept";
-import { PlayerLevel } from "./playerLevel";
+import { Territory } from "./territory";
+import { TransportStats } from "./transportStats";
 
-export interface PlayerGameStatus {
-  badges?: Array<BadgeCollectionConcept>;
-  campaignId?: string;
-  id?: string;
-  levels?: Array<PlayerLevel>;
-  nickname?: string;
+export interface PlayerStatusReport {
+  activityDays?: number;
+  co2?: number;
   playerId?: string;
-  score?: number;
-  updateTime?: number;
+  registrationDate?: number;
+  territory?: Territory;
+  transportStatsList?: Array<TransportStats>;
+  travels?: number;
 }

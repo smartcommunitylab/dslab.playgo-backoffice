@@ -23,6 +23,7 @@ export class CommunicationComponent implements OnInit {
   displayedColumns = ["title", "when", "channel"];
   size = [50];
   territoryId: string;
+  sorting: string = "from,desc";
   paginator: PageAnnouncement;
   paginatorData: PageTrackedInstanceClass = new PageTrackedInstanceClass();
   communications: AnnouncementClass[] = [];
@@ -48,13 +49,14 @@ export class CommunicationComponent implements OnInit {
     this.campaignService
       .getCampaignsUsingGET({ territoryId: this.territoryId })
       .subscribe((campaigns) => {
+        this.listCampaings.push(this.translate.instant(VALUE_EMPTY_SELECT_LIST));
         campaigns.forEach((item) => {
           this.listCampaings.push(item.campaignId);
         });
         if(this.listCampaings.length>0){
           this.selectedCampaign = this.listCampaings[0];
         }
-        this.listCampaings.push(this.translate.instant(VALUE_EMPTY_SELECT_LIST));
+        
         this.getNotificationUsingGet();
       });
      Object.keys(Announcement.ChannelsEnum).forEach((item)=>{
@@ -91,7 +93,9 @@ export class CommunicationComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result: AnnouncementClass) => {
       if (result !== undefined) {
         this.newItem = result;
-        this.communications.push(result);
+        const p = this.communications
+        this.communications = [result];
+        p.forEach(item=>{this.communications.push(item)});
         this.setTableData();
       }
     });
@@ -154,6 +158,7 @@ export class CommunicationComponent implements OnInit {
     .getNotificationsUsingGET({
       page: this.page,
       size: this.size[0],
+      sort: this.sorting,
       territoryId: this.territoryId,
       campaignId: this.selectedCampaign ===this.translate.instant(VALUE_EMPTY_SELECT_LIST)? undefined : this.selectedCampaign,
       channels: this.searchString===  VALUE_EMPTY_SELECT_LIST? undefined: this.searchString,
