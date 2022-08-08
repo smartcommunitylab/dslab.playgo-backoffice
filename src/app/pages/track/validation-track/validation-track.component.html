@@ -185,40 +185,45 @@
                     </mat-grid-tile>
                 </mat-grid-list>
             </form>
-            <p class="awarness">{{'selectPlayerToShowTracks' | translate}}</p>
-            <cdk-virtual-scroll-viewport [tvsItemSize]="48" headerHeight="5" style="height: 350px;width: 100%;">
-                <table mat-table [dataSource]="dataSourceRankingUsersList" class="full-width">
-                    <ng-container matColumnDef="position">
-                        <th mat-header-cell *matHeaderCellDef>
-                            {{'position' | translate}}
-                        </th>
-                        <td class="margin-20" mat-cell *matCellDef="let element">
-                            {{element.position}}
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="nickname">
-                        <th mat-header-cell *matHeaderCellDef>
-                            {{'nickname' | translate}}
-                        </th>
-                        <td class="margin-20" mat-cell *matCellDef="let element">
-                            {{element.nickname}}
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="playerId">
-                        <th mat-header-cell *matHeaderCellDef>
-                            {{'playerId' | translate}}
-                        </th>
-                        <td class="margin-20" mat-cell *matCellDef="let element">
-                            {{element.playerId}}
-                        </td>
-                    </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="displayedColumnsRankingUsers"></tr>
-                    <tr mat-row class="cursor-pointer" *matRowDef="let row; columns: displayedColumnsRankingUsers;"
-                        (click)="onSelectUserFromRankingList(row)"
-                        [ngClass]="{'highlight-table': !!row && !!selectedRankingUser && row.position===selectedRankingUser.position}">
-                    </tr>
-                </table>
-            </cdk-virtual-scroll-viewport>
+            <div *ngIf="rankingUsersList.length >0">
+                <p class="awarness">{{'selectPlayerToShowTracks' | translate}}</p>
+                <cdk-virtual-scroll-viewport [tvsItemSize]="48" headerHeight="5" style="height: 350px;width: 100%;">
+                    <table mat-table [dataSource]="dataSourceRankingUsersList" class="full-width">
+                        <ng-container matColumnDef="position">
+                            <th mat-header-cell *matHeaderCellDef>
+                                {{'position' | translate}}
+                            </th>
+                            <td class="margin-20" mat-cell *matCellDef="let element">
+                                {{element.position}}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="nickname">
+                            <th mat-header-cell *matHeaderCellDef>
+                                {{'nickname' | translate}}
+                            </th>
+                            <td class="margin-20" mat-cell *matCellDef="let element">
+                                {{element.nickname}}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="playerId">
+                            <th mat-header-cell *matHeaderCellDef>
+                                {{'playerId' | translate}}
+                            </th>
+                            <td class="margin-20" mat-cell *matCellDef="let element">
+                                {{element.playerId}}
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsRankingUsers"></tr>
+                        <tr mat-row class="cursor-pointer" *matRowDef="let row; columns: displayedColumnsRankingUsers;"
+                            (click)="onSelectUserFromRankingList(row)"
+                            [ngClass]="{'highlight-table': !!row && !!selectedRankingUser && row.position===selectedRankingUser.position}">
+                        </tr>
+                    </table>
+                </cdk-virtual-scroll-viewport>
+            </div>
+            <p *ngIf="rankingUsersList.length ===0" class="awarness">
+                {{'noUserRankingFound' | translate}}
+            </p>
         </mat-card-content>
     </mat-card>
     <div class="bottom-div" style="margin-top: 20px;">

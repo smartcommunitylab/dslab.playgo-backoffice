@@ -273,6 +273,8 @@
   "ranking":"Ranking",
   "validWithReserve": "Valid (with reserve)",
   "selectPlayerToShowTracks":"Select a player to show the tracks",
+  "noUserRankingFound":"It was not found any ranking for the selected fields",
+  "numberTrips":"Trips number",
   "":"",
   "":"",
   "":"",
