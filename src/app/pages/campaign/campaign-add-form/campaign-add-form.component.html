@@ -86,19 +86,19 @@
                         </mat-grid-tile>
                         <mat-grid-tile>
                             <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
-                                <mat-label>{{'dailyLimitString' | translate}}</mat-label>
+                                <mat-label>{{'dailyLimitString' | translate}} <span *ngIf="mean==='boat' || mean==='car'">({{'numberTrips' | translate}})</span><span *ngIf="mean!=='boat' && mean!=='car'">(km)</span></mat-label>
                                 <input [ngModelOptions]="{standalone: true}" type="number" matInput id="{{'dailyLimit'+mean}}" name="{{'dailyLimit'+mean}}"  [(ngModel)]="selectedLimits[mean].dailyLimit">
                             </mat-form-field>
                         </mat-grid-tile>
                         <mat-grid-tile>
                             <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
-                                <mat-label>{{'weeklyLimitString' | translate}}</mat-label>
+                                <mat-label>{{'weeklyLimitString' | translate}} <span *ngIf="mean==='boat' || mean==='car'">({{'numberTrips' | translate}})</span><span *ngIf="mean!=='boat' && mean!=='car'">(km)</span></mat-label>
                                 <input [ngModelOptions]="{standalone: true}" type="number" matInput id="{{'weeklyLimit'+mean}}" name="{{'weeklyLimit'+mean}}" [(ngModel)]="selectedLimits[mean].weeklyLimit">
                             </mat-form-field>
                         </mat-grid-tile>
                         <mat-grid-tile>
                             <mat-form-field appearance="fill" class="grid-tile-limit">
-                                <mat-label>{{'monthlyLimitString' | translate}}</mat-label>
+                                <mat-label>{{'monthlyLimitString' | translate}} <span *ngIf="mean==='boat' || mean==='car'">({{'numberTrips' | translate}})</span><span *ngIf="mean!=='boat' && mean!=='car'">(km)</span></mat-label>
                                 <input [ngModelOptions]="{standalone: true}" type="number" matInput id="{{'monthlyLimit'+mean}}" name="{{'monthlyLimit'+mean}}" [(ngModel)]="selectedLimits[mean].monthlyLimit">
                             </mat-form-field>
                         </mat-grid-tile>
@@ -316,19 +316,19 @@
                         </mat-grid-tile>
                         <mat-grid-tile>
                             <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
-                                <mat-label>{{'dailyLimitString' | translate}}</mat-label>
+                                <mat-label>{{'dailyLimitString' | translate}} <span *ngIf="mean==='boat' || mean==='car'">({{'numberTrips' | translate}})</span><span *ngIf="mean!=='boat' && mean!=='car'">(km)</span></mat-label>
                                 <input [ngModelOptions]="{standalone: true}" type="number" matInput id="{{'dailyLimit'+mean}}" name="{{'dailyLimit'+mean}}"  [(ngModel)]="selectedLimits[mean].dailyLimit">
                             </mat-form-field>
                         </mat-grid-tile>
                         <mat-grid-tile>
                             <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
-                                <mat-label>{{'weeklyLimitString' | translate}}</mat-label>
+                                <mat-label>{{'weeklyLimitString' | translate}} <span *ngIf="mean==='boat' || mean==='car'">({{'numberTrips' | translate}})</span><span *ngIf="mean!=='boat' && mean!=='car'">(km)</span></mat-label>
                                 <input [ngModelOptions]="{standalone: true}" type="number" matInput id="{{'weeklyLimit'+mean}}" name="{{'weeklyLimit'+mean}}" [(ngModel)]="selectedLimits[mean].weeklyLimit">
                             </mat-form-field>
                         </mat-grid-tile>
                         <mat-grid-tile>
                             <mat-form-field appearance="fill" class="grid-tile-limit">
-                                <mat-label>{{'monthlyLimitString' | translate}}</mat-label>
+                                <mat-label>{{'monthlyLimitString' | translate}} <span *ngIf="mean==='boat' || mean==='car'">({{'numberTrips' | translate}})</span><span *ngIf="mean!=='boat' && mean!=='car'">(km)</span></mat-label>
                                 <input [ngModelOptions]="{standalone: true}" type="number" matInput id="{{'monthlyLimit'+mean}}" name="{{'monthlyLimit'+mean}}" [(ngModel)]="selectedLimits[mean].monthlyLimit">
                             </mat-form-field>
                         </mat-grid-tile>

@@ -853,7 +853,7 @@ export class SelectedLimits{
 }
 
 export class LimitsClass{
-  dailyLimit?: number=0;
-  weeklyLimit?: number=0;
-  monthlyLimit?: number=0;
+  dailyLimit?: number;
+  weeklyLimit?: number;
+  monthlyLimit?: number;
 }
