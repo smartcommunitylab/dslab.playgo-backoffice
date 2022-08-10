@@ -351,6 +351,7 @@ export class ValidationTrackComponent implements OnInit {
   }
 
   searchSubmit() {
+    this.selectedRowIndex = undefined;
     if (this.validatingForm.valid) {
       if (this.resetSearchFieldsComponents) {
         this.allowResetOnsearch();
