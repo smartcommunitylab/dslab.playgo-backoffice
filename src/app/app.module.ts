@@ -19,6 +19,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { SideNavComponent } from './shared/components/side-nav/side-nav';
 import { AccountDialogComponent } from './shared/components/account-dialog/account-dialog.component';
 import { SpinnerInterceptor } from './core/loader/spinner.interceptor';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { getPaginatorIntl } from './shared/table-paginator-i18n';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -66,8 +68,11 @@ export function init_app(appLoadService: AppLoadService) {
       useClass: SpinnerInterceptor,
       multi: true
     },
+    { provide: MatPaginatorIntl, useValue: getPaginatorIntl() }
   ],
   bootstrap: [AppComponent],
   exports: []
 })
 export class AppModule { }
+
+
