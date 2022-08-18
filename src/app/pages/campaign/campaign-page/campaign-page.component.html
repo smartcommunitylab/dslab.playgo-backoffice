@@ -202,8 +202,8 @@
                         <drop-down-card-info [title]="'description' | translate"
                             [content]="selectedCampaign.description[languageDefault]">
                         </drop-down-card-info>
-                        <span *ngFor="let detail of selectedCampaign.details[languageDefault]">
-                            <drop-down-card-info [title]="detail.type | translate" [content]="detail.content">
+                        <span *ngFor="let detail of selectedCampaign.details[languageDefault];let i=index">
+                            <drop-down-card-info [title]="(detail.type? detail.type : selectedCampaign.details[defaulLanguageConst][i].type) | translate" [content]="detail.content">
                             </drop-down-card-info>
                         </span>
                         <drop-down-card-info [title]="'managers' | translate"

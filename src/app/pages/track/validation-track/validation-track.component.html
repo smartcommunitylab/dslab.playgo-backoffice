@@ -501,7 +501,7 @@
                                 <ul *ngIf="selectedTrack.campaigns.length>0">
                                     <li *ngFor="let campaign of selectedTrack.campaigns" class="light-background">
                                         <h3 style="margin-bottom: 0px;">{{campaign.campaignName[selectedLanguage]}} -
-                                            {{campaign.campaignId}} </h3>
+                                            {{campaign.campaignId}}</h3>
                                         <p style="font-style:italic">{{campaign.type | translate}}</p>
                                         <p>{{(campaign.valid? 'valid' : 'invalid') | translate}},
                                             <span *ngIf="campaign.type==='school' || campaign.type==='city'">
