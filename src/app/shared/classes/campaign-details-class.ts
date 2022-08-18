@@ -11,6 +11,6 @@ export class CampaignDetailClass implements CampaignDetail {
 export class DetailsForAddModifyModule{
     collapsed:boolean;
     created:boolean;
-    detail: CampaignDetailClass;
-    form : { [key: string]: FormGroup};
+    languageDataForm : { [key: string]: FormGroup};
+    staticTypeForm: FormGroup;
 }

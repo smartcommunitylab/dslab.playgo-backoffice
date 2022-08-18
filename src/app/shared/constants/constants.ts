@@ -43,3 +43,4 @@ export const DEFAULT_SURVEY_KEY = 'defaultSurvey';
 export const DAILY_LIMIT = 'dailyLimit';
 export const WEEKLY_LIMIT = 'weeklyLimit';
 export const MONTHLY_LIMIT = 'monthlyLimit';
+export const WEEB_HOOK_EVENT = ['register','unregister','validTrack'];

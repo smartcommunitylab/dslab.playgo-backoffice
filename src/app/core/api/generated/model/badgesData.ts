@@ -10,9 +10,11 @@
  * Do not edit the class manually.
  */
 
-export interface ChallengeStatsInfo {
-  completed?: number;
-  failed?: number;
-  period?: string;
-  type?: string;
+export interface BadgesData {
+  imageByte?: string;
+  imageName?: string;
+  imageType?: string;
+  path?: string;
+  text?: { [key: string]: string };
+  textId?: string;
 }

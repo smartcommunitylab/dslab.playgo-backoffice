@@ -74,7 +74,8 @@
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'means' | translate}}</mat-label>
-                        <mat-select id="means" formControlName="means" multiple (selectionChange)="chengeSelectedMeans($event)">
+                        <mat-select id="means" formControlName="means" multiple
+                            (selectionChange)="chengeSelectedMeans($event)">
                             <mat-option *ngFor="let mean of means" [value]="mean">{{mean |translate}}</mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -86,24 +87,63 @@
                         </mat-grid-tile>
                         <mat-grid-tile>
                             <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
-                                <mat-label>{{'dailyLimitString' | translate}} <span *ngIf="mean==='boat' || mean==='car'">({{'numberTrips' | translate}})</span><span *ngIf="mean!=='boat' && mean!=='car'">(km)</span></mat-label>
-                                <input [ngModelOptions]="{standalone: true}" type="number" matInput id="{{'dailyLimit'+mean}}" name="{{'dailyLimit'+mean}}"  [(ngModel)]="selectedLimits[mean].dailyLimit">
+                                <mat-label>{{'dailyLimitString' | translate}} <span
+                                        *ngIf="mean==='boat' || mean==='car'">({{'numberTrips' |
+                                        translate}})</span><span *ngIf="mean!=='boat' && mean!=='car'">(km)</span>
+                                </mat-label>
+                                <input [ngModelOptions]="{standalone: true}" type="number" matInput
+                                    id="{{'dailyLimit'+mean}}" name="{{'dailyLimit'+mean}}"
+                                    [(ngModel)]="selectedLimits[mean].dailyLimit">
                             </mat-form-field>
                         </mat-grid-tile>
                         <mat-grid-tile>
                             <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
-                                <mat-label>{{'weeklyLimitString' | translate}} <span *ngIf="mean==='boat' || mean==='car'">({{'numberTrips' | translate}})</span><span *ngIf="mean!=='boat' && mean!=='car'">(km)</span></mat-label>
-                                <input [ngModelOptions]="{standalone: true}" type="number" matInput id="{{'weeklyLimit'+mean}}" name="{{'weeklyLimit'+mean}}" [(ngModel)]="selectedLimits[mean].weeklyLimit">
+                                <mat-label>{{'weeklyLimitString' | translate}} <span
+                                        *ngIf="mean==='boat' || mean==='car'">({{'numberTrips' |
+                                        translate}})</span><span *ngIf="mean!=='boat' && mean!=='car'">(km)</span>
+                                </mat-label>
+                                <input [ngModelOptions]="{standalone: true}" type="number" matInput
+                                    id="{{'weeklyLimit'+mean}}" name="{{'weeklyLimit'+mean}}"
+                                    [(ngModel)]="selectedLimits[mean].weeklyLimit">
                             </mat-form-field>
                         </mat-grid-tile>
                         <mat-grid-tile>
                             <mat-form-field appearance="fill" class="grid-tile-limit">
-                                <mat-label>{{'monthlyLimitString' | translate}} <span *ngIf="mean==='boat' || mean==='car'">({{'numberTrips' | translate}})</span><span *ngIf="mean!=='boat' && mean!=='car'">(km)</span></mat-label>
-                                <input [ngModelOptions]="{standalone: true}" type="number" matInput id="{{'monthlyLimit'+mean}}" name="{{'monthlyLimit'+mean}}" [(ngModel)]="selectedLimits[mean].monthlyLimit">
+                                <mat-label>{{'monthlyLimitString' | translate}} <span
+                                        *ngIf="mean==='boat' || mean==='car'">({{'numberTrips' |
+                                        translate}})</span><span *ngIf="mean!=='boat' && mean!=='car'">(km)</span>
+                                </mat-label>
+                                <input [ngModelOptions]="{standalone: true}" type="number" matInput
+                                    id="{{'monthlyLimit'+mean}}" name="{{'monthlyLimit'+mean}}"
+                                    [(ngModel)]="selectedLimits[mean].monthlyLimit">
                             </mat-form-field>
                         </mat-grid-tile>
                     </div>
                 </mat-grid-list>
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-half-left">
+                        <mat-label>{{'webHookEvents' | translate}}</mat-label>
+                        <mat-select id="webHookEvents" formControlName="webHookEvents" multiple>
+                            <mat-option *ngFor="let event of weebHooksEventsList" [value]="event">{{event |translate}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div
+                    *ngIf="!!validatingForm.get('webHookEvents').value && validatingForm.get('webHookEvents').value.length>0">
+                    <div class="in-line-forms">
+                        <mat-form-field appearance="fill" class="input-half-left">
+                            <mat-label>{{'webHookId' | translate}}
+                            </mat-label>
+                            <input matInput formControlName="webHookId" type="text" />
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class="input-half-left">
+                            <mat-label>{{'endPointCongWebHook' | translate}}
+                            </mat-label>
+                            <input matInput formControlName="endPointCongWebHook" type="text" />
+                        </mat-form-field>
+                    </div>
+                </div>
                 <div class="in-line-forms"
                     *ngIf="!!validatingForm.get('type').value && validatingForm.get('type').value!=='company'">
                     <mat-form-field appearance="fill" class="input-half-left">
@@ -159,7 +199,7 @@
                                     </mat-card-title>
                                     <mat-card-content [@bodyExpansion]="detail.collapsed ? 'collapsed': 'expanded' "
                                         class="expandable-content">
-                                        <form [formGroup]="detail.form[languageSelected]">
+                                        <form [formGroup]="detail.languageDataForm[languageSelected]">
                                             <div class="in-line-forms">
                                                 <mat-form-field appearance="fill" class="new-details-input">
                                                     <mat-label>{{'nameDetail' | translate}} - {{l | translate}}
@@ -167,7 +207,9 @@
                                                     <input matInput formControlName="name" type="text" />
                                                 </mat-form-field>
                                             </div>
-                                            <div class="in-line-forms" *ngIf="languageSelected===languageDefault">
+                                        </form>
+                                        <form [formGroup]="detail.staticTypeForm">
+                                            <div class="in-line-forms">
                                                 <mat-form-field appearance="fill" class="new-details-input">
                                                     <mat-label>{{'type' | translate}}</mat-label>
                                                     <mat-select id="type" formControlName="type">
@@ -179,11 +221,12 @@
                                                 </mat-form-field>
                                                 <mat-form-field appearance="fill" class="new-details-input">
                                                     <mat-label>{{'extraUrl' | translate}}</mat-label>
-                                                    <input matInput formControlName="url" type="text" />
+                                                    <input matInput formControlName="extUrl" type="text" />
                                                 </mat-form-field>
                                             </div>
                                         </form>
-                                        <rich-text-editor [control]="detail.form[languageSelected].get('content')">
+                                        <rich-text-editor
+                                            [control]="detail.languageDataForm[languageSelected].get('content')">
                                         </rich-text-editor>
                                     </mat-card-content>
                                     <button type="button" mat-flat-button class="delete-detail-button"
@@ -304,7 +347,8 @@
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'means' | translate}}</mat-label>
-                        <mat-select id="means" formControlName="means" multiple (selectionChange)="chengeSelectedMeans($event)">
+                        <mat-select id="means" formControlName="means" multiple
+                            (selectionChange)="chengeSelectedMeans($event)">
                             <mat-option *ngFor="let mean of means" [value]="mean">{{mean |translate}}</mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -316,24 +360,63 @@
                         </mat-grid-tile>
                         <mat-grid-tile>
                             <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
-                                <mat-label>{{'dailyLimitString' | translate}} <span *ngIf="mean==='boat' || mean==='car'">({{'numberTrips' | translate}})</span><span *ngIf="mean!=='boat' && mean!=='car'">(km)</span></mat-label>
-                                <input [ngModelOptions]="{standalone: true}" type="number" matInput id="{{'dailyLimit'+mean}}" name="{{'dailyLimit'+mean}}"  [(ngModel)]="selectedLimits[mean].dailyLimit">
+                                <mat-label>{{'dailyLimitString' | translate}} <span
+                                        *ngIf="mean==='boat' || mean==='car'">({{'numberTrips' |
+                                        translate}})</span><span *ngIf="mean!=='boat' && mean!=='car'">(km)</span>
+                                </mat-label>
+                                <input [ngModelOptions]="{standalone: true}" type="number" matInput
+                                    id="{{'dailyLimit'+mean}}" name="{{'dailyLimit'+mean}}"
+                                    [(ngModel)]="selectedLimits[mean].dailyLimit">
                             </mat-form-field>
                         </mat-grid-tile>
                         <mat-grid-tile>
                             <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
-                                <mat-label>{{'weeklyLimitString' | translate}} <span *ngIf="mean==='boat' || mean==='car'">({{'numberTrips' | translate}})</span><span *ngIf="mean!=='boat' && mean!=='car'">(km)</span></mat-label>
-                                <input [ngModelOptions]="{standalone: true}" type="number" matInput id="{{'weeklyLimit'+mean}}" name="{{'weeklyLimit'+mean}}" [(ngModel)]="selectedLimits[mean].weeklyLimit">
+                                <mat-label>{{'weeklyLimitString' | translate}} <span
+                                        *ngIf="mean==='boat' || mean==='car'">({{'numberTrips' |
+                                        translate}})</span><span *ngIf="mean!=='boat' && mean!=='car'">(km)</span>
+                                </mat-label>
+                                <input [ngModelOptions]="{standalone: true}" type="number" matInput
+                                    id="{{'weeklyLimit'+mean}}" name="{{'weeklyLimit'+mean}}"
+                                    [(ngModel)]="selectedLimits[mean].weeklyLimit">
                             </mat-form-field>
                         </mat-grid-tile>
                         <mat-grid-tile>
                             <mat-form-field appearance="fill" class="grid-tile-limit">
-                                <mat-label>{{'monthlyLimitString' | translate}} <span *ngIf="mean==='boat' || mean==='car'">({{'numberTrips' | translate}})</span><span *ngIf="mean!=='boat' && mean!=='car'">(km)</span></mat-label>
-                                <input [ngModelOptions]="{standalone: true}" type="number" matInput id="{{'monthlyLimit'+mean}}" name="{{'monthlyLimit'+mean}}" [(ngModel)]="selectedLimits[mean].monthlyLimit">
+                                <mat-label>{{'monthlyLimitString' | translate}} <span
+                                        *ngIf="mean==='boat' || mean==='car'">({{'numberTrips' |
+                                        translate}})</span><span *ngIf="mean!=='boat' && mean!=='car'">(km)</span>
+                                </mat-label>
+                                <input [ngModelOptions]="{standalone: true}" type="number" matInput
+                                    id="{{'monthlyLimit'+mean}}" name="{{'monthlyLimit'+mean}}"
+                                    [(ngModel)]="selectedLimits[mean].monthlyLimit">
                             </mat-form-field>
                         </mat-grid-tile>
                     </div>
                 </mat-grid-list>
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-half-left">
+                        <mat-label>{{'webHookEvents' | translate}}</mat-label>
+                        <mat-select id="webHookEvents" formControlName="webHookEvents" multiple>
+                            <mat-option *ngFor="let event of weebHooksEventsList" [value]="event">{{event |translate}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div
+                    *ngIf="!!validatingForm.get('webHookEvents').value && validatingForm.get('webHookEvents').value.length>0">
+                    <div class="in-line-forms">
+                        <mat-form-field appearance="fill" class="input-half-left">
+                            <mat-label>{{'webHookId' | translate}}
+                            </mat-label>
+                            <input matInput formControlName="webHookId" type="text" />
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class="input-half-left">
+                            <mat-label>{{'endPointCongWebHook' | translate}}
+                            </mat-label>
+                            <input matInput formControlName="endPointCongWebHook" type="text" />
+                        </mat-form-field>
+                    </div>
+                </div>
                 <div class="in-line-forms"
                     *ngIf="!!validatingForm.get('type').value && validatingForm.get('type').value!=='company'">
                     <mat-form-field appearance="fill" class="input-half-left">
@@ -367,10 +450,10 @@
                             <div *ngFor="let detail of details">
                                 <mat-card class="card-expandable card-normal" style="margin-bottom: 15px;">
                                     <mat-card-title class="cursor-pointer" (click)="toggleDetail(detail)">
-                                        {{ (detail.form[languageSelected].get('name') &&
-                                        detail.form[languageSelected].get('name').value?
-                                        detail.form[languageSelected].get('name').value +' (' +
-                                        (detail.form[languageSelected].get('type').value | translate) + ')' :
+                                        {{ (detail.languageDataForm[languageSelected].get('name') &&
+                                        detail.languageDataForm[languageSelected].get('name').value?
+                                        detail.languageDataForm[languageSelected].get('name').value +' (' +
+                                        (detail.staticTypeForm.get('type').value | translate) + ')' :
                                         'newDetail')}} - {{l | translate}}
                                         <mat-card-actions class="right-button top-button">
                                             <mat-icon *ngIf="detail.collapsed">
@@ -387,7 +470,7 @@
                                     </mat-card-title>
                                     <mat-card-content [@bodyExpansion]="detail.collapsed ? 'collapsed': 'expanded' "
                                         class="expandable-content">
-                                        <form [formGroup]="detail.form[languageSelected]">
+                                        <form [formGroup]="detail.languageDataForm[languageSelected]">
                                             <div class="in-line-forms">
                                                 <mat-form-field appearance="fill" class="new-details-input">
                                                     <mat-label>{{'nameDetail' | translate}} - {{l | translate}}
@@ -395,7 +478,9 @@
                                                     <input matInput formControlName="name" type="text" />
                                                 </mat-form-field>
                                             </div>
-                                            <div class="in-line-forms" *ngIf="languageSelected===languageDefault">
+                                        </form>
+                                        <form [formGroup]="detail.staticTypeForm">
+                                            <div class="in-line-forms">
                                                 <mat-form-field appearance="fill" class="new-details-input">
                                                     <mat-label>{{'type' | translate}}</mat-label>
                                                     <mat-select id="type" formControlName="type">
@@ -407,11 +492,12 @@
                                                 </mat-form-field>
                                                 <mat-form-field appearance="fill" class="new-details-input">
                                                     <mat-label>{{'extraUrl' | translate}}</mat-label>
-                                                    <input matInput formControlName="url" type="text" />
+                                                    <input matInput formControlName="extUrl" type="text" />
                                                 </mat-form-field>
                                             </div>
                                         </form>
-                                        <rich-text-editor [control]="detail.form[languageSelected].get('content')">
+                                        <rich-text-editor
+                                            [control]="detail.languageDataForm[languageSelected].get('content')">
                                         </rich-text-editor>
                                     </mat-card-content>
                                     <button type="button" mat-flat-button class="delete-detail-button"
