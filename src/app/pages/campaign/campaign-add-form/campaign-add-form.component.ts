@@ -5,7 +5,11 @@ import {
   FormGroup,
   Validators,
 } from "@angular/forms";
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from "@angular/material/dialog";
 import { MapPoint } from "src/app/shared/classes/map-point";
 import { TerritoryClass } from "src/app/shared/classes/territory-class";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -25,6 +29,7 @@ import {
   PREFIX_SRC_IMG,
   TERRITORY_ID_LOCAL_STORAGE_KEY,
   TYPE_CAMPAIGN,
+  WEEB_HOOK_EVENT,
   WEEKLY_LIMIT,
 } from "src/app/shared/constants/constants";
 import {
@@ -54,6 +59,7 @@ import { Image } from "src/app/core/api/generated/model/image";
 import { DEFAULT_LANGUAGE, TranslateService } from "@ngx-translate/core";
 import { ConfirmCancelComponent } from "./confirm-cancel/confirm-cancel.component";
 import { SnackbarSavedComponent } from "src/app/shared/components/snackbar-saved/snackbar-saved.component";
+import { CampaignWebhook } from "src/app/core/api/generated/model/campaignWebhook";
 
 const moment = _moment;
 
@@ -84,7 +90,7 @@ const moment = _moment;
 export class CampaignAddFormComponent implements OnInit {
   @Input() type: string; // can be add or modify
   quillContent = "";
-  meansSelected: string[]=[];
+  meansSelected: string[] = [];
   selectedLimits: SelectedLimits;
   validatingForm: FormGroup;
   campaignCreated: CampaignClass;
@@ -111,6 +117,7 @@ export class CampaignAddFormComponent implements OnInit {
   languageDefault: any;
   languagesSupported = CONST_LANGUAGES_SUPPORTED;
   languageSelected: string;
+  weebHooksEventsList: string[]=[];
 
   @Input() set formTerritory(value: CampaignClass) {
     this.campaignUpdated = value;
@@ -148,6 +155,10 @@ export class CampaignAddFormComponent implements OnInit {
     this.languageDefault = this.translate.currentLang;
     this.campaignCreated = new CampaignClass();
     this.campaignCreated.validationData = new ValidationData();
+    const keysWebHook = Object.keys(CampaignWebhook.EventsEnum);
+    keysWebHook.forEach(item=>{
+      this.weebHooksEventsList.push(CampaignWebhook.EventsEnum[item]);
+    });
     this.initializaValidatingForm();
     this.territoryService
       .getTerritoriesUsingGET()
@@ -159,16 +170,16 @@ export class CampaignAddFormComponent implements OnInit {
       .subscribe((result) => {
         this.territorySelected = result;
         this.means = this.territorySelected.territoryData.means;
-        if(this.type ==='add'){
+        if (this.type === "add") {
           this.selectedLimits = new SelectedLimits();
-          for(let mean of this.means){
+          for (let mean of this.means) {
             this.selectedLimits[mean] = new LimitsClass();
           }
-        }else{
+        } else {
           this.means = this.campaignUpdated.validationData.means;
         }
       });
-      this.initDetailsType();
+    this.initDetailsType();
   }
 
   initializaValidatingForm() {
@@ -187,6 +198,9 @@ export class CampaignAddFormComponent implements OnInit {
         type: new FormControl("", [Validators.required]),
         gameId: new FormControl(""),
         startDayOfWeek: new FormControl("", [Validators.pattern("^[1-7]")]),
+        webHookEvents: new FormControl(""),
+        endPointCongWebHook: new FormControl(""),
+        webHookId: new FormControl(""),
       });
       this.validatingForm.patchValue({
         territoryId: localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY),
@@ -202,7 +216,10 @@ export class CampaignAddFormComponent implements OnInit {
         dateTo: new FormControl("", [Validators.required]),
         type: new FormControl("", [Validators.required]),
         gameId: new FormControl(""),
-        startDayOfWeek: new FormControl("")
+        startDayOfWeek: new FormControl(""),
+        webHookEvents: new FormControl(""),
+        endPointCongWebHook: new FormControl(""),
+        webHookId: new FormControl(""),
       });
       this.validatingForm.patchValue({
         means: this.campaignUpdated.validationData.means,
@@ -211,15 +228,24 @@ export class CampaignAddFormComponent implements OnInit {
         dateTo: moment(this.campaignUpdated.dateTo), //moment(this.campaignUpdated.dateTo, "YYYY-MM-DD"),
         type: this.campaignUpdated.type,
         gameId: this.campaignUpdated.gameId,
-        startDayOfWeek: this.campaignUpdated.startDayOfWeek
+        startDayOfWeek: this.campaignUpdated.startDayOfWeek,
       });
       this.meansSelected = this.campaignUpdated.validationData.means;
       this.selectedLimits = this.campaignUpdated.specificData;
+      this.campaignService.getWebhookUsingGET(this.campaignUpdated.campaignId).subscribe(res=>{
+        if(!!res){
+          this.validatingForm.patchValue({
+            webHookEvents: res.events,
+            endPointCongWebHook: res.endpoint,
+            webHookId: res.id,
+          });
+        }
+      });
     }
     // language common for add and update
     this.addFormControlMultilanguage();
-    this.languageSelected = LANGUAGE_DEFAULT;
-    this.validatingForm.patchValue({ languages: LANGUAGE_DEFAULT });
+    this.languageSelected = this.languageDefault;
+    this.validatingForm.patchValue({ languages: this.languageDefault });
   }
 
   public myError = (controlName: string, errorName: string) => {
@@ -240,28 +266,36 @@ export class CampaignAddFormComponent implements OnInit {
     return value;
   }
 
-  chengeSelectedMeans(event:any){
-    if(this.type!=='add'){
-      if(this.meansSelected.length>this.validatingForm.get('means').value.length){
+  chengeSelectedMeans(event: any) {
+    if (this.type !== "add") {
+      if (
+        this.meansSelected.length >
+        this.validatingForm.get("means").value.length
+      ) {
         // a mean was deleted
-        const found = this.findDiffInArray(this.validatingForm.get('means').value,this.meansSelected);
+        const found = this.findDiffInArray(
+          this.validatingForm.get("means").value,
+          this.meansSelected
+        );
         this.selectedLimits[found] = new LimitsClass();
       }
     }
-    this.meansSelected = this.validatingForm.get('means')?  this.validatingForm.get('means').value : [];
+    this.meansSelected = this.validatingForm.get("means")
+      ? this.validatingForm.get("means").value
+      : [];
   }
 
-  findDiffInArray(shortArr: any[],longArr: any[]): any{
+  findDiffInArray(shortArr: any[], longArr: any[]): any {
     var result;
     var found = true;
-    for(let i=0;i<longArr.length;i++){
-      var checkThisValue =false;
-      for(let j=0;j<shortArr.length;j++){
-        if(shortArr[j]===longArr[i]){
-          checkThisValue= true;
+    for (let i = 0; i < longArr.length; i++) {
+      var checkThisValue = false;
+      for (let j = 0; j < shortArr.length; j++) {
+        if (shortArr[j] === longArr[i]) {
+          checkThisValue = true;
         }
       }
-      if(!checkThisValue){
+      if (!checkThisValue) {
         //if not found in short array it's the result
         result = longArr[i];
         break;
@@ -275,11 +309,7 @@ export class CampaignAddFormComponent implements OnInit {
     if (this.validatingForm.valid) {
       const resValDetails = this.checkValidityDetails();
       if (!resValDetails["bool"]) {
-        this.errorMsgValidation =
-          this.translate.instant("detailsForLanguageDefaultNotValid") +
-          LANGUAGE_DEFAULT +
-          ", " +
-          resValDetails["name"];
+        this.errorMsgValidation = resValDetails["name"];
         return;
       } else {
         this.addMultilanguageFields();
@@ -317,11 +347,28 @@ export class CampaignAddFormComponent implements OnInit {
               } else {
                 // no upload for logo and banner
                 this.onNoClick("", this.campaignCreated);
-                this._snackBar.openFromComponent(SnackbarSavedComponent,
-                 {
-                  data:{displayText: 'savedData'},
-                  duration: 4999
+                this._snackBar.openFromComponent(SnackbarSavedComponent, {
+                  data: { displayText: "savedData" },
+                  duration: 4999,
                 });
+              }
+              if (!!this.validatingForm.get("webHookEvents")) {
+                let campaignWeebH: CampaignWebhook = {
+                  campaignId: this.campaignCreated.campaignId,
+                  endpoint: this.validatingForm.get("endPointCongWebHook")? this.validatingForm.get("endPointCongWebHook").value : '',
+                  events: this.validatingForm.get("webHookEvents")? this.validatingForm.get("webHookEvents").value : '',
+                  id: this.validatingForm.get("webHookId")? this.validatingForm.get("webHookId").value : '',
+                };
+                const weebHookConf = {
+                  campaignId: this.campaignCreated.campaignId,
+                  body: campaignWeebH};
+                console.log("weebHook; ",weebHookConf);
+                this.campaignService.setWebhookUsingPOST(weebHookConf).subscribe(
+                  () => {},
+                  (error) => {
+                    this.translate.instant("dataNotSavedForError") + error.error.ex;
+                  }
+                );
               }
             },
             (error) => {
@@ -329,7 +376,7 @@ export class CampaignAddFormComponent implements OnInit {
                 this.translate.instant("dataNotSavedForError") + error.error.ex;
             }
           );
-      }else if (this.type === "modify") {
+      } else if (this.type === "modify") {
         this.campaignCreated.name = this.campaignUpdated.name;
         this.campaignCreated.territoryId = this.campaignUpdated.territoryId;
         this.campaignCreated.campaignId = this.campaignUpdated.campaignId;
@@ -352,16 +399,37 @@ export class CampaignAddFormComponent implements OnInit {
               } else {
                 // no upload for logo and banner
                 this.onNoClick("", this.campaignCreated);
-                this._snackBar.openFromComponent(SnackbarSavedComponent,
-                  {
-                   data:{displayText: 'savedData'},
-                   duration: 4999
-                 });
+                this._snackBar.openFromComponent(SnackbarSavedComponent, {
+                  data: { displayText: "savedData" },
+                  duration: 4999,
+                });
+              }
+              if (!!this.validatingForm.get("webHookEvents")) {
+                let campaignWeebH: CampaignWebhook = {
+                  campaignId: this.campaignCreated.campaignId,
+                  endpoint: this.validatingForm.get("endPointCongWebHook")? this.validatingForm.get("endPointCongWebHook").value : '',
+                  events: this.validatingForm.get("webHookEvents")? this.validatingForm.get("webHookEvents").value : '',
+                  id: this.validatingForm.get("webHookId")? this.validatingForm.get("webHookId").value : '',
+                };
+                const weebHookConf = {
+                  campaignId: this.campaignCreated.campaignId,
+                  body: campaignWeebH};
+                console.log("weebHook; ",weebHookConf);
+                this.campaignService.setWebhookUsingPOST(weebHookConf).subscribe(
+                  () => {},
+                  (error) => {
+                    this.translate.instant("dataNotSavedForError") + error.error.ex;
+                  }
+                );
               }
             },
             (error) => {
               this.errorMsgValidation =
-                this.translate.instant("dataNotSavedForError") + ': '+(error.error.ex ? error.error.ex : this.translate.instant('errorNotProvidedByresponse'));
+                this.translate.instant("dataNotSavedForError") +
+                ": " +
+                (error.error.ex
+                  ? error.error.ex
+                  : this.translate.instant("errorNotProvidedByresponse"));
             }
           );
       }
@@ -391,15 +459,17 @@ export class CampaignAddFormComponent implements OnInit {
       .subscribe(
         () => {
           this.onNoClick("", this.campaignCreated);
-          this._snackBar.openFromComponent(SnackbarSavedComponent,
-            {
-             data:{displayText: 'savedData'},
-             duration: 4999
-           });
+          this._snackBar.openFromComponent(SnackbarSavedComponent, {
+            data: { displayText: "savedData" },
+            duration: 4999,
+          });
         },
         (error) => {
           this.errorMsgValidation =
-            this.translate.instant("allDataModifiedExceptBanner") + (error.error.ex ? error.error.ex : this.translate.instant('errorNotProvidedByresponse'));
+            this.translate.instant("allDataModifiedExceptBanner") +
+            (error.error.ex
+              ? error.error.ex
+              : this.translate.instant("errorNotProvidedByresponse"));
         }
       );
   }
@@ -415,16 +485,17 @@ export class CampaignAddFormComponent implements OnInit {
       .subscribe(
         () => {
           this.onNoClick("", this.campaignCreated);
-          this._snackBar.openFromComponent(SnackbarSavedComponent,
-            {
-             data:{displayText: 'savedData'},
-             duration: 4999
-           });
+          this._snackBar.openFromComponent(SnackbarSavedComponent, {
+            data: { displayText: "savedData" },
+            duration: 4999,
+          });
         },
         (error) => {
           this.errorMsgValidation =
             this.translate.instant("allDataModifiedExceptLogo") +
-            (error.error.ex ? error.error.ex : this.translate.instant('errorNotProvidedByresponse'));
+            (error.error.ex
+              ? error.error.ex
+              : this.translate.instant("errorNotProvidedByresponse"));
         }
       );
   }
@@ -444,12 +515,14 @@ export class CampaignAddFormComponent implements OnInit {
         (error) => {
           this.errorMsgValidation =
             this.translate.instant("allDataModifiedExceptBannerAndLogo") +
-            (error.error.ex ? error.error.ex : this.translate.instant('errorNotProvidedByresponse'));
+            (error.error.ex
+              ? error.error.ex
+              : this.translate.instant("errorNotProvidedByresponse"));
         }
       );
   }
 
-  fillCampaingCreated(){
+  fillCampaingCreated() {
     this.campaignCreated.active = this.validatingForm.get("active").value;
     //const dataFrom: Moment = this.validatingForm.get("dateFrom").value;
     this.campaignCreated.dateFrom = this.validatingForm.get("dateFrom").value; //dataFrom.toDate();// this.formatDate(dataFrom); //
@@ -463,8 +536,7 @@ export class CampaignAddFormComponent implements OnInit {
     }
     this.campaignCreated.banner = new ImageClass();
     if (!!this.selectedBanner) {
-      this.campaignCreated.banner.contentType =
-        this.selectedBanner.contentType;
+      this.campaignCreated.banner.contentType = this.selectedBanner.contentType;
       this.campaignCreated.banner.image = this.selectedBanner.image;
       this.campaignCreated.banner.url = this.selectedBanner.url;
     }
@@ -487,16 +559,20 @@ export class CampaignAddFormComponent implements OnInit {
       }
     }
     this.campaignCreated.specificData = {};
-    if(this.type==='modify'){
+    if (this.type === "modify") {
       // make it better copy every map and then override
-      this.campaignCreated.specificData[DEFAULT_SURVEY_KEY] = this.campaignUpdated.specificData[DEFAULT_SURVEY_KEY];
+      this.campaignCreated.specificData[DEFAULT_SURVEY_KEY] =
+        this.campaignUpdated.specificData[DEFAULT_SURVEY_KEY];
     }
     this.campaignCreated.specificData = new SelectedLimits();
-    for(let mean of this.validatingForm.get('means').value){
+    for (let mean of this.validatingForm.get("means").value) {
       this.campaignCreated.specificData[mean] = new LimitsClass();
-      this.campaignCreated.specificData[mean][DAILY_LIMIT] = this.selectedLimits[mean][DAILY_LIMIT] ;
-      this.campaignCreated.specificData[mean][WEEKLY_LIMIT] = this.selectedLimits[mean][WEEKLY_LIMIT] ;
-      this.campaignCreated.specificData[mean][MONTHLY_LIMIT] = this.selectedLimits[mean][MONTHLY_LIMIT] ;
+      this.campaignCreated.specificData[mean][DAILY_LIMIT] =
+        this.selectedLimits[mean][DAILY_LIMIT];
+      this.campaignCreated.specificData[mean][WEEKLY_LIMIT] =
+        this.selectedLimits[mean][WEEKLY_LIMIT];
+      this.campaignCreated.specificData[mean][MONTHLY_LIMIT] =
+        this.selectedLimits[mean][MONTHLY_LIMIT];
     }
   }
 
@@ -598,14 +674,21 @@ export class CampaignAddFormComponent implements OnInit {
       if (this.details) {
         this.details.forEach((item) => {
           var detail = new CampaignDetailClass();
-          detail.content = item.form[l].get("content").value;
-          detail.extUrl = item.form[l].get("url").value
-            ? item.form[l].get("url").value
-            : item.form[LANGUAGE_DEFAULT].get("url").value;
-          detail.name = item.form[l].get("name").value;
-          detail.type = item.form[l].get("type").value
-            ? item.form[l].get("type").value
-            : item.form[LANGUAGE_DEFAULT].get("type").value;
+          detail.content = item.languageDataForm[l].get("content")
+            ? item.languageDataForm[l].get("content").value
+            : "";
+          detail.name = item.languageDataForm[l].get("name")
+            ? item.languageDataForm[l].get("name").value
+            : null;
+          if (l === LANGUAGE_DEFAULT) {
+            //Set just one time in the datails default save space db
+            detail.extUrl = item.staticTypeForm.get("extUrl")
+              ? item.staticTypeForm.get("extUrl").value
+              : null;
+            detail.type = item.staticTypeForm.get("type")
+              ? item.staticTypeForm.get("type").value
+              : null;
+          }
           this.campaignCreated.details[l].push(detail);
         });
       }
@@ -615,16 +698,22 @@ export class CampaignAddFormComponent implements OnInit {
   checkValidityDetails(): {} {
     var result = { bool: true, name: "" };
     this.details.forEach((item) => {
-      item.form[LANGUAGE_DEFAULT].markAllAsTouched();
-      if (!item.form[LANGUAGE_DEFAULT].valid) {
-        if (item.detail.name) {
-          result = { bool: false, name: item.detail.name };
-        } else {
-          result = {
-            bool: false,
-            name: this.translate.instant("nameNotDefined"),
-          };
+      if (item.staticTypeForm.valid) {
+        for (let l of this.languagesSupported) {
+          if (!item.languageDataForm[l].valid) {
+            result = {
+              bool: false,
+              name:
+                this.translate.instant("nameNotDefined") +
+                ", " +
+                this.translate.instant("onLanguage") +
+                ": " +
+                l,
+            };
+          }
         }
+      } else {
+        result = { bool: false, name: this.translate.instant("typeNotSetted") };
       }
     });
     return result;
@@ -670,27 +759,27 @@ export class CampaignAddFormComponent implements OnInit {
     return false;
   }
 
-  cancelGoBack(event:any){
-    if(this.hasBeenModified()){
+  cancelGoBack(event: any) {
+    if (this.hasBeenModified()) {
       const dialogRef = this.confirmCancel.open(ConfirmCancelComponent, {
         width: "40%",
         //height: "150px",
       });
       let instance = dialogRef.componentInstance;
-  
+
       dialogRef.afterClosed().subscribe((result) => {
         if (result !== undefined) {
-          if(result){
-            this.onNoClick('',undefined);
+          if (result) {
+            this.onNoClick("", undefined);
           }
         }
       });
-    }else{
-      this.onNoClick('',undefined);
+    } else {
+      this.onNoClick("", undefined);
     }
   }
 
-  hasBeenModified():boolean{
+  hasBeenModified(): boolean {
     return this.validatingForm.touched;
   }
 
@@ -698,51 +787,55 @@ export class CampaignAddFormComponent implements OnInit {
     [key: string]: CampaignDetail[];
   }): DetailsForAddModifyModule[] {
     var result = [];
-    if(!!details && details[LANGUAGE_DEFAULT]){
-      var totalNumberOfDetail = details[LANGUAGE_DEFAULT].length; 
+    if (!!details && details[LANGUAGE_DEFAULT]) {
+      var totalNumberOfDetail = details[LANGUAGE_DEFAULT].length;
       var keys = Object.keys(details); // subset of CONST_LANGUAGES_SUPPORTED
-      for(let i=0;i<totalNumberOfDetail;i++){
+      for (let i = 0; i < totalNumberOfDetail; i++) {
         //iterate over the campaignDetails supposed that the default language is the one that has all the campaigns
         let item = new DetailsForAddModifyModule();
         item.collapsed = true;
         item.created = false;
-        item.detail = {};
-        item.form = {};
-        for(let l of CONST_LANGUAGES_SUPPORTED){
-          item.form[l] = this.formBuilder.group({
-            name: new FormControl("", [Validators.required]),
-            type: new FormControl("", [Validators.required]),
-            url: new FormControl(""),
+        item.languageDataForm = {};
+        item.staticTypeForm = this.formBuilder.group({
+          extUrl: new FormControl(""),
+          type: new FormControl("", [Validators.required]),
+        });
+        item.staticTypeForm.patchValue({
+          extUrl: details[LANGUAGE_DEFAULT][i].extUrl,
+          type: details[LANGUAGE_DEFAULT][i].type,
+        });
+        for (let l of CONST_LANGUAGES_SUPPORTED) {
+          item.languageDataForm[l] = this.formBuilder.group({
+            name: new FormControl("", [
+              Validators.required,
+              Validators.maxLength(40),
+            ]),
             content: new FormControl(""),
           });
-          if(details[l]){
+          if (details[l]) {
             //json object with the language exists
-            if(details[l][i]){
+            if (details[l][i]) {
               //campaingDetail-iesimo exists
-              item.form[l].patchValue({
-                name: details[l][i].name? details[l][i].name : details[LANGUAGE_DEFAULT][i].name,
-                type: details[l][i].type? details[l][i].type : details[LANGUAGE_DEFAULT][i].type,
-                url: details[l][i].extUrl? details[l][i].extUrl : details[LANGUAGE_DEFAULT][i].extUrl,
-                content: details[l][i].content ? details[l][i].content : '',
+              item.languageDataForm[l].patchValue({
+                name: details[l][i].name
+                  ? details[l][i].name
+                  : details[LANGUAGE_DEFAULT][i].name,
+                content: details[l][i].content ? details[l][i].content : "",
               });
-            }else{
+            } else {
               //campaingDetail-iesimo doesn't exists (copy data from default)
               //should enter here if data on 'it':[1,2,3] while 'en':[1,2] so there are some campaigndetails missing on the others languages
-              item.form[l].patchValue({
+              item.languageDataForm[l].patchValue({
                 name: details[LANGUAGE_DEFAULT][i].name,
-                type: details[LANGUAGE_DEFAULT][i].type,
-                url: details[LANGUAGE_DEFAULT][i].extUrl,
-                content: '',
+                content: "",
               });
             }
-          }else{
+          } else {
             //json object with language doesn't exists
             // for example {'it':[details1,details2]} doesn't have 'en' add a full-empty form copying the default values
-            item.form[l].patchValue({
+            item.languageDataForm[l].patchValue({
               name: details[LANGUAGE_DEFAULT][i].name,
-              type: details[LANGUAGE_DEFAULT][i].type,
-              url: details[LANGUAGE_DEFAULT][i].extUrl,
-              content: '',
+              content: "",
             });
           }
         }
@@ -756,25 +849,17 @@ export class CampaignAddFormComponent implements OnInit {
     var item = new DetailsForAddModifyModule();
     item.collapsed = false;
     item.created = true;
-    item.detail = new CampaignDetailClass();
-    item.form = {};
+    item.languageDataForm = {};
+    item.staticTypeForm = this.formBuilder.group({
+      extUrl: new FormControl(""),
+      type: new FormControl("", [Validators.required]),
+    });
     for (let l of this.languagesSupported) {
-      let controlName;
-      let controlType;
-      if (l === LANGUAGE_DEFAULT) {
-        controlName = new FormControl("", [
+      item.languageDataForm[l] = this.formBuilder.group({
+        name: new FormControl("", [
           Validators.required,
           Validators.maxLength(40),
-        ]);
-        controlType = new FormControl("", [Validators.required]);
-      } else {
-        controlName = new FormControl("", [Validators.maxLength(40)]);
-        controlType = new FormControl("");
-      }
-      item.form[l] = this.formBuilder.group({
-        name: controlName,
-        type: controlType,
-        url: new FormControl(""),
+        ]),
         content: new FormControl(""),
       });
     }
@@ -819,40 +904,40 @@ export class CampaignAddFormComponent implements OnInit {
       }
       this.validatingForm.addControl(nameName, controlName);
       this.validatingForm.addControl(nameDescription, controlDescription);
-      if(this.type !== "add"){
+      if (this.type !== "add") {
         var obj = {};
         obj[nameName] = this.campaignUpdated.name[l];
-        obj[nameDescription] = this.campaignUpdated.description[l] ?  this.campaignUpdated.description[l] : '';
+        obj[nameDescription] = this.campaignUpdated.description[l]
+          ? this.campaignUpdated.description[l]
+          : "";
         this.validatingForm.patchValue(obj);
       }
     }
-
   }
 
   selectedLanguageClick(event: any) {
     this.languageSelected = event;
   }
 
-  transformActiveBoolean(val:boolean): string{
-    if(val){
-      return 'active';
-    }else{
-      return 'inactive';
+  transformActiveBoolean(val: boolean): string {
+    if (val) {
+      return "active";
+    } else {
+      return "inactive";
     }
   }
-
 }
 
-export class SelectedLimits{
+export class SelectedLimits {
   walk?: LimitsClass;
-  bike?:LimitsClass;
-  bus?:LimitsClass;
-  car?:LimitsClass;
-  train?:LimitsClass;
-  boat?:LimitsClass;
+  bike?: LimitsClass;
+  bus?: LimitsClass;
+  car?: LimitsClass;
+  train?: LimitsClass;
+  boat?: LimitsClass;
 }
 
-export class LimitsClass{
+export class LimitsClass {
   dailyLimit?: number;
   weeklyLimit?: number;
   monthlyLimit?: number;

@@ -15,7 +15,7 @@ import { TerritoryControllerService } from "src/app/core/api/generated/controlle
 import { Logo } from "src/app/shared/classes/logo-class";
 import { Campaign } from "src/app/core/api/generated/model/campaign";
 import { SurveyComponentComponent } from "../survey-component/survey-component.component";
-import { TranslateService } from "@ngx-translate/core";
+import { DEFAULT_LANGUAGE, TranslateService } from "@ngx-translate/core";
 import { RewardsComponent } from "../rewards/rewards.component";
 import { ConsoleControllerService } from "src/app/core/api/generated/controllers/consoleController.service";
 
@@ -42,6 +42,7 @@ export class CampaignPageComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+  defaulLanguageConst = LANGUAGE_DEFAULT;
 
   dailyLimitString = DAILY_LIMIT;
   monthlyLimitString = MONTHLY_LIMIT;

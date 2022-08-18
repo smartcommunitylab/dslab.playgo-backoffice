@@ -16,7 +16,9 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 import { Campaign } from "../model/campaign";
+import { CampaignInfo } from "../model/campaignInfo";
 import { CampaignSubscription } from "../model/campaignSubscription";
+import { CampaignWebhook } from "../model/campaignWebhook";
 import { Image } from "../model/image";
 import { PlayerCampaign } from "../model/playerCampaign";
 import { SurveyRequest } from "../model/surveyRequest";
@@ -104,6 +106,22 @@ export class CampaignControllerService {
   }
 
   /**
+   * deleteWebhook
+   *
+   * @param campaignId campaignId
+   */
+  public deleteWebhookUsingDELETE(campaignId: string): Observable<any> {
+    return this.http.request<any>(
+      "delete",
+      environment.serverUrl.api +
+        `/playandgo/api/campaign/${encodeURIComponent(
+          String(campaignId)
+        )}/webhook`,
+      {}
+    );
+  }
+
+  /**
    * getCampaign
    *
    * @param campaignId campaignId
@@ -114,6 +132,25 @@ export class CampaignControllerService {
       environment.serverUrl.api +
         `/playandgo/api/campaign/${encodeURIComponent(String(campaignId))}`,
       {}
+    );
+  }
+
+  /**
+   * getCampaignsByPlayer
+   *
+   * @param playerId playerId
+   */
+  public getCampaignsByPlayerUsingGET(
+    playerId: string
+  ): Observable<Array<CampaignInfo>> {
+    return this.http.request<Array<CampaignInfo>>(
+      "get",
+      environment.serverUrl.api + `/playandgo/api/campaign/player`,
+      {
+        params: removeNullOrUndefined({
+          playerId,
+        }),
+      }
     );
   }
 
@@ -149,6 +186,45 @@ export class CampaignControllerService {
       "get",
       environment.serverUrl.api + `/playandgo/api/campaign/my`,
       {}
+    );
+  }
+
+  /**
+   * getWebhook
+   *
+   * @param campaignId campaignId
+   */
+  public getWebhookUsingGET(campaignId: string): Observable<CampaignWebhook> {
+    return this.http.request<CampaignWebhook>(
+      "get",
+      environment.serverUrl.api +
+        `/playandgo/api/campaign/${encodeURIComponent(
+          String(campaignId)
+        )}/webhook`,
+      {}
+    );
+  }
+
+  /**
+   * setWebhook
+   *
+   * @param campaignId campaignId
+   * @param body
+   */
+  public setWebhookUsingPOST(args: {
+    campaignId: string;
+    body?: CampaignWebhook;
+  }): Observable<CampaignWebhook> {
+    const { campaignId, body } = args;
+    return this.http.request<CampaignWebhook>(
+      "post",
+      environment.serverUrl.api +
+        `/playandgo/api/campaign/${encodeURIComponent(
+          String(campaignId)
+        )}/webhook`,
+      {
+        body: body,
+      }
     );
   }
 
