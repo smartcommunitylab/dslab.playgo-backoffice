@@ -79,6 +79,13 @@
                             <mat-option *ngFor="let mean of means" [value]="mean">{{mean |translate}}</mat-option>
                         </mat-select>
                     </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-half-right">
+                        <mat-label>{{'sendWeaklyEmail' | translate}}</mat-label>
+                        <mat-select id="sendWeaklyEmail" formControlName="sendWeaklyEmail">
+                            <mat-option *ngFor="let val of [true,false]" [value]="val">
+                                {{ transformActiveBoolean(val) |translate}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
                 </div>
                 <mat-grid-list [cols]="4" rowHeight="50px" style="margin-bottom: 10px">
                     <div *ngFor="let mean of meansSelected">
@@ -350,6 +357,13 @@
                         <mat-select id="means" formControlName="means" multiple
                             (selectionChange)="chengeSelectedMeans($event)">
                             <mat-option *ngFor="let mean of means" [value]="mean">{{mean |translate}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-half-right">
+                        <mat-label>{{'sendWeaklyEmail' | translate}}</mat-label>
+                        <mat-select id="sendWeaklyEmail" formControlName="sendWeaklyEmail">
+                            <mat-option *ngFor="let val of [true,false]" [value]="val">
+                                {{ transformActiveBoolean(val) |translate}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
