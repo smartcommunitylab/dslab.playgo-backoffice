@@ -283,6 +283,7 @@
   "webHookEvents":"Web hook events",
   "webHookId":"Web hook Id",
   "endPointCongWebHook":"Web hook endpoint",
+  "sendWeaklyEmail":"Send weakly email",
   "":"",
   "":"",
   "":"",
