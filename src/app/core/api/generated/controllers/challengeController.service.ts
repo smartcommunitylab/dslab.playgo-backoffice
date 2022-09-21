@@ -78,20 +78,20 @@ export class ChallengeControllerService {
    * changeInvitationStatus
    *
    * @param campaignId campaignId
-   * @param challengeName challengeName
+   * @param challengeId challengeId
    * @param status status
    */
   public changeInvitationStatusUsingPOST(args: {
     campaignId: string;
-    challengeName: string;
+    challengeId: string;
     status: string;
   }): Observable<any> {
-    const { campaignId, challengeName, status } = args;
+    const { campaignId, challengeId, status } = args;
     return this.http.request<any>(
       "post",
       environment.serverUrl.api +
         `/playandgo/api/challenge/invitation/status/${encodeURIComponent(
-          String(challengeName)
+          String(challengeId)
         )}/${encodeURIComponent(String(status))}`,
       {
         params: removeNullOrUndefined({
@@ -156,8 +156,8 @@ export class ChallengeControllerService {
    */
   public getBlackListUsingGET(
     campaignId: string
-  ): Observable<Array<{ [key: string]: string }>> {
-    return this.http.request<Array<{ [key: string]: string }>>(
+  ): Observable<Array<{ [key: string]: any }>> {
+    return this.http.request<Array<{ [key: string]: any }>>(
       "get",
       environment.serverUrl.api + `/playandgo/api/challenge/blacklist`,
       {
@@ -207,8 +207,8 @@ export class ChallengeControllerService {
    */
   public getChallengeablesUsingGET(
     campaignId: string
-  ): Observable<Array<{ [key: string]: string }>> {
-    return this.http.request<Array<{ [key: string]: string }>>(
+  ): Observable<Array<{ [key: string]: any }>> {
+    return this.http.request<Array<{ [key: string]: any }>>(
       "get",
       environment.serverUrl.api + `/playandgo/api/challenge/challengeables`,
       {
@@ -270,9 +270,9 @@ export class ChallengeControllerService {
   public getGroupChallengePreviewUsingPOST(args: {
     campaignId: string;
     body?: Invitation;
-  }): Observable<{ [key: string]: string }> {
+  }): Observable<any> {
     const { campaignId, body } = args;
-    return this.http.request<{ [key: string]: string }>(
+    return this.http.request<any>(
       "post",
       environment.serverUrl.api + `/playandgo/api/challenge/invitation/preview`,
       {

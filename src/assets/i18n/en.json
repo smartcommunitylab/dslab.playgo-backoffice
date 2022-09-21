@@ -284,6 +284,8 @@
   "webHookId":"Web hook Id",
   "endPointCongWebHook":"Web hook endpoint",
   "sendWeaklyEmail":"Send weakly email",
+  "timezone":"Timezone",
+  "Europe/Rome":"Europe/Rome",
   "":"",
   "":"",
   "":"",
