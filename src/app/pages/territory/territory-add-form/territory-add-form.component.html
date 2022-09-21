@@ -38,6 +38,14 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-custom-half-left">
+                        <mat-label>{{'timezone' | translate}}</mat-label>
+                        <mat-select id="timezone" formControlName="timezone">
+                            <mat-option *ngFor="let mean of timezones" [value]="mean">{{mean | translate}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
                 <div class="multilanguage-box">
                     <mat-form-field appearance="fill" class="input-custom-half-left">
                         <mat-label>{{'languages' | translate}}</mat-label>
@@ -139,6 +147,12 @@
                         <mat-label>{{'means' | translate}}</mat-label>
                         <mat-select id="means" formControlName="means" multiple>
                             <mat-option *ngFor="let mean of means" [value]="mean">{{mean | translate}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-custom-half-right">
+                        <mat-label>{{'timezone' | translate}}</mat-label>
+                        <mat-select id="timezone" formControlName="timezone">
+                            <mat-option *ngFor="let mean of timezones" [value]="mean">{{mean | translate}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>

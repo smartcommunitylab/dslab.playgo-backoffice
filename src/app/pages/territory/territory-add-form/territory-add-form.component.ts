@@ -21,7 +21,7 @@ import {
 } from "@angular/animations";
 import { TerritoryControllerService } from "src/app/core/api/generated/controllers/territoryController.service";
 import { DEFAULT_LANGUAGE, TranslateService } from "@ngx-translate/core";
-import { CONST_LANGUAGES_SUPPORTED, LANGUAGE_DEFAULT } from "src/app/shared/constants/constants";
+import { CONST_LANGUAGES_SUPPORTED, CONST_TIMEZONES_SUPPORTED, LANGUAGE_DEFAULT } from "src/app/shared/constants/constants";
 import { SnackbarSavedComponent } from "src/app/shared/components/snackbar-saved/snackbar-saved.component";
 import { TerritoryListService } from "src/app/shared/services/territory-list.service";
 
@@ -48,8 +48,10 @@ export class TerritoryAddFormComponent implements OnInit {
   languageDefault:any;
   languagesSupported= CONST_LANGUAGES_SUPPORTED;
   languageSelected: string;
+  timezones= CONST_TIMEZONES_SUPPORTED;
   @Input() set formTerritory(value: TerritoryClass) {
     this.terrytoryUpdate = value;
+
   }
 
   constructor(
@@ -97,8 +99,12 @@ export class TerritoryAddFormComponent implements OnInit {
         ]),
         validation: new FormControl(""),
         languages: new FormControl(""),
+        timezone: new FormControl(""),
       });
       this.addFormControlMultilanguage();
+      this.validatingForm.patchValue({
+        timezone: this.timezones[0]
+      });
     } else {
       this.validatingForm = this.formBuilder.group({
         territoryId: new FormControl(""),
@@ -117,6 +123,7 @@ export class TerritoryAddFormComponent implements OnInit {
         ]),
         validation: new FormControl(""),
         languages: new FormControl(""),
+        timezone: new FormControl(""),
       });
       this.addFormControlMultilanguage();
     }
@@ -167,6 +174,7 @@ export class TerritoryAddFormComponent implements OnInit {
         long: this.terrytoryUpdate.territoryData.area[0].long,
         ray: this.terrytoryUpdate.territoryData.area[0].radius,
         validation: this.terrytoryUpdate.territoryData.validation,
+        timezone : this.terrytoryUpdate.timezone
       });
       this.patchValuedMultilanguageOnModify(this.terrytoryUpdate.name,this.terrytoryUpdate.description);
     }
@@ -210,6 +218,7 @@ export class TerritoryAddFormComponent implements OnInit {
         this.validatingForm.get("long").value;
       this.terrotyCreated.territoryData.area[0].radius =
         this.validatingForm.get("ray").value;
+      this.terrotyCreated.timezone = this.validatingForm.get("timezone").value;
       if (this.type === "add") {
         this.territoryService
           .saveTerritoryUsingPOST(this.terrotyCreated)
