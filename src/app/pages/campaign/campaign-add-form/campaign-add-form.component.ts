@@ -196,6 +196,7 @@ export class CampaignAddFormComponent implements OnInit {
         dateFrom: new FormControl("", [Validators.required]),
         dateTo: new FormControl("", [Validators.required]),
         type: new FormControl("", [Validators.required]),
+        sendWeaklyEmail: new FormControl("", [Validators.required]),
         gameId: new FormControl(""),
         startDayOfWeek: new FormControl("", [Validators.pattern("^[1-7]")]),
         webHookEvents: new FormControl(""),
@@ -215,6 +216,7 @@ export class CampaignAddFormComponent implements OnInit {
         dateFrom: new FormControl("", [Validators.required]),
         dateTo: new FormControl("", [Validators.required]),
         type: new FormControl("", [Validators.required]),
+        sendWeaklyEmail: new FormControl("", [Validators.required]),
         gameId: new FormControl(""),
         startDayOfWeek: new FormControl(""),
         webHookEvents: new FormControl(""),
@@ -229,6 +231,7 @@ export class CampaignAddFormComponent implements OnInit {
         type: this.campaignUpdated.type,
         gameId: this.campaignUpdated.gameId,
         startDayOfWeek: this.campaignUpdated.startDayOfWeek,
+        sendWeaklyEmail: this.campaignUpdated.communications,
       });
       this.meansSelected = this.campaignUpdated.validationData.means;
       this.selectedLimits = this.campaignUpdated.specificData;
@@ -558,6 +561,7 @@ export class CampaignAddFormComponent implements OnInit {
         this.campaignCreated.startDayOfWeek = 1; //default value
       }
     }
+    this.campaignCreated.communications = this.validatingForm.get("sendWeaklyEmail").value;
     this.campaignCreated.specificData = {};
     if (this.type === "modify") {
       // make it better copy every map and then override

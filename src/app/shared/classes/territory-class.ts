@@ -9,4 +9,5 @@ export class TerritoryClass implements Territory {
     name?: { [key: string]: string };
     messagingAppId?: string;
     territoryData?: TerritoryData;
+    timezone?: string;
 }
