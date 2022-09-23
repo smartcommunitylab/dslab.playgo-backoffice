@@ -60,15 +60,15 @@
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'dateFrom' | translate}}</mat-label>
-                        <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1">
-                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                        <mat-datepicker #picker1></mat-datepicker>
+                        <input matInput id="dateFrom" formControlName="dateFrom" type="datetime-local" > <!--[matDatepicker]="picker1"-->
+                        <!-- <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker> -->
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="input-half-right">
                         <mat-label>{{'dateTo' | translate}}</mat-label>
-                        <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker">
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
+                        <input matInput id="dateTo" formControlName="dateTo" type="datetime-local"> <!--[matDatepicker]="picker1"-->
+                        <!-- <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker> -->
                     </mat-form-field>
                 </div>
                 <div class="in-line-forms">
@@ -340,15 +340,17 @@
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'dateFrom' | translate}}</mat-label>
-                        <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1">
+                        <input matInput id="dateFrom" formControlName="dateFrom" type="datetime-local" > 
+                        <!-- <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1">
                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                        <mat-datepicker #picker1></mat-datepicker>
+                        <mat-datepicker #picker1></mat-datepicker> -->
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="input-half-right">
                         <mat-label>{{'dateTo' | translate}}</mat-label>
-                        <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker">
+                        <input matInput id="dateTo" formControlName="dateTo" type="datetime-local">
+                        <!-- <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker">
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
+                        <mat-datepicker #picker></mat-datepicker> -->
                     </mat-form-field>
                 </div>
                 <div class="in-line-forms">
