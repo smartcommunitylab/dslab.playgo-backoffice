@@ -226,8 +226,8 @@ export class CampaignAddFormComponent implements OnInit {
       this.validatingForm.patchValue({
         means: this.campaignUpdated.validationData.means,
         active: this.campaignUpdated.active,
-        dateFrom: moment(this.campaignUpdated.dateFrom), //moment(this.campaignUpdated.dateFrom, "YYYY-MM-DD"),
-        dateTo: moment(this.campaignUpdated.dateTo), //moment(this.campaignUpdated.dateTo, "YYYY-MM-DD"),
+        dateFrom: this.createDate(this.campaignUpdated.dateFrom),//moment(this.campaignUpdated.dateFrom), //moment(this.campaignUpdated.dateFrom, "YYYY-MM-DD"),
+        dateTo: this.createDate(this.campaignUpdated.dateTo),//moment(this.campaignUpdated.dateTo), //moment(this.campaignUpdated.dateTo, "YYYY-MM-DD"),
         type: this.campaignUpdated.type,
         gameId: this.campaignUpdated.gameId,
         startDayOfWeek: this.campaignUpdated.startDayOfWeek,
@@ -528,9 +528,9 @@ export class CampaignAddFormComponent implements OnInit {
   fillCampaingCreated() {
     this.campaignCreated.active = this.validatingForm.get("active").value;
     //const dataFrom: Moment = this.validatingForm.get("dateFrom").value;
-    this.campaignCreated.dateFrom = this.validatingForm.get("dateFrom").value; //dataFrom.toDate();// this.formatDate(dataFrom); //
+    this.campaignCreated.dateFrom = this.fromDateTimeToLong(this.validatingForm.get("dateFrom").value); //dataFrom.toDate();// this.formatDate(dataFrom); //
     //const dataTo: Moment = this.validatingForm.get("dateTo").value;
-    this.campaignCreated.dateTo = this.validatingForm.get("dateTo").value; //dataTo.toDate();//this.formatDate(dataTo); //
+    this.campaignCreated.dateTo = this.fromDateTimeToLong(this.validatingForm.get("dateTo").value) ; //dataTo.toDate();//this.formatDate(dataTo); //
     this.campaignCreated.logo = new ImageClass();
     if (!!this.selectedLogo) {
       this.campaignCreated.logo.contentType = this.selectedLogo.contentType;
@@ -635,6 +635,23 @@ export class CampaignAddFormComponent implements OnInit {
     }
     const year = datee.toObject().years.toString();
     return year + "-" + month + "-" + day;
+  }
+
+  fromDateTimeToLong(dateString: String): number{
+    //yyyy-mm-ddThh:mm format date
+    //const firstPart = dateString.substring(0,'yyyy-mm-ddT'.length);
+    //const secondPart = dateString.substring('yyyy-mm-ddT'.length);
+    //const isoDate = firstPart+ '02:' +secondPart + '.000Z';
+    const isoDate = dateString + ':00Z'
+    const date: Date = new Date(isoDate);
+    return date.getTime();
+  }
+
+  createDate(timestamp: number): string {
+    const date = new Date(timestamp);
+    const midDate = date.toISOString().replace("Z", "");
+    return midDate.substring(0,midDate.length-7); // full date
+    //return midDate.substring(midDate.length - 12, midDate.length - 4); // just hours 
   }
 
   get descriptionRichControl() {
@@ -757,6 +774,7 @@ export class CampaignAddFormComponent implements OnInit {
   }
 
   validDates(start: number, end: number) {
+    console.log('datessss: ',start,end);
     if (start < end) {
       return true;
     }
