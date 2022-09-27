@@ -37,7 +37,7 @@ export class SideNavComponent implements OnInit {
       this.roleCampaign = this.checkIfRoleCampaign();
       this.roleTerritory = this.checkIfRoleTerritory();
     });
-
+    //console.log(this.roleAdmin,this.roleCampaign,this.roleTerritory);
   }
 
   checkIfRoleAdmin(): boolean {

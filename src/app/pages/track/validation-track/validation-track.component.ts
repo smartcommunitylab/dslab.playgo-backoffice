@@ -49,6 +49,7 @@ import { GameArea } from "src/app/shared/classes/map-point";
 import { TableVirtualScrollDataSource } from "ng-table-virtual-scroll";
 import { ReportControllerService } from "src/app/core/api/generated/controllers/reportController.service";
 import { CampaignPlacing } from "src/app/core/api/generated/model/campaignPlacing";
+import { decode, polylineEncodeLine } from "@googlemaps/polyline-codec";
 
 @Component({
   selector: "app-validation-track",
@@ -136,6 +137,8 @@ export class ValidationTrackComponent implements OnInit {
   rankingUsersList:CampaignPlacing[] =[];
   displayedColumnsRankingUsers= ["position","nickname","playerId"];
   selectedRankingUser: CampaignPlacing;
+  publicTransportTracks: any[];
+  layerPublicTransportTracks: any[];
 
   validatingFormRanking: FormGroup;
   validatingForm: FormGroup;
@@ -330,20 +333,20 @@ export class ValidationTrackComponent implements OnInit {
         .subscribe((res) => {
           this.rankingUsersList = res.content;
           //TODO replace sample data with real data delete the ones below
-          this.rankingUsersList =[];
-          let k:CampaignPlacing[] =[
-            {'position':1,'nickname':'spartan','playerId':'u_fe939cab-1638-45b3-a604-80a3fb018e54'},
-            {'position':2,'nickname':'mino','playerId':'u_b061c167-0054-4a00-878e-3278b7ec5e9c'},
-            {'position':3,'nickname':'matteochini','playerId':'u_c2016c30-20a4-47bd-8c7a-266995c0ff9e'},
-            {'position':4,'nickname':'alattaruolo','playerId':'u_f74b1e34-463e-45af-a940-0c87a6d21838'},
-            {'position':5,'nickname':'urca','playerId':'u_78dbd97d-5136-460c-a1a7-c67210236745'},
-            {'position':6,'nickname':'chin8','playerId':'u_5eae76b8-2828-4932-a821-a16a4811a9c7'},
-            {'position':7,'nickname':'udhfuhdf','playerId':'u_765393ce-c502-418a-a10d-000eb2c901d7'},
-            {'position':8,'nickname':'blubla81','playerId':'u_6c5b5cd2-4e15-4267-9991-546d81829ef5'},
-            {'position':9,'nickname':'tania','playerId':'u_f3c61cdea7254ae3bc5581c822b374d0'},
-            {'position':10,'nickname':'Taty','playerId':'u_6ffd65deab654f0ab19985154f3939ae'},
-            {'position':11,'nickname':'mau','playerId':'u_d995fe2ae909486399d89861aef2f450'}];
-          this.rankingUsersList = k;
+          // this.rankingUsersList =[];
+          // let k:CampaignPlacing[] =[
+          //   {'position':1,'nickname':'spartan','playerId':'u_fe939cab-1638-45b3-a604-80a3fb018e54'},
+          //   {'position':2,'nickname':'mino','playerId':'u_b061c167-0054-4a00-878e-3278b7ec5e9c'},
+          //   {'position':3,'nickname':'matteochini','playerId':'u_c2016c30-20a4-47bd-8c7a-266995c0ff9e'},
+          //   {'position':4,'nickname':'alattaruolo','playerId':'u_f74b1e34-463e-45af-a940-0c87a6d21838'},
+          //   {'position':5,'nickname':'urca','playerId':'u_78dbd97d-5136-460c-a1a7-c67210236745'},
+          //   {'position':6,'nickname':'chin8','playerId':'u_5eae76b8-2828-4932-a821-a16a4811a9c7'},
+          //   {'position':7,'nickname':'udhfuhdf','playerId':'u_765393ce-c502-418a-a10d-000eb2c901d7'},
+          //   {'position':8,'nickname':'blubla81','playerId':'u_6c5b5cd2-4e15-4267-9991-546d81829ef5'},
+          //   {'position':9,'nickname':'tania','playerId':'u_f3c61cdea7254ae3bc5581c822b374d0'},
+          //   {'position':10,'nickname':'Taty','playerId':'u_6ffd65deab654f0ab19985154f3939ae'},
+          //   {'position':11,'nickname':'mau','playerId':'u_d995fe2ae909486399d89861aef2f450'}];
+          // this.rankingUsersList = k;
           //delete till here
           this.setTableDataRankingUsers();
         });
@@ -497,14 +500,35 @@ export class ValidationTrackComponent implements OnInit {
   }
 
   showTrack(row: TrackedInstanceConsoleClass) {
-    this.showAllPoints = true;
     this.trackingService
       .getTrackedInstanceDetailUsingGET({
         territoryId: this.territoryId,
         trackId: row.trackedInstance.id,
       })
       .subscribe((fullDetails) => {
+        this.selectedTrack = new TrackedInstanceConsoleClass();
         this.selectedTrack = fullDetails;
+        if(this.selectedTrack.routesPolylines){
+          const keys = Object.keys(this.selectedTrack.routesPolylines);
+          this.publicTransportTracks = [];
+          this.layerPublicTransportTracks = [];
+          if (keys.length > 0) {
+            const mapTracks = this.selectedTrack.routesPolylines[keys[0]];
+            const tracksNumbers = Object.keys(mapTracks);
+            let i=0;
+            for (let trackNumber of tracksNumbers) {
+              const currentTrack = {
+                id: trackNumber,
+                index: i,
+                visualize: false,
+                polyline: this.decodePoliline(mapTracks[trackNumber]),
+              };
+              this.publicTransportTracks.push(currentTrack);
+              this.layerPublicTransportTracks.push(undefined);
+              i++;
+            }
+          }
+        }
         this.setInnerHtmlvalidation(
           this.selectedTrack.trackedInstance.validationResult.validationStatus
         );
@@ -562,6 +586,10 @@ export class ValidationTrackComponent implements OnInit {
           }
         } catch {}
       });
+  }
+  
+  decodePoliline(polylinEncoded: string): any[]{
+    return decode(polylinEncoded);
   }
 
   setInnerHtmlvalidation(obj: any) {
@@ -770,7 +798,8 @@ export class ValidationTrackComponent implements OnInit {
     var polyline = L.polyline(latlngs, { color: "blue" });
     this.layerGroup = new L.LayerGroup([polyline]);
     this.layerGroup.addTo(this.map);
-    this.map.setView(latlngs[0], 15);
+    this.map.fitBounds(latlngs);
+    //this.map.setView(latlngs[0], 15);
   }
 
   public initializeMap(map: Map): void {
@@ -1036,6 +1065,40 @@ export class ValidationTrackComponent implements OnInit {
     const midDate = date.toISOString().replace("Z", "").replace("T", " ");
     return midDate.substring(0,midDate.length-4); // full date
     //return midDate.substring(midDate.length - 12, midDate.length - 4); // just hours 
+  }
+
+  visualizeAllPublicTracks(checked : boolean):void{
+    for(let i=0;i<this.publicTransportTracks.length;i++){
+      this.publicTransportTracks[i].visualize = checked;
+      this.displayPublicTrack(checked,this.publicTransportTracks[i]);
+    }
+  }
+
+  displayPublicTrack(checked: boolean,item: any): void{
+    if(checked){
+      if(this.layerPublicTransportTracks[item.index] === undefined){
+        var iconStart = L.icon({
+          iconUrl: "/../../../assets/images/start-marker-transport.png", // /dslab.playgo-backoffice/src/assets/images/stop-marker.png
+          iconSize: [25, 41],
+          iconAnchor: [12, 43],
+        });
+        var iconEnd = L.icon({
+          iconUrl: "/../../../assets/images/stop-marker-transport.png", // /dslab.playgo-backoffice/src/assets/images/stop-marker.png
+          iconSize: [25, 41],
+          iconAnchor: [12, 43],
+        });
+        var markerStart = L.marker(item.polyline[0], { icon: iconStart });
+        var markerEnd = L.marker(item.polyline[item.polyline.length-1], { icon: iconEnd });
+        var polyline = L.polyline(item.polyline, { color: "yellow" });
+        this.layerPublicTransportTracks[item.index] = new L.LayerGroup([polyline,markerStart,markerEnd]); 
+        this.layerPublicTransportTracks[item.index].addTo(this.map);
+      }
+    }else{
+      if(this.layerPublicTransportTracks[item.index]!== undefined){
+        this.map.removeLayer(this.layerPublicTransportTracks[item.index]);
+      }
+      this.layerPublicTransportTracks[item.index] = undefined;
+    }
   }
 
   drawRayOnMap() {

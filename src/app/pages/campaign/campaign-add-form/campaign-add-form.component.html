@@ -56,19 +56,28 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
+                <div class="in-line-forms" style="margin-top: 20px;">
+                    <mat-form-field appearance="fill" class="input-half-left">
+                        <mat-label>{{'visible' | translate}}</mat-label>
+                        <mat-select id="visible" formControlName="visible">
+                            <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBooleanVisible(val)
+                                |translate}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
 
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'dateFrom' | translate}}</mat-label>
-                        <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1">
-                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                        <mat-datepicker #picker1></mat-datepicker>
+                        <input matInput id="dateFrom" formControlName="dateFrom" type="datetime-local" > <!--[matDatepicker]="picker1"-->
+                        <!-- <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker> -->
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="input-half-right">
                         <mat-label>{{'dateTo' | translate}}</mat-label>
-                        <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker">
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
+                        <input matInput id="dateTo" formControlName="dateTo" type="datetime-local"> <!--[matDatepicker]="picker1"-->
+                        <!-- <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker> -->
                     </mat-form-field>
                 </div>
                 <div class="in-line-forms">
@@ -337,18 +346,29 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
+                <div class="in-line-forms" style="margin-top: 20px;">
+                    <mat-form-field appearance="fill" class="input-half-left">
+                        <mat-label>{{'visible' | translate}}</mat-label>
+                        <mat-select id="visible" formControlName="visible">
+                            <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBooleanVisible(val)
+                                |translate}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'dateFrom' | translate}}</mat-label>
-                        <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1">
+                        <input matInput id="dateFrom" formControlName="dateFrom" type="datetime-local" > 
+                        <!-- <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1">
                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                        <mat-datepicker #picker1></mat-datepicker>
+                        <mat-datepicker #picker1></mat-datepicker> -->
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="input-half-right">
                         <mat-label>{{'dateTo' | translate}}</mat-label>
-                        <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker">
+                        <input matInput id="dateTo" formControlName="dateTo" type="datetime-local">
+                        <!-- <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker">
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
+                        <mat-datepicker #picker></mat-datepicker> -->
                     </mat-form-field>
                 </div>
                 <div class="in-line-forms">

@@ -62,14 +62,15 @@
                     </mat-grid-tile>
 
                     <mat-grid-tile>
-                        <mat-form-field appearance="fill" class="full-width margin-form" >
+                        <mat-form-field appearance="fill" class="full-width margin-form">
                             <mat-label>{{'trackId' | translate}}</mat-label>
                             <input matInput id="trackId" formControlName="trackId" (ngModelChange)="resetPageNumber()">
                         </mat-form-field>
                     </mat-grid-tile>
                     <mat-grid-tile>
                         <button style="margin-bottom: 20px;" color="primary" mat-flat-button type="button"
-                        (click)="switchTrackToRanking()">{{(!showTierFilter? 'ranking' : 'tracks' ) | translate }}</button>
+                            (click)="switchTrackToRanking()">{{(!showTierFilter? 'ranking' : 'tracks' ) | translate
+                            }}</button>
                     </mat-grid-tile>
                     <mat-grid-tile [colspan]="2">
                         <div class="search-container">
@@ -159,7 +160,8 @@
                     </mat-grid-tile>
                     <mat-grid-tile>
                         <button style="margin-bottom: 20px;" color="primary" mat-flat-button type="button"
-                        (click)="switchTrackToRanking()">{{(!showTierFilter? 'ranking' : 'tracks' ) | translate }}</button>
+                            (click)="switchTrackToRanking()">{{(!showTierFilter? 'ranking' : 'tracks' ) | translate
+                            }}</button>
                     </mat-grid-tile>
                     <mat-grid-tile [colspan]="2">
                         <div class="search-container">
@@ -257,7 +259,7 @@
                                     </mat-grid-tile>
                                     <mat-grid-tile style="width: 70%;">
                                         <span class="bold full-width center-text">
-                                            {{element.trackedInstance.validationResult.validationStatus.modeType |
+                                            {{element.trackedInstance.freeTrackingTransport |
                                             translate}}
                                         </span>
                                     </mat-grid-tile>
@@ -265,10 +267,11 @@
                                         <span class="full-width text-ellips">
                                             {{(element.trackedInstance.validationResult.travelValidity==='PENDING'?
                                             'pending': element.trackedInstance.validationResult.travelValidity)
-                                            | translate}} 
-                                            <span *ngIf="!!element.trackedInstance.toCheck">{{'validWithReserve' | translate}}</span>
+                                            | translate}}
+                                            <span *ngIf="!!element.trackedInstance.toCheck">{{'validWithReserve' |
+                                                translate}}</span>
                                         </span>
-                                        
+
                                     </mat-grid-tile>
                                 </mat-grid-list>
                                 <mat-grid-list cols="1" rowHeight="30px">
@@ -325,8 +328,10 @@
                                                     {{'status' | translate}}:</span> <br />
                                                 <span>
                                                     {{(statisticsSelectedTrack.validity==='PENDING'? 'pending':
-                                                    statisticsSelectedTrack.validity) | translate}} 
-                                                    <span *ngIf="!!selectedTrack.trackedInstance.toCheck">{{'validWithReserve' | translate}}</span>
+                                                    statisticsSelectedTrack.validity) | translate}}
+                                                    <span
+                                                        *ngIf="!!selectedTrack.trackedInstance.toCheck">{{'validWithReserve'
+                                                        | translate}}</span>
                                                 </span>
                                             </span>
                                         </div>
@@ -358,7 +363,7 @@
                                             <span class="info-title">
                                                 <span class="bold"> {{'mean' | translate}}: </span> <br />
                                                 <span>
-                                                    {{selectedTrack.trackedInstance.validationResult.validationStatus.modeType
+                                                    {{selectedTrack.trackedInstance.freeTrackingTransport
                                                     |
                                                     translate}}
                                                 </span>
@@ -470,7 +475,7 @@
                                                 <span class="info-title">
                                                     <span class="bold">
                                                         {{'changedValidity' | translate}}:</span> <br />
-                                                        <!-- here if different from null it was modified-->
+                                                    <!-- here if different from null it was modified-->
                                                     <span>{{ (selectedTrack.trackedInstance.changedValidity?
                                                         'changedValidity' : 'notChangedValidity') | translate}}</span>
                                                 </span>
@@ -510,7 +515,8 @@
                                                 {{campaign.score}},
                                             </span>
                                             {{'distance' | translate}}: {{campaign.distance |
-                                            round}} (m)</p>
+                                            round}} (m)
+                                        </p>
                                         <p *ngIf="!!campaign.errorCode" class="red">
                                             {{'errors' | translate}}: {{campaign.errorCode}}
                                         </p>
@@ -520,6 +526,23 @@
 
                         </mat-card>
                     </div>
+                </div>
+                <div class="transport-tracks-div" *ngIf="!!publicTransportTracks && publicTransportTracks.length>0">
+                    <h2 style="margin-bottom: 0px;">
+                        {{'publicTransportAvailable' | translate}}
+                    </h2>
+                    <mat-grid-list [cols]="8" rowHeight="50px">
+                        <mat-grid-tile >
+                            <mat-checkbox (change)="visualizeAllPublicTracks($event.checked)" [color]="'primary'">
+                                {{'selectAll' | translate}}
+                            </mat-checkbox>
+                        </mat-grid-tile>
+                        <mat-grid-tile *ngFor="let item of publicTransportTracks">
+                            <mat-checkbox [color]="'primary'" (change)="displayPublicTrack($event.checked,item)" [(ngModel)]="item.visualize">
+                                {{item.id}}
+                            </mat-checkbox>
+                        </mat-grid-tile>
+                    </mat-grid-list>
                 </div>
                 <div class="map-class" style="border: solid 1px black;" id="map" leaflet [leafletOptions]="mapOptions"
                     (leafletMapReady)="initializeMap($event)">
