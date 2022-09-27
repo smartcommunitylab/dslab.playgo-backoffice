@@ -333,20 +333,20 @@ export class ValidationTrackComponent implements OnInit {
         .subscribe((res) => {
           this.rankingUsersList = res.content;
           //TODO replace sample data with real data delete the ones below
-          this.rankingUsersList =[];
-          let k:CampaignPlacing[] =[
-            {'position':1,'nickname':'spartan','playerId':'u_fe939cab-1638-45b3-a604-80a3fb018e54'},
-            {'position':2,'nickname':'mino','playerId':'u_b061c167-0054-4a00-878e-3278b7ec5e9c'},
-            {'position':3,'nickname':'matteochini','playerId':'u_c2016c30-20a4-47bd-8c7a-266995c0ff9e'},
-            {'position':4,'nickname':'alattaruolo','playerId':'u_f74b1e34-463e-45af-a940-0c87a6d21838'},
-            {'position':5,'nickname':'urca','playerId':'u_78dbd97d-5136-460c-a1a7-c67210236745'},
-            {'position':6,'nickname':'chin8','playerId':'u_5eae76b8-2828-4932-a821-a16a4811a9c7'},
-            {'position':7,'nickname':'udhfuhdf','playerId':'u_765393ce-c502-418a-a10d-000eb2c901d7'},
-            {'position':8,'nickname':'blubla81','playerId':'u_6c5b5cd2-4e15-4267-9991-546d81829ef5'},
-            {'position':9,'nickname':'tania','playerId':'u_f3c61cdea7254ae3bc5581c822b374d0'},
-            {'position':10,'nickname':'Taty','playerId':'u_6ffd65deab654f0ab19985154f3939ae'},
-            {'position':11,'nickname':'mau','playerId':'u_d995fe2ae909486399d89861aef2f450'}];
-          this.rankingUsersList = k;
+          // this.rankingUsersList =[];
+          // let k:CampaignPlacing[] =[
+          //   {'position':1,'nickname':'spartan','playerId':'u_fe939cab-1638-45b3-a604-80a3fb018e54'},
+          //   {'position':2,'nickname':'mino','playerId':'u_b061c167-0054-4a00-878e-3278b7ec5e9c'},
+          //   {'position':3,'nickname':'matteochini','playerId':'u_c2016c30-20a4-47bd-8c7a-266995c0ff9e'},
+          //   {'position':4,'nickname':'alattaruolo','playerId':'u_f74b1e34-463e-45af-a940-0c87a6d21838'},
+          //   {'position':5,'nickname':'urca','playerId':'u_78dbd97d-5136-460c-a1a7-c67210236745'},
+          //   {'position':6,'nickname':'chin8','playerId':'u_5eae76b8-2828-4932-a821-a16a4811a9c7'},
+          //   {'position':7,'nickname':'udhfuhdf','playerId':'u_765393ce-c502-418a-a10d-000eb2c901d7'},
+          //   {'position':8,'nickname':'blubla81','playerId':'u_6c5b5cd2-4e15-4267-9991-546d81829ef5'},
+          //   {'position':9,'nickname':'tania','playerId':'u_f3c61cdea7254ae3bc5581c822b374d0'},
+          //   {'position':10,'nickname':'Taty','playerId':'u_6ffd65deab654f0ab19985154f3939ae'},
+          //   {'position':11,'nickname':'mau','playerId':'u_d995fe2ae909486399d89861aef2f450'}];
+          // this.rankingUsersList = k;
           //delete till here
           this.setTableDataRankingUsers();
         });
