@@ -49,6 +49,7 @@ import { GameArea } from "src/app/shared/classes/map-point";
 import { TableVirtualScrollDataSource } from "ng-table-virtual-scroll";
 import { ReportControllerService } from "src/app/core/api/generated/controllers/reportController.service";
 import { CampaignPlacing } from "src/app/core/api/generated/model/campaignPlacing";
+import { decode, polylineEncodeLine } from "@googlemaps/polyline-codec";
 
 @Component({
   selector: "app-validation-track",
@@ -136,6 +137,8 @@ export class ValidationTrackComponent implements OnInit {
   rankingUsersList:CampaignPlacing[] =[];
   displayedColumnsRankingUsers= ["position","nickname","playerId"];
   selectedRankingUser: CampaignPlacing;
+  publicTransportTracks: any[];
+  layerPublicTransportTracks: any[];
 
   validatingFormRanking: FormGroup;
   validatingForm: FormGroup;
@@ -497,14 +500,35 @@ export class ValidationTrackComponent implements OnInit {
   }
 
   showTrack(row: TrackedInstanceConsoleClass) {
-    this.showAllPoints = true;
     this.trackingService
       .getTrackedInstanceDetailUsingGET({
         territoryId: this.territoryId,
         trackId: row.trackedInstance.id,
       })
       .subscribe((fullDetails) => {
+        this.selectedTrack = new TrackedInstanceConsoleClass();
         this.selectedTrack = fullDetails;
+        if(this.selectedTrack.routesPolylines){
+          const keys = Object.keys(this.selectedTrack.routesPolylines);
+          this.publicTransportTracks = [];
+          this.layerPublicTransportTracks = [];
+          if (keys.length > 0) {
+            const mapTracks = this.selectedTrack.routesPolylines[keys[0]];
+            const tracksNumbers = Object.keys(mapTracks);
+            let i=0;
+            for (let trackNumber of tracksNumbers) {
+              const currentTrack = {
+                id: trackNumber,
+                index: i,
+                visualize: false,
+                polyline: this.decodePoliline(mapTracks[trackNumber]),
+              };
+              this.publicTransportTracks.push(currentTrack);
+              this.layerPublicTransportTracks.push(undefined);
+              i++;
+            }
+          }
+        }
         this.setInnerHtmlvalidation(
           this.selectedTrack.trackedInstance.validationResult.validationStatus
         );
@@ -562,6 +586,10 @@ export class ValidationTrackComponent implements OnInit {
           }
         } catch {}
       });
+  }
+  
+  decodePoliline(polylinEncoded: string): any[]{
+    return decode(polylinEncoded);
   }
 
   setInnerHtmlvalidation(obj: any) {
@@ -770,7 +798,8 @@ export class ValidationTrackComponent implements OnInit {
     var polyline = L.polyline(latlngs, { color: "blue" });
     this.layerGroup = new L.LayerGroup([polyline]);
     this.layerGroup.addTo(this.map);
-    this.map.setView(latlngs[0], 15);
+    this.map.fitBounds(latlngs);
+    //this.map.setView(latlngs[0], 15);
   }
 
   public initializeMap(map: Map): void {
@@ -1036,6 +1065,40 @@ export class ValidationTrackComponent implements OnInit {
     const midDate = date.toISOString().replace("Z", "").replace("T", " ");
     return midDate.substring(0,midDate.length-4); // full date
     //return midDate.substring(midDate.length - 12, midDate.length - 4); // just hours 
+  }
+
+  visualizeAllPublicTracks(checked : boolean):void{
+    for(let i=0;i<this.publicTransportTracks.length;i++){
+      this.publicTransportTracks[i].visualize = checked;
+      this.displayPublicTrack(checked,this.publicTransportTracks[i]);
+    }
+  }
+
+  displayPublicTrack(checked: boolean,item: any): void{
+    if(checked){
+      if(this.layerPublicTransportTracks[item.index] === undefined){
+        var iconStart = L.icon({
+          iconUrl: "/../../../assets/images/start-marker-transport.png", // /dslab.playgo-backoffice/src/assets/images/stop-marker.png
+          iconSize: [25, 41],
+          iconAnchor: [12, 43],
+        });
+        var iconEnd = L.icon({
+          iconUrl: "/../../../assets/images/stop-marker-transport.png", // /dslab.playgo-backoffice/src/assets/images/stop-marker.png
+          iconSize: [25, 41],
+          iconAnchor: [12, 43],
+        });
+        var markerStart = L.marker(item.polyline[0], { icon: iconStart });
+        var markerEnd = L.marker(item.polyline[item.polyline.length-1], { icon: iconEnd });
+        var polyline = L.polyline(item.polyline, { color: "yellow" });
+        this.layerPublicTransportTracks[item.index] = new L.LayerGroup([polyline,markerStart,markerEnd]); 
+        this.layerPublicTransportTracks[item.index].addTo(this.map);
+      }
+    }else{
+      if(this.layerPublicTransportTracks[item.index]!== undefined){
+        this.map.removeLayer(this.layerPublicTransportTracks[item.index]);
+      }
+      this.layerPublicTransportTracks[item.index] = undefined;
+    }
   }
 
   drawRayOnMap() {

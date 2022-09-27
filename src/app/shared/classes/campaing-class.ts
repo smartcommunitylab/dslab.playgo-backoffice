@@ -48,6 +48,7 @@ export class CampaignClass implements Campaign {
     type?: Campaign.TypeEnum;
     validationData?: any;
     weekConfs?: Array<CampaignWeekConf>;
+    visible?: boolean;
 }
 
 export class ImageClass implements Image {
