@@ -120,7 +120,19 @@
                                     do_not_disturb_on
                                 </span>
                             </mat-icon>
-
+                        </div>
+                        <div style="margin-top: 7px;">
+                            {{'visible' | translate}}:
+                            <mat-icon *ngIf="selectedCampaign.visible">
+                                <span class="material-icons-outlined">
+                                    check_circle
+                                </span>
+                            </mat-icon>
+                            <mat-icon *ngIf="!selectedCampaign.visible">
+                                <span class="material-icons-outlined">
+                                    do_not_disturb_on
+                                </span>
+                            </mat-icon>
                         </div>
                     </div>
                     <div class="logo">
