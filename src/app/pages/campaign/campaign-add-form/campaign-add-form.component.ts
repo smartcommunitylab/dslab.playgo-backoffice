@@ -193,6 +193,7 @@ export class CampaignAddFormComponent implements OnInit {
         description: new FormControl(""),
         means: new FormControl("", [Validators.required]),
         active: new FormControl("", [Validators.required]),
+        visible: new FormControl("", [Validators.required]),
         dateFrom: new FormControl("", [Validators.required]),
         dateTo: new FormControl("", [Validators.required]),
         type: new FormControl("", [Validators.required]),
@@ -213,6 +214,7 @@ export class CampaignAddFormComponent implements OnInit {
         description: new FormControl(""),
         means: new FormControl("", [Validators.required]),
         active: new FormControl("", [Validators.required]),
+        visible: new FormControl("", [Validators.required]),
         dateFrom: new FormControl("", [Validators.required]),
         dateTo: new FormControl("", [Validators.required]),
         type: new FormControl("", [Validators.required]),
@@ -226,6 +228,7 @@ export class CampaignAddFormComponent implements OnInit {
       this.validatingForm.patchValue({
         means: this.campaignUpdated.validationData.means,
         active: this.campaignUpdated.active,
+        visible: this.campaignUpdated.visible,
         dateFrom: this.createDate(this.campaignUpdated.dateFrom),//moment(this.campaignUpdated.dateFrom), //moment(this.campaignUpdated.dateFrom, "YYYY-MM-DD"),
         dateTo: this.createDate(this.campaignUpdated.dateTo),//moment(this.campaignUpdated.dateTo), //moment(this.campaignUpdated.dateTo, "YYYY-MM-DD"),
         type: this.campaignUpdated.type,
@@ -544,6 +547,7 @@ export class CampaignAddFormComponent implements OnInit {
       this.campaignCreated.banner.url = this.selectedBanner.url;
     }
     this.campaignCreated.type = this.validatingForm.get("type").value;
+    this.campaignCreated.visible = this.validatingForm.get("visible").value;
     this.campaignCreated.validationData.means =
       this.validatingForm.get("means").value;
     if (this.validatingForm.get("type").value !== "company") {
@@ -948,7 +952,17 @@ export class CampaignAddFormComponent implements OnInit {
       return "inactive";
     }
   }
+  transformActiveBooleanVisible(val: boolean): string {
+    if (val) {
+      return "visible";
+    } else {
+      return "notVisible";
+    }
+  }
 }
+
+
+
 
 export class SelectedLimits {
   walk?: LimitsClass;
