@@ -500,6 +500,7 @@ export class ValidationTrackComponent implements OnInit {
   }
 
   showTrack(row: TrackedInstanceConsoleClass) {
+    this.cleanPublicTrack();
     this.trackingService
       .getTrackedInstanceDetailUsingGET({
         territoryId: this.territoryId,
@@ -1119,7 +1120,7 @@ export class ValidationTrackComponent implements OnInit {
         });
         var markerStart = L.marker(item.polyline[0], { icon: iconStart });
         var markerEnd = L.marker(item.polyline[item.polyline.length-1], { icon: iconEnd });
-        var polyline = L.polyline(item.polyline, { color: "yellow" });
+        var polyline = L.polyline(item.polyline, { color: "black" });
         this.layerPublicTransportTracks[item.index] = new L.LayerGroup([polyline,markerStart,markerEnd]); 
         this.layerPublicTransportTracks[item.index].addTo(this.map);
       }
@@ -1129,6 +1130,16 @@ export class ValidationTrackComponent implements OnInit {
       }
       this.layerPublicTransportTracks[item.index] = undefined;
     }
+  }
+
+  cleanPublicTrack(){
+    if(this.layerPublicTransportTracks){
+      this.layerPublicTransportTracks.forEach((item)=>{
+        if(this.map)
+          this.map.removeLayer(item);
+      });
+    }
+
   }
 
   drawRayOnMap() {
