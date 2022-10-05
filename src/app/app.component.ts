@@ -68,7 +68,7 @@ export class AppComponent implements OnInit {
         this.rolesMenu = this.roleService.getRoles();
       },
       (error) => {
-        console.log(error);
+        console.log("Initialization error: ",error);
       }
     );
     this.updateTerritoryList.list.subscribe(data=>{
