@@ -918,6 +918,7 @@ export class ValidationTrackComponent implements OnInit {
     this.showAllPoints = !this.showAllPoints;
     if(this.someComplete()){
       this.restShowedPoints();
+      this.showAllPoints = false; 
       var i = 0;
       for (let item of this.selectedTrack.trackedInstance.geolocationEvents) {
         this.showPoint(item);
