@@ -916,10 +916,19 @@ export class ValidationTrackComponent implements OnInit {
 
   showAllDataOnMap() {
     this.showAllPoints = !this.showAllPoints;
-    var i = 0;
-    for (let item of this.selectedTrack.trackedInstance.geolocationEvents) {
-      this.showPoint(item);
-      i++;
+    if(this.someComplete()){
+      this.restShowedPoints();
+      var i = 0;
+      for (let item of this.selectedTrack.trackedInstance.geolocationEvents) {
+        this.showPoint(item);
+        i++;
+      }
+    }else{
+      var i = 0;
+      for (let item of this.selectedTrack.trackedInstance.geolocationEvents) {
+        this.showPoint(item);
+        i++;
+      }
     }
   }
 
@@ -933,8 +942,28 @@ export class ValidationTrackComponent implements OnInit {
           this.markerLayers[i] = undefined;
         }
         i++;
+      } catch {i++;}
+    }
+  }
+
+  someComplete(): boolean {
+    let i = 0;
+    let someComplete = false;
+    let allComplete = true;
+    for (let item of this.selectedTrack.trackedInstance.geolocationEvents) {
+      try {
+        if (this.markerLayers[i]) {
+          someComplete = true;
+        }else{
+          allComplete = false;
+        }
+        i++;
       } catch {}
     }
+    if(allComplete){
+      return false
+    }
+    return someComplete;
   }
 
   changeStatus() {
