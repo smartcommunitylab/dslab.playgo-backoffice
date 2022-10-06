@@ -60,6 +60,7 @@ import { DEFAULT_LANGUAGE, TranslateService } from "@ngx-translate/core";
 import { ConfirmCancelComponent } from "./confirm-cancel/confirm-cancel.component";
 import { SnackbarSavedComponent } from "src/app/shared/components/snackbar-saved/snackbar-saved.component";
 import { CampaignWebhook } from "src/app/core/api/generated/model/campaignWebhook";
+import { DateTime, Settings } from "luxon";
 
 const moment = _moment;
 
@@ -159,7 +160,6 @@ export class CampaignAddFormComponent implements OnInit {
     keysWebHook.forEach(item=>{
       this.weebHooksEventsList.push(CampaignWebhook.EventsEnum[item]);
     });
-    this.initializaValidatingForm();
     this.territoryService
       .getTerritoriesUsingGET()
       .subscribe((result) => (this.territoryList = result));
@@ -169,6 +169,7 @@ export class CampaignAddFormComponent implements OnInit {
       )
       .subscribe((result) => {
         this.territorySelected = result;
+        this.initializaValidatingForm();
         this.means = this.territorySelected.territoryData.means;
         if (this.type === "add") {
           this.selectedLimits = new SelectedLimits();
@@ -312,6 +313,7 @@ export class CampaignAddFormComponent implements OnInit {
 
   validate(): void {
     this.errorMsgValidation = "";
+    this.fillCampaingCreated();
     if (this.validatingForm.valid) {
       const resValDetails = this.checkValidityDetails();
       if (!resValDetails["bool"]) {
@@ -641,19 +643,19 @@ export class CampaignAddFormComponent implements OnInit {
     return year + "-" + month + "-" + day;
   }
 
-  fromDateTimeToLong(dateString: String): number{
+  fromDateTimeToLong(dateString: string): number{
     //yyyy-mm-ddThh:mm format date
-    //const firstPart = dateString.substring(0,'yyyy-mm-ddT'.length);
-    //const secondPart = dateString.substring('yyyy-mm-ddT'.length);
-    //const isoDate = firstPart+ '02:' +secondPart + '.000Z';
-    const isoDate = dateString + ':00Z'
-    const date: Date = new Date(isoDate);
-    return date.getTime();
+    const isoString = DateTime.fromISO(dateString).toISO();
+    const hdNoZ = DateTime.fromISO(isoString.substring(0,isoString.length -'+02:00'.length)); 
+    return hdNoZ.toMillis();
   }
 
+
   createDate(timestamp: number): string {
-    const date = new Date(timestamp);
-    const midDate = date.toISOString().replace("Z", "");
+    if(this.territorySelected)
+      Settings.defaultZone = this.territorySelected.timezone;
+    const date =  DateTime.fromMillis(timestamp);
+    const midDate = date.toISO().replace("Z", "");
     return midDate.substring(0,midDate.length-7); // full date
     //return midDate.substring(midDate.length - 12, midDate.length - 4); // just hours 
   }
@@ -778,7 +780,7 @@ export class CampaignAddFormComponent implements OnInit {
   }
 
   validDates(start: number, end: number) {
-    console.log('datessss: ',start,end);
+    //console.log('datessss: ',start,end);
     if (start < end) {
       return true;
     }

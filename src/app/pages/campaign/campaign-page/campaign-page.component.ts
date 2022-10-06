@@ -18,6 +18,8 @@ import { SurveyComponentComponent } from "../survey-component/survey-component.c
 import { DEFAULT_LANGUAGE, TranslateService } from "@ngx-translate/core";
 import { RewardsComponent } from "../rewards/rewards.component";
 import { ConsoleControllerService } from "src/app/core/api/generated/controllers/consoleController.service";
+import { DateTime, Settings } from "luxon";
+import { Territory } from "src/app/core/api/generated/model/territory";
 
 @Component({
   selector: "app-campaign-page",
@@ -39,6 +41,7 @@ export class CampaignPageComponent implements OnInit {
   highlightCampaign: CampaignClass;
   languageDefault:any;
   managers: string;
+  territorySelected: Territory;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -64,6 +67,10 @@ export class CampaignPageComponent implements OnInit {
   ngOnInit() {
     this.languageDefault = this.translate.currentLang;
     this.territoryService.getTerritoriesUsingGET().subscribe(result => this.listTerritories = result);
+    this.territoryService
+    .getTerritoryUsingGET(
+      localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY)
+    ).subscribe(res =>{this.territorySelected = res});
     this.highlightCampaign = new CampaignClass();
     this.highlightCampaign.campaignId = "";
     this.onSelectTerritory(localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY));
@@ -362,9 +369,11 @@ export class CampaignPageComponent implements OnInit {
 }
 
 fromTimestampToDate(timestamp: any) : string{
-  const date = new Date(timestamp);
-  const midDate = date.toISOString().replace("Z", "").replace('T'," ");
-  return midDate.substring(0,midDate.length-7); // full date
+  if(this.territorySelected)
+    Settings.defaultZone = this.territorySelected.timezone;
+  const date =  DateTime.fromMillis(timestamp);
+  const midDate = date.toISO().replace("Z", "").replace("T", " ");
+  return midDate.substring(0,midDate.length-13); // full date
 }
 
 
