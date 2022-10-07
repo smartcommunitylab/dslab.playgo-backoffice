@@ -70,10 +70,13 @@ export class CampaignPageComponent implements OnInit {
     this.territoryService
     .getTerritoryUsingGET(
       localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY)
-    ).subscribe(res =>{this.territorySelected = res});
+    ).subscribe(res =>{
+      this.territorySelected = res;
+      this.onSelectTerritory(localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY));
+    });
     this.highlightCampaign = new CampaignClass();
     this.highlightCampaign.campaignId = "";
-    this.onSelectTerritory(localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY));
+    
   }
 
   ngAfterViewInit() {}
@@ -369,11 +372,8 @@ export class CampaignPageComponent implements OnInit {
 }
 
 fromTimestampToDate(timestamp: any) : string{
-  if(this.territorySelected)
-    Settings.defaultZone = this.territorySelected.timezone;
-  const date =  DateTime.fromMillis(timestamp);
-  const midDate = date.toISO().replace("Z", "").replace("T", " ");
-  return midDate.substring(0,midDate.length-13); // full date
+  const date =  DateTime.fromMillis(timestamp, {zone: this.territorySelected.timezone});
+  return date.toFormat("yyyy-MM-dd HH:mm");
 }
 
 
