@@ -29,17 +29,11 @@
                 </mat-grid-tile>
             </mat-grid-list>
         </div>
-        <div class="col-12 full-width" style="margin-top: 15px;">
+        <div class="col-12 full-width" style="margin-top: 15px;" *ngIf="!!validatingForm">
             <div class="full-height">
-                <div class="in-line-forms">
-                    <mat-form-field appearance="fill" class="input-half-left">
-                        <mat-label>{{'territoryId' | translate}}</mat-label>
-                        <mat-select id="territoryId" formControlName="territoryId" [disabled]="true">
-                            <mat-option *ngFor="let val of territoryList" [value]="val.territoryId">{{val.territoryId}}
-                            </mat-option>
-                        </mat-select>
-                        <mat-hint>{{"hintIdTerritoryAddCampaign" | translate}}</mat-hint>
-                    </mat-form-field>
+                <div class="in-line-forms" *ngIf="!!territorySelected">
+                        <mat-label style="width: 100%; margin-right: 10px;">{{'territoryId' | translate}}:  {{territorySelected.territoryId}}</mat-label>
+                        <mat-hint style="width: 100%;">{{"hintIdTerritoryAddCampaign" | translate}}</mat-hint>
                 </div>
                 <div class="in-line-forms" style="margin-top: 20px;">
                     <mat-form-field appearance="fill" class="input-half-left">
@@ -146,7 +140,7 @@
                     </mat-form-field>
                 </div>
                 <div
-                    *ngIf="!!validatingForm.get('webHookEvents').value && validatingForm.get('webHookEvents').value.length>0">
+                    *ngIf="!!validatingForm && !!validatingForm.get('webHookEvents').value && validatingForm.get('webHookEvents').value.length>0">
                     <div class="in-line-forms">
                         <mat-form-field appearance="fill" class="input-half-left">
                             <mat-label>{{'webHookId' | translate}}
@@ -161,7 +155,7 @@
                     </div>
                 </div>
                 <div class="in-line-forms"
-                    *ngIf="!!validatingForm.get('type').value && validatingForm.get('type').value!=='company'">
+                    *ngIf="!!validatingForm && !!validatingForm.get('type').value && validatingForm.get('type').value!=='company'">
                     <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'startDayOfWeek' | translate}}</mat-label>
                         <input matInput id="startDayOfWeek" formControlName="startDayOfWeek">
@@ -329,7 +323,7 @@
             </mat-grid-list>
         </div>
 
-        <div class="col-12 full-width" style="margin-top: 15px;">
+        <div class="col-12 full-width" style="margin-top: 15px;" *ngIf="!!validatingForm">
             <div class="full-height">
                 <div class="in-line-forms" style="margin-top: 20px;">
                     <mat-form-field appearance="fill" class="input-half-left">
@@ -437,7 +431,7 @@
                     </mat-form-field>
                 </div>
                 <div
-                    *ngIf="!!validatingForm.get('webHookEvents').value && validatingForm.get('webHookEvents').value.length>0">
+                    *ngIf="!!validatingForm && !!validatingForm.get('webHookEvents').value && validatingForm.get('webHookEvents').value.length>0">
                     <div class="in-line-forms">
                         <mat-form-field appearance="fill" class="input-half-left">
                             <mat-label>{{'webHookId' | translate}}
@@ -452,7 +446,7 @@
                     </div>
                 </div>
                 <div class="in-line-forms"
-                    *ngIf="!!validatingForm.get('type').value && validatingForm.get('type').value!=='company'">
+                    *ngIf="!!validatingForm && !!validatingForm.get('type').value && validatingForm.get('type').value!=='company'">
                     <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'startDayOfWeek' | translate}}</mat-label>
                         <input matInput id="startDayOfWeek" formControlName="startDayOfWeek">
