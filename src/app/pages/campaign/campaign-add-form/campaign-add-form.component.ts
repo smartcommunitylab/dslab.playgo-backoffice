@@ -96,7 +96,6 @@ export class CampaignAddFormComponent implements OnInit {
   validatingForm: FormGroup;
   campaignCreated: CampaignClass;
   campaignUpdated: CampaignClass;
-  territoryList: TerritoryClass[];
   territorySelected: TerritoryClass;
   selectedLogo: Image;
   selectedBanner: Image;
@@ -134,7 +133,14 @@ export class CampaignAddFormComponent implements OnInit {
     // this.selectedBanner.image = value.banner.image;
     // this.selectedBanner.url = value.banner.url;
     this.details = this.setDetails(value.details);
-    this.initializaValidatingForm();
+    this.territoryService
+      .getTerritoryUsingGET(
+        localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY)
+      )
+      .subscribe((result) => {
+        this.territorySelected = result;
+        this.initializaValidatingForm();
+      });
   }
 
   constructor(
@@ -160,9 +166,6 @@ export class CampaignAddFormComponent implements OnInit {
     keysWebHook.forEach(item=>{
       this.weebHooksEventsList.push(CampaignWebhook.EventsEnum[item]);
     });
-    this.territoryService
-      .getTerritoriesUsingGET()
-      .subscribe((result) => (this.territoryList = result));
     this.territoryService
       .getTerritoryUsingGET(
         localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY)
@@ -533,6 +536,7 @@ export class CampaignAddFormComponent implements OnInit {
   fillCampaingCreated() {
     this.campaignCreated.active = this.validatingForm.get("active").value;
     //const dataFrom: Moment = this.validatingForm.get("dateFrom").value;
+    console.log(this.validatingForm.get("dateFrom").value);
     this.campaignCreated.dateFrom = this.fromDateTimeToLong(this.validatingForm.get("dateFrom").value); //dataFrom.toDate();// this.formatDate(dataFrom); //
     //const dataTo: Moment = this.validatingForm.get("dateTo").value;
     this.campaignCreated.dateTo = this.fromDateTimeToLong(this.validatingForm.get("dateTo").value) ; //dataTo.toDate();//this.formatDate(dataTo); //
@@ -644,20 +648,24 @@ export class CampaignAddFormComponent implements OnInit {
   }
 
   fromDateTimeToLong(dateString: string): number{
-    //yyyy-mm-ddThh:mm format date
-    const isoString = DateTime.fromISO(dateString).toISO();
-    const hdNoZ = DateTime.fromISO(isoString.substring(0,isoString.length -'+02:00'.length)); 
-    return hdNoZ.toMillis();
+    //yyyy-mm-ddThh:mm:ss format date
+    console.log('String date: ',dateString);
+    if(dateString.length === 'yyyy-mm-ddThh:mm:ss'.length){
+      const newDate = DateTime.fromFormat(dateString,"yyyy-MM-dd'T'HH:mm:ss",{zone: this.territorySelected.timezone});
+      console.log(newDate);
+      return newDate.toMillis();
+    }else{
+      const newDate = DateTime.fromFormat(dateString,"yyyy-MM-dd'T'HH:mm",{zone: this.territorySelected.timezone});
+      console.log(newDate);
+      return newDate.toMillis();
+    }
+
   }
 
 
   createDate(timestamp: number): string {
-    if(this.territorySelected)
-      Settings.defaultZone = this.territorySelected.timezone;
-    const date =  DateTime.fromMillis(timestamp);
-    const midDate = date.toISO().replace("Z", "");
-    return midDate.substring(0,midDate.length-7); // full date
-    //return midDate.substring(midDate.length - 12, midDate.length - 4); // just hours 
+    const date =  DateTime.fromMillis(timestamp, {zone: this.territorySelected.timezone});
+    return date.toFormat("yyyy-MM-dd'T'HH:mm:ss");
   }
 
   get descriptionRichControl() {
