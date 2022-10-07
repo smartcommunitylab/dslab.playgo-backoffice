@@ -1099,10 +1099,13 @@ export class ValidationTrackComponent implements OnInit {
   }
 
   visualizeAllPublicTracks(checked : boolean):void{
-    for(let i=0;i<this.publicTransportTracks.length;i++){
-      this.publicTransportTracks[i].visualize = checked;
-      this.displayPublicTrack(checked,this.publicTransportTracks[i]);
+    if(this.publicTransportTracks){
+      for(let i=0;i<this.publicTransportTracks.length;i++){
+        this.publicTransportTracks[i].visualize = checked;
+        this.displayPublicTrack(checked,this.publicTransportTracks[i]);
+      }
     }
+
   }
 
   displayPublicTrack(checked: boolean,item: any): void{
@@ -1133,9 +1136,10 @@ export class ValidationTrackComponent implements OnInit {
   }
 
   cleanPublicTrack(){
+    this.visualizeAllPublicTracks(false);
     if(this.layerPublicTransportTracks){
       this.layerPublicTransportTracks.forEach((item)=>{
-        if(this.map)
+        if(this.map && item)
           this.map.removeLayer(item);
       });
     }
