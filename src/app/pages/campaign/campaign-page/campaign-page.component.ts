@@ -372,8 +372,13 @@ export class CampaignPageComponent implements OnInit {
 }
 
 fromTimestampToDate(timestamp: any) : string{
-  const date =  DateTime.fromMillis(timestamp, {zone: this.territorySelected.timezone});
-  return date.toFormat("yyyy-MM-dd HH:mm");
+  if(timestamp){
+    const date =  DateTime.fromMillis(timestamp, {zone: this.territorySelected.timezone});
+    return date.toFormat("yyyy-MM-dd HH:mm");
+  }else{
+    return this.translate.instant("alwaysActive");
+  }
+
 }
 
 
