@@ -206,9 +206,9 @@
                             <mat-grid-tile><h3>{{'monthlyLimitString' | translate}}</h3></mat-grid-tile>
                             <span *ngFor="let mean of selectedCampaign.validationData.means">
                                 <mat-grid-tile>{{mean | translate}}</mat-grid-tile>
-                                <mat-grid-tile>{{selectedCampaign.specificData[mean].dailyLimit? selectedCampaign.specificData[mean].dailyLimit + (mean==='car' || mean==='boat'? ' ('+('numberTrips' | translate)+')' : ' (km)') : ('-' | translate) }} </mat-grid-tile>
-                                <mat-grid-tile>{{selectedCampaign.specificData[mean].weeklyLimit ? selectedCampaign.specificData[mean].weeklyLimit +(mean==='car' || mean==='boat'? ' ('+('numberTrips' | translate)+')' : ' (km)') : ('-' | translate) }}</mat-grid-tile>
-                                <mat-grid-tile>{{selectedCampaign.specificData[mean].monthlyLimit? selectedCampaign.specificData[mean].monthlyLimit +(mean==='car' || mean==='boat'? ' ('+('numberTrips' | translate)+')' : ' (km)') : ('-' | translate) }}</mat-grid-tile>
+                                <mat-grid-tile>{{selectedCampaign.specificData[mean] && selectedCampaign.specificData[mean].dailyLimit? selectedCampaign.specificData[mean].dailyLimit + (mean==='car' || mean==='boat'? ' ('+('numberTrips' | translate)+')' : ' (km)') : ('-' | translate) }} </mat-grid-tile>
+                                <mat-grid-tile>{{selectedCampaign.specificData[mean] && selectedCampaign.specificData[mean].weeklyLimit ? selectedCampaign.specificData[mean].weeklyLimit +(mean==='car' || mean==='boat'? ' ('+('numberTrips' | translate)+')' : ' (km)') : ('-' | translate) }}</mat-grid-tile>
+                                <mat-grid-tile>{{selectedCampaign.specificData[mean] && selectedCampaign.specificData[mean].monthlyLimit? selectedCampaign.specificData[mean].monthlyLimit +(mean==='car' || mean==='boat'? ' ('+('numberTrips' | translate)+')' : ' (km)') : ('-' | translate) }}</mat-grid-tile>
                             </span>
                         </mat-grid-list>
                         <drop-down-card-info [title]="'description' | translate"
