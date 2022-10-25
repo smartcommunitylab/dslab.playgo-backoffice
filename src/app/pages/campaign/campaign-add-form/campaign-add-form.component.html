@@ -138,21 +138,12 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-                </div>
-                <div
-                    *ngIf="!!validatingForm && !!validatingForm.get('webHookEvents').value && validatingForm.get('webHookEvents').value.length>0">
-                    <div class="in-line-forms">
-                        <mat-form-field appearance="fill" class="input-half-left">
-                            <mat-label>{{'webHookId' | translate}}
-                            </mat-label>
-                            <input matInput formControlName="webHookId" type="text" />
-                        </mat-form-field>
-                        <mat-form-field appearance="fill" class="input-half-left">
-                            <mat-label>{{'endPointCongWebHook' | translate}}
-                            </mat-label>
-                            <input matInput formControlName="endPointCongWebHook" type="text" />
-                        </mat-form-field>
-                    </div>
+
+                    <mat-form-field appearance="fill" class="input-half-left" *ngIf="!!validatingForm && !!validatingForm.get('webHookEvents').value && validatingForm.get('webHookEvents').value.length>0">
+                        <mat-label>{{'endPointCongWebHook' | translate}}
+                        </mat-label>
+                        <input matInput formControlName="endPointCongWebHook" type="text" />
+                    </mat-form-field>
                 </div>
                 <div class="in-line-forms"
                     *ngIf="!!validatingForm && !!validatingForm.get('type').value && validatingForm.get('type').value!=='company'">
@@ -429,21 +420,11 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-                </div>
-                <div
-                    *ngIf="!!validatingForm && !!validatingForm.get('webHookEvents').value && validatingForm.get('webHookEvents').value.length>0">
-                    <div class="in-line-forms">
-                        <mat-form-field appearance="fill" class="input-half-left">
-                            <mat-label>{{'webHookId' | translate}}
-                            </mat-label>
-                            <input matInput formControlName="webHookId" type="text" />
-                        </mat-form-field>
-                        <mat-form-field appearance="fill" class="input-half-left">
-                            <mat-label>{{'endPointCongWebHook' | translate}}
-                            </mat-label>
-                            <input matInput formControlName="endPointCongWebHook" type="text" />
-                        </mat-form-field>
-                    </div>
+                    <mat-form-field appearance="fill" class="input-half-left" *ngIf="!!validatingForm && !!validatingForm.get('webHookEvents').value && validatingForm.get('webHookEvents').value.length>0">
+                        <mat-label>{{'endPointCongWebHook' | translate}}
+                        </mat-label>
+                        <input matInput formControlName="endPointCongWebHook" type="text" />
+                    </mat-form-field>
                 </div>
                 <div class="in-line-forms"
                     *ngIf="!!validatingForm && !!validatingForm.get('type').value && validatingForm.get('type').value!=='company'">

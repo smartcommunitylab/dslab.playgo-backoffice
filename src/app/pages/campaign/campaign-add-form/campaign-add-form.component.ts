@@ -206,7 +206,6 @@ export class CampaignAddFormComponent implements OnInit {
         startDayOfWeek: new FormControl("", [Validators.pattern("^[1-7]")]),
         webHookEvents: new FormControl(""),
         endPointCongWebHook: new FormControl(""),
-        webHookId: new FormControl(""),
       });
       this.validatingForm.patchValue({
         territoryId: localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY),
@@ -227,7 +226,6 @@ export class CampaignAddFormComponent implements OnInit {
         startDayOfWeek: new FormControl(""),
         webHookEvents: new FormControl(""),
         endPointCongWebHook: new FormControl(""),
-        webHookId: new FormControl(""),
       });
       this.validatingForm.patchValue({
         means: this.campaignUpdated.validationData.means,
@@ -247,7 +245,6 @@ export class CampaignAddFormComponent implements OnInit {
           this.validatingForm.patchValue({
             webHookEvents: res.events,
             endPointCongWebHook: res.endpoint,
-            webHookId: res.id,
           });
         }
       });
@@ -368,7 +365,6 @@ export class CampaignAddFormComponent implements OnInit {
                   campaignId: this.campaignCreated.campaignId,
                   endpoint: this.validatingForm.get("endPointCongWebHook")? this.validatingForm.get("endPointCongWebHook").value : '',
                   events: this.validatingForm.get("webHookEvents")? this.validatingForm.get("webHookEvents").value : '',
-                  id: this.validatingForm.get("webHookId")? this.validatingForm.get("webHookId").value : '',
                 };
                 const weebHookConf = {
                   campaignId: this.campaignCreated.campaignId,
@@ -420,7 +416,6 @@ export class CampaignAddFormComponent implements OnInit {
                   campaignId: this.campaignCreated.campaignId,
                   endpoint: this.validatingForm.get("endPointCongWebHook")? this.validatingForm.get("endPointCongWebHook").value : '',
                   events: this.validatingForm.get("webHookEvents")? this.validatingForm.get("webHookEvents").value : '',
-                  id: this.validatingForm.get("webHookId")? this.validatingForm.get("webHookId").value : '',
                 };
                 const weebHookConf = {
                   campaignId: this.campaignCreated.campaignId,
