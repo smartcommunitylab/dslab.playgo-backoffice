@@ -23,6 +23,7 @@ import {
   CONST_LANGUAGES_SUPPORTED,
   DAILY_LIMIT,
   DEFAULT_SURVEY_KEY,
+  PERIODS_KEY,
   LANGUAGE_DEFAULT,
   MONTHLY_LIMIT,
   MY_DATE_FORMATS,
@@ -572,8 +573,10 @@ export class CampaignAddFormComponent implements OnInit {
       // make it better copy every map and then override
       this.campaignCreated.specificData[DEFAULT_SURVEY_KEY] =
         this.campaignUpdated.specificData[DEFAULT_SURVEY_KEY];
+      this.campaignCreated.specificData[PERIODS_KEY] =
+        this.campaignUpdated.specificData[PERIODS_KEY];
     }
-    this.campaignCreated.specificData = new SelectedLimits();
+    //this.campaignCreated.specificData = new SelectedLimits();
     for (let mean of this.validatingForm.get("means").value) {
       this.campaignCreated.specificData[mean] = new LimitsClass();
       this.campaignCreated.specificData[mean][DAILY_LIMIT] =
