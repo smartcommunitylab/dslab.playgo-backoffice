@@ -122,6 +122,7 @@ export class CampaignAddFormComponent implements OnInit {
 
   @Input() set formTerritory(value: CampaignClass) {
     this.campaignUpdated = value;
+    console.log(this.campaignUpdated.specificData);
     this.selectedLogo = value.logo;
     this.selectedBanner = value.banner;
     // this.selectedLogo = new ImageClass();
@@ -592,6 +593,7 @@ export class CampaignAddFormComponent implements OnInit {
       this.campaignCreated.specificData[mean][MONTHLY_LIMIT] =
         this.selectedLimits[mean][MONTHLY_LIMIT];
     }
+    console.log('after: ',this.campaignCreated.specificData);
   }
 
   uploadLogo(event: any): void {
