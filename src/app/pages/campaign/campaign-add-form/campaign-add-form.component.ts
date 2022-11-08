@@ -122,6 +122,7 @@ export class CampaignAddFormComponent implements OnInit {
 
   @Input() set formTerritory(value: CampaignClass) {
     this.campaignUpdated = value;
+    console.log(this.campaignUpdated.specificData);
     this.selectedLogo = value.logo;
     this.selectedBanner = value.banner;
     // this.selectedLogo = new ImageClass();
@@ -318,6 +319,10 @@ export class CampaignAddFormComponent implements OnInit {
     return result;
   }
 
+  // addPeriods():void{
+  //   this.campaignCreated.specificData.periods = {start: 1665871200000, end: 1697407200000};
+  // }
+
   validate(): void {
     this.errorMsgValidation = "";
     if (this.validatingForm.valid) {
@@ -329,6 +334,7 @@ export class CampaignAddFormComponent implements OnInit {
         this.addMultilanguageFields();
       }
       this.fillCampaingCreated();
+      // this.addPeriods(); //TODO remove later
       if (
         !this.validDates(
           this.campaignCreated.dateFrom,
@@ -592,6 +598,7 @@ export class CampaignAddFormComponent implements OnInit {
       this.campaignCreated.specificData[mean][MONTHLY_LIMIT] =
         this.selectedLimits[mean][MONTHLY_LIMIT];
     }
+    console.log('after: ',this.campaignCreated.specificData);
   }
 
   uploadLogo(event: any): void {
