@@ -1105,7 +1105,6 @@ export class ValidationTrackComponent implements OnInit {
         this.displayPublicTrack(checked,this.publicTransportTracks[i]);
       }
     }
-
   }
 
   displayPublicTrack(checked: boolean,item: any): void{

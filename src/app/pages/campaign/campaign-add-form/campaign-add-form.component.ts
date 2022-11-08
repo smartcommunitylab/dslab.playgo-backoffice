@@ -319,6 +319,10 @@ export class CampaignAddFormComponent implements OnInit {
     return result;
   }
 
+  // addPeriods():void{
+  //   this.campaignCreated.specificData.periods = {start: 1665871200000, end: 1697407200000};
+  // }
+
   validate(): void {
     this.errorMsgValidation = "";
     if (this.validatingForm.valid) {
@@ -330,6 +334,7 @@ export class CampaignAddFormComponent implements OnInit {
         this.addMultilanguageFields();
       }
       this.fillCampaingCreated();
+      // this.addPeriods(); //TODO remove later
       if (
         !this.validDates(
           this.campaignCreated.dateFrom,
