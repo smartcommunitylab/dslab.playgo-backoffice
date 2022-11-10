@@ -50,6 +50,9 @@ import { TableVirtualScrollDataSource } from "ng-table-virtual-scroll";
 import { ReportControllerService } from "src/app/core/api/generated/controllers/reportController.service";
 import { CampaignPlacing } from "src/app/core/api/generated/model/campaignPlacing";
 import { decode, polylineEncodeLine } from "@googlemaps/polyline-codec";
+import { CampaignTripInfo } from "src/app/core/api/generated/model/campaignTripInfo";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { SnackbarSavedComponent } from "src/app/shared/components/snackbar-saved/snackbar-saved.component";
 
 @Component({
   selector: "app-validation-track",
@@ -150,7 +153,8 @@ export class ValidationTrackComponent implements OnInit {
     private campaignService: CampaignControllerService,
     private rankingService: ReportControllerService,
     private dialogStatus: MatDialog,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private _snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -1100,6 +1104,20 @@ export class ValidationTrackComponent implements OnInit {
       this.listTrack= [];
       this.setTableData();
     }
+  }
+
+  revalidateTrack(campaign: CampaignTripInfo){
+    console.log(this.territoryId,campaign.campaignId,this.selectedTrack.trackedInstance.id);
+    this.trackingServiceInternal.revalidateTrackUsingGET({    
+      territoryId: this.territoryId,
+      campaignId: campaign.campaignId,
+      trackedInstanceId: this.selectedTrack.trackedInstance.id
+    }).subscribe(res=>{
+      this._snackBar.open(this.translate.instant('rivalidationInProgress'), this.translate.instant('close'), {
+        duration: 7500
+      });
+    });
+
   }
 
   createDate(timestamp: number): string {
