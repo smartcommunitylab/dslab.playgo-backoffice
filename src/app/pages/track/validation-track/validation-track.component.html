@@ -505,8 +505,20 @@
                                     {{selectedTrack.trackedInstance.validationResult.validationStatus.error}}</p>
                                 <ul *ngIf="selectedTrack.campaigns.length>0">
                                     <li *ngFor="let campaign of selectedTrack.campaigns" class="light-background">
-                                        <h3 style="margin-bottom: 0px;">{{campaign.campaignName[selectedLanguage]}} -
-                                            {{campaign.campaignId}}</h3>
+                                        <mat-grid-list [cols]="8" rowHeight="60px">
+                                            <mat-grid-tile [colspan]="5" style="margin-left: 0px;">
+                                                <h3 style="margin-bottom: 0px;">
+                                                    {{campaign.campaignName[selectedLanguage]}} -
+                                                    {{campaign.campaignId}}</h3>
+                                            </mat-grid-tile>
+                                            <mat-grid-tile [colspan]="3">
+                                                <button class="margin-5" mat-flat-button color="primary"
+                                                (click)="revalidateTrack(campaign)">
+                                                {{'revalidateTrack' | translate}}
+                                            </button>
+                                            </mat-grid-tile>
+                                        </mat-grid-list>
+
                                         <p style="font-style:italic">{{campaign.type | translate}}</p>
                                         <p>{{(campaign.valid? 'valid' : 'invalid') | translate}},
                                             <span *ngIf="campaign.type==='school' || campaign.type==='city'">
@@ -517,9 +529,11 @@
                                             {{'distance' | translate}}: {{campaign.distance |
                                             round}} (m)
                                         </p>
+                                        <p>{{'state' | translate}}: {{campaign.scoreStatus}}</p>
                                         <p *ngIf="!!campaign.errorCode" class="red">
                                             {{'errors' | translate}}: {{campaign.errorCode}}
                                         </p>
+
                                     </li>
                                 </ul>
                             </mat-card-content>
@@ -553,11 +567,8 @@
                         {{'trackDetails' | translate}}
                     </mat-card-title>
                     <mat-card-content>
-                        <mat-checkbox class="example-margin" [checked]="false"
-                            [(ngModel)]="!showAllPoints"
-                            color="primary"
-                            [indeterminate]="someComplete()"
-                            (change)="showAllDataOnMap()">
+                        <mat-checkbox class="example-margin" [checked]="false" [(ngModel)]="!showAllPoints"
+                            color="primary" [indeterminate]="someComplete()" (change)="showAllDataOnMap()">
                             <span *ngIf="showAllPoints">
                                 {{'showAllPoints' | translate}}
                             </span>

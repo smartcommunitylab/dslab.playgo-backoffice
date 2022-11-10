@@ -19,6 +19,7 @@ import { ChallengeChoice } from "../model/challengeChoice";
 import { ChallengeConceptInfo } from "../model/challengeConceptInfo";
 import { ChallengeStatsInfo } from "../model/challengeStatsInfo";
 import { Invitation } from "../model/invitation";
+import { PlayerChallenge } from "../model/playerChallenge";
 import { Reward } from "../model/reward";
 
 @Injectable({
@@ -256,6 +257,32 @@ export class ChallengeControllerService {
         params: removeNullOrUndefined({
           campaignId,
           filter,
+        }),
+      }
+    );
+  }
+
+  /**
+   * getCompletedChallanges
+   *
+   * @param campaignId campaignId
+   * @param dateFrom UTC millis
+   * @param dateTo UTC millis
+   */
+  public getCompletedChallangesUsingGET(args: {
+    campaignId: string;
+    dateFrom: number;
+    dateTo: number;
+  }): Observable<Array<PlayerChallenge>> {
+    const { campaignId, dateFrom, dateTo } = args;
+    return this.http.request<Array<PlayerChallenge>>(
+      "get",
+      environment.serverUrl.api + `/playandgo/api/challenge/completed`,
+      {
+        params: removeNullOrUndefined({
+          campaignId,
+          dateFrom,
+          dateTo,
         }),
       }
     );
