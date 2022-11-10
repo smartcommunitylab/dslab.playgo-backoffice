@@ -23,6 +23,7 @@ import {
   CONST_LANGUAGES_SUPPORTED,
   DAILY_LIMIT,
   DEFAULT_SURVEY_KEY,
+  PERIODS_KEY,
   LANGUAGE_DEFAULT,
   MONTHLY_LIMIT,
   MY_DATE_FORMATS,
@@ -121,6 +122,7 @@ export class CampaignAddFormComponent implements OnInit {
 
   @Input() set formTerritory(value: CampaignClass) {
     this.campaignUpdated = value;
+    console.log(this.campaignUpdated.specificData);
     this.selectedLogo = value.logo;
     this.selectedBanner = value.banner;
     // this.selectedLogo = new ImageClass();
@@ -179,8 +181,6 @@ export class CampaignAddFormComponent implements OnInit {
           for (let mean of this.means) {
             this.selectedLimits[mean] = new LimitsClass();
           }
-        } else {
-          this.means = this.campaignUpdated.validationData.means;
         }
       });
     this.initDetailsType();
@@ -285,6 +285,14 @@ export class CampaignAddFormComponent implements OnInit {
           this.meansSelected
         );
         this.selectedLimits[found] = new LimitsClass();
+      }else{
+        // a mean was added
+        const found = this.findDiffInArray(
+          this.meansSelected,
+          event.value
+        );
+        this.meansSelected.push(found);
+        this.selectedLimits[found] = new LimitsClass();
       }
     }
     this.meansSelected = this.validatingForm.get("means")
@@ -311,9 +319,12 @@ export class CampaignAddFormComponent implements OnInit {
     return result;
   }
 
+  // addPeriods():void{
+  //   this.campaignCreated.specificData.periods = {start: 1665871200000, end: 1697407200000};
+  // }
+
   validate(): void {
     this.errorMsgValidation = "";
-    this.fillCampaingCreated();
     if (this.validatingForm.valid) {
       const resValDetails = this.checkValidityDetails();
       if (!resValDetails["bool"]) {
@@ -323,6 +334,7 @@ export class CampaignAddFormComponent implements OnInit {
         this.addMultilanguageFields();
       }
       this.fillCampaingCreated();
+      // this.addPeriods(); //TODO remove later
       if (
         !this.validDates(
           this.campaignCreated.dateFrom,
@@ -369,7 +381,6 @@ export class CampaignAddFormComponent implements OnInit {
                 const weebHookConf = {
                   campaignId: this.campaignCreated.campaignId,
                   body: campaignWeebH};
-                console.log("weebHook; ",weebHookConf);
                 this.campaignService.setWebhookUsingPOST(weebHookConf).subscribe(
                   () => {},
                   (error) => {
@@ -420,7 +431,6 @@ export class CampaignAddFormComponent implements OnInit {
                 const weebHookConf = {
                   campaignId: this.campaignCreated.campaignId,
                   body: campaignWeebH};
-                console.log("weebHook; ",weebHookConf);
                 this.campaignService.setWebhookUsingPOST(weebHookConf).subscribe(
                   () => {},
                   (error) => {
@@ -531,7 +541,6 @@ export class CampaignAddFormComponent implements OnInit {
   fillCampaingCreated() {
     this.campaignCreated.active = this.validatingForm.get("active").value;
     //const dataFrom: Moment = this.validatingForm.get("dateFrom").value;
-    console.log(this.validatingForm.get("dateFrom").value);
     this.campaignCreated.dateFrom = this.fromDateTimeToLong(this.validatingForm.get("dateFrom").value); //dataFrom.toDate();// this.formatDate(dataFrom); //
     //const dataTo: Moment = this.validatingForm.get("dateTo").value;
     this.campaignCreated.dateTo = this.fromDateTimeToLong(this.validatingForm.get("dateTo").value) ; //dataTo.toDate();//this.formatDate(dataTo); //
@@ -569,11 +578,17 @@ export class CampaignAddFormComponent implements OnInit {
     this.campaignCreated.communications = this.validatingForm.get("sendWeaklyEmail").value;
     this.campaignCreated.specificData = {};
     if (this.type === "modify") {
-      // make it better copy every map and then override
-      this.campaignCreated.specificData[DEFAULT_SURVEY_KEY] =
-        this.campaignUpdated.specificData[DEFAULT_SURVEY_KEY];
+      const specificDataKeys = Object.keys(this.campaignUpdated.specificData);
+      for(let key of specificDataKeys){
+        // mantains all the other keys present in specificData, like survey and periods
+        this.campaignCreated.specificData[key] = this.campaignUpdated.specificData[key];
+        const meansUsed: string[] = this.validatingForm.get("means").value;
+        if(this.means.find(item=>item===key)){
+          //reset means that are restored with the next for loop, enter here when a delete of a mean is made
+          delete this.campaignCreated.specificData[key];
+        }
+      }
     }
-    this.campaignCreated.specificData = new SelectedLimits();
     for (let mean of this.validatingForm.get("means").value) {
       this.campaignCreated.specificData[mean] = new LimitsClass();
       this.campaignCreated.specificData[mean][DAILY_LIMIT] =
@@ -583,6 +598,7 @@ export class CampaignAddFormComponent implements OnInit {
       this.campaignCreated.specificData[mean][MONTHLY_LIMIT] =
         this.selectedLimits[mean][MONTHLY_LIMIT];
     }
+    console.log('after: ',this.campaignCreated.specificData);
   }
 
   uploadLogo(event: any): void {
@@ -644,14 +660,11 @@ export class CampaignAddFormComponent implements OnInit {
 
   fromDateTimeToLong(dateString: string): number{
     //yyyy-mm-ddThh:mm:ss format date
-    console.log('String date: ',dateString);
     if(dateString.length === 'yyyy-mm-ddThh:mm:ss'.length){
       const newDate = DateTime.fromFormat(dateString,"yyyy-MM-dd'T'HH:mm:ss",{zone: this.territorySelected.timezone});
-      console.log(newDate);
       return newDate.toMillis();
     }else{
       const newDate = DateTime.fromFormat(dateString,"yyyy-MM-dd'T'HH:mm",{zone: this.territorySelected.timezone});
-      console.log(newDate);
       return newDate.toMillis();
     }
 
@@ -783,7 +796,6 @@ export class CampaignAddFormComponent implements OnInit {
   }
 
   validDates(start: number, end: number) {
-    //console.log('datessss: ',start,end);
     if (start < end) {
       return true;
     }
