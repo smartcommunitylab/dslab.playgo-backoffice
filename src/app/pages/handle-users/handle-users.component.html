@@ -13,7 +13,7 @@
                     <form class="example-form full-width">
                         <mat-form-field class="searchBar" appearance="fill">
                             <input class="full-width" type="text" matInput placeholder="{{'search' | translate}}"
-                                [(ngModel)]="searchString" (keyup)="searchUser($event)">
+                                [(ngModel)]="searchString" (keyup)="searchUserCallObservable($event)">
                             <mat-icon matSuffix>search</mat-icon>
                         </mat-form-field>
                     </form>
