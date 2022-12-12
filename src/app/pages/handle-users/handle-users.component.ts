@@ -10,6 +10,8 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { ConsoleControllerService } from "src/app/core/api/generated/controllers/consoleController.service";
 import { PagePlayer } from "src/app/shared/classes/PagePlayerInfoConsole-class";
 import { SnackbarSavedComponent } from "src/app/shared/components/snackbar-saved/snackbar-saved.component";
+import { interval, Observable, Subject } from "rxjs";
+import { debounce, debounceTime, map } from "rxjs/operators";
 
 @Component({
   selector: "app-handle-users",
@@ -28,6 +30,7 @@ export class HandleUsersComponent implements OnInit {
   fieldOrdering:string = "notSelected";
   listUserCampaign: PlayerCampaignClass[];
   paginatorData: PagePlayer;
+  searchSubject: Subject<any>;
   @ViewChild(MatSort) sort: MatSort;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -46,6 +49,9 @@ export class HandleUsersComponent implements OnInit {
     this.dataSource = new MatTableDataSource<PlayerCampaignClass>();
     this.dataSource.paginator = this.paginator;
     this.currentPageNumber = 0;
+    this.searchSubject = new Subject();
+    this.searchSubject.pipe(
+      debounceTime(500)).subscribe(searchText => this.searchUser(null));
     try {
       this.playerService.
       searchPlayersByTerritoryUsingGET({
@@ -85,6 +91,9 @@ export class HandleUsersComponent implements OnInit {
   }
 
 
+  searchUserCallObservable(item:any){
+    this.searchSubject.next(this.searchString);
+  }
 
   searchUser(item: any){
     if (this.searchString === "") {
