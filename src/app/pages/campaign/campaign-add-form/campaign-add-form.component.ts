@@ -356,6 +356,12 @@ export class CampaignAddFormComponent implements OnInit {
         this.errorMsgValidation = "dateNotValid";
         return;
       }
+      if(this.campaignCreated.dateFrom === START_YEAR_FIXED){
+        this.campaignCreated.dateFrom = null;
+      }
+      if(this.campaignCreated.dateTo === END_YEAR_FIXED){
+        this.campaignCreated.dateTo = null;
+      }
       if (this.type === "add") {
         this.campaignCreated.territoryId =
           this.validatingForm.get("territoryId").value;
