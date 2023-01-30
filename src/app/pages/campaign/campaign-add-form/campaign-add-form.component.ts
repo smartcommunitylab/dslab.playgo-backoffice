@@ -285,7 +285,6 @@ export class CampaignAddFormComponent implements OnInit {
   }
 
   chengeSelectedMeans(event: any) {
-    console.log("HERE: ",event)
     if (this.type !== "add") {
       if (
         this.meansSelected.length >
