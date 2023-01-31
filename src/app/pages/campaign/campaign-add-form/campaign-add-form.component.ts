@@ -580,10 +580,6 @@ export class CampaignAddFormComponent implements OnInit {
     if (this.validatingForm.get("type").value !== "company") {
       if (!!this.validatingForm.get("gameId").value) {
         this.campaignCreated.gameId = this.validatingForm.get("gameId").value;
-      } else {
-        const currentDate = new Date();
-        const timestamp = currentDate.getTime().toString();
-        this.campaignCreated.gameId = timestamp; //timestamp as ID
       }
       if (!!this.validatingForm.get("startDayOfWeek").value) {
         this.campaignCreated.startDayOfWeek =
