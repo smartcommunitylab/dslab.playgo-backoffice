@@ -46,3 +46,5 @@ export const WEEKLY_LIMIT = 'weeklyLimit';
 export const MONTHLY_LIMIT = 'monthlyLimit';
 export const WEEB_HOOK_EVENT = ['register','unregister','validTrack'];
 export const CONST_TIMEZONES_SUPPORTED = ['Europe/Rome'];
+export const END_YEAR_FIXED = 7777777777000;
+export const START_YEAR_FIXED = 0;

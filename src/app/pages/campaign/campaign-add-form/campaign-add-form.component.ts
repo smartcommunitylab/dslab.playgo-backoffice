@@ -32,6 +32,8 @@ import {
   TYPE_CAMPAIGN,
   WEEB_HOOK_EVENT,
   WEEKLY_LIMIT,
+  START_YEAR_FIXED,
+  END_YEAR_FIXED,
 } from "src/app/shared/constants/constants";
 import {
   trigger,
@@ -231,14 +233,23 @@ export class CampaignAddFormComponent implements OnInit {
         means: this.campaignUpdated.validationData.means,
         active: this.campaignUpdated.active,
         visible: this.campaignUpdated.visible,
-        dateFrom: this.createDate(this.campaignUpdated.dateFrom),//moment(this.campaignUpdated.dateFrom), //moment(this.campaignUpdated.dateFrom, "YYYY-MM-DD"),
-        dateTo: this.createDate(this.campaignUpdated.dateTo),//moment(this.campaignUpdated.dateTo), //moment(this.campaignUpdated.dateTo, "YYYY-MM-DD"),
+        dateFrom: this.createDate(!this.campaignUpdated.dateFrom? START_YEAR_FIXED : this.campaignUpdated.dateFrom),//moment(this.campaignUpdated.dateFrom), //moment(this.campaignUpdated.dateFrom, "YYYY-MM-DD"),
+        dateTo: this.createDate(!this.campaignUpdated.dateTo? END_YEAR_FIXED : this.campaignUpdated.dateTo ),//moment(this.campaignUpdated.dateTo), //moment(this.campaignUpdated.dateTo, "YYYY-MM-DD"),
         type: this.campaignUpdated.type,
         gameId: this.campaignUpdated.gameId,
         startDayOfWeek: this.campaignUpdated.startDayOfWeek,
         sendWeaklyEmail: this.campaignUpdated.communications,
       });
       this.meansSelected = this.campaignUpdated.validationData.means;
+      if(!this.campaignUpdated.specificData || Object.keys(this.campaignUpdated.specificData).length<=0 ){
+        this.campaignUpdated.specificData = {};
+        for(let mean of this.meansSelected){
+          this.campaignUpdated.specificData[mean] = new LimitsClass();
+          this.campaignUpdated.specificData[mean][DAILY_LIMIT] = null;
+          this.campaignUpdated.specificData[mean][WEEKLY_LIMIT] = null;
+          this.campaignUpdated.specificData[mean][MONTHLY_LIMIT] = null;
+        }
+      }
       this.selectedLimits = this.campaignUpdated.specificData;
       this.campaignService.getWebhookUsingGET(this.campaignUpdated.campaignId).subscribe(res=>{
         if(!!res){
@@ -343,6 +354,12 @@ export class CampaignAddFormComponent implements OnInit {
       ) {
         this.errorMsgValidation = "dateNotValid";
         return;
+      }
+      if(this.campaignCreated.dateFrom === START_YEAR_FIXED){
+        this.campaignCreated.dateFrom = null;
+      }
+      if(this.campaignCreated.dateTo === END_YEAR_FIXED){
+        this.campaignCreated.dateTo = null;
       }
       if (this.type === "add") {
         this.campaignCreated.territoryId =
