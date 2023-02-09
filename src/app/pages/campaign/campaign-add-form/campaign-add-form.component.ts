@@ -120,7 +120,7 @@ export class CampaignAddFormComponent implements OnInit {
   languageDefault: any;
   languagesSupported = CONST_LANGUAGES_SUPPORTED;
   languageSelected: string;
-  weebHooksEventsList: string[]=[];
+  weebHooksEventsList: string[] = [];
 
   @Input() set formTerritory(value: CampaignClass) {
     this.campaignUpdated = value;
@@ -167,7 +167,7 @@ export class CampaignAddFormComponent implements OnInit {
     this.campaignCreated = new CampaignClass();
     this.campaignCreated.validationData = new ValidationData();
     const keysWebHook = Object.keys(CampaignWebhook.EventsEnum);
-    keysWebHook.forEach(item=>{
+    keysWebHook.forEach((item) => {
       this.weebHooksEventsList.push(CampaignWebhook.EventsEnum[item]);
     });
     this.territoryService
@@ -233,17 +233,28 @@ export class CampaignAddFormComponent implements OnInit {
         means: this.campaignUpdated.validationData.means,
         active: this.campaignUpdated.active,
         visible: this.campaignUpdated.visible,
-        dateFrom: this.createDate(!this.campaignUpdated.dateFrom? START_YEAR_FIXED : this.campaignUpdated.dateFrom),//moment(this.campaignUpdated.dateFrom), //moment(this.campaignUpdated.dateFrom, "YYYY-MM-DD"),
-        dateTo: this.createDate(!this.campaignUpdated.dateTo? END_YEAR_FIXED : this.campaignUpdated.dateTo ),//moment(this.campaignUpdated.dateTo), //moment(this.campaignUpdated.dateTo, "YYYY-MM-DD"),
+        dateFrom: this.createDate(
+          !this.campaignUpdated.dateFrom
+            ? START_YEAR_FIXED
+            : this.campaignUpdated.dateFrom
+        ), //moment(this.campaignUpdated.dateFrom), //moment(this.campaignUpdated.dateFrom, "YYYY-MM-DD"),
+        dateTo: this.createDate(
+          !this.campaignUpdated.dateTo
+            ? END_YEAR_FIXED
+            : this.campaignUpdated.dateTo
+        ), //moment(this.campaignUpdated.dateTo), //moment(this.campaignUpdated.dateTo, "YYYY-MM-DD"),
         type: this.campaignUpdated.type,
         gameId: this.campaignUpdated.gameId,
         startDayOfWeek: this.campaignUpdated.startDayOfWeek,
         sendWeaklyEmail: this.campaignUpdated.communications,
       });
       this.meansSelected = this.campaignUpdated.validationData.means;
-      if(!this.campaignUpdated.specificData || Object.keys(this.campaignUpdated.specificData).length<=0 ){
+      if (
+        !this.campaignUpdated.specificData ||
+        Object.keys(this.campaignUpdated.specificData).length <= 0
+      ) {
         this.campaignUpdated.specificData = {};
-        for(let mean of this.meansSelected){
+        for (let mean of this.meansSelected) {
           this.campaignUpdated.specificData[mean] = new LimitsClass();
           this.campaignUpdated.specificData[mean][DAILY_LIMIT] = null;
           this.campaignUpdated.specificData[mean][WEEKLY_LIMIT] = null;
@@ -251,14 +262,16 @@ export class CampaignAddFormComponent implements OnInit {
         }
       }
       this.selectedLimits = this.campaignUpdated.specificData;
-      this.campaignService.getWebhookUsingGET(this.campaignUpdated.campaignId).subscribe(res=>{
-        if(!!res){
-          this.validatingForm.patchValue({
-            webHookEvents: res.events,
-            endPointCongWebHook: res.endpoint,
-          });
-        }
-      });
+      this.campaignService
+        .getWebhookUsingGET(this.campaignUpdated.campaignId)
+        .subscribe((res) => {
+          if (!!res) {
+            this.validatingForm.patchValue({
+              webHookEvents: res.events,
+              endPointCongWebHook: res.endpoint,
+            });
+          }
+        });
     }
     // language common for add and update
     this.addFormControlMultilanguage();
@@ -296,12 +309,9 @@ export class CampaignAddFormComponent implements OnInit {
           this.meansSelected
         );
         this.selectedLimits[found] = new LimitsClass();
-      }else{
+      } else {
         // a mean was added
-        const found = this.findDiffInArray(
-          this.meansSelected,
-          event.value
-        );
+        const found = this.findDiffInArray(this.meansSelected, event.value);
         this.meansSelected.push(found);
         this.selectedLimits[found] = new LimitsClass();
       }
@@ -355,10 +365,10 @@ export class CampaignAddFormComponent implements OnInit {
         this.errorMsgValidation = "dateNotValid";
         return;
       }
-      if(this.campaignCreated.dateFrom === START_YEAR_FIXED){
+      if (this.campaignCreated.dateFrom === START_YEAR_FIXED) {
         this.campaignCreated.dateFrom = null;
       }
-      if(this.campaignCreated.dateTo === END_YEAR_FIXED){
+      if (this.campaignCreated.dateTo === END_YEAR_FIXED) {
         this.campaignCreated.dateTo = null;
       }
       if (this.type === "add") {
@@ -392,18 +402,26 @@ export class CampaignAddFormComponent implements OnInit {
               if (!!this.validatingForm.get("webHookEvents")) {
                 let campaignWeebH: CampaignWebhook = {
                   campaignId: this.campaignCreated.campaignId,
-                  endpoint: this.validatingForm.get("endPointCongWebHook")? this.validatingForm.get("endPointCongWebHook").value : '',
-                  events: this.validatingForm.get("webHookEvents")? this.validatingForm.get("webHookEvents").value : '',
+                  endpoint: this.validatingForm.get("endPointCongWebHook")
+                    ? this.validatingForm.get("endPointCongWebHook").value
+                    : "",
+                  events: this.validatingForm.get("webHookEvents")
+                    ? this.validatingForm.get("webHookEvents").value
+                    : "",
                 };
                 const weebHookConf = {
                   campaignId: this.campaignCreated.campaignId,
-                  body: campaignWeebH};
-                this.campaignService.setWebhookUsingPOST(weebHookConf).subscribe(
-                  () => {},
-                  (error) => {
-                    this.translate.instant("dataNotSavedForError") + error.error.ex;
-                  }
-                );
+                  body: campaignWeebH,
+                };
+                this.campaignService
+                  .setWebhookUsingPOST(weebHookConf)
+                  .subscribe(
+                    () => {},
+                    (error) => {
+                      this.translate.instant("dataNotSavedForError") +
+                        error.error.ex;
+                    }
+                  );
               }
             },
             (error) => {
@@ -442,18 +460,26 @@ export class CampaignAddFormComponent implements OnInit {
               if (!!this.validatingForm.get("webHookEvents")) {
                 let campaignWeebH: CampaignWebhook = {
                   campaignId: this.campaignCreated.campaignId,
-                  endpoint: this.validatingForm.get("endPointCongWebHook")? this.validatingForm.get("endPointCongWebHook").value : '',
-                  events: this.validatingForm.get("webHookEvents")? this.validatingForm.get("webHookEvents").value : '',
+                  endpoint: this.validatingForm.get("endPointCongWebHook")
+                    ? this.validatingForm.get("endPointCongWebHook").value
+                    : "",
+                  events: this.validatingForm.get("webHookEvents")
+                    ? this.validatingForm.get("webHookEvents").value
+                    : "",
                 };
                 const weebHookConf = {
                   campaignId: this.campaignCreated.campaignId,
-                  body: campaignWeebH};
-                this.campaignService.setWebhookUsingPOST(weebHookConf).subscribe(
-                  () => {},
-                  (error) => {
-                    this.translate.instant("dataNotSavedForError") + error.error.ex;
-                  }
-                );
+                  body: campaignWeebH,
+                };
+                this.campaignService
+                  .setWebhookUsingPOST(weebHookConf)
+                  .subscribe(
+                    () => {},
+                    (error) => {
+                      this.translate.instant("dataNotSavedForError") +
+                        error.error.ex;
+                    }
+                  );
               }
             },
             (error) => {
@@ -558,9 +584,13 @@ export class CampaignAddFormComponent implements OnInit {
   fillCampaingCreated() {
     this.campaignCreated.active = this.validatingForm.get("active").value;
     //const dataFrom: Moment = this.validatingForm.get("dateFrom").value;
-    this.campaignCreated.dateFrom = this.fromDateTimeToLong(this.validatingForm.get("dateFrom").value); //dataFrom.toDate();// this.formatDate(dataFrom); //
+    this.campaignCreated.dateFrom = this.fromDateTimeToLong(
+      this.validatingForm.get("dateFrom").value
+    ); //dataFrom.toDate();// this.formatDate(dataFrom); //
     //const dataTo: Moment = this.validatingForm.get("dateTo").value;
-    this.campaignCreated.dateTo = this.fromDateTimeToLong(this.validatingForm.get("dateTo").value) ; //dataTo.toDate();//this.formatDate(dataTo); //
+    this.campaignCreated.dateTo = this.fromDateTimeToLong(
+      this.validatingForm.get("dateTo").value
+    ); //dataTo.toDate();//this.formatDate(dataTo); //
     this.campaignCreated.logo = new ImageClass();
     if (!!this.selectedLogo) {
       this.campaignCreated.logo.contentType = this.selectedLogo.contentType;
@@ -588,15 +618,17 @@ export class CampaignAddFormComponent implements OnInit {
         this.campaignCreated.startDayOfWeek = 1; //default value
       }
     }
-    this.campaignCreated.communications = this.validatingForm.get("sendWeaklyEmail").value;
+    this.campaignCreated.communications =
+      this.validatingForm.get("sendWeaklyEmail").value;
     this.campaignCreated.specificData = {};
     if (this.type === "modify") {
       const specificDataKeys = Object.keys(this.campaignUpdated.specificData);
-      for(let key of specificDataKeys){
+      for (let key of specificDataKeys) {
         // mantains all the other keys present in specificData, like survey and periods
-        this.campaignCreated.specificData[key] = this.campaignUpdated.specificData[key];
+        this.campaignCreated.specificData[key] =
+          this.campaignUpdated.specificData[key];
         const meansUsed: string[] = this.validatingForm.get("means").value;
-        if(this.means.find(item=>item===key)){
+        if (this.means.find((item) => item === key)) {
           //reset means that are restored with the next for loop, enter here when a delete of a mean is made
           delete this.campaignCreated.specificData[key];
         }
@@ -611,7 +643,7 @@ export class CampaignAddFormComponent implements OnInit {
       this.campaignCreated.specificData[mean][MONTHLY_LIMIT] =
         this.selectedLimits[mean][MONTHLY_LIMIT];
     }
-    console.log('after: ',this.campaignCreated.specificData);
+    console.log("after: ", this.campaignCreated.specificData);
   }
 
   uploadLogo(event: any): void {
@@ -671,21 +703,25 @@ export class CampaignAddFormComponent implements OnInit {
     return year + "-" + month + "-" + day;
   }
 
-  fromDateTimeToLong(dateString: string): number{
+  fromDateTimeToLong(dateString: string): number {
     //yyyy-mm-ddThh:mm:ss format date
-    if(dateString.length === 'yyyy-mm-ddThh:mm:ss'.length){
-      const newDate = DateTime.fromFormat(dateString,"yyyy-MM-dd'T'HH:mm:ss",{zone: this.territorySelected.timezone});
+    if (dateString.length === "yyyy-mm-ddThh:mm:ss".length) {
+      const newDate = DateTime.fromFormat(dateString, "yyyy-MM-dd'T'HH:mm:ss", {
+        zone: this.territorySelected.timezone,
+      });
       return newDate.toMillis();
-    }else{
-      const newDate = DateTime.fromFormat(dateString,"yyyy-MM-dd'T'HH:mm",{zone: this.territorySelected.timezone});
+    } else {
+      const newDate = DateTime.fromFormat(dateString, "yyyy-MM-dd'T'HH:mm", {
+        zone: this.territorySelected.timezone,
+      });
       return newDate.toMillis();
     }
-
   }
 
-
   createDate(timestamp: number): string {
-    const date =  DateTime.fromMillis(timestamp, {zone: this.territorySelected.timezone});
+    const date = DateTime.fromMillis(timestamp, {
+      zone: this.territorySelected.timezone,
+    });
     return date.toFormat("yyyy-MM-dd'T'HH:mm:ss");
   }
 
@@ -736,15 +772,12 @@ export class CampaignAddFormComponent implements OnInit {
           detail.name = item.languageDataForm[l].get("name")
             ? item.languageDataForm[l].get("name").value
             : null;
-          if (l === LANGUAGE_DEFAULT) {
-            //Set just one time in the datails default save space db
-            detail.extUrl = item.staticTypeForm.get("extUrl")
-              ? item.staticTypeForm.get("extUrl").value
-              : null;
-            detail.type = item.staticTypeForm.get("type")
-              ? item.staticTypeForm.get("type").value
-              : null;
-          }
+          detail.extUrl = item.staticTypeForm.get("extUrl")
+            ? item.staticTypeForm.get("extUrl").value
+            : null;
+          detail.type = item.staticTypeForm.get("type")
+            ? item.staticTypeForm.get("type").value
+            : null;
           this.campaignCreated.details[l].push(detail);
         });
       }
@@ -990,9 +1023,6 @@ export class CampaignAddFormComponent implements OnInit {
     }
   }
 }
-
-
-
 
 export class SelectedLimits {
   walk?: LimitsClass;
