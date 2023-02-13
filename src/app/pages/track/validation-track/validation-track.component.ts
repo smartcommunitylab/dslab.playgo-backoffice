@@ -1100,7 +1100,6 @@ export class ValidationTrackComponent implements OnInit {
   }
 
   createDate(timestamp: number,secondsDisplay = true): string {
-    console.log(this.territorySelected);
     const date = DateTime.fromMillis(timestamp, {
       zone: this.territorySelected.timezone,
     });
