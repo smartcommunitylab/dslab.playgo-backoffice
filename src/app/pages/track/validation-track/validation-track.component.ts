@@ -53,6 +53,8 @@ import { decode, polylineEncodeLine } from "@googlemaps/polyline-codec";
 import { CampaignTripInfo } from "src/app/core/api/generated/model/campaignTripInfo";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { SnackbarSavedComponent } from "src/app/shared/components/snackbar-saved/snackbar-saved.component";
+import { DateTime, Settings } from "luxon";
+import { TerritoryClass } from "src/app/shared/classes/territory-class";
 
 @Component({
   selector: "app-validation-track",
@@ -142,6 +144,7 @@ export class ValidationTrackComponent implements OnInit {
   selectedRankingUser: CampaignPlacing;
   publicTransportTracks: any[];
   layerPublicTransportTracks: any[];
+  territorySelected: TerritoryClass;
 
   validatingFormRanking: FormGroup;
   validatingForm: FormGroup;
@@ -197,6 +200,7 @@ export class ValidationTrackComponent implements OnInit {
     this.territoryService
       .getTerritoryUsingGET(this.territoryId)
       .subscribe((territory) => {
+        this.territorySelected = territory;
         this.listModelType = territory.territoryData.means;
         this.listModelType.push("all");
       });
@@ -291,31 +295,6 @@ export class ValidationTrackComponent implements OnInit {
         }),
       ],
     };
-  }
-
-  getDateFromTimeStamp(timestamp: any) {
-    var date = new Date(timestamp);
-    const gmtDiff = 2;
-    date.setHours(date.getHours()-gmtDiff);
-    return (
-      date.getDate() +
-      "/" +
-      (date.getMonth() + 1) +
-      "/" +
-      date.getFullYear() +
-      " " +
-      (date.getHours().toString().length === 1
-        ? date.getHours().toString().length === 0
-          ? "00"
-          : "0" + date.getHours().toString()
-        : date.getHours().toString()) +
-      ":" +
-      (date.getMinutes().toString().length === 1
-        ? date.getMinutes().toString().length === 0
-          ? "00"
-          : "0" + date.getMinutes().toString()
-        : date.getMinutes().toString())
-    );
   }
 
   searchSubmitRanking(){
@@ -1120,11 +1099,15 @@ export class ValidationTrackComponent implements OnInit {
 
   }
 
-  createDate(timestamp: number): string {
-    const date = new Date(timestamp);
-    const midDate = date.toISOString().replace("Z", "").replace("T", " ");
-    return midDate.substring(0,midDate.length-4); // full date
-    //return midDate.substring(midDate.length - 12, midDate.length - 4); // just hours 
+  createDate(timestamp: number,secondsDisplay = true): string {
+    console.log(this.territorySelected);
+    const date = DateTime.fromMillis(timestamp, {
+      zone: this.territorySelected.timezone,
+    });
+    if(!secondsDisplay){
+      return date.toFormat("yyyy-MM-dd HH:mm");
+    }
+    return date.toFormat("yyyy-MM-dd HH:mm:ss");
   }
 
   visualizeAllPublicTracks(checked : boolean):void{
