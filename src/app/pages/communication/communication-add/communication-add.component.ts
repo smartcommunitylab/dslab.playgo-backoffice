@@ -16,7 +16,10 @@ import { NotificationControllerService } from "src/app/core/api/generated/contro
 import { Announcement } from "src/app/core/api/generated/model/announcement";
 import { AnnouncementClass } from "src/app/shared/classes/announcment-class";
 import { SnackbarSavedComponent } from "src/app/shared/components/snackbar-saved/snackbar-saved.component";
-import { CHANNELS_COMMUNICATION, MY_DATE_FORMATS, VALUE_EMPTY_SELECT_LIST } from "src/app/shared/constants/constants";
+import { CHANNELS_COMMUNICATION, MY_DATE_FORMATS, TERRITORY_ID_LOCAL_STORAGE_KEY, VALUE_EMPTY_SELECT_LIST } from "src/app/shared/constants/constants";
+import { DateTime, Settings } from "luxon";
+import { TerritoryClass } from "src/app/shared/classes/territory-class";
+import { TerritoryControllerService } from "src/app/core/api/generated/controllers/territoryController.service";
 
 @Component({
   selector: "app-communication-add",
@@ -38,6 +41,7 @@ export class CommunicationAddComponent implements OnInit {
   territories: string[] = ["aa", "bb"];
   channels: string[] = CHANNELS_COMMUNICATION;
   listCampaings: string[] = [];
+  territorySelected: TerritoryClass;
   errorMsgValidation = "";
   constructor(
     private formBuilder: FormBuilder,
@@ -45,6 +49,7 @@ export class CommunicationAddComponent implements OnInit {
     private campaignService: CampaignControllerService,
     private _snackBar: MatSnackBar,
     private communicationService: NotificationControllerService,
+    private territoryService: TerritoryControllerService,
     public dialogRef: MatDialogRef<CommunicationAddComponent>
   ) {}
 
@@ -62,10 +67,18 @@ export class CommunicationAddComponent implements OnInit {
       users: new FormControl(""),
       title: new FormControl("", [Validators.required]),
     });
-    const today = new Date();
-    this.validatingForm.patchValue({
-      territoryId: this.territoryId,
-      dateFrom: moment(today, "YYYY-MM-DD"),
+
+    this.territoryService
+    .getTerritoryUsingGET(
+      localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY)
+    )
+    .subscribe((result) => {
+      this.territorySelected = result;
+      const today = new Date();
+      this.validatingForm.patchValue({
+        territoryId: this.territoryId,
+        dateFrom: this.createDate(Date.now()),
+      });
     });
     this.campaignService
       .getCampaignsUsingGET({ territoryId: this.territoryId })
@@ -84,10 +97,10 @@ export class CommunicationAddComponent implements OnInit {
   validate() {
     if (this.validatingForm.valid) {
       const dateFrom: number = this.validatingForm.get("dateFrom").value
-        ? this.validatingForm.get("dateFrom").value.valueOf()
+        ? this.fromDateTimeToLong(this.validatingForm.get("dateFrom").value)
         : undefined;
       const dateTo: number = this.validatingForm.get("dateTo").value
-        ? this.validatingForm.get("dateTo").value.valueOf()
+        ? this.fromDateTimeToLong(this.validatingForm.get("dateTo").value)
         : undefined;
       if(dateTo){
         if (!this.validDates(dateFrom, dateTo)) {
@@ -199,5 +212,35 @@ export class CommunicationAddComponent implements OnInit {
       }
     }
     return result;
+  }
+
+  createDate(timestamp: number): string {
+    const date = DateTime.fromMillis(timestamp, {
+      zone: this.territorySelected.timezone,
+    });
+    return date.toFormat("yyyy-MM-dd'T'HH:mm");
+  }
+
+
+  fromDateTimeToLong(dateString: string): number {
+    //yyyy-mm-ddThh:mm:ss format date
+    if (dateString.length === "yyyy-mm-ddThh:mm:ss".length) {
+      const newDate = DateTime.fromFormat(dateString, "yyyy-MM-dd'T'HH:mm:ss", {
+        zone: this.territorySelected.timezone,
+      });
+      return newDate.toMillis();
+    } else
+    if(dateString.length === "yyyy-mm-ddThh:mm".length)
+    {
+      const newDate = DateTime.fromFormat(dateString, "yyyy-MM-dd'T'HH:mm", {
+        zone: this.territorySelected.timezone,
+      });
+      return newDate.toMillis();
+    }else{
+      const newDate = DateTime.fromFormat(dateString, "yyyy-MM-dd", {
+        zone: this.territorySelected.timezone,
+      });
+      return newDate.toMillis();
+    }
   }
 }
