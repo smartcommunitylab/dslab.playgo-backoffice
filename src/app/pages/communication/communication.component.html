@@ -18,7 +18,7 @@
                     </mat-grid-tile>
                     <mat-grid-tile style="height: 65px;">
                         <form class="example-form">
-                            <mat-form-field class="example-full-width" appearance="fill" >
+                            <mat-form-field class="example-full-width" appearance="fill">
                                 <mat-label>{{'campaignId' | translate}}</mat-label>
                                 <mat-select [(ngModel)]="selectedCampaign" (closed)="searchCommunication($event)">
                                     <mat-option *ngFor="let val of listCampaings" [value]="val">{{val | translate}}
@@ -31,7 +31,7 @@
                         <form class="example-form">
                             <mat-form-field class="example-full-width" appearance="fill">
                                 <mat-label>{{'channel' | translate}}</mat-label>
-                                <mat-select [(ngModel)]="searchString" (closed)="searchCommunication($event)" >
+                                <mat-select [(ngModel)]="searchString" (closed)="searchCommunication($event)">
                                     <mat-option *ngFor="let val of listComunications" [value]="val">{{val | translate}}
                                     </mat-option>
                                 </mat-select>
@@ -75,7 +75,7 @@
                         </table>
 
                         <mat-paginator [pageSizeOptions]="size" showFirstLastButtons [length]="paginator.totalElements"
-                        (page)="selectedPageSize($event)">
+                            (page)="selectedPageSize($event)">
                         </mat-paginator>
                     </div>
                 </mat-card-content>
@@ -99,13 +99,26 @@
                                 {{mean | translate}}
                             </li>
                         </ul>
-                        <span *ngIf="communicationSelected.players!==[]">
+                        <!-- <div style="margin-bottom: 10px; width: 100%; height: 100%;">
+                            <div class="bold" style="margin-bottom: 4px;">{{'campaign' |translate }}:</div>
+                            <ul>
+                                <li>
+                                    {{communicationSelected.campaignId}}
+                                </li>
+                            </ul>
+                        </div> -->
+
+                        <span *ngIf="communicationSelected.players.length>0">
                             <h3 class="bold">{{'players' | translate}}</h3>
                             <ul>
                                 <li *ngFor="let player of communicationSelected.players">
                                     {{player | translate}}
                                 </li>
                             </ul>
+                        </span>
+                        <span *ngIf="communicationSelected.players.length==0">
+                            <h3 class="bold">{{'players' | translate}}</h3>
+                            <p>{{'allPlayers' | translate}}</p>
                         </span>
                         <span *ngIf="!!communicationSelected.description">
                             <p class="bold">{{"description" | translate}}</p>

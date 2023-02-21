@@ -84,15 +84,11 @@
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-custom-half-left">
                         <mat-label>{{'dateFrom' | translate}}</mat-label>
-                        <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1" >
-                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                        <mat-datepicker #picker1></mat-datepicker>
+                        <input matInput id="dateFrom" formControlName="dateFrom" type="datetime-local" >
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="input-custom-half-right">
                         <mat-label>{{'dateTo' | translate}}</mat-label>
-                        <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker2">
-                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                        <mat-datepicker #picker2></mat-datepicker>
+                        <input matInput id="dateTo" formControlName="dateTo" type="datetime-local"> 
                     </mat-form-field>
                 </div>
             </div>

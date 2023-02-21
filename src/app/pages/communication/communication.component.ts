@@ -143,6 +143,7 @@ export class CommunicationComponent implements OnInit {
 
   selectedCommunication(row) {
     this.communicationSelected = row;
+    console.log(this.communicationSelected)
     if (!!this.communicationSelected && !!this.newItem && this.communicationSelected.title === this.newItem.title) {
       this.newItem = new AnnouncementClass();
       this.newItem.title = "";
