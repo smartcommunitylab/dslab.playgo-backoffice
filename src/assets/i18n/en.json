@@ -33,6 +33,8 @@
   "type":"Type",
   "active":"Active",
   "inactive":"Inactive",
+  "activeMale":"Active",
+  "inactiveMale":"Inactive",
   "from":"From",
   "to":"to",
   "privacy":"Privacy",
