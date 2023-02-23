@@ -177,7 +177,7 @@
 "NO_DATA":"(dati non forniti)", 
 "SHARED_DOES_NOT_MATCH":"(dati condivisi non combaciano)",
 "currentModeType":"Modalità attuale",
-"addUserModalityCommunication":"aggiungere Id giocatore degli utenti separati da virgole",
+"addUserModalityCommunication":"Inserire ID giocatore degli utenti separati da virgole",
 "news":"Annunci",
 "push":"Notifiche push",
 "error":"Errore",

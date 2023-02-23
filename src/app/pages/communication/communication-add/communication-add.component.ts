@@ -130,8 +130,14 @@ export class CommunicationAddComponent implements OnInit {
       body.html = this.validatingForm.get("richDescription").value
         ? this.validatingForm.get("richDescription").value
         : "";
-      body.players = this.validatingForm.get("users").value
-        ? this.validatingForm.get("users").value.split(",")
+      body.players =[];
+      this.validatingForm.get("users").value
+        ? this.validatingForm.get("users").value.split(",").forEach((e,index) =>{
+          const id = e.trim();
+          if(!!id && id!==""){
+            body.players.push(id);
+          }
+        })
         : [];
       body.timestamp = new Date().valueOf();
       body.title = this.validatingForm.get("title").value
