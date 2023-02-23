@@ -321,6 +321,20 @@ export class CampaignAddFormComponent implements OnInit {
       : [];
   }
 
+  chengeSelectedType(event: any){
+    if(this.validatingForm.get('type').value){
+      if(this.validatingForm.get('type').value!=='company'){
+        this.validatingForm.get('gameId').setValidators([Validators.required]);
+        this.validatingForm.get('gameId').updateValueAndValidity();
+        console.log("ADDED");
+      }else{
+        this.validatingForm.get("gameId").clearValidators();
+        this.validatingForm.get('gameId').updateValueAndValidity();
+        console.log("REMOVED");
+      }
+    }
+  }
+
   findDiffInArray(shortArr: any[], longArr: any[]): any {
     var result;
     var found = true;
@@ -399,7 +413,7 @@ export class CampaignAddFormComponent implements OnInit {
                   duration: 4999,
                 });
               }
-              if (!!this.validatingForm.get("webHookEvents")) {
+              if (this.validatingForm.get("webHookEvents").value.length >0) {
                 let campaignWeebH: CampaignWebhook = {
                   campaignId: this.campaignCreated.campaignId,
                   endpoint: this.validatingForm.get("endPointCongWebHook")
@@ -407,7 +421,7 @@ export class CampaignAddFormComponent implements OnInit {
                     : "",
                   events: this.validatingForm.get("webHookEvents")
                     ? this.validatingForm.get("webHookEvents").value
-                    : "",
+                    : [],
                 };
                 const weebHookConf = {
                   campaignId: this.campaignCreated.campaignId,
@@ -1015,6 +1029,15 @@ export class CampaignAddFormComponent implements OnInit {
       return "inactive";
     }
   }
+
+  transformActiveBooleanMale(val: boolean): string {
+    if (val) {
+      return "activeMale";
+    } else {
+      return "inactiveMale";
+    }
+  }
+
   transformActiveBooleanVisible(val: boolean): string {
     if (val) {
       return "visible";
