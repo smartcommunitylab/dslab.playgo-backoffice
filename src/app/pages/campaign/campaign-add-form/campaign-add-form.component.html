@@ -173,13 +173,28 @@
                             <input matInput id="{{'name'+languageSelected}}"
                                 formControlName="{{'name'+languageSelected}}">
                         </mat-form-field>
+
                         <mat-card class="card" *ngIf="l===languageSelected">
-                            <mat-card-title>{{'description' | translate}} - {{l | translate}}</mat-card-title>
-                            <mat-card-content>
+                            <mat-card-title class="cursor-pointer card-expandable" (click)="expandableDescription = ! expandableDescription">
+                                {{'description' | translate}} - {{l | translate}}
+                                <mat-card-actions class="right-button top-button">
+                                    <mat-icon *ngIf="expandableDescription">
+                                        <span class="material-symbols-outlined">
+                                            expand_more
+                                        </span>
+                                    </mat-icon>
+                                    <mat-icon *ngIf="!expandableDescription">
+                                        <span class="material-symbols-outlined">
+                                            expand_less
+                                        </span>
+                                    </mat-icon>
+                                </mat-card-actions>
+                            </mat-card-title>
+                            <mat-card-content [@bodyExpansion]="expandableDescription ? 'collapsed': 'expanded' "
+                            class="expandable-content">
                                 <rich-text-editor [control]="descriptionRichControl"></rich-text-editor>
                             </mat-card-content>
                         </mat-card>
-
                         <div class="in-line-forms" *ngIf="l===languageSelected" style="margin-top: 20px">
                             <div *ngFor="let detail of details">
                                 <mat-card class="card-expandable card-normal" style="margin-bottom: 15px;">
@@ -450,8 +465,23 @@
                     <p class="warning">{{'warningTextBoxesSelectedLanguage' | translate}}</p>
                     <div *ngFor="let l of languagesSupported">
                         <mat-card class="card" *ngIf="l===languageSelected">
-                            <mat-card-title>{{'description' | translate}} - {{l | translate}}</mat-card-title>
-                            <mat-card-content>
+                            <mat-card-title class="cursor-pointer card-expandable" (click)="expandableDescription = ! expandableDescription">
+                                {{'description' | translate}} - {{l | translate}}
+                                <mat-card-actions class="right-button top-button">
+                                    <mat-icon *ngIf="expandableDescription">
+                                        <span class="material-symbols-outlined">
+                                            expand_more
+                                        </span>
+                                    </mat-icon>
+                                    <mat-icon *ngIf="!expandableDescription">
+                                        <span class="material-symbols-outlined">
+                                            expand_less
+                                        </span>
+                                    </mat-icon>
+                                </mat-card-actions>
+                            </mat-card-title>
+                            <mat-card-content [@bodyExpansion]="expandableDescription ? 'collapsed': 'expanded' "
+                            class="expandable-content">
                                 <rich-text-editor [control]="descriptionRichControl"></rich-text-editor>
                             </mat-card-content>
                         </mat-card>

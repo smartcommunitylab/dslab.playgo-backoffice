@@ -3,6 +3,7 @@ import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '../../constants/constants';
 import { FeatureGroup, icon, latLng, LeafletMouseEvent, Map, MapOptions, marker, tileLayer } from 'leaflet';
 import { MapPoint } from './map.model';
 import * as L from 'leaflet';
+import { fullScreenMap } from '../../full-screen/fullScreen';
 
 @Component({
   selector: 'jhi-app-map',
@@ -87,6 +88,7 @@ export class MapComponent implements OnInit,OnChanges {
 
   public initializeMap(map: Map): void {
     this.map = map;
+    //fullScreenMap({ id: 'map', position: 'topleft' }).addTo(this.map);
     this.createMarker();
   }
   private initializeMapOptions(): void {
