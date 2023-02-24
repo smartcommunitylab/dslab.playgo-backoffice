@@ -4,6 +4,7 @@ import { FeatureGroup, icon, latLng, LeafletMouseEvent, Map, MapOptions, marker,
 import * as L from 'leaflet';
 import { MapPoint } from '../map-with-selector/map.model';
 import { GameArea } from '../../classes/map-point';
+import { fullScreenMap } from '../../full-screen/fullScreen';
 @Component({
   selector: 'app-map-show',
   templateUrl: './map-show.component.html',
@@ -67,6 +68,7 @@ export class MapShowComponent implements OnInit {
 
   public initializeMap(map: Map): void {
     this.map = map;
+    fullScreenMap({ id: 'map', position: 'topleft' }).addTo(this.map);
     this.onInputCoords();
   }
 

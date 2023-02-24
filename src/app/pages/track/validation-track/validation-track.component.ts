@@ -33,7 +33,7 @@ import {
   DEFAULT_LATITUDE,
   DEFAULT_LONGITUDE,
 } from "../../../shared/constants/constants";
-import { FeatureGroup, latLng, Map, MapOptions, tileLayer } from "leaflet"; // Draw
+import { FeatureGroup, latLng, Map, MapOptions, tileLayer,Control } from "leaflet"; // Draw
 import * as L from "leaflet";
 import { means } from "src/app/shared/constants/means";
 import * as moment from "moment";
@@ -55,6 +55,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { SnackbarSavedComponent } from "src/app/shared/components/snackbar-saved/snackbar-saved.component";
 import { DateTime, Settings } from "luxon";
 import { TerritoryClass } from "src/app/shared/classes/territory-class";
+import { fullScreenMap } from "src/app/shared/full-screen/fullScreen";
 
 @Component({
   selector: "app-validation-track",
@@ -789,6 +790,7 @@ export class ValidationTrackComponent implements OnInit {
   public initializeMap(map: Map): void {
     this.restoreMap = map;
     this.map = map;
+    fullScreenMap({ id: 'map', position: 'topleft' }).addTo(this.map);
     this.drawRayOnMap();
     this.drawPolyline(this.selectedTrack.trackedInstance.geolocationEvents);
     this.markerLayers = [];
@@ -1146,6 +1148,9 @@ export class ValidationTrackComponent implements OnInit {
   }
 
   cleanPublicTrack(){
+    if(!this.showAllPoints){
+      this.showAllPoints = true;
+    }
     this.visualizeAllPublicTracks(false);
     if(this.layerPublicTransportTracks){
       this.layerPublicTransportTracks.forEach((item)=>{

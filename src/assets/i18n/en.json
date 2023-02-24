@@ -104,6 +104,7 @@
   "status":"Status",
   "logout":"Logout",
   "notifications":"Notifications",
+  "sendEmailnotifications": "Sending email",
   "surname":"Surname",
   "validation":"Validation",
   "mean":"Mean",
