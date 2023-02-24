@@ -268,7 +268,7 @@
 "trackDetails":"Dettagli viaggio",
 "tripValidation":"Dati di validazione",
 "motivation":"Motivazione",
-"assignCommunicationWarning":" ATTENZIONE! Se il ID giocatore non è specificato (necessario ID giocatore non email), la mail verrà inviata a TUTTI i giocatori della campagna",
+"assignCommunicationWarning":" ATTENZIONE! Se l'ID giocatore non è specificato (necessario ID giocatore non email), la mail verrà inviata a TUTTI i giocatori della campagna",
 "send":"Invio",
 "text":"Testo",
 "notVirtual":"Non virtuale",
