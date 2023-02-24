@@ -106,6 +106,7 @@ export class CampaignAddFormComponent implements OnInit {
   means: string[];
   errorMsgValidation: string;
   stateDescription: string = "collapsed";
+  expandableDescription: boolean = true; 
   details: DetailsForAddModifyModule[] = [];
   detailsType: any[];
   // stateRules: string = "collapsed";
@@ -213,6 +214,7 @@ export class CampaignAddFormComponent implements OnInit {
         territoryId: localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY),
         active: false,
       });
+      this.expandableDescription = false;
     } else {
       this.validatingForm = this.formBuilder.group({
         languages: new FormControl(""),
