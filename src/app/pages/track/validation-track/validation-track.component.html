@@ -594,6 +594,11 @@
                 <div class="map-class" style="border: solid 1px black;" id="map" leaflet [leafletOptions]="mapOptions"
                     (leafletMapReady)="initializeMap($event)">
                 </div>
+                <div *ngIf="save_button_new_poly">
+                    <button style="margin: 1%" color="primary" mat-flat-button type="button"
+                    (click)="saveNewTrack()">{{"save_new_track" | translate
+                    }}</button>
+                </div>
                 <mat-card class="table-details card-normal">
                     <mat-card-title>
                         {{'trackDetails' | translate}}
