@@ -481,6 +481,15 @@
                                                 </span>
                                             </div>
                                         </mat-grid-tile>
+                                        <mat-grid-tile [colspan]="1" *ngIf="getCarPoolingUserType(selectedTrack.trackedInstance.sharedTravelId)!== null">
+                                            <div class="wrapper">
+                                                <span class="info-title">
+                                                    <span class="bold">
+                                                        {{'carPoolingUserType' | translate}}:</span> <br />
+                                                    <span>{{ getCarPoolingUserType(selectedTrack.trackedInstance.sharedTravelId) | translate}}</span>
+                                                </span>
+                                            </div>
+                                        </mat-grid-tile>
                                     </div>
 
                                 </mat-grid-list>
@@ -593,6 +602,11 @@
                 </div>
                 <div class="map-class" style="border: solid 1px black;" id="map" leaflet [leafletOptions]="mapOptions"
                     (leafletMapReady)="initializeMap($event)">
+                </div>
+                <div *ngIf="save_button_new_poly">
+                    <button style="margin: 1%" color="primary" mat-flat-button type="button"
+                    (click)="saveNewTrack()">{{"save_new_track" | translate
+                    }}</button>
                 </div>
                 <mat-card class="table-details card-normal">
                     <mat-card-title>
