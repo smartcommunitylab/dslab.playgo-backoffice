@@ -847,7 +847,7 @@ export class ValidationTrackComponent implements OnInit {
         "</h4>";
       var marker = L.marker([row.geocoding[1], row.geocoding[0]], {
         icon: icon,
-        draggable: true,
+        // draggable: true,
       });
       marker.on('dragstart', (e)=>{this.current_moving_pointer_leaflet_id=marker["_leaflet_id"]; })
       .on('drag', (e)=>{this.movePolylineOnMarkerMove(e["latlng"])})
@@ -862,7 +862,6 @@ export class ValidationTrackComponent implements OnInit {
       };
       this.markerLayers[row.index]["layer"].addTo(this.map);
     }
-    console.log(this.markerLayers)
   }
 
   addStartMarker(point: any) {
@@ -1171,7 +1170,6 @@ export class ValidationTrackComponent implements OnInit {
   }
 
   movePolylineOnMarkerMove(latLong: any){
-    console.log("leafletID: ",this.current_moving_pointer_leaflet_id, ", latLong: ",latLong);
     this.markerLayers.forEach((layer,index)=>{
       if(layer["markers"][0]["_leaflet_id"]===this.current_moving_pointer_leaflet_id){
         //this.selectedTrack.trackedInstance.geolocationEvents[index] = new Geolocation();
@@ -1202,7 +1200,28 @@ export class ValidationTrackComponent implements OnInit {
 
   saveNewTrack(){
     console.log("To implement save new Track");
+    // TODO
   }
+
+  getCarPoolingUserType(id: string){
+    if(!!!id || id===null){
+      return null;
+    }
+    else{
+      if(id.toLocaleUpperCase().charAt(0)==='D'){
+        return "driver";
+      }
+      else {
+        if(id.toLocaleUpperCase().charAt(0)==='P'){
+          return "passenger";
+        }else{
+          return null;
+        }
+      }
+    }
+
+  }
+
 
   drawRayOnMap() {
     this.territoryService
