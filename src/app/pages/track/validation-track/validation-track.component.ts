@@ -146,6 +146,8 @@ export class ValidationTrackComponent implements OnInit {
   publicTransportTracks: any[];
   layerPublicTransportTracks: any[];
   territorySelected: TerritoryClass;
+  current_moving_pointer_leaflet_id: number;
+  save_button_new_poly: boolean= false;
 
   validatingFormRanking: FormGroup;
   validatingForm: FormGroup;
@@ -845,7 +847,11 @@ export class ValidationTrackComponent implements OnInit {
         "</h4>";
       var marker = L.marker([row.geocoding[1], row.geocoding[0]], {
         icon: icon,
+        // draggable: true,
       });
+      marker.on('dragstart', (e)=>{this.current_moving_pointer_leaflet_id=marker["_leaflet_id"]; })
+      .on('drag', (e)=>{this.movePolylineOnMarkerMove(e["latlng"])})
+      .on('dragend', (e)=>{this.save_button_new_poly = true;});
       const markers = this.markerLayers[row.index]
         ? this.markerLayers[row.index]["markers"].push(marker)
         : [marker];
@@ -1148,6 +1154,8 @@ export class ValidationTrackComponent implements OnInit {
   }
 
   cleanPublicTrack(){
+    this.current_moving_pointer_leaflet_id = null;
+    this.save_button_new_poly= false;
     if(!this.showAllPoints){
       this.showAllPoints = true;
     }
@@ -1160,6 +1168,60 @@ export class ValidationTrackComponent implements OnInit {
     }
 
   }
+
+  movePolylineOnMarkerMove(latLong: any){
+    this.markerLayers.forEach((layer,index)=>{
+      if(layer["markers"][0]["_leaflet_id"]===this.current_moving_pointer_leaflet_id){
+        //this.selectedTrack.trackedInstance.geolocationEvents[index] = new Geolocation();
+        this.drawPolylineOnMarkerMove(this.selectedTrack.trackedInstance.geolocationEvents,index,latLong);
+      }
+    });
+  }
+
+  drawPolylineOnMarkerMove(arrayPoints: any[],index, latLong) {
+    // any[] = GeolocationClass
+    var latlngs = [];
+    if(this.layerGroup){
+      this.map.removeLayer(this.layerGroup);
+    }
+    for (let i=0;i<arrayPoints.length;i++) {
+      if(i!=index){
+        latlngs.push([arrayPoints[i].geocoding[1], arrayPoints[i].geocoding[0]]);
+      }else{
+        this.selectedTrack.trackedInstance.geolocationEvents[i].geocoding[1] = latLong["lat"];
+        this.selectedTrack.trackedInstance.geolocationEvents[i].geocoding[0] = latLong["lng"];
+        latlngs.push([latLong["lat"], latLong["lng"]]);
+      }
+    }
+    var polyline = L.polyline(latlngs, { color: "blue" });
+    this.layerGroup = new L.LayerGroup([polyline]);
+    this.layerGroup.addTo(this.map);
+  }
+
+  saveNewTrack(){
+    console.log("To implement save new Track");
+    // TODO
+  }
+
+  getCarPoolingUserType(id: string){
+    if(!!!id || id===null){
+      return null;
+    }
+    else{
+      if(id.toLocaleUpperCase().charAt(0)==='D'){
+        return "driver";
+      }
+      else {
+        if(id.toLocaleUpperCase().charAt(0)==='P'){
+          return "passenger";
+        }else{
+          return null;
+        }
+      }
+    }
+
+  }
+
 
   drawRayOnMap() {
     this.territoryService
