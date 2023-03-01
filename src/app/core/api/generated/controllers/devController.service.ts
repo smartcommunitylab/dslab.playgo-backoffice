@@ -15,6 +15,8 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Observable } from "rxjs";
 
+import { CampaignSubscription } from "../model/campaignSubscription";
+
 @Injectable({
   providedIn: "root",
 })
@@ -88,6 +90,32 @@ export class DevControllerService {
   }
 
   /**
+   * revalidateTrack
+   *
+   * @param territoryId territoryId
+   * @param playerId playerId
+   * @param trackedInstanceId trackedInstanceId
+   */
+  public revalidateTrackUsingGET1(args: {
+    territoryId: string;
+    playerId: string;
+    trackedInstanceId: string;
+  }): Observable<any> {
+    const { territoryId, playerId, trackedInstanceId } = args;
+    return this.http.request<any>(
+      "get",
+      environment.serverUrl.api + `/playandgo/api/dev/track/revalidate`,
+      {
+        params: removeNullOrUndefined({
+          territoryId,
+          playerId,
+          trackedInstanceId,
+        }),
+      }
+    );
+  }
+
+  /**
    * subscribeAziendale
    *
    * @param campaignId campaignId
@@ -124,6 +152,18 @@ export class DevControllerService {
     return this.http.request<any>(
       "get",
       environment.serverUrl.api + `/playandgo/api/dev/test/campaign/placing`,
+      {}
+    );
+  }
+
+  /**
+   * testFindByMetaData
+   *
+   */
+  public testFindByMetaDataUsingGET(): Observable<Array<CampaignSubscription>> {
+    return this.http.request<Array<CampaignSubscription>>(
+      "get",
+      environment.serverUrl.api + `/playandgo/api/dev/test/campaign/sub/meta`,
       {}
     );
   }
