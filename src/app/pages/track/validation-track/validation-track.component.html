@@ -490,6 +490,15 @@
                                                 </span>
                                             </div>
                                         </mat-grid-tile>
+                                        <mat-grid-tile [colspan]="2" *ngIf="getCarPoolingUserType(selectedTrack.trackedInstance.sharedTravelId)!== null">
+                                            <div class="wrapper">
+                                                <span class="info-title">
+                                                    <span class="bold">
+                                                        {{'sharedTravelId' | translate}}:</span> <br />
+                                                    <span>{{selectedTrack.trackedInstance.sharedTravelId}}</span>
+                                                </span>
+                                            </div>
+                                        </mat-grid-tile>
                                     </div>
 
                                 </mat-grid-list>
