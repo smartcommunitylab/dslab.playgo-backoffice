@@ -20,7 +20,7 @@
                             <mat-label>{{'status' | translate}}</mat-label>
                             <mat-select id="status" formControlName="status" (ngModelChange)="resetPageNumber()">
                                 <mat-option *ngFor="let val of listStates" [value]="val">{{val | translate}}
-                                </mat-option>
+                                </mat-option>  
                             </mat-select>
                         </mat-form-field>
                     </mat-grid-tile>
@@ -56,7 +56,7 @@
                             <mat-label>{{'means' | translate}}</mat-label>
                             <mat-select id="modeType" formControlName="modeType" (ngModelChange)="resetPageNumber()">
                                 <mat-option *ngFor="let val of listModelType" [value]="val">{{val | translate}}
-                                </mat-option>
+                                </mat-option> 
                             </mat-select>
                         </mat-form-field>
                     </mat-grid-tile>
@@ -68,9 +68,16 @@
                         </mat-form-field>
                     </mat-grid-tile>
                     <mat-grid-tile>
-                        <button style="margin-bottom: 20px;" color="primary" mat-flat-button type="button"
-                            (click)="switchTrackToRanking()">{{(!showTierFilter? 'ranking' : 'tracks' ) | translate
-                            }}</button>
+                        <mat-form-field appearance="fill" class="full-width">
+                            <mat-label>{{'checkValue' | translate}}</mat-label>
+                            <mat-select id="toCheck" formControlName="toCheck">
+                                <mat-option [value]="true">{{"trueToCheck" |
+                                    translate}}</mat-option>
+                                <mat-option [value]="false">{{"falseToCheck" |
+                                    translate}}</mat-option>
+                                <mat-option [value]="null">-</mat-option>                                                        
+                            </mat-select>
+                        </mat-form-field>
                     </mat-grid-tile>
                     <mat-grid-tile [colspan]="2">
                         <div class="search-container">
@@ -93,6 +100,12 @@
                                 {{"resetSearchFields" | translate}}
                             </button>
                         </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile></mat-grid-tile>
+                    <mat-grid-tile>
+                        <button style="margin-bottom: 20px;" color="primary" mat-flat-button type="button"
+                            (click)="switchTrackToRanking()">{{(!showTierFilter? 'ranking' : 'tracks' ) | translate
+                            }}</button>
                     </mat-grid-tile>
                 </mat-grid-list>
             </form>
@@ -481,16 +494,20 @@
                                                 </span>
                                             </div>
                                         </mat-grid-tile>
-                                        <mat-grid-tile [colspan]="1" *ngIf="getCarPoolingUserType(selectedTrack.trackedInstance.sharedTravelId)!== null">
+                                        <mat-grid-tile [colspan]="1"
+                                            *ngIf="getCarPoolingUserType(selectedTrack.trackedInstance.sharedTravelId)!== null">
                                             <div class="wrapper">
                                                 <span class="info-title">
                                                     <span class="bold">
                                                         {{'carPoolingUserType' | translate}}:</span> <br />
-                                                    <span>{{ getCarPoolingUserType(selectedTrack.trackedInstance.sharedTravelId) | translate}}</span>
+                                                    <span>{{
+                                                        getCarPoolingUserType(selectedTrack.trackedInstance.sharedTravelId)
+                                                        | translate}}</span>
                                                 </span>
                                             </div>
                                         </mat-grid-tile>
-                                        <mat-grid-tile [colspan]="2" *ngIf="getCarPoolingUserType(selectedTrack.trackedInstance.sharedTravelId)!== null">
+                                        <mat-grid-tile [colspan]="2"
+                                            *ngIf="getCarPoolingUserType(selectedTrack.trackedInstance.sharedTravelId)!== null">
                                             <div class="wrapper">
                                                 <span class="info-title">
                                                     <span class="bold">
@@ -510,6 +527,49 @@
                                     </mat-icon>
                                     {{'modifyTrack' | translate}}
                                 </button>
+                                <mat-card class="card-to-check" style="padding: 0px;">
+                                    <div class="full-dimension" style="margin: 0px;padding: 10px;" [ngClass]="{
+                                        'red-background' : this.selectedTrack.trackedInstance.toCheck===null || this.selectedTrack.trackedInstance.toCheck,
+                                        'green-background' : !this.selectedTrack.trackedInstance.toCheck
+                                    }">
+                                        <mat-card-title>{{ "toCheckTrip" | translate}}</mat-card-title>
+                                        <mat-card-content>
+                                            <mat-grid-list [cols]="1" rowHeight="50px">
+                                                <mat-grid-tile>
+                                                    <div class="wrapper">
+                                                        {{"currentValue"| translate}}
+                                                        {{translateForToCheckValue(this.selectedTrack.trackedInstance.toCheck)
+                                                        | translate}}
+                                                    </div>
+                                                </mat-grid-tile>
+                                                <mat-grid-tile>
+                                                    <div class="second-wrapper">
+                                                        <form [formGroup]="toCheckForm">
+                                                            <mat-form-field appearance="fill" class="full-width">
+                                                                <mat-label>{{'newCheckValue' | translate}}</mat-label>
+                                                                <mat-select id="toCheck" formControlName="toCheck">
+                                                                    <mat-option [value]="true">{{"trueToCheck" |
+                                                                        translate}}</mat-option>
+                                                                    <mat-option [value]="false">{{"falseToCheck" |
+                                                                        translate}}</mat-option>
+                                                                    <!-- <mat-option [value]="null">{{"nullToCheckValue" | translate}}</mat-option>                                                         -->
+                                                                </mat-select>
+                                                            </mat-form-field>
+                                                        </form>
+                                                    </div>
+                                                </mat-grid-tile>
+                                                <mat-grid-tile>
+                                                    <div class="wrapper">
+                                                        <button mat-flat-button color="primary"
+                                                            (click)="changeToCheck()">
+                                                            {{"saveCheckTrip" | translate}}
+                                                        </button>
+                                                    </div>
+                                                </mat-grid-tile>
+                                            </mat-grid-list>
+                                        </mat-card-content>
+                                    </div>
+                                </mat-card>
                             </mat-card-content>
                         </mat-card>
                     </div>
@@ -521,38 +581,40 @@
                                     *ngIf="selectedTrack.trackedInstance.validationResult.travelValidity==='INVALID'">
                                     {{'error' | translate}}:
                                     {{selectedTrack.trackedInstance.validationResult.validationStatus.error}}</p>
-                                    <cdk-virtual-scroll-viewport itemSize="50" *ngIf="selectedTrack.campaigns.length>0" class="viewport">
-                                        <div *cdkVirtualFor="let campaign of selectedTrack.campaigns" class="light-background">
-                                            <mat-grid-list [cols]="8" rowHeight="60px">
-                                                <mat-grid-tile [colspan]="5" style="margin-left: 0px;">
-                                                    <h3 style="margin-bottom: 0px;">
-                                                        {{campaign.campaignName[selectedLanguage]}} -
-                                                        {{campaign.campaignId}}</h3>
-                                                </mat-grid-tile>
-                                                <mat-grid-tile [colspan]="3">
-                                                    <button class="margin-5" mat-flat-button color="primary"
+                                <cdk-virtual-scroll-viewport itemSize="50" *ngIf="selectedTrack.campaigns.length>0"
+                                    class="viewport">
+                                    <div *cdkVirtualFor="let campaign of selectedTrack.campaigns"
+                                        class="light-background">
+                                        <mat-grid-list [cols]="8" rowHeight="60px">
+                                            <mat-grid-tile [colspan]="5" style="margin-left: 0px;">
+                                                <h3 style="margin-bottom: 0px;">
+                                                    {{campaign.campaignName[selectedLanguage]}} -
+                                                    {{campaign.campaignId}}</h3>
+                                            </mat-grid-tile>
+                                            <mat-grid-tile [colspan]="3">
+                                                <button class="margin-5" mat-flat-button color="primary"
                                                     (click)="revalidateTrack(campaign)">
                                                     {{'revalidateTrack' | translate}}
                                                 </button>
-                                                </mat-grid-tile>
-                                            </mat-grid-list>
-    
-                                            <p style="font-style:italic">{{campaign.type | translate}}</p>
-                                            <p>{{(campaign.valid? 'valid' : 'invalid') | translate}},
-                                                <span *ngIf="campaign.type==='school' || campaign.type==='city'">
-                                                    {{'score' |
-                                                    translate}}:
-                                                    {{campaign.score}},
-                                                </span>
-                                                {{'distance' | translate}}: {{campaign.distance |
-                                                round}} (m)
-                                            </p>
-                                            <p>{{'state' | translate}}: {{campaign.scoreStatus}}</p>
-                                            <p *ngIf="!!campaign.errorCode" class="red">
-                                                {{'errors' | translate}}: {{campaign.errorCode}}
-                                            </p>
-                                        </div>
-                                      </cdk-virtual-scroll-viewport>
+                                            </mat-grid-tile>
+                                        </mat-grid-list>
+
+                                        <p style="font-style:italic">{{campaign.type | translate}}</p>
+                                        <p>{{(campaign.valid? 'valid' : 'invalid') | translate}},
+                                            <span *ngIf="campaign.type==='school' || campaign.type==='city'">
+                                                {{'score' |
+                                                translate}}:
+                                                {{campaign.score}},
+                                            </span>
+                                            {{'distance' | translate}}: {{campaign.distance |
+                                            round}} (m)
+                                        </p>
+                                        <p>{{'state' | translate}}: {{campaign.scoreStatus}}</p>
+                                        <p *ngIf="!!campaign.errorCode" class="red">
+                                            {{'errors' | translate}}: {{campaign.errorCode}}
+                                        </p>
+                                    </div>
+                                </cdk-virtual-scroll-viewport>
                                 <!-- <ul *ngIf="selectedTrack.campaigns.length>0">
                                     <li *ngFor="let campaign of selectedTrack.campaigns" class="light-background">
                                         <mat-grid-list [cols]="8" rowHeight="60px">
@@ -614,8 +676,8 @@
                 </div>
                 <div *ngIf="save_button_new_poly">
                     <button style="margin: 1%" color="primary" mat-flat-button type="button"
-                    (click)="saveNewTrack()">{{"save_new_track" | translate
-                    }}</button>
+                        (click)="saveNewTrack()">{{"save_new_track" | translate
+                        }}</button>
                 </div>
                 <mat-card class="table-details card-normal">
                     <mat-card-title>

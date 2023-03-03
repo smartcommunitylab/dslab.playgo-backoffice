@@ -152,7 +152,7 @@
 
 .header-detatils{
   width: 99%;
-  height: 590px;
+  height: 820px;
   margin-left: 1%;
 }
 
@@ -175,12 +175,16 @@
 
 .margin-5{
   margin: 5px;
-
 }
 
 .wrapper {
   width: 100%;
   display: flex;
+  text-align: left;
+}
+
+.second-wrapper{
+  width: 100%;
   text-align: left;
 }
 
@@ -254,4 +258,10 @@
 .viewport{
   height: 95%;
   width: 100%;
+}
+
+.card-to-check{
+  margin-top: 10px;
+  background-color: white;
+  border: 10px black solid;
 }
