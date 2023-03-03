@@ -148,6 +148,7 @@ export class ValidationTrackComponent implements OnInit {
   territorySelected: TerritoryClass;
   current_moving_pointer_leaflet_id: number;
   save_button_new_poly: boolean= false;
+  toCheckForm: FormGroup;
 
   validatingFormRanking: FormGroup;
   validatingForm: FormGroup;
@@ -167,6 +168,7 @@ export class ValidationTrackComponent implements OnInit {
     this.territoryId = localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY);
     this.initializaValidatingForm();
     this.initializaValidatingFormRanking();
+    this.initToCheckForm();
     // var dateFromString =  this.transformDateToString(this.validatingForm.get("dateFrom").value, true);
     // var dateToString = this.transformDateToString(this.validatingForm.get("dateTo").value, true);
     this.trackingServiceInternal
@@ -229,12 +231,19 @@ export class ValidationTrackComponent implements OnInit {
       dateTo: new FormControl(""),
       campaignId: new FormControl(""),
       status: new FormControl(""),
+      toCheck: new FormControl("")
     });
     const monday = this.getPreviousMonday();
     const sunday = this.getNextSunday();
     this.validatingForm.patchValue({
       dateFrom: moment(monday, "YYYY-MM-DD"),
       dateTo: moment(sunday, "YYYY-MM-DD"),
+    });
+  }
+
+  initToCheckForm(){
+    this.toCheckForm = this.formBuilder.group({
+      toCheck: new FormControl(""),
     });
   }
 
@@ -393,6 +402,9 @@ export class ValidationTrackComponent implements OnInit {
               ? undefined
               : this.validatingForm.get("status").value.toUpperCase()
             : undefined,
+            toCheck: this.validatingForm.get("toCheck").value === false || this.validatingForm.get("toCheck").value === true 
+            ? this.validatingForm.get("toCheck").value
+            : undefined
         })
         .subscribe((res) => {
           this.paginatorData = res;
@@ -495,6 +507,9 @@ export class ValidationTrackComponent implements OnInit {
       .subscribe((fullDetails) => {
         this.selectedTrack = new TrackedInstanceConsoleClass();
         this.selectedTrack = fullDetails;
+        this.toCheckForm.patchValue({
+          toCheck: this.selectedTrack.trackedInstance.toCheck
+        });
         if(this.selectedTrack.routesPolylines){
           const keys = Object.keys(this.selectedTrack.routesPolylines);
           this.publicTransportTracks = [];
@@ -634,6 +649,7 @@ export class ValidationTrackComponent implements OnInit {
       dateTo: new FormControl(""),
       campaignId: new FormControl(""),
       status: new FormControl(""),
+      toCheck: new FormControl(""),
     });
     this.validatingForm.patchValue({
       sort: "",
@@ -644,6 +660,7 @@ export class ValidationTrackComponent implements OnInit {
       dateTo: "",
       campaignId: "",
       status: "",
+      toCheck: null,
     });
     this.resetPageNumber();
   }
@@ -709,6 +726,9 @@ export class ValidationTrackComponent implements OnInit {
             status: this.validatingForm.get("status").value
               ? this.validatingForm.get("status").value.toUpperCase()
               : undefined,
+            toCheck: this.validatingForm.get("toCheck").value === false || this.validatingForm.get("toCheck").value === true
+            ? this.validatingForm.get("toCheck").value
+            : undefined
           })
           .subscribe((res) => {
             this.listTrack = res.content;
@@ -991,6 +1011,27 @@ export class ValidationTrackComponent implements OnInit {
     });
   }
 
+  changeToCheck(){
+    if(this.toCheckForm.get("toCheck").value != null){
+      this.trackingService.modifyToCheckUsingPUT({
+        toCheck: this.toCheckForm.get("toCheck").value,
+        trackId: this.selectedTrack.trackedInstance.id,
+      }).subscribe(()=>{this.selectedTrack.trackedInstance.toCheck = this.toCheckForm.get("toCheck").value});
+    }
+  }
+
+  translateForToCheckValue(value): string{
+    if(value === null){
+      return "nullToCheckValue";
+    }
+    if(value){
+      return "trueToCheck";
+    }else{
+      return "falseToCheck";
+    }
+    
+  }
+
   selectedRowOnTrack(index: number): boolean {
     if (this.markerLayers) {
       if (!!this.markerLayers[index]) {
@@ -1067,6 +1108,7 @@ export class ValidationTrackComponent implements OnInit {
       dateTo: undefined,
       campaignId: undefined,
       status: undefined,
+      toCheck: undefined,
     });
     this.selectedTrack = undefined;
     const monday = this.getPreviousMonday();
