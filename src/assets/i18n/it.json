@@ -275,7 +275,7 @@
 "changedValidity":"Validità modificata",
 "notChangedValidity":"Validità non modificata",
 "ranking":"Classifica",
-"validWithReserve": "Valido (con riserva)",
+"withReserve": "(con riserva)",
 "selectPlayerToShowTracks":"Selezione un giocatore per vedere i tracciati",
 "noUserRankingFound":"Non è stata trovata alcuna classifica per i campi selezionati",
 "numberTrips":"N. viaggi",
