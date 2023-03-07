@@ -86,7 +86,7 @@ export class CommunicationAddComponent implements OnInit {
         campaigns.forEach((item) => {
           this.listCampaings.push(item.campaignId);
         });
-        this.listCampaings.push(this.translate.instant(VALUE_EMPTY_SELECT_LIST));
+        // this.listCampaings.push(this.translate.instant(VALUE_EMPTY_SELECT_LIST)); //TODO suspended for now
       });
   }
 
@@ -144,6 +144,7 @@ export class CommunicationAddComponent implements OnInit {
         ? this.validatingForm.get("title").value
         : "";
       body.to = dateTo ? dateTo.toString() : '';
+      console.log("Post for, ", body, campaignId, this.territoryId);
       this.communicationService
         .notifyCampaignUsingPOST({
           territoryId: this.territoryId,
@@ -152,6 +153,7 @@ export class CommunicationAddComponent implements OnInit {
         })
         .subscribe(
           (res) => {
+            console.log(" $$$$$$$$$$$$$$$$$$$$$$$$$ Done $$$$$$$$$$$$$$$$$$$");
             this.onNoClick("", body);
             this._snackBar.openFromComponent(SnackbarSavedComponent,
               {
