@@ -149,6 +149,9 @@ export class ValidationTrackComponent implements OnInit {
   current_moving_pointer_leaflet_id: number;
   save_button_new_poly: boolean= false;
   toCheckForm: FormGroup;
+  polylineHighligthLayer;
+  highligthTrackCheck= false;
+  selectAllCheckbox= false;
 
   validatingFormRanking: FormGroup;
   validatingForm: FormGroup;
@@ -802,11 +805,30 @@ export class ValidationTrackComponent implements OnInit {
     for (let element of arrayPoints) {
       latlngs.push([element.geocoding[1], element.geocoding[0]]);
     }
-    var polyline = L.polyline(latlngs, { color: "blue" });
+    var polyline = L.polyline(latlngs, { color: "blue" }); // ,weight:10
     this.layerGroup = new L.LayerGroup([polyline]);
     this.layerGroup.addTo(this.map);
     this.map.fitBounds(latlngs);
     //this.map.setView(latlngs[0], 15);
+  }
+
+  highlightTrack(toDraw: boolean){
+    var latlngs = [];
+    this.highligthTrackCheck = toDraw;
+    try{
+      if (this.polylineHighligthLayer) {
+        this.map.removeLayer(this.polylineHighligthLayer);
+        this.polylineHighligthLayer = undefined;
+      }
+    }catch(error){}
+    if(toDraw){
+      for (let element of  this.selectedTrack.trackedInstance.geolocationEvents) {
+        latlngs.push([element.geocoding[1], element.geocoding[0]]);
+      }
+      var polyline = L.polyline(latlngs, { color: "blue",weight:10 }); // ,weight:10
+      this.polylineHighligthLayer = new L.LayerGroup([polyline]);
+      this.polylineHighligthLayer.addTo(this.map);
+    }
   }
 
   public initializeMap(map: Map): void {
@@ -1160,6 +1182,7 @@ export class ValidationTrackComponent implements OnInit {
   }
 
   visualizeAllPublicTracks(checked : boolean):void{
+    this.selectAllCheckbox = checked;
     if(this.publicTransportTracks){
       for(let i=0;i<this.publicTransportTracks.length;i++){
         this.publicTransportTracks[i].visualize = checked;
@@ -1198,6 +1221,10 @@ export class ValidationTrackComponent implements OnInit {
   cleanPublicTrack(){
     this.current_moving_pointer_leaflet_id = null;
     this.save_button_new_poly= false;
+    this.highligthTrackCheck= false;
+    this.selectAllCheckbox= false;
+    this.highlightTrack(false);
+    document.getElementById("highlightCheckbox")
     if(!this.showAllPoints){
       this.showAllPoints = true;
     }

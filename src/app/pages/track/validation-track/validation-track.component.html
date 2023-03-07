@@ -584,17 +584,16 @@
                                     class="viewport">
                                     <div *cdkVirtualFor="let campaign of selectedTrack.campaigns"
                                         class="light-background">
-                                        <mat-grid-list [cols]="8" rowHeight="60px">
-                                            <mat-grid-tile [colspan]="5" style="margin-left: 0px;">
+                                        <mat-grid-list [cols]="8" rowHeight="22px">
+                                            <mat-grid-tile [colspan]="8" style="margin-left: 0px;">
                                                 <h3 style="margin-bottom: 0px;">
-                                                    {{campaign.campaignName[selectedLanguage]}} -
-                                                    {{campaign.campaignId}}</h3>
+                                                    {{campaign.campaignName[selectedLanguage]}}
+                                                </h3>
                                             </mat-grid-tile>
-                                            <mat-grid-tile [colspan]="3">
-                                                <button class="margin-5" mat-flat-button color="primary"
-                                                    (click)="revalidateTrack(campaign)">
-                                                    {{'revalidateTrack' | translate}}
-                                                </button>
+                                            <mat-grid-tile [colspan]="8" style="margin-left: 0px;">
+                                                <h3 style="margin-bottom: 0px;">
+                                                    {{campaign.campaignId}}
+                                                </h3>
                                             </mat-grid-tile>
                                         </mat-grid-list>
 
@@ -612,53 +611,32 @@
                                         <p *ngIf="!!campaign.errorCode" class="red">
                                             {{'errors' | translate}}: {{campaign.errorCode}}
                                         </p>
+                                        <button class="margin-5" mat-flat-button color="primary"
+                                        (click)="revalidateTrack(campaign)">
+                                        {{'revalidateTrack' | translate}}
+                                    </button>
                                     </div>
                                 </cdk-virtual-scroll-viewport>
-                                <!-- <ul *ngIf="selectedTrack.campaigns.length>0">
-                                    <li *ngFor="let campaign of selectedTrack.campaigns" class="light-background">
-                                        <mat-grid-list [cols]="8" rowHeight="60px">
-                                            <mat-grid-tile [colspan]="5" style="margin-left: 0px;">
-                                                <h3 style="margin-bottom: 0px;">
-                                                    {{campaign.campaignName[selectedLanguage]}} -
-                                                    {{campaign.campaignId}}</h3>
-                                            </mat-grid-tile>
-                                            <mat-grid-tile [colspan]="3">
-                                                <button class="margin-5" mat-flat-button color="primary"
-                                                (click)="revalidateTrack(campaign)">
-                                                {{'revalidateTrack' | translate}}
-                                            </button>
-                                            </mat-grid-tile>
-                                        </mat-grid-list>
-
-                                        <p style="font-style:italic">{{campaign.type | translate}}</p>
-                                        <p>{{(campaign.valid? 'valid' : 'invalid') | translate}},
-                                            <span *ngIf="campaign.type==='school' || campaign.type==='city'">
-                                                {{'score' |
-                                                translate}}:
-                                                {{campaign.score}},
-                                            </span>
-                                            {{'distance' | translate}}: {{campaign.distance |
-                                            round}} (m)
-                                        </p>
-                                        <p>{{'state' | translate}}: {{campaign.scoreStatus}}</p>
-                                        <p *ngIf="!!campaign.errorCode" class="red">
-                                            {{'errors' | translate}}: {{campaign.errorCode}}
-                                        </p>
-
-                                    </li>
-                                </ul> -->
                             </mat-card-content>
 
                         </mat-card>
                     </div>
+                </div>
+                <div class="map-class" style="border: solid 1px black;" id="map" leaflet [leafletOptions]="mapOptions"
+                    (leafletMapReady)="initializeMap($event)">
                 </div>
                 <div class="transport-tracks-div" *ngIf="!!publicTransportTracks && publicTransportTracks.length>0">
                     <h4 style="margin-bottom: 0px;">
                         {{'publicTransportAvailable' | translate}}
                     </h4>
                     <mat-grid-list [cols]="5" rowHeight="50px">
+                        <mat-grid-tile>
+                            <mat-checkbox [checked]="highligthTrackCheck" (change)="highlightTrack($event.checked)" [color]="'primary'">
+                                {{'highligthTrack' | translate}}
+                            </mat-checkbox>
+                        </mat-grid-tile>
                         <mat-grid-tile style="width: 20%;">
-                            <mat-checkbox (change)="visualizeAllPublicTracks($event.checked)" [color]="'primary'">
+                            <mat-checkbox [checked]="selectAllCheckbox" (change)="visualizeAllPublicTracks($event.checked)" [color]="'primary'">
                                 {{'selectAll' | translate}}
                             </mat-checkbox>
                         </mat-grid-tile>
@@ -668,10 +646,8 @@
                                 {{item.id}}
                             </mat-checkbox>
                         </mat-grid-tile>
+
                     </mat-grid-list>
-                </div>
-                <div class="map-class" style="border: solid 1px black;" id="map" leaflet [leafletOptions]="mapOptions"
-                    (leafletMapReady)="initializeMap($event)">
                 </div>
                 <div *ngIf="save_button_new_poly">
                     <button style="margin: 1%" color="primary" mat-flat-button type="button"
