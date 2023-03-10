@@ -153,7 +153,7 @@
 
 .header-detatils{
   width: 99%;
-  height: 820px;
+  height: 560px;
   margin-left: 1%;
 }
 
@@ -192,6 +192,10 @@
 .bottom-div{
   height: 2000px;
   width: 100%;
+}
+
+.reduced-bottom-padding{
+  padding-bottom: 0px;
 }
 
 .expandable-content{
@@ -265,4 +269,8 @@
   margin-top: 10px;
   background-color: white;
   border: 10px black solid;
+}
+
+.margin-bottom-sm{
+  margin-bottom: 5px;
 }

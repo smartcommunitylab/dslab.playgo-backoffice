@@ -20,7 +20,7 @@
                             <mat-label>{{'status' | translate}}</mat-label>
                             <mat-select id="status" formControlName="status" (ngModelChange)="resetPageNumber()">
                                 <mat-option *ngFor="let val of listStates" [value]="val">{{val | translate}}
-                                </mat-option>  
+                                </mat-option>
                             </mat-select>
                         </mat-form-field>
                     </mat-grid-tile>
@@ -56,7 +56,7 @@
                             <mat-label>{{'means' | translate}}</mat-label>
                             <mat-select id="modeType" formControlName="modeType" (ngModelChange)="resetPageNumber()">
                                 <mat-option *ngFor="let val of listModelType" [value]="val">{{val | translate}}
-                                </mat-option> 
+                                </mat-option>
                             </mat-select>
                         </mat-form-field>
                     </mat-grid-tile>
@@ -75,7 +75,7 @@
                                     translate}}</mat-option>
                                 <mat-option [value]="false">{{"falseToCheck" |
                                     translate}}</mat-option>
-                                <mat-option [value]="null">-</mat-option>                                                        
+                                <mat-option [value]="'all'">{{"all" | translate}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </mat-grid-tile>
@@ -281,13 +281,13 @@
                                             {{(element.trackedInstance.validationResult.travelValidity==='PENDING'?
                                             'pending': element.trackedInstance.validationResult.travelValidity)
                                             | translate}}
-                                            <span *ngIf="!!element.trackedInstance.toCheck">{{'withReserve' |
-                                                translate}}</span>
+                                            <!-- <span *ngIf="!!element.trackedInstance.toCheck">{{'withReserve' |
+                                                translate}}</span> -->
                                         </span>
                                     </mat-grid-tile>
                                 </mat-grid-list>
-                                <mat-grid-list cols="1" rowHeight="30px">
-                                    <mat-grid-tile>
+                                <mat-grid-list cols="3" rowHeight="30px">
+                                    <mat-grid-tile [colspan]="2">
                                         <span class=" left-text full-width">
                                             <span class="bold">
                                                 {{'player' | translate}}: {{element.playerInfo.nickname}}
@@ -297,6 +297,11 @@
                                                 ({{element.playerInfo.playerId}})
                                             </span>
                                         </span>
+                                    </mat-grid-tile>
+                                    <mat-grid-tile [colspan]="1">
+                                        <mat-checkbox [checked]="!valueOfCheck(element.trackedInstance.toCheck)"
+                                            (change)="changeToCheck($event.checked,element)" [color]="'primary'">
+                                        </mat-checkbox>
                                     </mat-grid-tile>
                                 </mat-grid-list>
                             </mat-card>
@@ -341,9 +346,8 @@
                                                 <span>
                                                     {{(statisticsSelectedTrack.validity==='PENDING'? 'pending':
                                                     statisticsSelectedTrack.validity) | translate}}
-                                                    <span
-                                                        *ngIf="!!selectedTrack.trackedInstance.toCheck">{{'validWithReserve'
-                                                        | translate}}</span>
+                                                    <!-- <span *ngIf="!!selectedTrack.trackedInstance.toCheck">{{'withReserve'
+                                                        | translate}}</span> -->
                                                 </span>
                                             </span>
                                         </div>
@@ -493,7 +497,17 @@
                                                 </span>
                                             </div>
                                         </mat-grid-tile>
-                                        <mat-grid-tile [colspan]="1"
+                                        <mat-grid-tile [colspan]="1">
+                                            <div class="wrapper">
+                                                <span class="info-title">
+                                                    <span class="bold">
+                                                        {{"currentValue"| translate}}</span> <br />
+                                                    <span>{{translateForToCheckValue(this.selectedTrack.trackedInstance.toCheck)
+                                                        | translate}}</span>
+                                                </span>
+                                            </div>
+                                        </mat-grid-tile>
+                                        <mat-grid-tile [colspan]="2"
                                             *ngIf="getCarPoolingUserType(selectedTrack.trackedInstance.sharedTravelId)!== null">
                                             <div class="wrapper">
                                                 <span class="info-title">
@@ -505,7 +519,7 @@
                                                 </span>
                                             </div>
                                         </mat-grid-tile>
-                                        <mat-grid-tile [colspan]="2"
+                                        <mat-grid-tile [colspan]="1"
                                             *ngIf="getCarPoolingUserType(selectedTrack.trackedInstance.sharedTravelId)!== null">
                                             <div class="wrapper">
                                                 <span class="info-title">
@@ -526,49 +540,6 @@
                                     </mat-icon>
                                     {{'modifyTrack' | translate}}
                                 </button>
-                                <mat-card class="card-to-check" style="padding: 0px;">
-                                    <div class="full-dimension" style="margin: 0px;padding: 10px;" [ngClass]="{
-                                        'red-background' : this.selectedTrack.trackedInstance.toCheck===null || this.selectedTrack.trackedInstance.toCheck,
-                                        'green-background' : !this.selectedTrack.trackedInstance.toCheck
-                                    }">
-                                        <mat-card-title>{{ "toCheckTrip" | translate}}</mat-card-title>
-                                        <mat-card-content>
-                                            <mat-grid-list [cols]="1" rowHeight="50px">
-                                                <mat-grid-tile>
-                                                    <div class="wrapper">
-                                                        {{"currentValue"| translate}}
-                                                        {{translateForToCheckValue(this.selectedTrack.trackedInstance.toCheck)
-                                                        | translate}}
-                                                    </div>
-                                                </mat-grid-tile>
-                                                <mat-grid-tile>
-                                                    <div class="second-wrapper">
-                                                        <form [formGroup]="toCheckForm">
-                                                            <mat-form-field appearance="fill" class="full-width">
-                                                                <mat-label>{{'newCheckValue' | translate}}</mat-label>
-                                                                <mat-select id="toCheck" formControlName="toCheck">
-                                                                    <mat-option [value]="true">{{"trueToCheck" |
-                                                                        translate}}</mat-option>
-                                                                    <mat-option [value]="false">{{"falseToCheck" |
-                                                                        translate}}</mat-option>
-                                                                    <!-- <mat-option [value]="null">{{"nullToCheckValue" | translate}}</mat-option>                                                         -->
-                                                                </mat-select>
-                                                            </mat-form-field>
-                                                        </form>
-                                                    </div>
-                                                </mat-grid-tile>
-                                                <mat-grid-tile>
-                                                    <div class="wrapper">
-                                                        <button mat-flat-button color="primary"
-                                                            (click)="changeToCheck()">
-                                                            {{"saveCheckTrip" | translate}}
-                                                        </button>
-                                                    </div>
-                                                </mat-grid-tile>
-                                            </mat-grid-list>
-                                        </mat-card-content>
-                                    </div>
-                                </mat-card>
                             </mat-card-content>
                         </mat-card>
                     </div>
@@ -596,25 +567,55 @@
                                                 </h3>
                                             </mat-grid-tile>
                                         </mat-grid-list>
+                                        <mat-grid-list [cols]="3" rowHeight="80px">
+                                            <mat-grid-tile [colspan]="2">
+                                                <div style="width: 100%;height: 100%;">
+                                                    <p class="margin-bottom-sm" style="font-style:italic">{{campaign.type | translate}}</p>
+                                                    <p class="margin-bottom-sm">{{(campaign.valid? 'valid' : 'invalid') | translate}},
+                                                        <span
+                                                            *ngIf="campaign.type==='school' || campaign.type==='city'">
+                                                            {{'score' |
+                                                            translate}}:
+                                                            {{campaign.score}},
+                                                        </span>
+                                                        {{'distance' | translate}}: {{campaign.distance |
+                                                        round}} (m)
+                                                    </p>
+                                                    <p class="margin-bottom-sm">{{'state' | translate}}: {{campaign.scoreStatus}}</p>
+                                                    <p *ngIf="!!campaign.errorCode" class="red">
+                                                        {{'errors' | translate}}: {{campaign.errorCode}}
+                                                    </p>
+                                                </div>
+                                                <!-- <mat-grid-list [cols]="1" rowHeight="20px">
+                                                    <mat-grid-tile [colspan]="1">
+                                                       <p style="font-style:italic;width: 100%;">{{campaign.type | translate}}</p> 
+                                                    </mat-grid-tile>
+                                                    <mat-grid-tile [colspan]="1">
+                                                        {{(campaign.valid? 'valid' : 'invalid') | translate}},
+                                                    <span *ngIf="campaign.type==='school' || campaign.type==='city'">
+                                                        {{'score' |
+                                                        translate}}:
+                                                        {{campaign.score}},
+                                                    </span>
+                                                    {{'distance' | translate}}: {{campaign.distance |
+                                                    round}} (m)
+                                                    </mat-grid-tile>
+                                                    <mat-grid-tile [colspan]="1">
+                                                        {{'state' | translate}}: {{campaign.scoreStatus}}
+                                                    </mat-grid-tile>
+                                                    <mat-grid-tile [colspan]="1" *ngIf="!!campaign.errorCode" class="red">
+                                                        {{'errors' | translate}}: {{campaign.errorCode}}
+                                                    </mat-grid-tile>
+                                                </mat-grid-list> -->
 
-                                        <p style="font-style:italic">{{campaign.type | translate}}</p>
-                                        <p>{{(campaign.valid? 'valid' : 'invalid') | translate}},
-                                            <span *ngIf="campaign.type==='school' || campaign.type==='city'">
-                                                {{'score' |
-                                                translate}}:
-                                                {{campaign.score}},
-                                            </span>
-                                            {{'distance' | translate}}: {{campaign.distance |
-                                            round}} (m)
-                                        </p>
-                                        <p>{{'state' | translate}}: {{campaign.scoreStatus}}</p>
-                                        <p *ngIf="!!campaign.errorCode" class="red">
-                                            {{'errors' | translate}}: {{campaign.errorCode}}
-                                        </p>
-                                        <button class="margin-5" mat-flat-button color="primary"
-                                        (click)="revalidateTrack(campaign)">
-                                        {{'revalidateTrack' | translate}}
-                                    </button>
+                                            </mat-grid-tile>
+                                            <mat-grid-tile [colspan]="1">
+                                                <button class="margin-5" mat-flat-button color="primary"
+                                                    (click)="revalidateTrack(campaign)">
+                                                    {{'revalidateTrack' | translate}}
+                                                </button>
+                                            </mat-grid-tile>
+                                        </mat-grid-list>
                                     </div>
                                 </cdk-virtual-scroll-viewport>
                             </mat-card-content>
@@ -631,12 +632,14 @@
                     </h4>
                     <mat-grid-list [cols]="5" rowHeight="50px">
                         <mat-grid-tile>
-                            <mat-checkbox [checked]="highligthTrackCheck" (change)="highlightTrack($event.checked)" [color]="'primary'">
+                            <mat-checkbox [checked]="highligthTrackCheck" (change)="highlightTrack($event.checked)"
+                                [color]="'primary'">
                                 {{'highligthTrack' | translate}}
                             </mat-checkbox>
                         </mat-grid-tile>
                         <mat-grid-tile style="width: 20%;">
-                            <mat-checkbox [checked]="selectAllCheckbox" (change)="visualizeAllPublicTracks($event.checked)" [color]="'primary'">
+                            <mat-checkbox [checked]="selectAllCheckbox"
+                                (change)="visualizeAllPublicTracks($event.checked)" [color]="'primary'">
                                 {{'selectAll' | translate}}
                             </mat-checkbox>
                         </mat-grid-tile>
