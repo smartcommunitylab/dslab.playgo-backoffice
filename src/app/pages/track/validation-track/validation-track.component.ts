@@ -1,5 +1,10 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from "@angular/forms";
 import { GeoLocationEvent, Track } from "src/app/shared/classes/track-class";
 import {
   LIST_STATES_TRACK,
@@ -33,7 +38,14 @@ import {
   DEFAULT_LATITUDE,
   DEFAULT_LONGITUDE,
 } from "../../../shared/constants/constants";
-import { FeatureGroup, latLng, Map, MapOptions, tileLayer,Control } from "leaflet"; // Draw
+import {
+  FeatureGroup,
+  latLng,
+  Map,
+  MapOptions,
+  tileLayer,
+  Control,
+} from "leaflet"; // Draw
 import * as L from "leaflet";
 import { means } from "src/app/shared/constants/means";
 import * as moment from "moment";
@@ -101,7 +113,7 @@ export class ValidationTrackComponent implements OnInit {
     "isMoving",
     "speed",
   ];
-  dataSource: TableVirtualScrollDataSource<any>;//TrackedInstanceConsoleClass
+  dataSource: TableVirtualScrollDataSource<any>; //TrackedInstanceConsoleClass
   displayedColumns: string[] = ["tracks"];
   selectedTrack: TrackedInstanceConsoleClass;
   selectedRowIndex: string;
@@ -140,14 +152,17 @@ export class ValidationTrackComponent implements OnInit {
   restoreMap: Map;
   showTierFilter = false;
   dataSourceRankingUsersList: TableVirtualScrollDataSource<any>;
-  rankingUsersList:CampaignPlacing[] =[];
-  displayedColumnsRankingUsers= ["position","nickname","playerId"];
+  rankingUsersList: CampaignPlacing[] = [];
+  displayedColumnsRankingUsers = ["position", "nickname", "playerId"];
   selectedRankingUser: CampaignPlacing;
   publicTransportTracks: any[];
   layerPublicTransportTracks: any[];
   territorySelected: TerritoryClass;
   current_moving_pointer_leaflet_id: number;
-  save_button_new_poly: boolean= false;
+  save_button_new_poly: boolean = false;
+  polylineHighligthLayer;
+  highligthTrackCheck = false;
+  selectAllCheckbox = false;
 
   validatingFormRanking: FormGroup;
   validatingForm: FormGroup;
@@ -191,7 +206,8 @@ export class ValidationTrackComponent implements OnInit {
           : undefined,
         status: this.validatingForm.get("status").value
           ? this.validatingForm.get("status").value.toUpperCase()
-          : undefined,
+          : undefined, 
+        toCheck: true,
       })
       .subscribe((res) => {
         this.paginatorData = res;
@@ -229,12 +245,14 @@ export class ValidationTrackComponent implements OnInit {
       dateTo: new FormControl(""),
       campaignId: new FormControl(""),
       status: new FormControl(""),
+      toCheck: new FormControl(""),
     });
     const monday = this.getPreviousMonday();
     const sunday = this.getNextSunday();
     this.validatingForm.patchValue({
       dateFrom: moment(monday, "YYYY-MM-DD"),
       dateTo: moment(sunday, "YYYY-MM-DD"),
+      toCheck:true,
     });
   }
 
@@ -242,7 +260,7 @@ export class ValidationTrackComponent implements OnInit {
     this.validatingFormRanking = this.formBuilder.group({
       dateFrom: new FormControl(""),
       dateTo: new FormControl(""),
-      campaignId: new FormControl("",[Validators.required]),
+      campaignId: new FormControl("", [Validators.required]),
     });
     const monday = this.getPreviousMonday();
     const sunday = this.getNextSunday();
@@ -284,7 +302,9 @@ export class ValidationTrackComponent implements OnInit {
   }
 
   setTableDataRankingUsers() {
-    this.dataSourceRankingUsersList = new TableVirtualScrollDataSource<any>(this.rankingUsersList);
+    this.dataSourceRankingUsersList = new TableVirtualScrollDataSource<any>(
+      this.rankingUsersList
+    );
   }
 
   private initializeMapOptions(): void {
@@ -300,21 +320,21 @@ export class ValidationTrackComponent implements OnInit {
     };
   }
 
-  searchSubmitRanking(){
+  searchSubmitRanking() {
     if (this.validatingFormRanking.valid) {
       if (this.resetSearchFieldsComponents) {
         this.allowResetOnsearch();
         this.resetSearchFieldsComponents = false;
       }
       const today: number = new Date().getTime();
-      this.rankingService.
-        getCampaingPlacingByGameUsingGET({
+      this.rankingService
+        .getCampaingPlacingByGameUsingGET({
           page: this.currentPageNumber,
           size: this.size[0],
           campaignId: this.validatingFormRanking.get("campaignId").value,
           sort: this.SORTING,
           dateFrom: this.validatingFormRanking.get("dateFrom").value,
-          dateTo: this.validatingFormRanking.get("dateTo").value
+          dateTo: this.validatingFormRanking.get("dateTo").value,
         })
         .subscribe((res) => {
           this.rankingUsersList = res.content;
@@ -393,6 +413,13 @@ export class ValidationTrackComponent implements OnInit {
               ? undefined
               : this.validatingForm.get("status").value.toUpperCase()
             : undefined,
+          toCheck:
+            this.validatingForm.get("toCheck").value === "all" ? 
+            undefined : 
+            this.validatingForm.get("toCheck").value === false ||
+            this.validatingForm.get("toCheck").value === true
+              ? this.validatingForm.get("toCheck").value
+              : undefined,
         })
         .subscribe((res) => {
           this.paginatorData = res;
@@ -486,96 +513,102 @@ export class ValidationTrackComponent implements OnInit {
   }
 
   showTrack(row: TrackedInstanceConsoleClass) {
-    this.cleanPublicTrack();
-    this.trackingService
-      .getTrackedInstanceDetailUsingGET({
-        territoryId: this.territoryId,
-        trackId: row.trackedInstance.id,
-      })
-      .subscribe((fullDetails) => {
-        this.selectedTrack = new TrackedInstanceConsoleClass();
-        this.selectedTrack = fullDetails;
-        if(this.selectedTrack.routesPolylines){
-          const keys = Object.keys(this.selectedTrack.routesPolylines);
-          this.publicTransportTracks = [];
-          this.layerPublicTransportTracks = [];
-          if (keys.length > 0) {
-            const mapTracks = this.selectedTrack.routesPolylines[keys[0]];
-            const tracksNumbers = Object.keys(mapTracks);
-            let i=0;
-            for (let trackNumber of tracksNumbers) {
-              const currentTrack = {
-                id: trackNumber,
-                index: i,
-                visualize: false,
-                polyline: this.decodePoliline(mapTracks[trackNumber]),
-              };
-              this.publicTransportTracks.push(currentTrack);
-              this.layerPublicTransportTracks.push(undefined);
-              i++;
+    if (
+      !(
+        !!this.selectedTrack &&
+        row.trackedInstance.id === this.selectedTrack.trackedInstance.id
+      )
+    ) {
+      this.cleanPublicTrack();
+      this.trackingService
+        .getTrackedInstanceDetailUsingGET({
+          territoryId: this.territoryId,
+          trackId: row.trackedInstance.id,
+        })
+        .subscribe((fullDetails) => {
+          this.selectedTrack = new TrackedInstanceConsoleClass();
+          this.selectedTrack = fullDetails;
+          if (this.selectedTrack.routesPolylines) {
+            const keys = Object.keys(this.selectedTrack.routesPolylines);
+            this.publicTransportTracks = [];
+            this.layerPublicTransportTracks = [];
+            if (keys.length > 0) {
+              const mapTracks = this.selectedTrack.routesPolylines[keys[0]];
+              const tracksNumbers = Object.keys(mapTracks);
+              let i = 0;
+              for (let trackNumber of tracksNumbers) {
+                const currentTrack = {
+                  id: trackNumber,
+                  index: i,
+                  visualize: false,
+                  polyline: this.decodePoliline(mapTracks[trackNumber]),
+                };
+                this.publicTransportTracks.push(currentTrack);
+                this.layerPublicTransportTracks.push(undefined);
+                i++;
+              }
             }
           }
-        }
-        this.setInnerHtmlvalidation(
-          this.selectedTrack.trackedInstance.validationResult.validationStatus
-        );
-        this.orderPoints();
-        this.setStatisticsSelectedTrack(); // always after orderPoints
-        this.selectedRowIndex = this.selectedTrack.trackedInstance.id;
-        var events: GeolocationEventsClass[] = [];
-        let i=0;
-        for(let item of this.selectedTrack.trackedInstance.geolocationEvents){
-          var event: GeolocationEventsClass = item;
-          event.index = i;
-          events.push(event);
-          i++;
-
-        } 
-        this.dataSourceInfoTrack = new TableVirtualScrollDataSource<any>(
-          events
-        );
-        this.deviceInfo = this.obejectFromString(
-          this.selectedTrack.trackedInstance.deviceInfo
-        );
-        try {
-          this.drawRayOnMap();
-          this.drawPolyline(
-            this.selectedTrack.trackedInstance.geolocationEvents
+          this.setInnerHtmlvalidation(
+            this.selectedTrack.trackedInstance.validationResult.validationStatus
           );
-          this.markerLayers = [];
-          for (
-            let i = 0;
-            i < this.selectedTrack.trackedInstance.geolocationEvents.length;
-            i++
-          ) {
-            this.markerLayers.push(undefined);
+          this.orderPoints();
+          this.setStatisticsSelectedTrack(); // always after orderPoints
+          this.selectedRowIndex = this.selectedTrack.trackedInstance.id;
+          var events: GeolocationEventsClass[] = [];
+          let i = 0;
+          for (let item of this.selectedTrack.trackedInstance
+            .geolocationEvents) {
+            var event: GeolocationEventsClass = item;
+            event.index = i;
+            events.push(event);
+            i++;
           }
-          var start = [
-            this.selectedTrack.trackedInstance.geolocationEvents[0]
-              .geocoding[1],
-            this.selectedTrack.trackedInstance.geolocationEvents[0]
-              .geocoding[0],
-          ];
-          this.addStartMarker(start);
-          const length =
-            this.selectedTrack.trackedInstance.geolocationEvents.length;
-          if (length > 1) {
-            var end = [
-              this.selectedTrack.trackedInstance.geolocationEvents[length - 1]
+          this.dataSourceInfoTrack = new TableVirtualScrollDataSource<any>(
+            events
+          );
+          this.deviceInfo = this.obejectFromString(
+            this.selectedTrack.trackedInstance.deviceInfo
+          );
+          try {
+            this.drawRayOnMap();
+            this.drawPolyline(
+              this.selectedTrack.trackedInstance.geolocationEvents
+            );
+            this.markerLayers = [];
+            for (
+              let i = 0;
+              i < this.selectedTrack.trackedInstance.geolocationEvents.length;
+              i++
+            ) {
+              this.markerLayers.push(undefined);
+            }
+            var start = [
+              this.selectedTrack.trackedInstance.geolocationEvents[0]
                 .geocoding[1],
-              this.selectedTrack.trackedInstance.geolocationEvents[length - 1]
+              this.selectedTrack.trackedInstance.geolocationEvents[0]
                 .geocoding[0],
             ];
-            this.addEndMarker(end);
-          }else{
-            if(this.stopMarker)
-              this.map.removeLayer(this.stopMarker);
-          }
-        } catch {}
-      });
+            this.addStartMarker(start);
+            const length =
+              this.selectedTrack.trackedInstance.geolocationEvents.length;
+            if (length > 1) {
+              var end = [
+                this.selectedTrack.trackedInstance.geolocationEvents[length - 1]
+                  .geocoding[1],
+                this.selectedTrack.trackedInstance.geolocationEvents[length - 1]
+                  .geocoding[0],
+              ];
+              this.addEndMarker(end);
+            } else {
+              if (this.stopMarker) this.map.removeLayer(this.stopMarker);
+            }
+          } catch {}
+        });
+    }
   }
-  
-  decodePoliline(polylinEncoded: string): any[]{
+
+  decodePoliline(polylinEncoded: string): any[] {
     return decode(polylinEncoded);
   }
 
@@ -634,6 +667,7 @@ export class ValidationTrackComponent implements OnInit {
       dateTo: new FormControl(""),
       campaignId: new FormControl(""),
       status: new FormControl(""),
+      toCheck: new FormControl(""),
     });
     this.validatingForm.patchValue({
       sort: "",
@@ -644,6 +678,7 @@ export class ValidationTrackComponent implements OnInit {
       dateTo: "",
       campaignId: "",
       status: "",
+      toCheck: null,
     });
     this.resetPageNumber();
   }
@@ -652,12 +687,12 @@ export class ValidationTrackComponent implements OnInit {
     this.validatingFormRanking = this.formBuilder.group({
       dateFrom: new FormControl(""),
       dateTo: new FormControl(""),
-      campaignId: new FormControl("",[Validators.required]),
+      campaignId: new FormControl("", [Validators.required]),
     });
     this.validatingForm.patchValue({
-      dateFrom: '',
-      dateTo: '',
-      campaignId: '',
+      dateFrom: "",
+      dateTo: "",
+      campaignId: "",
     });
     this.resetPageNumber();
   }
@@ -709,6 +744,13 @@ export class ValidationTrackComponent implements OnInit {
             status: this.validatingForm.get("status").value
               ? this.validatingForm.get("status").value.toUpperCase()
               : undefined,
+            toCheck:
+            this.validatingForm.get("toCheck").value === "all" ? 
+            undefined : 
+              this.validatingForm.get("toCheck").value === false ||
+              this.validatingForm.get("toCheck").value === true
+                ? this.validatingForm.get("toCheck").value
+                : undefined,
           })
           .subscribe((res) => {
             this.listTrack = res.content;
@@ -738,16 +780,16 @@ export class ValidationTrackComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  onSelectUserFromRankingList(row: any){
+  onSelectUserFromRankingList(row: any) {
     this.selectedRankingUser = row;
     //set search fields;
     this.validatingForm.patchValue({
       trackId: undefined,
       playerId: row.playerId,
       modeType: undefined,
-      dateFrom: this.validatingFormRanking.get('dateFrom').value,
-      dateTo: this.validatingFormRanking.get('dateTo').value,
-      campaignId: this.validatingFormRanking.get('campaignId').value,
+      dateFrom: this.validatingFormRanking.get("dateFrom").value,
+      dateTo: this.validatingFormRanking.get("dateTo").value,
+      campaignId: this.validatingFormRanking.get("campaignId").value,
       status: undefined,
     });
     this.currentPageNumber = 0;
@@ -782,17 +824,37 @@ export class ValidationTrackComponent implements OnInit {
     for (let element of arrayPoints) {
       latlngs.push([element.geocoding[1], element.geocoding[0]]);
     }
-    var polyline = L.polyline(latlngs, { color: "blue" });
+    var polyline = L.polyline(latlngs, { color: "blue" }); // ,weight:10
     this.layerGroup = new L.LayerGroup([polyline]);
     this.layerGroup.addTo(this.map);
     this.map.fitBounds(latlngs);
     //this.map.setView(latlngs[0], 15);
   }
 
+  highlightTrack(toDraw: boolean) {
+    var latlngs = [];
+    this.highligthTrackCheck = toDraw;
+    try {
+      if (this.polylineHighligthLayer) {
+        this.map.removeLayer(this.polylineHighligthLayer);
+        this.polylineHighligthLayer = undefined;
+      }
+    } catch (error) {}
+    if (toDraw) {
+      for (let element of this.selectedTrack.trackedInstance
+        .geolocationEvents) {
+        latlngs.push([element.geocoding[1], element.geocoding[0]]);
+      }
+      var polyline = L.polyline(latlngs, { color: "blue", weight: 10 }); // ,weight:10
+      this.polylineHighligthLayer = new L.LayerGroup([polyline]);
+      this.polylineHighligthLayer.addTo(this.map);
+    }
+  }
+
   public initializeMap(map: Map): void {
     this.restoreMap = map;
     this.map = map;
-    fullScreenMap({ id: 'map', position: 'topleft' }).addTo(this.map);
+    fullScreenMap({ id: "map", position: "topleft" }).addTo(this.map);
     this.drawRayOnMap();
     this.drawPolyline(this.selectedTrack.trackedInstance.geolocationEvents);
     this.markerLayers = [];
@@ -820,7 +882,7 @@ export class ValidationTrackComponent implements OnInit {
     }
   }
 
-  showPoint( row: GeolocationEventsClass) {
+  showPoint(row: GeolocationEventsClass) {
     //row => GeolocationClass
     var icon = L.divIcon({
       className: "number-icon",
@@ -849,9 +911,16 @@ export class ValidationTrackComponent implements OnInit {
         icon: icon,
         // draggable: true,
       });
-      marker.on('dragstart', (e)=>{this.current_moving_pointer_leaflet_id=marker["_leaflet_id"]; })
-      .on('drag', (e)=>{this.movePolylineOnMarkerMove(e["latlng"])})
-      .on('dragend', (e)=>{this.save_button_new_poly = true;});
+      marker
+        .on("dragstart", (e) => {
+          this.current_moving_pointer_leaflet_id = marker["_leaflet_id"];
+        })
+        .on("drag", (e) => {
+          this.movePolylineOnMarkerMove(e["latlng"]);
+        })
+        .on("dragend", (e) => {
+          this.save_button_new_poly = true;
+        });
       const markers = this.markerLayers[row.index]
         ? this.markerLayers[row.index]["markers"].push(marker)
         : [marker];
@@ -908,26 +977,26 @@ export class ValidationTrackComponent implements OnInit {
 
   showAllDataOnMap() {
     this.showAllPoints = !this.showAllPoints;
-    if(this.someComplete()){
-      if(this.showAllPoints){
+    if (this.someComplete()) {
+      if (this.showAllPoints) {
         this.restShowedPoints();
-        this.showAllPoints = true; 
+        this.showAllPoints = true;
         var i = 0;
         for (let item of this.selectedTrack.trackedInstance.geolocationEvents) {
           this.showPoint(item);
           i++;
         }
         this.restShowedPoints();
-      }else{
+      } else {
         this.restShowedPoints();
-        this.showAllPoints = false; 
+        this.showAllPoints = false;
         var i = 0;
         for (let item of this.selectedTrack.trackedInstance.geolocationEvents) {
           this.showPoint(item);
           i++;
         }
       }
-    }else{
+    } else {
       var i = 0;
       for (let item of this.selectedTrack.trackedInstance.geolocationEvents) {
         this.showPoint(item);
@@ -946,7 +1015,9 @@ export class ValidationTrackComponent implements OnInit {
           this.markerLayers[i] = undefined;
         }
         i++;
-      } catch {i++;}
+      } catch {
+        i++;
+      }
     }
   }
 
@@ -958,14 +1029,14 @@ export class ValidationTrackComponent implements OnInit {
       try {
         if (this.markerLayers[i]) {
           someComplete = true;
-        }else{
+        } else {
           allComplete = false;
         }
         i++;
       } catch {}
     }
-    if(allComplete){
-      return false
+    if (allComplete) {
+      return false;
     }
     return someComplete;
   }
@@ -991,6 +1062,50 @@ export class ValidationTrackComponent implements OnInit {
     });
   }
 
+  valueOfCheck(value):boolean{
+    if (value === null) {
+      return true;
+    }
+    if (value) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  changeToCheck(checked:boolean,track: TrackedInstanceConsoleClass) {
+    if(checked){
+      this.trackingService
+      .modifyToCheckUsingPUT({
+        toCheck: false,
+        trackId: track.trackedInstance.id,
+      })
+      .subscribe(() => {
+        this.selectedTrack.trackedInstance.toCheck = false;
+      })
+    }else{
+      this.trackingService
+      .modifyToCheckUsingPUT({
+        toCheck: true,
+        trackId: track.trackedInstance.id,
+      })
+      .subscribe(() => {
+        this.selectedTrack.trackedInstance.toCheck = true;
+      })
+    }
+  }
+
+  translateForToCheckValue(value): string {
+    if (value === null) {
+      return "trueToCheck";
+    }
+    if (value) {
+      return "trueToCheck";
+    } else {
+      return "falseToCheck";
+    }
+  }
+
   selectedRowOnTrack(index: number): boolean {
     if (this.markerLayers) {
       if (!!this.markerLayers[index]) {
@@ -1012,8 +1127,8 @@ export class ValidationTrackComponent implements OnInit {
         manufacturer: "-",
         isVirtual: false,
         serial: "-",
-        codePushLabel: '-',
-        osVersion: '-'
+        codePushLabel: "-",
+        osVersion: "-",
       };
     }
 
@@ -1030,8 +1145,8 @@ export class ValidationTrackComponent implements OnInit {
       manufacturer: "-",
       isVirtual: false,
       serial: "-",
-      codePushLabel: '-',
-      osVersion: '-'
+      codePushLabel: "-",
+      osVersion: "-",
     };
   }
 
@@ -1056,7 +1171,7 @@ export class ValidationTrackComponent implements OnInit {
     else return undefined;
   }
 
-  switchTrackToRanking(){
+  switchTrackToRanking() {
     this.showTierFilter = !this.showTierFilter;
     this.currentPageNumber = 0;
     this.validatingForm.patchValue({
@@ -1067,68 +1182,79 @@ export class ValidationTrackComponent implements OnInit {
       dateTo: undefined,
       campaignId: undefined,
       status: undefined,
+      toCheck: undefined,
     });
     this.selectedTrack = undefined;
     const monday = this.getPreviousMonday();
     const sunday = this.getNextSunday();
-    if(!this.showTierFilter){
+    if (!this.showTierFilter) {
       //enter trip filter
       this.validatingForm.patchValue({
         dateFrom: moment(monday, "YYYY-MM-DD"),
         dateTo: moment(sunday, "YYYY-MM-DD"),
       });
       this.searchSubmit();
-      this.rankingUsersList =[];
+      this.rankingUsersList = [];
       this.setTableDataRankingUsers();
-    }else{
+    } else {
       //enter ranking filter
       //reset searched tracks
       this.validatingFormRanking.patchValue({
         dateFrom: moment(monday, "YYYY-MM-DD"),
         dateTo: moment(sunday, "YYYY-MM-DD"),
-        campaignId: undefined
+        campaignId: undefined,
       });
-      this.listTrack= [];
+      this.listTrack = [];
       this.setTableData();
     }
   }
 
-  revalidateTrack(campaign: CampaignTripInfo){
-    console.log(this.territoryId,campaign.campaignId,this.selectedTrack.trackedInstance.id);
-    this.trackingServiceInternal.revalidateTrackUsingGET({    
-      territoryId: this.territoryId,
-      campaignId: campaign.campaignId,
-      trackedInstanceId: this.selectedTrack.trackedInstance.id
-    }).subscribe(res=>{
-      this._snackBar.open(this.translate.instant('rivalidationInProgress'), this.translate.instant('close'), {
-        duration: 7500
+  revalidateTrack(campaign: CampaignTripInfo) {
+    console.log(
+      this.territoryId,
+      campaign.campaignId,
+      this.selectedTrack.trackedInstance.id
+    );
+    this.trackingServiceInternal
+      .revalidateTrackUsingGET({
+        territoryId: this.territoryId,
+        campaignId: campaign.campaignId,
+        trackedInstanceId: this.selectedTrack.trackedInstance.id,
+      })
+      .subscribe((res) => {
+        this._snackBar.open(
+          this.translate.instant("rivalidationInProgress"),
+          this.translate.instant("close"),
+          {
+            duration: 7500,
+          }
+        );
       });
-    });
-
   }
 
-  createDate(timestamp: number,secondsDisplay = true): string {
+  createDate(timestamp: number, secondsDisplay = true): string {
     const date = DateTime.fromMillis(timestamp, {
       zone: this.territorySelected.timezone,
     });
-    if(!secondsDisplay){
+    if (!secondsDisplay) {
       return date.toFormat("yyyy-MM-dd HH:mm");
     }
     return date.toFormat("yyyy-MM-dd HH:mm:ss");
   }
 
-  visualizeAllPublicTracks(checked : boolean):void{
-    if(this.publicTransportTracks){
-      for(let i=0;i<this.publicTransportTracks.length;i++){
+  visualizeAllPublicTracks(checked: boolean): void {
+    this.selectAllCheckbox = checked;
+    if (this.publicTransportTracks) {
+      for (let i = 0; i < this.publicTransportTracks.length; i++) {
         this.publicTransportTracks[i].visualize = checked;
-        this.displayPublicTrack(checked,this.publicTransportTracks[i]);
+        this.displayPublicTrack(checked, this.publicTransportTracks[i]);
       }
     }
   }
 
-  displayPublicTrack(checked: boolean,item: any): void{
-    if(checked){
-      if(this.layerPublicTransportTracks[item.index] === undefined){
+  displayPublicTrack(checked: boolean, item: any): void {
+    if (checked) {
+      if (this.layerPublicTransportTracks[item.index] === undefined) {
         var iconStart = L.icon({
           iconUrl: "/../../../assets/images/start-marker-transport.png", // /dslab.playgo-backoffice/src/assets/images/stop-marker.png
           iconSize: [25, 41],
@@ -1140,56 +1266,76 @@ export class ValidationTrackComponent implements OnInit {
           iconAnchor: [12, 43],
         });
         var markerStart = L.marker(item.polyline[0], { icon: iconStart });
-        var markerEnd = L.marker(item.polyline[item.polyline.length-1], { icon: iconEnd });
+        var markerEnd = L.marker(item.polyline[item.polyline.length - 1], {
+          icon: iconEnd,
+        });
         var polyline = L.polyline(item.polyline, { color: "black" });
-        this.layerPublicTransportTracks[item.index] = new L.LayerGroup([polyline,markerStart,markerEnd]); 
+        this.layerPublicTransportTracks[item.index] = new L.LayerGroup([
+          polyline,
+          markerStart,
+          markerEnd,
+        ]);
         this.layerPublicTransportTracks[item.index].addTo(this.map);
       }
-    }else{
-      if(this.layerPublicTransportTracks[item.index]!== undefined){
+    } else {
+      if (this.layerPublicTransportTracks[item.index] !== undefined) {
         this.map.removeLayer(this.layerPublicTransportTracks[item.index]);
       }
       this.layerPublicTransportTracks[item.index] = undefined;
     }
   }
 
-  cleanPublicTrack(){
+  cleanPublicTrack() {
     this.current_moving_pointer_leaflet_id = null;
-    this.save_button_new_poly= false;
-    if(!this.showAllPoints){
+    this.save_button_new_poly = false;
+    this.highligthTrackCheck = false;
+    this.selectAllCheckbox = false;
+    this.highlightTrack(false);
+    document.getElementById("highlightCheckbox");
+    if (!this.showAllPoints) {
       this.showAllPoints = true;
     }
     this.visualizeAllPublicTracks(false);
-    if(this.layerPublicTransportTracks){
-      this.layerPublicTransportTracks.forEach((item)=>{
-        if(this.map && item)
-          this.map.removeLayer(item);
+    if (this.layerPublicTransportTracks) {
+      this.layerPublicTransportTracks.forEach((item) => {
+        if (this.map && item) this.map.removeLayer(item);
       });
     }
-
   }
 
-  movePolylineOnMarkerMove(latLong: any){
-    this.markerLayers.forEach((layer,index)=>{
-      if(layer["markers"][0]["_leaflet_id"]===this.current_moving_pointer_leaflet_id){
+  movePolylineOnMarkerMove(latLong: any) {
+    this.markerLayers.forEach((layer, index) => {
+      if (
+        layer["markers"][0]["_leaflet_id"] ===
+        this.current_moving_pointer_leaflet_id
+      ) {
         //this.selectedTrack.trackedInstance.geolocationEvents[index] = new Geolocation();
-        this.drawPolylineOnMarkerMove(this.selectedTrack.trackedInstance.geolocationEvents,index,latLong);
+        this.drawPolylineOnMarkerMove(
+          this.selectedTrack.trackedInstance.geolocationEvents,
+          index,
+          latLong
+        );
       }
     });
   }
 
-  drawPolylineOnMarkerMove(arrayPoints: any[],index, latLong) {
+  drawPolylineOnMarkerMove(arrayPoints: any[], index, latLong) {
     // any[] = GeolocationClass
     var latlngs = [];
-    if(this.layerGroup){
+    if (this.layerGroup) {
       this.map.removeLayer(this.layerGroup);
     }
-    for (let i=0;i<arrayPoints.length;i++) {
-      if(i!=index){
-        latlngs.push([arrayPoints[i].geocoding[1], arrayPoints[i].geocoding[0]]);
-      }else{
-        this.selectedTrack.trackedInstance.geolocationEvents[i].geocoding[1] = latLong["lat"];
-        this.selectedTrack.trackedInstance.geolocationEvents[i].geocoding[0] = latLong["lng"];
+    for (let i = 0; i < arrayPoints.length; i++) {
+      if (i != index) {
+        latlngs.push([
+          arrayPoints[i].geocoding[1],
+          arrayPoints[i].geocoding[0],
+        ]);
+      } else {
+        this.selectedTrack.trackedInstance.geolocationEvents[i].geocoding[1] =
+          latLong["lat"];
+        this.selectedTrack.trackedInstance.geolocationEvents[i].geocoding[0] =
+          latLong["lng"];
         latlngs.push([latLong["lat"], latLong["lng"]]);
       }
     }
@@ -1198,30 +1344,26 @@ export class ValidationTrackComponent implements OnInit {
     this.layerGroup.addTo(this.map);
   }
 
-  saveNewTrack(){
+  saveNewTrack() {
     console.log("To implement save new Track");
     // TODO
   }
 
-  getCarPoolingUserType(id: string){
-    if(!!!id || id===null){
+  getCarPoolingUserType(id: string) {
+    if (!!!id || id === null) {
       return null;
-    }
-    else{
-      if(id.toLocaleUpperCase().charAt(0)==='D'){
+    } else {
+      if (id.toLocaleUpperCase().charAt(0) === "D") {
         return "driver";
-      }
-      else {
-        if(id.toLocaleUpperCase().charAt(0)==='P'){
+      } else {
+        if (id.toLocaleUpperCase().charAt(0) === "P") {
           return "passenger";
-        }else{
+        } else {
           return null;
         }
       }
     }
-
   }
-
 
   drawRayOnMap() {
     this.territoryService
@@ -1269,8 +1411,8 @@ interface SelectedTrackStatistic {
   avrgSpeed?: number;
   maxSpeed?: number;
 }
- 
-class GeolocationEventsClass implements GeoLocationEvent{
+
+class GeolocationEventsClass implements GeoLocationEvent {
   accuracy?: number;
   activityConfidence?: number;
   activityType?: string;
@@ -1295,4 +1437,4 @@ class GeolocationEventsClass implements GeoLocationEvent{
   userId?: string;
   uuid?: string;
   index?: number;
-} 
+}
