@@ -16,7 +16,7 @@ import { NotificationControllerService } from "src/app/core/api/generated/contro
 import { Announcement } from "src/app/core/api/generated/model/announcement";
 import { AnnouncementClass } from "src/app/shared/classes/announcment-class";
 import { SnackbarSavedComponent } from "src/app/shared/components/snackbar-saved/snackbar-saved.component";
-import { CHANNELS_COMMUNICATION, MY_DATE_FORMATS, TERRITORY_ID_LOCAL_STORAGE_KEY, VALUE_EMPTY_SELECT_LIST } from "src/app/shared/constants/constants";
+import { CHANNELS_COMMUNICATION, LANGUAGE_DEFAULT, MY_DATE_FORMATS, TERRITORY_ID_LOCAL_STORAGE_KEY, VALUE_EMPTY_SELECT_LIST } from "src/app/shared/constants/constants";
 import { DateTime, Settings } from "luxon";
 import { TerritoryClass } from "src/app/shared/classes/territory-class";
 import { TerritoryControllerService } from "src/app/core/api/generated/controllers/territoryController.service";
@@ -40,7 +40,7 @@ export class CommunicationAddComponent implements OnInit {
   validatingForm: FormGroup;
   territories: string[] = ["aa", "bb"];
   channels: string[] = CHANNELS_COMMUNICATION;
-  listCampaings: string[] = [];
+  listCampaings: string[][] = [];
   territorySelected: TerritoryClass;
   errorMsgValidation = "";
   constructor(
@@ -84,9 +84,9 @@ export class CommunicationAddComponent implements OnInit {
       .getCampaignsUsingGET({ territoryId: this.territoryId })
       .subscribe((campaigns) => {
         campaigns.forEach((item) => {
-          this.listCampaings.push(item.campaignId);
+          this.listCampaings.push([item.campaignId,item.name[this.translate.currentLang]?item.name[this.translate.currentLang] : item.name[LANGUAGE_DEFAULT]]);
         });
-        // this.listCampaings.push(this.translate.instant(VALUE_EMPTY_SELECT_LIST)); //TODO suspended for now
+        // this.listCampaings.push([VALUE_EMPTY_SELECT_LIST,this.translate.instant(VALUE_EMPTY_SELECT_LIST)]); //TODO suspended for now
       });
   }
 
@@ -118,7 +118,7 @@ export class CommunicationAddComponent implements OnInit {
           ? Announcement.ChannelsEnum.Push
           : Announcement.ChannelsEnum.News;
       const campaignId = this.validatingForm.get("campaignId").value
-        ? (this.validatingForm.get("campaignId").value === this.translate.instant(VALUE_EMPTY_SELECT_LIST) ? undefined : this.validatingForm.get("campaignId").value)
+        ? (this.validatingForm.get("campaignId").value === VALUE_EMPTY_SELECT_LIST ? undefined : this.validatingForm.get("campaignId").value)
         : undefined;
       const channels = this.tranformChannels();
       let body:AnnouncementClass = new AnnouncementClass();
@@ -153,7 +153,6 @@ export class CommunicationAddComponent implements OnInit {
         })
         .subscribe(
           (res) => {
-            console.log(" $$$$$$$$$$$$$$$$$$$$$$$$$ Done $$$$$$$$$$$$$$$$$$$");
             this.onNoClick("", body);
             this._snackBar.openFromComponent(SnackbarSavedComponent,
               {
