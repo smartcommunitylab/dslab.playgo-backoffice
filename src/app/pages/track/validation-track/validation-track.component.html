@@ -552,10 +552,14 @@
                         <mat-card class="card-normal table-details">
                             <mat-card-title>{{'pointsPerCampaign' | translate}}</mat-card-title>
                             <mat-card-content style="width: 100%;height: 100%;">
-                                <p style="color: red"
+                                <div style="color: red"
                                     *ngIf="selectedTrack.trackedInstance.validationResult.travelValidity==='INVALID'">
-                                    {{'error' | translate}}:
-                                    {{selectedTrack.trackedInstance.validationResult.validationStatus.error}}</p>
+                                    <div style="width: 100%;height: 470px;"></div>
+                                    <p>
+                                        {{'error' | translate}}:
+                                        {{selectedTrack.trackedInstance.validationResult.validationStatus.error}}
+                                    </p>
+                                </div>
                                 <cdk-virtual-scroll-viewport itemSize="50" *ngIf="selectedTrack.campaigns.length>0"
                                     class="viewport">
                                     <div *cdkVirtualFor="let campaign of selectedTrack.campaigns"
