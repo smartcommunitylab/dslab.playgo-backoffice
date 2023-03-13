@@ -38,9 +38,9 @@
                 </div>
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-custom-half-left">
-                        <mat-label>{{'campaignId' | translate}}</mat-label>
+                        <mat-label>{{'campaign' | translate}}</mat-label>
                         <mat-select id="campaignId" formControlName="campaignId">
-                            <mat-option *ngFor="let val of listCampaings" [value]="val">{{val | translate}}
+                            <mat-option *ngFor="let val of listCampaings" [value]="val[0]">{{val[1] | translate}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
