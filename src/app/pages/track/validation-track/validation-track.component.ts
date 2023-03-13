@@ -7,10 +7,12 @@ import {
 } from "@angular/forms";
 import { GeoLocationEvent, Track } from "src/app/shared/classes/track-class";
 import {
+  LANGUAGE_DEFAULT,
   LIST_STATES_TRACK,
   MY_DATE_FORMATS,
   TERRITORY_ID_LOCAL_STORAGE_KEY,
   VALIDATIONJSON,
+  VALUE_EMPTY_SELECT_LIST,
 } from "src/app/shared/constants/constants";
 import {
   trigger,
@@ -130,8 +132,8 @@ export class ValidationTrackComponent implements OnInit {
   circleLayer: FeatureGroup;
   markerLayers: any[];
   deviceInfo: any;
-  listCampaings: string[] = [];
-  listCampaingsClean: string[] = [];
+  listCampaings: string[][] = [];
+  listCampaingsClean: string[][] = [];
   dateFromModified = false;
   dateToModified = false;
   resetSearchFieldsComponents = false;
@@ -207,7 +209,7 @@ export class ValidationTrackComponent implements OnInit {
         status: this.validatingForm.get("status").value
           ? this.validatingForm.get("status").value.toUpperCase()
           : undefined, 
-        toCheck: true,
+        toCheck: undefined,
       })
       .subscribe((res) => {
         this.paginatorData = res;
@@ -221,16 +223,17 @@ export class ValidationTrackComponent implements OnInit {
       .subscribe((territory) => {
         this.territorySelected = territory;
         this.listModelType = territory.territoryData.means;
-        this.listModelType.push("all");
+        this.listModelType.push(VALUE_EMPTY_SELECT_LIST);
       });
     this.campaignService
       .getCampaignsUsingGET({ territoryId: this.territoryId })
       .subscribe((campaigns) => {
         campaigns.forEach((item) => {
-          this.listCampaings.push(item.campaignId);
-          this.listCampaingsClean.push(item.campaignId);
+          this.selectedLanguage = this.translate.currentLang;
+          this.listCampaings.push([item.campaignId,item.name[this.selectedLanguage]?item.name[this.selectedLanguage] : item.name[LANGUAGE_DEFAULT] ]);
+          this.listCampaingsClean.push([item.campaignId,item.name[this.selectedLanguage]?item.name[this.selectedLanguage] : item.name[LANGUAGE_DEFAULT]]);
         });
-        this.listCampaings.push("all");
+        this.listCampaings.push([VALUE_EMPTY_SELECT_LIST,VALUE_EMPTY_SELECT_LIST]);
       });
     this.selectedLanguage = this.translate.currentLang;
   }
@@ -252,7 +255,6 @@ export class ValidationTrackComponent implements OnInit {
     this.validatingForm.patchValue({
       dateFrom: moment(monday, "YYYY-MM-DD"),
       dateTo: moment(sunday, "YYYY-MM-DD"),
-      toCheck:true,
     });
   }
 
@@ -393,7 +395,7 @@ export class ValidationTrackComponent implements OnInit {
             ? this.validatingForm.get("playerId").value
             : undefined,
           modeType: this.validatingForm.get("modeType").value
-            ? this.validatingForm.get("modeType").value === "all"
+            ? this.validatingForm.get("modeType").value === VALUE_EMPTY_SELECT_LIST
               ? undefined
               : this.validatingForm.get("modeType").value
             : undefined,
@@ -404,17 +406,17 @@ export class ValidationTrackComponent implements OnInit {
             ? this.validatingForm.get("dateTo").value.valueOf() + this.day
             : today,
           campaignId: this.validatingForm.get("campaignId").value
-            ? this.validatingForm.get("campaignId").value === "all"
+            ? this.validatingForm.get("campaignId").value === VALUE_EMPTY_SELECT_LIST
               ? undefined
               : this.validatingForm.get("campaignId").value
             : undefined,
           status: this.validatingForm.get("status").value
-            ? this.validatingForm.get("status").value === "all"
+            ? this.validatingForm.get("status").value === VALUE_EMPTY_SELECT_LIST
               ? undefined
               : this.validatingForm.get("status").value.toUpperCase()
             : undefined,
           toCheck:
-            this.validatingForm.get("toCheck").value === "all" ? 
+            this.validatingForm.get("toCheck").value === VALUE_EMPTY_SELECT_LIST ? 
             undefined : 
             this.validatingForm.get("toCheck").value === false ||
             this.validatingForm.get("toCheck").value === true
@@ -745,7 +747,7 @@ export class ValidationTrackComponent implements OnInit {
               ? this.validatingForm.get("status").value.toUpperCase()
               : undefined,
             toCheck:
-            this.validatingForm.get("toCheck").value === "all" ? 
+            this.validatingForm.get("toCheck").value === VALUE_EMPTY_SELECT_LIST ? 
             undefined : 
               this.validatingForm.get("toCheck").value === false ||
               this.validatingForm.get("toCheck").value === true

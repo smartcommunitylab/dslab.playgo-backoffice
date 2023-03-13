@@ -33,10 +33,10 @@
                     </mat-grid-tile>
                     <mat-grid-tile>
                         <mat-form-field appearance="fill" class="full-width margin-form">
-                            <mat-label>{{'campaignId' | translate}}</mat-label>
+                            <mat-label>{{'campaign' | translate}}</mat-label>
                             <mat-select id="campaignId" formControlName="campaignId"
                                 (ngModelChange)="resetPageNumber()">
-                                <mat-option *ngFor="let val of listCampaings" [value]="val">{{val | translate}}
+                                <mat-option *ngFor="let val of listCampaings" [value]="val[0]">{{val[1] | translate}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -141,10 +141,10 @@
                     </mat-grid-tile>
                     <mat-grid-tile>
                         <mat-form-field appearance="fill" class="full-width margin-form">
-                            <mat-label>{{'campaignId' | translate}}</mat-label>
+                            <mat-label>{{'campaign' | translate}}</mat-label>
                             <mat-select id="campaignId" formControlName="campaignId"
                                 (ngModelChange)="resetPageNumber()">
-                                <mat-option *ngFor="let val of listCampaingsClean" [value]="val">{{val |
+                                <mat-option *ngFor="let val of listCampaingsClean" [value]="val[0]">{{val[1] |
                                     translate}}
                                 </mat-option>
                             </mat-select>
@@ -264,30 +264,35 @@
                                     'yellow-background' : element.trackedInstance.validationResult.travelValidity==='PENDING',
                                     'red-background' : element.trackedInstance.validationResult.travelValidity==='INVALID',
                                     'green-background' : element.trackedInstance.validationResult.travelValidity==='VALID'  }">
-                                <mat-grid-list cols="3" rowHeight="30px">
-                                    <mat-grid-tile>
+                                <mat-grid-list cols="10" rowHeight="30px">
+                                    <mat-grid-tile [colspan]="3">
                                         <span class="full-width">
                                             {{createDate(element.trackedInstance.startTime,false)}}
                                         </span>
                                     </mat-grid-tile>
-                                    <mat-grid-tile style="width: 70%;">
+                                    <mat-grid-tile [colspan]="3">
                                         <span class="bold full-width center-text">
                                             {{element.trackedInstance.freeTrackingTransport |
                                             translate}}
                                         </span>
                                     </mat-grid-tile>
-                                    <mat-grid-tile>
-                                        <span class="full-width text-ellips">
+                                    <mat-grid-tile [colspan]="3">
+                                        <span>
                                             {{(element.trackedInstance.validationResult.travelValidity==='PENDING'?
                                             'pending': element.trackedInstance.validationResult.travelValidity)
                                             | translate}}
-                                            <!-- <span *ngIf="!!element.trackedInstance.toCheck">{{'withReserve' |
-                                                translate}}</span> -->
+                                            <span *ngIf="!!element.trackedInstance.toCheck">{{'withReserve' |
+                                                translate}}</span>
                                         </span>
                                     </mat-grid-tile>
+                                    <mat-grid-tile [colspan]="1">
+                                        <mat-checkbox [checked]="!valueOfCheck(element.trackedInstance.toCheck)"
+                                            (change)="changeToCheck($event.checked,element)" [color]="'primary'">
+                                        </mat-checkbox>
+                                    </mat-grid-tile>
                                 </mat-grid-list>
-                                <mat-grid-list cols="3" rowHeight="30px">
-                                    <mat-grid-tile [colspan]="2">
+                                <mat-grid-list cols="10" rowHeight="30px">
+                                    <mat-grid-tile [colspan]="10">
                                         <span class=" left-text full-width">
                                             <span class="bold">
                                                 {{'player' | translate}}: {{element.playerInfo.nickname}}
@@ -298,11 +303,11 @@
                                             </span>
                                         </span>
                                     </mat-grid-tile>
-                                    <mat-grid-tile [colspan]="1">
+                                    <!-- <mat-grid-tile [colspan]="1">
                                         <mat-checkbox [checked]="!valueOfCheck(element.trackedInstance.toCheck)"
                                             (change)="changeToCheck($event.checked,element)" [color]="'primary'">
-                                        </mat-checkbox>
-                                    </mat-grid-tile>
+                                        </mat-checkbox> >
+                                    </mat-grid-tile -->
                                 </mat-grid-list>
                             </mat-card>
                         </td>
@@ -342,7 +347,7 @@
                                         <div class="wrapper">
                                             <span class="info-title">
                                                 <span class="bold">
-                                                    {{'status' | translate}}:</span> <br />
+                                                    {{'validityState' | translate}}:</span> <br />
                                                 <span>
                                                     {{(statisticsSelectedTrack.validity==='PENDING'? 'pending':
                                                     statisticsSelectedTrack.validity) | translate}}
@@ -370,51 +375,6 @@
                                                     {{'end' | translate}}: </span> <br />
                                                 <span>
                                                     {{statisticsSelectedTrack.end}}
-                                                </span>
-                                            </span>
-                                        </div>
-                                    </mat-grid-tile>
-                                    <mat-grid-tile [colspan]="2">
-                                        <div class="wrapper">
-                                            <span class="info-title">
-                                                <span class="bold"> {{'mean' | translate}}: </span> <br />
-                                                <span>
-                                                    {{selectedTrack.trackedInstance.freeTrackingTransport
-                                                    |
-                                                    translate}}
-                                                </span>
-                                            </span>
-                                        </div>
-                                    </mat-grid-tile>
-                                    <mat-grid-tile [colspan]="1">
-                                        <div class="wrapper">
-                                            <span class="info-title">
-                                                <span class="bold">
-                                                    {{'distance' | translate}}:</span> <br />
-                                                <span>
-                                                    {{statisticsSelectedTrack.distance | round}} (m)
-                                                </span>
-                                            </span>
-                                        </div>
-                                    </mat-grid-tile>
-                                    <mat-grid-tile [colspan]="2">
-                                        <div class="wrapper">
-                                            <span class="info-title">
-                                                <span class="bold">
-                                                    {{'maxSpeed' | translate}}:</span> <br />
-                                                <span>
-                                                    {{statisticsSelectedTrack.maxSpeed | round}} (m/s)
-                                                </span>
-                                            </span>
-                                        </div>
-                                    </mat-grid-tile>
-                                    <mat-grid-tile [colspan]="1">
-                                        <div class="wrapper">
-                                            <span class="info-title">
-                                                <span class="bold">
-                                                    {{'avrgSpeed' | translate}}:</span> <br />
-                                                <span>
-                                                    {{statisticsSelectedTrack.avrgSpeed | round}} (m/s)
                                                 </span>
                                             </span>
                                         </div>
@@ -486,50 +446,95 @@
                                                 </span>
                                             </div>
                                         </mat-grid-tile>
-                                        <mat-grid-tile [colspan]="2">
-                                            <div class="wrapper">
-                                                <span class="info-title">
-                                                    <span class="bold">
-                                                        {{'changedValidity' | translate}}:</span> <br />
-                                                    <!-- here if different from null it was modified-->
-                                                    <span>{{ (selectedTrack.trackedInstance.changedValidity?
-                                                        'changedValidity' : 'notChangedValidity') | translate}}</span>
-                                                </span>
-                                            </div>
-                                        </mat-grid-tile>
-                                        <mat-grid-tile [colspan]="1">
-                                            <div class="wrapper">
-                                                <span class="info-title">
-                                                    <span class="bold">
-                                                        {{"currentValue"| translate}}</span> <br />
-                                                    <span>{{translateForToCheckValue(this.selectedTrack.trackedInstance.toCheck)
-                                                        | translate}}</span>
-                                                </span>
-                                            </div>
-                                        </mat-grid-tile>
-                                        <mat-grid-tile [colspan]="2"
-                                            *ngIf="getCarPoolingUserType(selectedTrack.trackedInstance.sharedTravelId)!== null">
-                                            <div class="wrapper">
-                                                <span class="info-title">
-                                                    <span class="bold">
-                                                        {{'carPoolingUserType' | translate}}:</span> <br />
-                                                    <span>{{
-                                                        getCarPoolingUserType(selectedTrack.trackedInstance.sharedTravelId)
-                                                        | translate}}</span>
-                                                </span>
-                                            </div>
-                                        </mat-grid-tile>
-                                        <mat-grid-tile [colspan]="1"
-                                            *ngIf="getCarPoolingUserType(selectedTrack.trackedInstance.sharedTravelId)!== null">
-                                            <div class="wrapper">
-                                                <span class="info-title">
-                                                    <span class="bold">
-                                                        {{'sharedTravelId' | translate}}:</span> <br />
-                                                    <span>{{selectedTrack.trackedInstance.sharedTravelId}}</span>
-                                                </span>
-                                            </div>
-                                        </mat-grid-tile>
                                     </div>
+                                    <mat-grid-tile [colspan]="2">
+                                        <div class="wrapper">
+                                            <span class="info-title">
+                                                <span class="bold"> {{'mean' | translate}}: </span> <br />
+                                                <span>
+                                                    {{selectedTrack.trackedInstance.freeTrackingTransport
+                                                    |
+                                                    translate}}
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </mat-grid-tile>
+                                    <mat-grid-tile [colspan]="1">
+                                        <div class="wrapper">
+                                            <span class="info-title">
+                                                <span class="bold">
+                                                    {{'distance' | translate}}:</span> <br />
+                                                <span>
+                                                    {{statisticsSelectedTrack.distance | round}} (m)
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </mat-grid-tile>
+                                    <mat-grid-tile [colspan]="2">
+                                        <div class="wrapper">
+                                            <span class="info-title">
+                                                <span class="bold">
+                                                    {{'maxSpeed' | translate}}:</span> <br />
+                                                <span>
+                                                    {{statisticsSelectedTrack.maxSpeed | round}} (m/s)
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </mat-grid-tile>
+                                    <mat-grid-tile [colspan]="1">
+                                        <div class="wrapper">
+                                            <span class="info-title">
+                                                <span class="bold">
+                                                    {{'avrgSpeed' | translate}}:</span> <br />
+                                                <span>
+                                                    {{statisticsSelectedTrack.avrgSpeed | round}} (m/s)
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </mat-grid-tile>
+                                    <mat-grid-tile [colspan]="2">
+                                        <div class="wrapper">
+                                            <span class="info-title">
+                                                <span class="bold">
+                                                    {{'changedValidity' | translate}}:</span> <br />
+                                                <!-- here if different from null it was modified-->
+                                                <span>{{ (selectedTrack.trackedInstance.changedValidity?
+                                                    'changedValidity' : 'notChangedValidity') | translate}}</span>
+                                            </span>
+                                        </div>
+                                    </mat-grid-tile>
+                                    <mat-grid-tile [colspan]="1">
+                                        <div class="wrapper">
+                                            <span class="info-title">
+                                                <span class="bold">
+                                                    {{"currentValue"| translate}}</span> <br />
+                                                <span>{{translateForToCheckValue(this.selectedTrack.trackedInstance.toCheck)
+                                                    | translate}}</span>
+                                            </span>
+                                        </div>
+                                    </mat-grid-tile>
+                                    <mat-grid-tile [colspan]="2"
+                                        *ngIf="getCarPoolingUserType(selectedTrack.trackedInstance.sharedTravelId)!== null">
+                                        <div class="wrapper">
+                                            <span class="info-title">
+                                                <span class="bold">
+                                                    {{'carPoolingUserType' | translate}}:</span> <br />
+                                                <span>{{
+                                                    getCarPoolingUserType(selectedTrack.trackedInstance.sharedTravelId)
+                                                    | translate}}</span>
+                                            </span>
+                                        </div>
+                                    </mat-grid-tile>
+                                    <mat-grid-tile [colspan]="1"
+                                        *ngIf="getCarPoolingUserType(selectedTrack.trackedInstance.sharedTravelId)!== null">
+                                        <div class="wrapper">
+                                            <span class="info-title">
+                                                <span class="bold">
+                                                    {{'sharedTravelId' | translate}}:</span> <br />
+                                                <span>{{selectedTrack.trackedInstance.sharedTravelId}}</span>
+                                            </span>
+                                        </div>
+                                    </mat-grid-tile>
 
                                 </mat-grid-list>
                                 <button class="margin-5" mat-flat-button color="primary" (click)="changeStatus()">
@@ -546,7 +551,7 @@
                     <div class="right-header">
                         <mat-card class="card-normal table-details">
                             <mat-card-title>{{'pointsPerCampaign' | translate}}</mat-card-title>
-                            <mat-card-content style="width: 100%; height: 100%;">
+                            <mat-card-content style="width: 100%;height: 100%;">
                                 <p style="color: red"
                                     *ngIf="selectedTrack.trackedInstance.validationResult.travelValidity==='INVALID'">
                                     {{'error' | translate}}:
@@ -561,17 +566,19 @@
                                                     {{campaign.campaignName[selectedLanguage]}}
                                                 </h3>
                                             </mat-grid-tile>
-                                            <mat-grid-tile [colspan]="8" style="margin-left: 0px;">
+                                            <!-- <mat-grid-tile [colspan]="8" style="margin-left: 0px;">
                                                 <h3 style="margin-bottom: 0px;">
                                                     {{campaign.campaignId}}
                                                 </h3>
-                                            </mat-grid-tile>
+                                            </mat-grid-tile> -->
                                         </mat-grid-list>
                                         <mat-grid-list [cols]="3" rowHeight="80px">
                                             <mat-grid-tile [colspan]="2">
                                                 <div style="width: 100%;height: 100%;">
-                                                    <p class="margin-bottom-sm" style="font-style:italic">{{campaign.type | translate}}</p>
-                                                    <p class="margin-bottom-sm">{{(campaign.valid? 'valid' : 'invalid') | translate}},
+                                                    <p class="margin-bottom-sm" style="font-style:italic">
+                                                        {{campaign.type | translate}}</p>
+                                                    <p class="margin-bottom-sm">{{(campaign.valid? 'valid' : 'invalid')
+                                                        | translate}},
                                                         <span
                                                             *ngIf="campaign.type==='school' || campaign.type==='city'">
                                                             {{'score' |
@@ -581,7 +588,8 @@
                                                         {{'distance' | translate}}: {{campaign.distance |
                                                         round}} (m)
                                                     </p>
-                                                    <p class="margin-bottom-sm">{{'state' | translate}}: {{campaign.scoreStatus}}</p>
+                                                    <p class="margin-bottom-sm">{{'state' | translate}}:
+                                                        {{campaign.scoreStatus}}</p>
                                                     <p *ngIf="!!campaign.errorCode" class="red">
                                                         {{'errors' | translate}}: {{campaign.errorCode}}
                                                     </p>

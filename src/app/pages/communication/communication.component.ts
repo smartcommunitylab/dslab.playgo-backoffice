@@ -10,7 +10,7 @@ import { Announcement } from "src/app/core/api/generated/model/announcement";
 import { PageAnnouncement } from "src/app/core/api/generated/model/pageAnnouncement";
 import { AnnouncementClass } from "src/app/shared/classes/announcment-class";
 import { PageTrackedInstanceClass } from "src/app/shared/classes/PageTrackedInstance-class";
-import { TERRITORY_ID_LOCAL_STORAGE_KEY, VALUE_EMPTY_SELECT_LIST } from "src/app/shared/constants/constants";
+import { LANGUAGE_DEFAULT, TERRITORY_ID_LOCAL_STORAGE_KEY, VALUE_EMPTY_SELECT_LIST } from "src/app/shared/constants/constants";
 import { CommunicationAddComponent } from "./communication-add/communication-add.component";
 
 @Component({
@@ -29,9 +29,10 @@ export class CommunicationComponent implements OnInit {
   newItem: AnnouncementClass;
   communicationSelected: AnnouncementClass;
   searchString: string = VALUE_EMPTY_SELECT_LIST;
-  listCampaings: string[] = [];
+  listCampaings: string[][] = [];
   selectedCampaign: string;
   listComunications:string[] =[VALUE_EMPTY_SELECT_LIST];
+  selectedLanguage: string;
   page = 0;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) matPaginator: MatPaginator;
@@ -48,12 +49,13 @@ export class CommunicationComponent implements OnInit {
     this.campaignService
       .getCampaignsUsingGET({ territoryId: this.territoryId })
       .subscribe((campaigns) => {
-        this.listCampaings.push(this.translate.instant(VALUE_EMPTY_SELECT_LIST));
+        this.listCampaings.push([VALUE_EMPTY_SELECT_LIST,this.translate.instant(VALUE_EMPTY_SELECT_LIST)]);
         campaigns.forEach((item) => {
-          this.listCampaings.push(item.campaignId);
+          this.selectedLanguage = this.translate.currentLang;
+          this.listCampaings.push([item.campaignId,item.name[this.selectedLanguage]?item.name[this.selectedLanguage] : item.name[LANGUAGE_DEFAULT]]);
         });
         if(this.listCampaings.length>0){
-          this.selectedCampaign = this.listCampaings[0];
+          this.selectedCampaign = this.listCampaings[0][0];
         }
         this.getNotificationUsingGet();
         this.setTableDataInit();
@@ -168,7 +170,7 @@ export class CommunicationComponent implements OnInit {
       size: this.size[0],
       sort: this.sorting,
       territoryId: this.territoryId,
-      campaignId: this.selectedCampaign ===this.translate.instant(VALUE_EMPTY_SELECT_LIST)? undefined : this.selectedCampaign,
+      campaignId: this.selectedCampaign ===VALUE_EMPTY_SELECT_LIST? undefined : this.selectedCampaign,
       channels: this.searchString===  VALUE_EMPTY_SELECT_LIST? undefined: this.searchString,
     })
     .subscribe(
@@ -195,7 +197,7 @@ export class CommunicationComponent implements OnInit {
       size: this.size[0],
       sort: this.sorting,
       territoryId: this.territoryId,
-      campaignId: this.selectedCampaign ===this.translate.instant(VALUE_EMPTY_SELECT_LIST)? undefined : this.selectedCampaign,
+      campaignId: this.selectedCampaign ===VALUE_EMPTY_SELECT_LIST? undefined : this.selectedCampaign,
       channels: this.searchString===  VALUE_EMPTY_SELECT_LIST? undefined: this.searchString,
     })
     .subscribe(
