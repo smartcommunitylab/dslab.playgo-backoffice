@@ -204,6 +204,10 @@ export class SurveyComponentComponent implements OnInit {
         this.errorAddNewSurvey = this.translate.instant("notPossibleToCreateAnotherDefaultSurvey");
         return;
       }
+      if(this.checkNameAlreadyExists()){
+        this.errorAddNewSurvey = this.translate.instant("changeNameOfTheSurvayItAlreadyExists");
+        return;
+      }
       var surveryReq: SurveyRequest =  {
         data: {
           bonusPointType: this.validatingForm.get("bonusPoint").value ? this.validatingForm.get("bonusPoint").value : undefined,
@@ -243,6 +247,11 @@ export class SurveyComponentComponent implements OnInit {
       return true;
     }
     return false;
+  }
+
+  checkNameAlreadyExists(){
+    const found_el = this.surveys.find((item => item.surveyName === this.validatingForm.get('surveyName').value))
+    return !!found_el;
   }
 
   fromTimestampToDate(timestamp: any) : string{
