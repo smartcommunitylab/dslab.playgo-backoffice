@@ -34,6 +34,10 @@ import {
   WEEKLY_LIMIT,
   START_YEAR_FIXED,
   END_YEAR_FIXED,
+  CHALLENGE_PLAYER_PROPOSER,
+  CHALLENGE_PLAYER_ASSIGNED,
+  HOURS_CONST,
+  DAY_WEEK_KEY_VALUE,
 } from "src/app/shared/constants/constants";
 import {
   trigger,
@@ -122,6 +126,9 @@ export class CampaignAddFormComponent implements OnInit {
   languagesSupported = CONST_LANGUAGES_SUPPORTED;
   languageSelected: string;
   weebHooksEventsList: string[] = [];
+  hours_const = HOURS_CONST;
+  day_week_const =  DAY_WEEK_KEY_VALUE;
+  disabledControl = true;
 
   @Input() set formTerritory(value: CampaignClass) {
     this.campaignUpdated = value;
@@ -138,13 +145,14 @@ export class CampaignAddFormComponent implements OnInit {
     // this.selectedBanner.image = value.banner.image;
     // this.selectedBanner.url = value.banner.url;
     this.details = this.setDetails(value.details);
+    this.initializaValidatingForm();
     this.territoryService
       .getTerritoryUsingGET(
         localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY)
       )
       .subscribe((result) => {
         this.territorySelected = result;
-        this.initializaValidatingForm();
+        this.setValuesValidatingForm();
       });
   }
 
@@ -164,6 +172,7 @@ export class CampaignAddFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.initializaValidatingForm();
     this.languageDefault = this.translate.currentLang;
     this.campaignCreated = new CampaignClass();
     this.campaignCreated.validationData = new ValidationData();
@@ -177,7 +186,7 @@ export class CampaignAddFormComponent implements OnInit {
       )
       .subscribe((result) => {
         this.territorySelected = result;
-        this.initializaValidatingForm();
+        this.setValuesValidatingForm();
         this.means = this.territorySelected.territoryData.means;
         if (this.type === "add") {
           this.selectedLimits = new SelectedLimits();
@@ -189,48 +198,14 @@ export class CampaignAddFormComponent implements OnInit {
     this.initDetailsType();
   }
 
-  initializaValidatingForm() {
+  setValuesValidatingForm(){
     if (this.type === "add") {
-      this.validatingForm = this.formBuilder.group({
-        territoryId: new FormControl("", [Validators.required]),
-        languages: new FormControl(""),
-        //name: new FormControl("", [Validators.required]),
-        logo: new FormControl("", [Validators.required]),
-        banner: new FormControl("", [Validators.required]),
-        description: new FormControl(""),
-        means: new FormControl("", [Validators.required]),
-        active: new FormControl("", [Validators.required]),
-        visible: new FormControl("", [Validators.required]),
-        dateFrom: new FormControl("", [Validators.required]),
-        dateTo: new FormControl("", [Validators.required]),
-        type: new FormControl("", [Validators.required]),
-        sendWeaklyEmail: new FormControl("", [Validators.required]),
-        gameId: new FormControl(""),
-        startDayOfWeek: new FormControl("", [Validators.pattern("^[1-7]")]),
-        webHookEvents: new FormControl(""),
-        endPointCongWebHook: new FormControl(""),
-      });
       this.validatingForm.patchValue({
         territoryId: localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY),
         active: false,
       });
       this.expandableDescription = false;
     } else {
-      this.validatingForm = this.formBuilder.group({
-        languages: new FormControl(""),
-        description: new FormControl(""),
-        means: new FormControl("", [Validators.required]),
-        active: new FormControl("", [Validators.required]),
-        visible: new FormControl("", [Validators.required]),
-        dateFrom: new FormControl("", [Validators.required]),
-        dateTo: new FormControl("", [Validators.required]),
-        type: new FormControl("", [Validators.required]),
-        sendWeaklyEmail: new FormControl("", [Validators.required]),
-        gameId: new FormControl(""),
-        startDayOfWeek: new FormControl(""),
-        webHookEvents: new FormControl(""),
-        endPointCongWebHook: new FormControl(""),
-      });
       this.validatingForm.patchValue({
         means: this.campaignUpdated.validationData.means,
         active: this.campaignUpdated.active,
@@ -246,15 +221,30 @@ export class CampaignAddFormComponent implements OnInit {
             : this.campaignUpdated.dateTo
         ), //moment(this.campaignUpdated.dateTo), //moment(this.campaignUpdated.dateTo, "YYYY-MM-DD"),
         type: this.campaignUpdated.type,
-        gameId: this.campaignUpdated.gameId,
+        gameId: !!this.campaignUpdated.gameId ? this.campaignUpdated.gameId : "" ,
         startDayOfWeek: this.campaignUpdated.startDayOfWeek,
         sendWeaklyEmail: this.campaignUpdated.communications,
       });
       this.meansSelected = this.campaignUpdated.validationData.means;
+      // console.log(this.campaignUpdated.specificData[CHALLENGE_PLAYER_PROPOSER].split(";")[1])
+      if(!!this.campaignUpdated.specificData && this.campaignUpdated.specificData[CHALLENGE_PLAYER_PROPOSER]){
+        this.validatingForm.patchValue({
+          challengePlayerProposedDay: this.campaignUpdated.specificData[CHALLENGE_PLAYER_PROPOSER].split(";")[1],
+          challengePlayerProposedHour: this.campaignUpdated.specificData[CHALLENGE_PLAYER_PROPOSER].split(";")[0],
+        });
+
+      }
+      if(!!this.campaignUpdated.specificData && this.campaignUpdated.specificData[CHALLENGE_PLAYER_ASSIGNED]){
+        this.validatingForm.patchValue({
+          challengePlayerAssignedDay: this.campaignUpdated.specificData[CHALLENGE_PLAYER_ASSIGNED].split(";")[1],
+          challengePlayerAssignedHour: this.campaignUpdated.specificData[CHALLENGE_PLAYER_ASSIGNED].split(";")[0],
+        });
+      }
       if (
         !this.campaignUpdated.specificData ||
         Object.keys(this.campaignUpdated.specificData).length <= 0
       ) {
+        //do other operation on specificData always before of the means which reset the specificData
         this.campaignUpdated.specificData = {};
         for (let mean of this.meansSelected) {
           this.campaignUpdated.specificData[mean] = new LimitsClass();
@@ -279,6 +269,55 @@ export class CampaignAddFormComponent implements OnInit {
     this.addFormControlMultilanguage();
     this.languageSelected = this.languageDefault;
     this.validatingForm.patchValue({ languages: this.languageDefault });
+    this.chengeSelectedType();
+  }
+
+  initializaValidatingForm() {
+    if (this.type === "add") {
+      this.validatingForm = this.formBuilder.group({
+        territoryId: new FormControl("", [Validators.required]),
+        languages: new FormControl(""),
+        //name: new FormControl("", [Validators.required]),
+        logo: new FormControl("", [Validators.required]),
+        banner: new FormControl("", [Validators.required]),
+        description: new FormControl(""),
+        means: new FormControl("", [Validators.required]),
+        active: new FormControl("", [Validators.required]),
+        visible: new FormControl("", [Validators.required]),
+        dateFrom: new FormControl("", [Validators.required]),
+        dateTo: new FormControl("", [Validators.required]),
+        type: new FormControl("", [Validators.required]),
+        sendWeaklyEmail: new FormControl("", [Validators.required]),
+        gameId: new FormControl(""),
+        startDayOfWeek: new FormControl("", [Validators.pattern("^[1-7]")]),
+        webHookEvents: new FormControl(""),
+        endPointCongWebHook: new FormControl(""),
+        challengePlayerAssignedDay: new FormControl("",),
+        challengePlayerAssignedHour: new FormControl("",),
+        challengePlayerProposedDay: new FormControl("",),
+        challengePlayerProposedHour: new FormControl("",),
+      });
+    } else {
+      this.validatingForm = this.formBuilder.group({
+        languages: new FormControl(""),
+        description: new FormControl(""),
+        means: new FormControl("", [Validators.required]),
+        active: new FormControl("", [Validators.required]),
+        visible: new FormControl("", [Validators.required]),
+        dateFrom: new FormControl("", [Validators.required]),
+        dateTo: new FormControl("", [Validators.required]),
+        type: new FormControl(""),
+        sendWeaklyEmail: new FormControl("", [Validators.required]),
+        gameId: new FormControl(""),
+        startDayOfWeek: new FormControl(""),
+        webHookEvents: new FormControl(""),
+        endPointCongWebHook: new FormControl(""),
+        challengePlayerAssignedDay: new FormControl("",),
+        challengePlayerAssignedHour: new FormControl("",),
+        challengePlayerProposedDay: new FormControl("",),
+        challengePlayerProposedHour: new FormControl("",),
+      });
+    }
   }
 
   public myError = (controlName: string, errorName: string) => {
@@ -323,18 +362,17 @@ export class CampaignAddFormComponent implements OnInit {
       : [];
   }
 
-  chengeSelectedType(event: any){
-    if(this.validatingForm.get('type').value){
+  chengeSelectedType(){
+    if(!!this.validatingForm && this.validatingForm.get('type').value){
       if(this.validatingForm.get('type').value!=='company'){
         this.validatingForm.get('gameId').setValidators([Validators.required]);
         this.validatingForm.get('gameId').updateValueAndValidity();
-        console.log("ADDED");
       }else{
         this.validatingForm.get("gameId").clearValidators();
         this.validatingForm.get('gameId').updateValueAndValidity();
-        console.log("REMOVED");
       }
     }
+    this.onSelectTypeChangeValidation();
   }
 
   findDiffInArray(shortArr: any[], longArr: any[]): any {
@@ -379,6 +417,10 @@ export class CampaignAddFormComponent implements OnInit {
         )
       ) {
         this.errorMsgValidation = "dateNotValid";
+        return;
+      }
+      if((this.campaignCreated.type === "city" || this.campaignCreated.type === "school") && !this.assignedProposedValid()){
+        this.errorMsgValidation = "assignedProposedNotValid";
         return;
       }
       if (this.campaignCreated.dateFrom === START_YEAR_FIXED) {
@@ -659,6 +701,11 @@ export class CampaignAddFormComponent implements OnInit {
       this.campaignCreated.specificData[mean][MONTHLY_LIMIT] =
         this.selectedLimits[mean][MONTHLY_LIMIT];
     }
+    if(this.campaignCreated.type === "city" || this.campaignCreated.type === "school"){
+      this.campaignCreated.specificData[CHALLENGE_PLAYER_PROPOSER] = this.validatingForm.get("challengePlayerProposedHour").value + ";"+ this.validatingForm.get("challengePlayerProposedDay").value;
+      this.campaignCreated.specificData[CHALLENGE_PLAYER_ASSIGNED] = this.validatingForm.get("challengePlayerAssignedHour").value + ";"+ this.validatingForm.get("challengePlayerAssignedDay").value;
+    }
+
     console.log("after: ", this.campaignCreated.specificData);
   }
 
@@ -864,6 +911,24 @@ export class CampaignAddFormComponent implements OnInit {
     return false;
   }
 
+  assignedProposedValid(): boolean{
+    const hour_prop = parseInt(this.validatingForm.get("challengePlayerProposedHour").value);
+    const day_prop = this.day_week_const.find(item=>item['day'] ===this.validatingForm.get("challengePlayerProposedDay").value)["value"];
+    const hour_assign = parseInt(this.validatingForm.get("challengePlayerAssignedHour").value);
+    const day_assign = this.day_week_const.find(item=>item['day'] ===this.validatingForm.get("challengePlayerAssignedDay").value)["value"];
+    if(day_assign>day_prop){
+      return true;
+    }else if(day_assign<day_prop){
+      return false;
+    }else{
+      if(hour_assign>hour_prop){
+        return true;
+      }else{
+        return false;
+      }
+    }
+  }
+
   cancelGoBack(event: any) {
     if (this.hasBeenModified()) {
       const dialogRef = this.confirmCancel.open(ConfirmCancelComponent, {
@@ -991,6 +1056,25 @@ export class CampaignAddFormComponent implements OnInit {
         used: false,
       });
     }
+  }
+
+  onSelectTypeChangeValidation(){
+    this.validatingForm.get("challengePlayerAssignedDay").clearValidators();
+    this.validatingForm.get("challengePlayerAssignedHour").clearValidators();
+    this.validatingForm.get("challengePlayerProposedDay").clearValidators();
+    this.validatingForm.get("challengePlayerProposedHour").clearValidators();
+    if(this.validatingForm && (this.validatingForm.get("type").value ==="school" || this.validatingForm.get("type").value ==="city")){
+      //SCHOOL OR CITY
+      this.validatingForm.get("challengePlayerAssignedDay").setValidators([Validators.required]);
+      this.validatingForm.get("challengePlayerAssignedHour").setValidators([Validators.required]);
+      this.validatingForm.get("challengePlayerProposedDay").setValidators([Validators.required]);
+      this.validatingForm.get("challengePlayerProposedHour").setValidators([Validators.required]);
+    }
+    this.validatingForm.get("challengePlayerAssignedDay").updateValueAndValidity();
+    this.validatingForm.get("challengePlayerAssignedHour").updateValueAndValidity();
+    this.validatingForm.get("challengePlayerProposedDay").updateValueAndValidity();
+    this.validatingForm.get("challengePlayerProposedHour").updateValueAndValidity();
+
   }
 
   addFormControlMultilanguage() {

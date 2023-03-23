@@ -48,3 +48,7 @@ export const WEEB_HOOK_EVENT = ['register','unregister','validTrack'];
 export const CONST_TIMEZONES_SUPPORTED = ['Europe/Rome'];
 export const END_YEAR_FIXED = 7777777777000;
 export const START_YEAR_FIXED = 0;
+export const CHALLENGE_PLAYER_PROPOSER = "challengePlayerProposed"
+export const CHALLENGE_PLAYER_ASSIGNED ="challengePlayerAssigned"
+export const DAY_WEEK_KEY_VALUE = [{"day":"MON","value":1},{"day":"TUE","value":2},{"day":"WED","value":3},{"day":"THU","value":4},{"day":"FRI","value":5},{"day":"SAT","value":6},{"day":"SUN","value":7}]
+export const HOURS_CONST = ["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"]
