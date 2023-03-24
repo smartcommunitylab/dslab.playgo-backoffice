@@ -32,13 +32,14 @@
         <div class="col-12 full-width" style="margin-top: 15px;" *ngIf="!!validatingForm">
             <div class="full-height">
                 <div class="in-line-forms" *ngIf="!!territorySelected">
-                        <mat-label style="width: 100%; margin-right: 10px;">{{'territoryId' | translate}}:  {{territorySelected.territoryId}}</mat-label>
-                        <mat-hint style="width: 100%;">{{"hintIdTerritoryAddCampaign" | translate}}</mat-hint>
+                    <mat-label style="width: 100%; margin-right: 10px;">{{'territoryId' | translate}}:
+                        {{territorySelected.territoryId}}</mat-label>
+                    <mat-hint style="width: 100%;">{{"hintIdTerritoryAddCampaign" | translate}}</mat-hint>
                 </div>
                 <div class="in-line-forms" style="margin-top: 20px;">
                     <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'typology' | translate}}</mat-label>
-                        <mat-select id="type" formControlName="type" (selectionChange)="chengeSelectedType($event)">
+                        <mat-select id="type" formControlName="type" (selectionChange)="chengeSelectedType()">
                             <mat-option *ngFor="let val of typeCampaign" [value]="val">{{val |translate}}</mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -54,7 +55,8 @@
                     <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'visible' | translate}}</mat-label>
                         <mat-select id="visible" formControlName="visible">
-                            <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBooleanVisible(val)
+                            <mat-option *ngFor="let val of [true,false]" [value]="val">{{
+                                transformActiveBooleanVisible(val)
                                 |translate}}</mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -63,15 +65,11 @@
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'dateFrom' | translate}}</mat-label>
-                        <input matInput id="dateFrom" formControlName="dateFrom" type="datetime-local" > <!--[matDatepicker]="picker1"-->
-                        <!-- <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                        <mat-datepicker #picker1></mat-datepicker> -->
+                        <input matInput id="dateFrom" formControlName="dateFrom" type="datetime-local">
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="input-half-right">
                         <mat-label>{{'dateTo' | translate}}</mat-label>
-                        <input matInput id="dateTo" formControlName="dateTo" type="datetime-local"> <!--[matDatepicker]="picker1"-->
-                        <!-- <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker> -->
+                        <input matInput id="dateTo" formControlName="dateTo" type="datetime-local">
                     </mat-form-field>
                 </div>
                 <div class="in-line-forms">
@@ -139,7 +137,8 @@
                         </mat-select>
                     </mat-form-field>
 
-                    <mat-form-field appearance="fill" class="input-half-left" *ngIf="!!validatingForm && !!validatingForm.get('webHookEvents').value && validatingForm.get('webHookEvents').value.length>0">
+                    <mat-form-field appearance="fill" class="input-half-left"
+                        *ngIf="!!validatingForm && !!validatingForm.get('webHookEvents').value && validatingForm.get('webHookEvents').value.length>0">
                         <mat-label>{{'endPointCongWebHook' | translate}}
                         </mat-label>
                         <input matInput formControlName="endPointCongWebHook" type="text" />
@@ -148,14 +147,74 @@
                 <div class="in-line-forms"
                     *ngIf="!!validatingForm && !!validatingForm.get('type').value && validatingForm.get('type').value!=='company'">
                     <mat-form-field appearance="fill" class="input-half-left">
-                        <mat-label>{{'startDayOfWeek' | translate}}</mat-label>
-                        <input matInput id="startDayOfWeek" formControlName="startDayOfWeek">
-                        <mat-hint>{{"hintStartDayOfWeek" | translate}}</mat-hint>
+                        <mat-label>{{'startDayOfWeek' | translate  }}</mat-label>
+                        <mat-select id="startDayOfWeek" formControlName="startDayOfWeek">
+                            <mat-option *ngFor="let event of day_week_const" [value]="event['value']">
+                                {{event['day'] | translate}}
+                            </mat-option>
+                        </mat-select>
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="input-half-right">
                         <mat-label>{{'gameId' | translate}}</mat-label>
                         <input matInput id="gameId" formControlName="gameId">
                     </mat-form-field>
+                </div>
+                <div class="in-line-forms"
+                    *ngIf="!!validatingForm && !!validatingForm.get('type').value && (validatingForm.get('type').value==='city' || validatingForm.get('type').value==='school' ) ">
+                    <mat-grid-list [cols]="5" rowHeight="50px" style="margin-bottom: 10px">
+                        <mat-grid-tile [colspan]="2">
+                            {{"challengeProposed" | translate}}
+                        </mat-grid-tile>
+                        <mat-grid-tile></mat-grid-tile>
+                        <mat-grid-tile [colspan]="2">
+                            {{"challengeAssigned" | translate}}
+                        </mat-grid-tile>
+                        <mat-grid-tile>
+                            <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                <mat-label>{{'challengePlayerProposedHour' | translate}}</mat-label>
+                                <mat-select id="challengePlayerProposedHour"
+                                    formControlName="challengePlayerProposedHour">
+                                    <mat-option *ngFor="let event of hours_const" [value]="event">
+                                        {{event}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile>
+                            <mat-form-field appearance="fill" class="grid-tile-limit">
+                                <mat-label>{{'challengePlayerProposedDay' | translate}}</mat-label>
+                                <mat-select id="challengePlayerProposedDay"
+                                    formControlName="challengePlayerProposedDay">
+                                    <mat-option *ngFor="let event of day_week_const" [value]="event['day']">
+                                        {{event['day'] | translate}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile></mat-grid-tile>
+                        <mat-grid-tile>
+                            <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                <mat-label>{{'challengePlayerAssignedHour' | translate}}</mat-label>
+                                <mat-select id="challengePlayerAssignedHour"
+                                    formControlName="challengePlayerAssignedHour">
+                                    <mat-option *ngFor="let event of hours_const" [value]="event">
+                                        {{event}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile>
+                            <mat-form-field appearance="fill" class="grid-tile-limit">
+                                <mat-label>{{'challengePlayerAssignedDay' | translate}}</mat-label>
+                                <mat-select id="challengePlayerAssignedDay"
+                                    formControlName="challengePlayerAssignedDay">
+                                    <mat-option *ngFor="let event of day_week_const" [value]="event['day']">
+                                        {{event['day'] | translate}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </mat-grid-list>
                 </div>
                 <div class="multilanguage-box">
                     <mat-form-field appearance="fill" class="input-half-left">
@@ -175,7 +234,8 @@
                         </mat-form-field>
 
                         <mat-card class="card" *ngIf="l===languageSelected">
-                            <mat-card-title class="cursor-pointer card-expandable" (click)="expandableDescription = ! expandableDescription">
+                            <mat-card-title class="cursor-pointer card-expandable"
+                                (click)="expandableDescription = ! expandableDescription">
                                 {{'description' | translate}} - {{l | translate}}
                                 <mat-card-actions class="right-button top-button">
                                     <mat-icon *ngIf="expandableDescription">
@@ -191,7 +251,7 @@
                                 </mat-card-actions>
                             </mat-card-title>
                             <mat-card-content [@bodyExpansion]="expandableDescription ? 'collapsed': 'expanded' "
-                            class="expandable-content">
+                                class="expandable-content">
                                 <rich-text-editor [control]="descriptionRichControl"></rich-text-editor>
                             </mat-card-content>
                         </mat-card>
@@ -332,9 +392,10 @@
         <div class="col-12 full-width" style="margin-top: 15px;" *ngIf="!!validatingForm">
             <div class="full-height">
                 <div class="in-line-forms" style="margin-top: 20px;">
+                    
                     <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'typology' | translate}}</mat-label>
-                        <mat-select id="type" formControlName="type" (selectionChange)="chengeSelectedType($event)">
+                        <mat-select id="type" formControlName="type" [disabled]="true">
                             <mat-option *ngFor="let val of typeCampaign" [value]="val">{{val |translate}}</mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -350,7 +411,8 @@
                     <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'visible' | translate}}</mat-label>
                         <mat-select id="visible" formControlName="visible">
-                            <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBooleanVisible(val)
+                            <mat-option *ngFor="let val of [true,false]" [value]="val">{{
+                                transformActiveBooleanVisible(val)
                                 |translate}}</mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -358,17 +420,11 @@
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'dateFrom' | translate}}</mat-label>
-                        <input matInput id="dateFrom" formControlName="dateFrom" type="datetime-local" > 
-                        <!-- <input matInput id="dateFrom" formControlName="dateFrom" [matDatepicker]="picker1">
-                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                        <mat-datepicker #picker1></mat-datepicker> -->
+                        <input matInput id="dateFrom" formControlName="dateFrom" type="datetime-local">
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="input-half-right">
                         <mat-label>{{'dateTo' | translate}}</mat-label>
                         <input matInput id="dateTo" formControlName="dateTo" type="datetime-local">
-                        <!-- <input matInput id="dateTo" formControlName="dateTo" [matDatepicker]="picker">
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker> -->
                     </mat-form-field>
                 </div>
                 <div class="in-line-forms">
@@ -435,7 +491,8 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field appearance="fill" class="input-half-left" *ngIf="!!validatingForm && !!validatingForm.get('webHookEvents').value && validatingForm.get('webHookEvents').value.length>0">
+                    <mat-form-field appearance="fill" class="input-half-left"
+                        *ngIf="!!validatingForm && !!validatingForm.get('webHookEvents').value && validatingForm.get('webHookEvents').value.length>0">
                         <mat-label>{{'endPointCongWebHook' | translate}}
                         </mat-label>
                         <input matInput formControlName="endPointCongWebHook" type="text" />
@@ -445,13 +502,73 @@
                     *ngIf="!!validatingForm && !!validatingForm.get('type').value && validatingForm.get('type').value!=='company'">
                     <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'startDayOfWeek' | translate}}</mat-label>
-                        <input matInput id="startDayOfWeek" formControlName="startDayOfWeek">
-                        <mat-hint>{{"hintStartDayOfWeek" | translate}}</mat-hint>
+                        <mat-select id="startDayOfWeek" formControlName="startDayOfWeek">
+                            <mat-option *ngFor="let event of day_week_const" [value]="event['value']">
+                                {{event['day'] | translate}}
+                            </mat-option>
+                        </mat-select>
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="input-half-right">
                         <mat-label>{{'gameId' | translate}}</mat-label>
                         <input matInput id="gameId" formControlName="gameId">
                     </mat-form-field>
+                </div>
+                <div class="in-line-forms"
+                    *ngIf="!!validatingForm && !!validatingForm.get('type').value && (validatingForm.get('type').value==='city' || validatingForm.get('type').value==='school' ) ">
+                    <mat-grid-list [cols]="5" rowHeight="50px" style="margin-bottom: 10px">
+                        <mat-grid-tile [colspan]="2">
+                            {{"challengeProposed" | translate}}
+                        </mat-grid-tile>
+                        <mat-grid-tile></mat-grid-tile>
+                        <mat-grid-tile [colspan]="2">
+                            {{"challengeAssigned" | translate}}
+                        </mat-grid-tile>
+                        <mat-grid-tile>
+                            <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                <mat-label>{{'challengePlayerProposedHour' | translate}}</mat-label>
+                                <mat-select id="challengePlayerProposedHour"
+                                    formControlName="challengePlayerProposedHour">
+                                    <mat-option *ngFor="let event of hours_const" [value]="event">
+                                        {{event}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile>
+                            <mat-form-field appearance="fill" class="grid-tile-limit">
+                                <mat-label>{{'challengePlayerProposedDay' | translate}}</mat-label>
+                                <mat-select id="challengePlayerProposedDay"
+                                    formControlName="challengePlayerProposedDay">
+                                    <mat-option *ngFor="let event of day_week_const" [value]="event['day']">
+                                        {{event['day'] | translate}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile></mat-grid-tile>
+                        <mat-grid-tile>
+                            <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                <mat-label>{{'challengePlayerAssignedHour' | translate}}</mat-label>
+                                <mat-select id="challengePlayerAssignedHour"
+                                    formControlName="challengePlayerAssignedHour">
+                                    <mat-option *ngFor="let event of hours_const" [value]="event">
+                                        {{event}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile>
+                            <mat-form-field appearance="fill" class="grid-tile-limit">
+                                <mat-label>{{'challengePlayerAssignedDay' | translate}}</mat-label>
+                                <mat-select id="challengePlayerAssignedDay"
+                                    formControlName="challengePlayerAssignedDay">
+                                    <mat-option *ngFor="let event of day_week_const" [value]="event['day']">
+                                        {{event['day'] | translate}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </mat-grid-list>
                 </div>
                 <div class="multilanguage-box">
                     <mat-form-field appearance="fill" class="input-half-left">
@@ -465,7 +582,8 @@
                     <p class="warning">{{'warningTextBoxesSelectedLanguage' | translate}}</p>
                     <div *ngFor="let l of languagesSupported">
                         <mat-card class="card" *ngIf="l===languageSelected">
-                            <mat-card-title class="cursor-pointer card-expandable" (click)="expandableDescription = ! expandableDescription">
+                            <mat-card-title class="cursor-pointer card-expandable"
+                                (click)="expandableDescription = ! expandableDescription">
                                 {{'description' | translate}} - {{l | translate}}
                                 <mat-card-actions class="right-button top-button">
                                     <mat-icon *ngIf="expandableDescription">
@@ -481,7 +599,7 @@
                                 </mat-card-actions>
                             </mat-card-title>
                             <mat-card-content [@bodyExpansion]="expandableDescription ? 'collapsed': 'expanded' "
-                            class="expandable-content">
+                                class="expandable-content">
                                 <rich-text-editor [control]="descriptionRichControl"></rich-text-editor>
                             </mat-card-content>
                         </mat-card>
