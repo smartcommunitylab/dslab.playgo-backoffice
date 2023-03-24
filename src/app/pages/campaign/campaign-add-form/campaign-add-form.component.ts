@@ -457,7 +457,7 @@ export class CampaignAddFormComponent implements OnInit {
                   duration: 4999,
                 });
               }
-              if (this.validatingForm.get("webHookEvents").value.length >0) {
+              if (this.validatingForm.get("webHookEvents").value!== "" && this.validatingForm.get("webHookEvents").value.length >0) {
                 let campaignWeebH: CampaignWebhook = {
                   campaignId: this.campaignCreated.campaignId,
                   endpoint: this.validatingForm.get("endPointCongWebHook")
@@ -515,7 +515,7 @@ export class CampaignAddFormComponent implements OnInit {
                   duration: 4999,
                 });
               }
-              if (!!this.validatingForm.get("webHookEvents")) {
+              if (this.validatingForm.get("webHookEvents").value!== "" && this.validatingForm.get("webHookEvents").value.length >0) {
                 let campaignWeebH: CampaignWebhook = {
                   campaignId: this.campaignCreated.campaignId,
                   endpoint: this.validatingForm.get("endPointCongWebHook")
