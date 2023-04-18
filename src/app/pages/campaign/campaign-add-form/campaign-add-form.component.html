@@ -174,6 +174,7 @@
                                 <mat-label>{{'challengePlayerProposedHour' | translate}}</mat-label>
                                 <mat-select id="challengePlayerProposedHour"
                                     formControlName="challengePlayerProposedHour">
+                                    <mat-option [value]="null">-</mat-option>
                                     <mat-option *ngFor="let event of hours_const" [value]="event">
                                         {{event}}
                                     </mat-option>
@@ -185,6 +186,7 @@
                                 <mat-label>{{'challengePlayerProposedDay' | translate}}</mat-label>
                                 <mat-select id="challengePlayerProposedDay"
                                     formControlName="challengePlayerProposedDay">
+                                    <mat-option [value]="null">-</mat-option>
                                     <mat-option *ngFor="let event of day_week_const" [value]="event['day']">
                                         {{event['day'] | translate}}
                                     </mat-option>
@@ -197,6 +199,7 @@
                                 <mat-label>{{'challengePlayerAssignedHour' | translate}}</mat-label>
                                 <mat-select id="challengePlayerAssignedHour"
                                     formControlName="challengePlayerAssignedHour">
+                                    <mat-option [value]="null">-</mat-option>
                                     <mat-option *ngFor="let event of hours_const" [value]="event">
                                         {{event}}
                                     </mat-option>
@@ -208,6 +211,7 @@
                                 <mat-label>{{'challengePlayerAssignedDay' | translate}}</mat-label>
                                 <mat-select id="challengePlayerAssignedDay"
                                     formControlName="challengePlayerAssignedDay">
+                                    <mat-option [value]="null">-</mat-option>
                                     <mat-option *ngFor="let event of day_week_const" [value]="event['day']">
                                         {{event['day'] | translate}}
                                     </mat-option>
@@ -528,6 +532,7 @@
                                 <mat-label>{{'challengePlayerProposedHour' | translate}}</mat-label>
                                 <mat-select id="challengePlayerProposedHour"
                                     formControlName="challengePlayerProposedHour">
+                                    <mat-option [value]="null">-</mat-option>
                                     <mat-option *ngFor="let event of hours_const" [value]="event">
                                         {{event}}
                                     </mat-option>
@@ -539,6 +544,7 @@
                                 <mat-label>{{'challengePlayerProposedDay' | translate}}</mat-label>
                                 <mat-select id="challengePlayerProposedDay"
                                     formControlName="challengePlayerProposedDay">
+                                    <mat-option [value]="null">-</mat-option>
                                     <mat-option *ngFor="let event of day_week_const" [value]="event['day']">
                                         {{event['day'] | translate}}
                                     </mat-option>
@@ -551,6 +557,7 @@
                                 <mat-label>{{'challengePlayerAssignedHour' | translate}}</mat-label>
                                 <mat-select id="challengePlayerAssignedHour"
                                     formControlName="challengePlayerAssignedHour">
+                                    <mat-option [value]="null">-</mat-option>
                                     <mat-option *ngFor="let event of hours_const" [value]="event">
                                         {{event}}
                                     </mat-option>
@@ -562,6 +569,7 @@
                                 <mat-label>{{'challengePlayerAssignedDay' | translate}}</mat-label>
                                 <mat-select id="challengePlayerAssignedDay"
                                     formControlName="challengePlayerAssignedDay">
+                                    <mat-option [value]="null">-</mat-option>
                                     <mat-option *ngFor="let event of day_week_const" [value]="event['day']">
                                         {{event['day'] | translate}}
                                     </mat-option>
