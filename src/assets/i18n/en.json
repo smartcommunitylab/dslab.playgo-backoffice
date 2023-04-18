@@ -325,7 +325,7 @@
   "FRI":"Friday",
   "SAT":"Saturday",
   "SUN":"Sunday",
-  "assignedProposedNotValid":"Make sure that proposed come before assigned for challenges",
+  "assignedProposedNotValid":"Make sure that proposed come before assigned for challenges, (complete all 4 fields)",
   "":"",
   "":"",
   "":"",
