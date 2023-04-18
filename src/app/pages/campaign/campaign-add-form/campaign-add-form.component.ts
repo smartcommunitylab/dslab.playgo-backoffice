@@ -372,7 +372,6 @@ export class CampaignAddFormComponent implements OnInit {
         this.validatingForm.get('gameId').updateValueAndValidity();
       }
     }
-    this.onSelectTypeChangeValidation();
   }
 
   findDiffInArray(shortArr: any[], longArr: any[]): any {
@@ -702,8 +701,16 @@ export class CampaignAddFormComponent implements OnInit {
         this.selectedLimits[mean][MONTHLY_LIMIT];
     }
     if(this.campaignCreated.type === "city" || this.campaignCreated.type === "school"){
-      this.campaignCreated.specificData[CHALLENGE_PLAYER_PROPOSER] = this.validatingForm.get("challengePlayerProposedHour").value + ";"+ this.validatingForm.get("challengePlayerProposedDay").value;
-      this.campaignCreated.specificData[CHALLENGE_PLAYER_ASSIGNED] = this.validatingForm.get("challengePlayerAssignedHour").value + ";"+ this.validatingForm.get("challengePlayerAssignedDay").value;
+      if(this.validatingForm.get("challengePlayerProposedHour").value!==null && this.validatingForm.get("challengePlayerProposedDay").value!==null){
+        this.campaignCreated.specificData[CHALLENGE_PLAYER_PROPOSER] = this.validatingForm.get("challengePlayerProposedHour").value + ";"+ this.validatingForm.get("challengePlayerProposedDay").value;
+      }else{
+        this.campaignCreated.specificData[CHALLENGE_PLAYER_PROPOSER] = null;
+      }
+      if(this.validatingForm.get("challengePlayerAssignedHour").value!==null && this.validatingForm.get("challengePlayerAssignedDay").value!==null){
+        this.campaignCreated.specificData[CHALLENGE_PLAYER_ASSIGNED] = this.validatingForm.get("challengePlayerAssignedHour").value + ";"+ this.validatingForm.get("challengePlayerAssignedDay").value;
+      }else{
+        this.campaignCreated.specificData[CHALLENGE_PLAYER_ASSIGNED] = null;
+      }
     }
 
     console.log("after: ", this.campaignCreated.specificData);
@@ -912,21 +919,31 @@ export class CampaignAddFormComponent implements OnInit {
   }
 
   assignedProposedValid(): boolean{
-    const hour_prop = parseInt(this.validatingForm.get("challengePlayerProposedHour").value);
-    const day_prop = this.day_week_const.find(item=>item['day'] ===this.validatingForm.get("challengePlayerProposedDay").value)["value"];
-    const hour_assign = parseInt(this.validatingForm.get("challengePlayerAssignedHour").value);
-    const day_assign = this.day_week_const.find(item=>item['day'] ===this.validatingForm.get("challengePlayerAssignedDay").value)["value"];
-    if(day_assign>day_prop){
+    if (this.validatingForm.get("challengePlayerProposedHour").value===null && this.validatingForm.get("challengePlayerAssignedHour").value===null && this.validatingForm.get("challengePlayerProposedDay").value===null && this.validatingForm.get("challengePlayerAssignedDay").value===null){
+      //all values ampty
       return true;
-    }else if(day_assign<day_prop){
-      return false;
-    }else{
-      if(hour_assign>hour_prop){
-        return true;
-      }else{
-        return false;
-      }
     }
+    try{
+      const hour_prop = parseInt(this.validatingForm.get("challengePlayerProposedHour").value);
+      const day_prop = this.day_week_const.find(item=>item['day'] ===this.validatingForm.get("challengePlayerProposedDay").value)["value"];
+      const hour_assign = parseInt(this.validatingForm.get("challengePlayerAssignedHour").value);
+      const day_assign = this.day_week_const.find(item=>item['day'] ===this.validatingForm.get("challengePlayerAssignedDay").value)["value"];
+      if(day_assign>day_prop){
+        return true;
+      }else if(day_assign<day_prop){
+        return false;
+      }else{
+        if(hour_assign>hour_prop){
+          return true;
+        }else{
+          return false;
+        }
+      }
+    }catch{
+      //if here at least one value null
+      return false;
+    }
+
   }
 
   cancelGoBack(event: any) {
@@ -1056,25 +1073,6 @@ export class CampaignAddFormComponent implements OnInit {
         used: false,
       });
     }
-  }
-
-  onSelectTypeChangeValidation(){
-    this.validatingForm.get("challengePlayerAssignedDay").clearValidators();
-    this.validatingForm.get("challengePlayerAssignedHour").clearValidators();
-    this.validatingForm.get("challengePlayerProposedDay").clearValidators();
-    this.validatingForm.get("challengePlayerProposedHour").clearValidators();
-    if(this.validatingForm && (this.validatingForm.get("type").value ==="school" || this.validatingForm.get("type").value ==="city")){
-      //SCHOOL OR CITY
-      this.validatingForm.get("challengePlayerAssignedDay").setValidators([Validators.required]);
-      this.validatingForm.get("challengePlayerAssignedHour").setValidators([Validators.required]);
-      this.validatingForm.get("challengePlayerProposedDay").setValidators([Validators.required]);
-      this.validatingForm.get("challengePlayerProposedHour").setValidators([Validators.required]);
-    }
-    this.validatingForm.get("challengePlayerAssignedDay").updateValueAndValidity();
-    this.validatingForm.get("challengePlayerAssignedHour").updateValueAndValidity();
-    this.validatingForm.get("challengePlayerProposedDay").updateValueAndValidity();
-    this.validatingForm.get("challengePlayerProposedHour").updateValueAndValidity();
-
   }
 
   addFormControlMultilanguage() {
