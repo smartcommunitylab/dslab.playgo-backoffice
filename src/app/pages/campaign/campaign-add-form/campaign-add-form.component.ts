@@ -919,8 +919,9 @@ export class CampaignAddFormComponent implements OnInit {
   }
 
   assignedProposedValid(): boolean{
-    if (this.validatingForm.get("challengePlayerProposedHour").value===null && this.validatingForm.get("challengePlayerAssignedHour").value===null && this.validatingForm.get("challengePlayerProposedDay").value===null && this.validatingForm.get("challengePlayerAssignedDay").value===null){
-      //all values ampty
+    // console.log('ppppp: ',this.validatingForm.get("challengePlayerProposedHour").value, this.validatingForm.get("challengePlayerAssignedHour").value, this.validatingForm.get("challengePlayerProposedDay").value, this.validatingForm.get("challengePlayerAssignedDay").value)
+    if (!this.validatingForm.get("challengePlayerProposedHour").value && !this.validatingForm.get("challengePlayerAssignedHour").value && !this.validatingForm.get("challengePlayerProposedDay").value && !this.validatingForm.get("challengePlayerAssignedDay").value){
+      //all values empty
       return true;
     }
     try{
@@ -941,6 +942,7 @@ export class CampaignAddFormComponent implements OnInit {
       }
     }catch{
       //if here at least one value null
+      // console.log('Inside catch');
       return false;
     }
 
