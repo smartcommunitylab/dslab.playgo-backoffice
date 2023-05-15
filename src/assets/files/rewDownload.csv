@@ -1,7 +1,10 @@
-settimana,posizione,it,en
-1,1,"colazione","breakfast"
-1,2,"pranzo","lunch"
-1,3,"cena","dinner"
-3,1,"casa","house"
-3,2,"macchina","car"
-3,3,"pesce","fish"
+settimana,posizione,desc_it,desc_en,note_premio_it,note_premio_en,nome_sponsor,descrizione_sponsor_it,descrizione_sponsor_en,website_sponsor,assegnato_a
+1,1,"premio 1° classificato it","premio 1° classificato en","nota premio it","nota premio en","Sponsor srl","desc sponsor it","desc sponsor en","http://www.test.it",
+1,2,"premio 2° classificato it","premio 2° classificato en",,,,,,,
+1,3,"premio 3° classificato it","premio 3° classificato en",,,,,,,
+2,1,"premio 1° classificato it","premio 1° classificato en",,,,,,,
+2,2,"premio 2° classificato it","premio 2° classificato en",,,,,,,
+2,3,"premio 3° classificato it","premio 3° classificato en",,,,,,,
+3,1,"premio 1° classificato it","premio 1° classificato en",,,,,,,
+3,2,"premio 2° classificato it","premio 2° classificato en",,,,,,,
+3,3,"premio 3° classificato it","premio 3° classificato en",,,,,,,
