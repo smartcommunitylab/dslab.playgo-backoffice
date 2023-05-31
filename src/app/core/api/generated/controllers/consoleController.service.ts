@@ -307,6 +307,7 @@ export class ConsoleControllerService {
     campaignId?: string;
     status?: string;
     toCheck?: boolean;
+    scoreStatus?: string;
   }): Observable<PageTrackedInstanceConsole> {
     const {
       page,
@@ -321,6 +322,7 @@ export class ConsoleControllerService {
       campaignId,
       status,
       toCheck,
+      scoreStatus,
     } = args;
     return this.http.request<PageTrackedInstanceConsole>(
       "get",
@@ -339,6 +341,7 @@ export class ConsoleControllerService {
           campaignId,
           status,
           toCheck,
+          scoreStatus
         }),
       }
     );

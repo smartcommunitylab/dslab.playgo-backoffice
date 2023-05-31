@@ -8,6 +8,7 @@ import {
 import { GeoLocationEvent, Track } from "src/app/shared/classes/track-class";
 import {
   LANGUAGE_DEFAULT,
+  LIST_SCORE_STATUS,
   LIST_STATES_TRACK,
   MY_DATE_FORMATS,
   TERRITORY_ID_LOCAL_STORAGE_KEY,
@@ -126,6 +127,7 @@ export class ValidationTrackComponent implements OnInit {
   listModelType = means;
   listStates = LIST_STATES_TRACK;
   validationJson = VALIDATIONJSON;
+  listScoreStatus = LIST_SCORE_STATUS;
   layerGroup: L.Layer;
   startMarker: L.Layer;
   stopMarker: L.Layer;
@@ -249,6 +251,7 @@ export class ValidationTrackComponent implements OnInit {
       campaignId: new FormControl(""),
       status: new FormControl(""),
       toCheck: new FormControl(""),
+      scoreStatus: new FormControl(""),
     });
     const monday = this.getPreviousMonday();
     const sunday = this.getNextSunday();
@@ -422,6 +425,8 @@ export class ValidationTrackComponent implements OnInit {
             this.validatingForm.get("toCheck").value === true
               ? this.validatingForm.get("toCheck").value
               : undefined,
+          scoreStatus: this.validatingForm.get("scoreStatus").value === "empty" ?
+          undefined: this.validatingForm.get("scoreStatus").value
         })
         .subscribe((res) => {
           this.paginatorData = res;
@@ -1397,6 +1402,16 @@ export class ValidationTrackComponent implements OnInit {
         }
       });
   }
+
+  isCampaignIdSelected(){
+    if(!!this.validatingForm.get("campaignId").value){
+      if(this.validatingForm.get("campaignId").value =="all"){
+        return false;
+      }
+      return true;
+    }
+    return false;
+  }
 }
 
 interface StatisticsTracks {
@@ -1413,6 +1428,7 @@ interface SelectedTrackStatistic {
   avrgSpeed?: number;
   maxSpeed?: number;
 }
+
 
 class GeolocationEventsClass implements GeoLocationEvent {
   accuracy?: number;

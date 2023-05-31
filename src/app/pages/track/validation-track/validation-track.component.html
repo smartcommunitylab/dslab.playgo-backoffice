@@ -79,6 +79,17 @@
                             </mat-select>
                         </mat-form-field>
                     </mat-grid-tile>
+                    <mat-grid-tile *ngIf="isCampaignIdSelected()">
+                        <mat-form-field appearance="fill" class="full-width margin-form">
+                            <mat-label>{{'scoreStatus' | translate}}</mat-label>
+                            <mat-select id="scoreStatus" formControlName="scoreStatus" (ngModelChange)="resetPageNumber()">
+                                <mat-option *ngFor="let val of listScoreStatus" [value]="val">{{val | translate}}
+                                </mat-option>
+                                <mat-option [value]="'empty'">{{"empty" | translate}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="3" *ngIf="isCampaignIdSelected()"></mat-grid-tile>
                     <mat-grid-tile [colspan]="2">
                         <div class="search-container">
                             <button class="margin-form" mat-flat-button type="submit" (click)="searchSubmit()"
