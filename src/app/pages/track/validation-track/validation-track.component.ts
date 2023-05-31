@@ -425,8 +425,8 @@ export class ValidationTrackComponent implements OnInit {
             this.validatingForm.get("toCheck").value === true
               ? this.validatingForm.get("toCheck").value
               : undefined,
-          // scoreStatus: this.validatingForm.get("toCheck").value === "empty" ?
-          // undefined: ""
+          scoreStatus: this.validatingForm.get("scoreStatus").value === "empty" ?
+          undefined: this.validatingForm.get("scoreStatus").value
         })
         .subscribe((res) => {
           this.paginatorData = res;
