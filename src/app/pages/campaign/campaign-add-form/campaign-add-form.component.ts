@@ -364,13 +364,21 @@ export class CampaignAddFormComponent implements OnInit {
 
   chengeSelectedType(){
     if(!!this.validatingForm && this.validatingForm.get('type').value){
-      if(this.validatingForm.get('type').value!=='company'){
+      if(this.isGameIdMandatory(this.validatingForm.get('type').value)){
         this.validatingForm.get('gameId').setValidators([Validators.required]);
         this.validatingForm.get('gameId').updateValueAndValidity();
       }else{
         this.validatingForm.get("gameId").clearValidators();
         this.validatingForm.get('gameId').updateValueAndValidity();
       }
+    }
+  }
+
+  isGameIdMandatory(campaignType: string){
+    if(campaignType=== "school" || campaignType ==="city"){
+      return true;
+    }else{
+      return false;
     }
   }
 
@@ -664,7 +672,7 @@ export class CampaignAddFormComponent implements OnInit {
     this.campaignCreated.visible = this.validatingForm.get("visible").value;
     this.campaignCreated.validationData.means =
       this.validatingForm.get("means").value;
-    if (this.validatingForm.get("type").value !== "company") {
+    if (this.isGameIdMandatory(this.validatingForm.get('type').value)) {
       if (!!this.validatingForm.get("gameId").value) {
         this.campaignCreated.gameId = this.validatingForm.get("gameId").value;
       }
