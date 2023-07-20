@@ -198,7 +198,7 @@
                 </mat-grid-list>
                 <!-- old <img class="img-logo" src="{{PREFIX_SRC_IMG_C + selectedCampaign.banner.contentType + BASE64_SRC_IMG_C + selectedCampaign.banner.image}}"> -->
                 <mat-card-content>
-                    <div style="margin-top: 10px">
+                    <!-- <div style="margin-top: 10px">
                         <mat-grid-list cols="4" rowHeight="30px" style="margin-bottom:10px;">
                             <mat-grid-tile><h3>{{'means' | translate}}</h3></mat-grid-tile>
                             <mat-grid-tile><h3>{{'dailyLimitString' | translate}}</h3></mat-grid-tile>
@@ -221,7 +221,7 @@
                         <drop-down-card-info [title]="'managers' | translate"
                         [content]="managers">
                     </drop-down-card-info>
-                    </div>
+                    </div> -->
                 </mat-card-content>
                 <img *ngIf="selectedCampaign.banner" class="img-banner" src="{{ selectedCampaign.banner.url }}">
 

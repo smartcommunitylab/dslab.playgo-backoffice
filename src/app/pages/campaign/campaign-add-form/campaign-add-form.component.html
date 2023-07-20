@@ -88,46 +88,111 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <mat-grid-list [cols]="4" rowHeight="50px" style="margin-bottom: 10px">
-                    <div *ngFor="let mean of meansSelected">
-                        <mat-grid-tile>
-                            {{mean | translate}}
-                        </mat-grid-tile>
-                        <mat-grid-tile>
-                            <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
-                                <mat-label>{{'dailyLimitString' | translate}} <span
-                                        *ngIf="mean==='boat' || mean==='car'">({{'numberTrips' |
-                                        translate}})</span><span *ngIf="mean!=='boat' && mean!=='car'">(km)</span>
-                                </mat-label>
-                                <input [ngModelOptions]="{standalone: true}" type="number" matInput
-                                    id="{{'dailyLimit'+mean}}" name="{{'dailyLimit'+mean}}"
-                                    [(ngModel)]="selectedLimits[mean].dailyLimit">
-                            </mat-form-field>
-                        </mat-grid-tile>
-                        <mat-grid-tile>
-                            <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
-                                <mat-label>{{'weeklyLimitString' | translate}} <span
-                                        *ngIf="mean==='boat' || mean==='car'">({{'numberTrips' |
-                                        translate}})</span><span *ngIf="mean!=='boat' && mean!=='car'">(km)</span>
-                                </mat-label>
-                                <input [ngModelOptions]="{standalone: true}" type="number" matInput
-                                    id="{{'weeklyLimit'+mean}}" name="{{'weeklyLimit'+mean}}"
-                                    [(ngModel)]="selectedLimits[mean].weeklyLimit">
-                            </mat-form-field>
-                        </mat-grid-tile>
-                        <mat-grid-tile>
-                            <mat-form-field appearance="fill" class="grid-tile-limit">
-                                <mat-label>{{'monthlyLimitString' | translate}} <span
-                                        *ngIf="mean==='boat' || mean==='car'">({{'numberTrips' |
-                                        translate}})</span><span *ngIf="mean!=='boat' && mean!=='car'">(km)</span>
-                                </mat-label>
-                                <input [ngModelOptions]="{standalone: true}" type="number" matInput
-                                    id="{{'monthlyLimit'+mean}}" name="{{'monthlyLimit'+mean}}"
-                                    [(ngModel)]="selectedLimits[mean].monthlyLimit">
-                            </mat-form-field>
-                        </mat-grid-tile>
+                <div
+                    *ngIf="!!validatingForm && !!validatingForm.get('type').value && validatingForm.get('type').value==='company'">
+                    <mat-card-header style="border-bottom: 1px black solid; font-weight: bold;">
+                        {{"indicator" | translate}}
+                    </mat-card-header>
+                    <div class="in-line-forms" style="margin-top: 20px">
+                        <mat-form-field appearance="fill" class="input-half-right">
+                            <mat-label>{{'labelAddModifyCampaign' | translate}}</mat-label>
+                            <input matInput id="labelAddModifyCampaign" formControlName="labelAddModifyCampaign" type="text" [placeholder]="'labelAddModifyCampaignPlaceholder' | translate">
+                        </mat-form-field>
                     </div>
-                </mat-grid-list>
+                    <div  style="border-top: 1px rgba(128, 128, 128, 0.335) solid;">
+                        <mat-card-header style="margin-top: 20px;">
+                            {{"calculation" | translate}}
+                        </mat-card-header>
+                    </div>
+                    <mat-grid-list [cols]="7" rowHeight="50px" style="margin-bottom: 10px">
+                        <div *ngFor="let mean of meansSelected">
+                            <mat-grid-tile></mat-grid-tile>
+                            <mat-grid-tile>
+                                {{mean | translate}}
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-label>{{'metricEvaluation' | translate}}</mat-label>
+                                    <!-- <input [ngModelOptions]="{standalone: true}" type="text" matInput
+                                    id="metricEvaluation" name="metricEvaluation"
+                                    [(ngModel)]="selectedLimits[mean].metricEvaluation"> -->
+                                    <mat-select id="metricEvaluation" name="metricEvaluation"(selectionChange)="setLimitsMetric(mean,$event)" >
+                                        <mat-option *ngFor="let val of list_evaluation_types" [value]="val">
+                                            {{val |translate}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-label>{{'meansPoints' | translate}}</mat-label>
+                                    <input [ngModelOptions]="{standalone: true}" type="number" matInput
+                                        id="meansPoints" name="meansPoints"
+                                        [(ngModel)]="selectedLimits[mean].points">
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile></mat-grid-tile>
+                            <mat-grid-tile></mat-grid-tile>
+                            <mat-grid-tile></mat-grid-tile>
+                        </div>
+                    </mat-grid-list>
+                    <div>
+                        <div  style="border-top: 1px rgba(128, 128, 128, 0.335) solid;">
+                            <mat-card-header style="margin-top: 20px;">
+                                {{"limits" | translate}}
+                            </mat-card-header>
+                        </div>
+                        <mat-grid-list [cols]="4" rowHeight="50px" style="margin-bottom: 10px">
+                            <mat-grid-tile>
+                                {{"virtualPoints" | translate}}
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-label>{{'dailyLimit' | translate}}
+                                    </mat-label>
+                                    <input matInput id="dailyLimitvirtualPoints" formControlName="dailyLimitvirtualPoints" type="text">
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-label>{{'weeklyLimit' | translate}}
+                                    </mat-label>
+                                    <input matInput id="weeklyLimitvirtualPoints" formControlName="weeklyLimitvirtualPoints" type="text">
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-label>{{'monthlyLimit' | translate}}
+                                    </mat-label>
+                                    <input matInput id="monthlyLimitvirtualPoints" formControlName="monthlyLimitvirtualPoints" type="text">
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                {{"tripsNumber" | translate}}
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-label>{{'dailyLimit' | translate}}
+                                    </mat-label>
+                                    <input matInput id="dailyLimitTripsNumber" formControlName="dailyLimitTripsNumber" type="text">
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-label>{{'weeklyLimit' | translate}}
+                                    </mat-label>
+                                    <input matInput id="weeklyLimitTripsNumber" formControlName="weeklyLimitTripsNumber" type="text">
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-label>{{'monthlyLimit' | translate}}
+                                    </mat-label>
+                                    <input matInput id="monthlyLimitTripsNumber" formControlName="monthlyLimitTripsNumber" type="text">
+                                </mat-form-field>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+                </div>
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'webHookEvents' | translate}}</mat-label>
@@ -147,7 +212,7 @@
                 <div class="in-line-forms"
                     *ngIf="!!validatingForm && !!validatingForm.get('type').value && validatingForm.get('type').value!=='company'">
                     <mat-form-field appearance="fill" class="input-half-left">
-                        <mat-label>{{'startDayOfWeek' | translate  }}</mat-label>
+                        <mat-label>{{'startDayOfWeek' | translate }}</mat-label>
                         <mat-select id="startDayOfWeek" formControlName="startDayOfWeek">
                             <mat-option *ngFor="let event of day_week_const" [value]="event['value']">
                                 {{event['day'] | translate}}
@@ -396,7 +461,7 @@
         <div class="col-12 full-width" style="margin-top: 15px;" *ngIf="!!validatingForm">
             <div class="full-height">
                 <div class="in-line-forms" style="margin-top: 20px;">
-                    
+
                     <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'typology' | translate}}</mat-label>
                         <mat-select id="type" formControlName="type" [disabled]="true">
@@ -447,46 +512,117 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <mat-grid-list [cols]="4" rowHeight="50px" style="margin-bottom: 10px">
-                    <div *ngFor="let mean of meansSelected">
-                        <mat-grid-tile>
-                            {{mean | translate}}
-                        </mat-grid-tile>
-                        <mat-grid-tile>
-                            <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
-                                <mat-label>{{'dailyLimitString' | translate}} <span
-                                        *ngIf="mean==='boat' || mean==='car'">({{'numberTrips' |
-                                        translate}})</span><span *ngIf="mean!=='boat' && mean!=='car'">(km)</span>
-                                </mat-label>
-                                <input [ngModelOptions]="{standalone: true}" type="number" matInput
-                                    id="{{'dailyLimit'+mean}}" name="{{'dailyLimit'+mean}}"
-                                    [(ngModel)]="selectedLimits[mean].dailyLimit">
-                            </mat-form-field>
-                        </mat-grid-tile>
-                        <mat-grid-tile>
-                            <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
-                                <mat-label>{{'weeklyLimitString' | translate}} <span
-                                        *ngIf="mean==='boat' || mean==='car'">({{'numberTrips' |
-                                        translate}})</span><span *ngIf="mean!=='boat' && mean!=='car'">(km)</span>
-                                </mat-label>
-                                <input [ngModelOptions]="{standalone: true}" type="number" matInput
-                                    id="{{'weeklyLimit'+mean}}" name="{{'weeklyLimit'+mean}}"
-                                    [(ngModel)]="selectedLimits[mean].weeklyLimit">
-                            </mat-form-field>
-                        </mat-grid-tile>
-                        <mat-grid-tile>
-                            <mat-form-field appearance="fill" class="grid-tile-limit">
-                                <mat-label>{{'monthlyLimitString' | translate}} <span
-                                        *ngIf="mean==='boat' || mean==='car'">({{'numberTrips' |
-                                        translate}})</span><span *ngIf="mean!=='boat' && mean!=='car'">(km)</span>
-                                </mat-label>
-                                <input [ngModelOptions]="{standalone: true}" type="number" matInput
-                                    id="{{'monthlyLimit'+mean}}" name="{{'monthlyLimit'+mean}}"
-                                    [(ngModel)]="selectedLimits[mean].monthlyLimit">
-                            </mat-form-field>
-                        </mat-grid-tile>
+                <div
+                    *ngIf="!!validatingForm && !!validatingForm.get('type').value && validatingForm.get('type').value==='company'">
+                    <mat-card-header style="border-bottom: 1px black solid; font-weight: bold;">
+                        {{"indicator" | translate}}
+                    </mat-card-header>
+                    <div class="in-line-forms" style="margin-top: 20px">
+                        <mat-form-field appearance="fill" class="input-half-right">
+                            <mat-label>{{'labelAddModifyCampaign' | translate}}</mat-label>
+                            <input matInput id="labelAddModifyCampaign" formControlName="labelAddModifyCampaign" type="text" [placeholder]="'labelAddModifyCampaignPlaceholder' | translate">
+                        </mat-form-field>
                     </div>
-                </mat-grid-list>
+                    <div  style="border-top: 1px rgba(128, 128, 128, 0.335) solid;">
+                        <mat-card-header style="margin-top: 20px;">
+                            {{"calculation" | translate}}
+                        </mat-card-header>
+                    </div>
+                    <mat-grid-list [cols]="7" rowHeight="50px" style="margin-bottom: 10px">
+                        <div *ngFor="let mean of meansSelected">
+                            <mat-grid-tile></mat-grid-tile>
+                            <mat-grid-tile>
+                                {{mean | translate}}
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-label>{{'metricEvaluation' | translate}}</mat-label>
+                                    <!-- <input [ngModelOptions]="{standalone: true}" type="text" matInput
+                                    id="metricEvaluation" name="metricEvaluation"
+                                    [(ngModel)]="selectedLimits[mean].metricEvaluation"> -->
+                                    <mat-select [formControlName]="'metricEvaluation'+ mean" [id]="'metricEvaluation'+ mean" (selectionChange)="setLimitsMetric(mean,$event)" >
+                                        <mat-option *ngFor="let val of list_evaluation_types" [value]="val">
+                                            {{val |translate}}</mat-option> 
+                                    </mat-select>
+                                    <!-- <mat-select [id]="'metricEvaluation'+ mean" [(ngModel)]="selectedLimits[mean].metricEvaluation" (selectionChange)="setLimitsMetric(mean,$event)" >
+                                        <mat-option *ngFor="let val of list_evaluation_types" [value]="val">
+                                            {{val |translate}}</mat-option> 
+                                    </mat-select> -->
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-label>{{'meansPoints' | translate}}</mat-label>
+                                    <input [ngModelOptions]="{standalone: true}" type="number" matInput
+                                        [id]="'meansPoints'+mean"
+                                        [(ngModel)]="selectedLimits[mean].points">
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile></mat-grid-tile>
+                            <mat-grid-tile></mat-grid-tile>
+                            <mat-grid-tile></mat-grid-tile>
+                        </div>
+                    </mat-grid-list>
+                    <div>
+                        <div  style="border-top: 1px rgba(128, 128, 128, 0.335) solid;">
+                            <mat-card-header style="margin-top: 20px;">
+                                {{"limits" | translate}}
+                            </mat-card-header>
+                        </div>
+                        <mat-grid-list [cols]="4" rowHeight="50px" style="margin-bottom: 10px">
+                            <mat-grid-tile>
+                                {{"virtualPoints" | translate}}
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-label>{{'dailyLimit' | translate}}
+                                    </mat-label>
+                                    <input matInput id="dailyLimitvirtualPoints" formControlName="dailyLimitvirtualPoints" type="text">
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-label>{{'weeklyLimit' | translate}}
+                                    </mat-label>
+                                    <input matInput id="weeklyLimitvirtualPoints" formControlName="weeklyLimitvirtualPoints" type="text">
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-label>{{'monthlyLimit' | translate}}
+                                    </mat-label>
+                                    <input matInput id="monthlyLimitvirtualPoints" formControlName="monthlyLimitvirtualPoints" type="text">
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                {{"tripsNumber" | translate}}
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-label>{{'dailyLimit' | translate}}
+                                    </mat-label>
+                                    <input matInput id="dailyLimitTripsNumber" formControlName="dailyLimitTripsNumber" type="text">
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-label>{{'weeklyLimit' | translate}}
+                                    </mat-label>
+                                    <input matInput id="weeklyLimitTripsNumber" formControlName="weeklyLimitTripsNumber" type="text">
+                                </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-label>{{'monthlyLimit' | translate}}
+                                    </mat-label>
+                                    <input matInput id="monthlyLimitTripsNumber" formControlName="monthlyLimitTripsNumber" type="text">
+                                </mat-form-field>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+                </div>
+                
+
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'webHookEvents' | translate}}</mat-label>
