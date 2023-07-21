@@ -255,7 +255,7 @@ export class CampaignAddFormComponent implements OnInit {
           let value_to_add = {};
           value_to_add[name_metric] = this.selectedLimits[mean][METRIC_EVALUATION];
           this.validatingForm.patchValue(value_to_add);
-          if(this.selectedLimits[mean][METRIC_EVALUATION] == "minutes"){
+          if(this.selectedLimits[mean][METRIC_EVALUATION] == "time"){
             //saved in seconds in the backend
             this.selectedLimits[mean][POINTS] = this.campaignUpdated.specificData[VIRTUAL_SCORE][mean][COEFFICIENT]/60;
           }else{
@@ -799,7 +799,7 @@ export class CampaignAddFormComponent implements OnInit {
         
           this.campaignCreated.specificData[VIRTUAL_SCORE][mean][METRIC] =
           this.selectedLimits[mean][METRIC_EVALUATION];
-        if(this.selectedLimits[mean][METRIC_EVALUATION] =="minutes"){
+        if(this.selectedLimits[mean][METRIC_EVALUATION] =="time"){
           //convert in seconds
           this.campaignCreated.specificData[VIRTUAL_SCORE][mean][COEFFICIENT] =
           this.selectedLimits[mean][POINTS]*60;
@@ -1227,6 +1227,22 @@ export class CampaignAddFormComponent implements OnInit {
         used: false,
       });
     }
+  }
+
+  convert_metrics(value: string){
+    if(value=="distance"){
+      return "km";
+    }
+    if(value=="co2"){
+      return "co2";
+    }
+    if(value=="tracks"){
+      return "trip";
+    }
+    if(value=="time"){
+      return "minutes";
+    }
+    return "";
   }
 
   addFormControlMultilanguage() {
