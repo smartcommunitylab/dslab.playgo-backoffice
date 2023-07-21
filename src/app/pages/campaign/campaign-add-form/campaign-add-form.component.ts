@@ -263,10 +263,10 @@ export class CampaignAddFormComponent implements OnInit {
           this.validatingForm.patchValue(value_to_add);
           if(this.selectedLimits[mean][METRIC_EVALUATION] == "time"){
             //saved in seconds in the backend
-            this.selectedLimits[mean][POINTS] = this.campaignUpdated.specificData[VIRTUAL_SCORE][mean][COEFFICIENT]/60;
+            this.selectedLimits[mean][POINTS] = this.campaignUpdated.specificData[VIRTUAL_SCORE][mean][COEFFICIENT]*60;
           }
           else if(this.selectedLimits[mean][METRIC_EVALUATION] == "distance"){
-            this.selectedLimits[mean][POINTS] = this.campaignUpdated.specificData[VIRTUAL_SCORE][mean][COEFFICIENT]/1000;
+            this.selectedLimits[mean][POINTS] = this.campaignUpdated.specificData[VIRTUAL_SCORE][mean][COEFFICIENT]*1000;
           }else{
             this.selectedLimits[mean][POINTS] = this.campaignUpdated.specificData[VIRTUAL_SCORE][mean][COEFFICIENT];
           }
@@ -811,11 +811,11 @@ export class CampaignAddFormComponent implements OnInit {
         if(this.selectedLimits[mean][METRIC_EVALUATION] =="time"){
           //convert in seconds
           this.campaignCreated.specificData[VIRTUAL_SCORE][mean][COEFFICIENT] =
-          this.selectedLimits[mean][POINTS]*60;
+          this.selectedLimits[mean][POINTS]/60;
         }else if(this.selectedLimits[mean][METRIC_EVALUATION] =="distance"){
           // convert in meters
           this.campaignCreated.specificData[VIRTUAL_SCORE][mean][COEFFICIENT] =
-          this.selectedLimits[mean][POINTS]*1000;
+          this.selectedLimits[mean][POINTS]/1000;
         }else{
           this.campaignCreated.specificData[VIRTUAL_SCORE][mean][COEFFICIENT] =
           this.selectedLimits[mean][POINTS];
