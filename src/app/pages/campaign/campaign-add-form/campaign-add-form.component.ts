@@ -51,7 +51,13 @@ import {
   MONTHLY_LIMIT_VIRTUAL_POINTS,
   MONTHLY_LIMIT_TRIPS_NUMBER,
   WEEKLY_LIMIT_TRIPS_NUMBER,
-  DAILY_LIMIT_TRIPS_NUMBER
+  DAILY_LIMIT_TRIPS_NUMBER,
+  DAILY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE,
+  WEEKLY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE,
+  MONTHLY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE,
+  DAILY_LIMIT_TRIPS_NUMBER_SPEC_LABLE,
+  WEEKLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE,
+  MONTHLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE
 } from "src/app/shared/constants/constants";
 import {
   trigger,
@@ -258,6 +264,9 @@ export class CampaignAddFormComponent implements OnInit {
           if(this.selectedLimits[mean][METRIC_EVALUATION] == "time"){
             //saved in seconds in the backend
             this.selectedLimits[mean][POINTS] = this.campaignUpdated.specificData[VIRTUAL_SCORE][mean][COEFFICIENT]/60;
+          }
+          else if(this.selectedLimits[mean][METRIC_EVALUATION] == "distance"){
+            this.selectedLimits[mean][POINTS] = this.campaignUpdated.specificData[VIRTUAL_SCORE][mean][COEFFICIENT]/1000;
           }else{
             this.selectedLimits[mean][POINTS] = this.campaignUpdated.specificData[VIRTUAL_SCORE][mean][COEFFICIENT];
           }
@@ -278,33 +287,33 @@ export class CampaignAddFormComponent implements OnInit {
           challengePlayerAssignedHour: this.campaignUpdated.specificData[CHALLENGE_PLAYER_ASSIGNED].split(";")[0],
         });
       }
-      if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_VIRTUAL_POINTS]){
+      if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE]){
         this.validatingForm.patchValue({
-          dailyLimitvirtualPoints: this.campaignUpdated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_VIRTUAL_POINTS]});
+          dailyLimitvirtualPoints: this.campaignUpdated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE]});
        }
-       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE][WEEKLY_LIMIT_VIRTUAL_POINTS]){
+       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE][WEEKLY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE]){
         this.validatingForm.patchValue({
-          weeklyLimitvirtualPoints: this.campaignUpdated.specificData[VIRTUAL_SCORE][WEEKLY_LIMIT_VIRTUAL_POINTS],
+          weeklyLimitvirtualPoints: this.campaignUpdated.specificData[VIRTUAL_SCORE][WEEKLY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE],
         });
        }
-       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_VIRTUAL_POINTS]){
+       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE]){
         this.validatingForm.patchValue({
-          monthlyLimitvirtualPoints: this.campaignUpdated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_VIRTUAL_POINTS],
+          monthlyLimitvirtualPoints: this.campaignUpdated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE],
         });
        }
-       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_TRIPS_NUMBER]){
+       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_TRIPS_NUMBER_SPEC_LABLE]){
         this.validatingForm.patchValue({
-          dailyLimitTripsNumber: this.campaignUpdated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_TRIPS_NUMBER],
+          dailyLimitTripsNumber: this.campaignUpdated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_TRIPS_NUMBER_SPEC_LABLE],
         });
        }
-       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE][WEEKLY_LIMIT_TRIPS_NUMBER]){
+       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE][WEEKLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE]){
         this.validatingForm.patchValue({
-          weeklyLimitTripsNumber: this.campaignUpdated.specificData[VIRTUAL_SCORE][WEEKLY_LIMIT_TRIPS_NUMBER],
+          weeklyLimitTripsNumber: this.campaignUpdated.specificData[VIRTUAL_SCORE][WEEKLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE],
         });
        }
-       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_TRIPS_NUMBER]){
+       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE]){
         this.validatingForm.patchValue({
-          monthlyLimitTripsNumber: this.campaignUpdated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_TRIPS_NUMBER],
+          monthlyLimitTripsNumber: this.campaignUpdated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE],
         });
        }
        if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE][LABEL]){
@@ -803,6 +812,10 @@ export class CampaignAddFormComponent implements OnInit {
           //convert in seconds
           this.campaignCreated.specificData[VIRTUAL_SCORE][mean][COEFFICIENT] =
           this.selectedLimits[mean][POINTS]*60;
+        }else if(this.selectedLimits[mean][METRIC_EVALUATION] =="distance"){
+          // convert in meters
+          this.campaignCreated.specificData[VIRTUAL_SCORE][mean][COEFFICIENT] =
+          this.selectedLimits[mean][POINTS]*1000;
         }else{
           this.campaignCreated.specificData[VIRTUAL_SCORE][mean][COEFFICIENT] =
           this.selectedLimits[mean][POINTS];
@@ -817,34 +830,34 @@ export class CampaignAddFormComponent implements OnInit {
         this.campaignCreated.specificData[VIRTUAL_SCORE][LABEL] =  undefined;
       }
       if(this.validatingForm.get(DAILY_LIMIT_VIRTUAL_POINTS).value!==null && this.validatingForm.get(DAILY_LIMIT_VIRTUAL_POINTS).value!==null){
-        this.campaignCreated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_VIRTUAL_POINTS] =  this.validatingForm.get(DAILY_LIMIT_VIRTUAL_POINTS).value;
+        this.campaignCreated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE] =  this.validatingForm.get(DAILY_LIMIT_VIRTUAL_POINTS).value;
       }else{
-        this.campaignCreated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_VIRTUAL_POINTS] =  undefined;
+        this.campaignCreated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE] =  undefined;
       }
       if(this.validatingForm.get(WEEKLY_LIMIT_VIRTUAL_POINTS).value!==null && this.validatingForm.get(WEEKLY_LIMIT_VIRTUAL_POINTS).value!==null){
-        this.campaignCreated.specificData[VIRTUAL_SCORE][WEEKLY_LIMIT_VIRTUAL_POINTS] =  this.validatingForm.get(WEEKLY_LIMIT_VIRTUAL_POINTS).value;
+        this.campaignCreated.specificData[VIRTUAL_SCORE][WEEKLY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE] =  this.validatingForm.get(WEEKLY_LIMIT_VIRTUAL_POINTS).value;
       }else{
-        this.campaignCreated.specificData[VIRTUAL_SCORE][WEEKLY_LIMIT_VIRTUAL_POINTS] =  undefined;
+        this.campaignCreated.specificData[VIRTUAL_SCORE][WEEKLY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE] =  undefined;
       }
       if(this.validatingForm.get(MONTHLY_LIMIT_VIRTUAL_POINTS).value!==null && this.validatingForm.get(MONTHLY_LIMIT_VIRTUAL_POINTS).value!==null){
-        this.campaignCreated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_VIRTUAL_POINTS] =  this.validatingForm.get(MONTHLY_LIMIT_VIRTUAL_POINTS).value;
+        this.campaignCreated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE] =  this.validatingForm.get(MONTHLY_LIMIT_VIRTUAL_POINTS).value;
       }else{
-        this.campaignCreated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_VIRTUAL_POINTS] =  undefined;
+        this.campaignCreated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE] =  undefined;
       }
       if(this.validatingForm.get(DAILY_LIMIT_TRIPS_NUMBER).value!==null && this.validatingForm.get(DAILY_LIMIT_TRIPS_NUMBER).value!==null){
-        this.campaignCreated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_TRIPS_NUMBER] =  this.validatingForm.get(DAILY_LIMIT_TRIPS_NUMBER).value;
+        this.campaignCreated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_TRIPS_NUMBER_SPEC_LABLE] =  this.validatingForm.get(DAILY_LIMIT_TRIPS_NUMBER).value;
       }else{
-        this.campaignCreated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_TRIPS_NUMBER] =  undefined;
+        this.campaignCreated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_TRIPS_NUMBER_SPEC_LABLE] =  undefined;
       }
       if(this.validatingForm.get(WEEKLY_LIMIT_TRIPS_NUMBER).value!==null && this.validatingForm.get(WEEKLY_LIMIT_TRIPS_NUMBER).value!==null){
-        this.campaignCreated.specificData[VIRTUAL_SCORE][WEEKLY_LIMIT_TRIPS_NUMBER] =  this.validatingForm.get(WEEKLY_LIMIT_TRIPS_NUMBER).value;
+        this.campaignCreated.specificData[VIRTUAL_SCORE][WEEKLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE] =  this.validatingForm.get(WEEKLY_LIMIT_TRIPS_NUMBER).value;
       }else{
-        this.campaignCreated.specificData[VIRTUAL_SCORE][WEEKLY_LIMIT_TRIPS_NUMBER] =  undefined;
+        this.campaignCreated.specificData[VIRTUAL_SCORE][WEEKLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE] =  undefined;
       }
       if(this.validatingForm.get(MONTHLY_LIMIT_TRIPS_NUMBER).value!==null && this.validatingForm.get(MONTHLY_LIMIT_TRIPS_NUMBER).value!==null){
-        this.campaignCreated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_TRIPS_NUMBER] =  this.validatingForm.get(MONTHLY_LIMIT_TRIPS_NUMBER).value;
+        this.campaignCreated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE] =  this.validatingForm.get(MONTHLY_LIMIT_TRIPS_NUMBER).value;
       }else{
-        this.campaignCreated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_TRIPS_NUMBER] =  undefined;
+        this.campaignCreated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE] =  undefined;
       }
     }
     if(this.campaignCreated.type === "city" || this.campaignCreated.type === "school"){
