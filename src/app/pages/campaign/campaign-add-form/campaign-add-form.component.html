@@ -118,7 +118,7 @@
                                     [(ngModel)]="selectedLimits[mean].metricEvaluation"> -->
                                     <mat-select id="metricEvaluation" name="metricEvaluation"(selectionChange)="setLimitsMetric(mean,$event)" >
                                         <mat-option *ngFor="let val of list_evaluation_types" [value]="val">
-                                            {{val |translate}}</mat-option>
+                                            {{convert_metrics(val) |translate}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </mat-grid-tile>
@@ -542,7 +542,7 @@
                                     [(ngModel)]="selectedLimits[mean].metricEvaluation"> -->
                                     <mat-select [formControlName]="'metricEvaluation'+ mean" [id]="'metricEvaluation'+ mean" (selectionChange)="setLimitsMetric(mean,$event)" >
                                         <mat-option *ngFor="let val of list_evaluation_types" [value]="val">
-                                            {{val |translate}}</mat-option> 
+                                            {{ convert_metrics(val) |translate}}</mat-option> 
                                     </mat-select>
                                     <!-- <mat-select [id]="'metricEvaluation'+ mean" [(ngModel)]="selectedLimits[mean].metricEvaluation" (selectionChange)="setLimitsMetric(mean,$event)" >
                                         <mat-option *ngFor="let val of list_evaluation_types" [value]="val">
