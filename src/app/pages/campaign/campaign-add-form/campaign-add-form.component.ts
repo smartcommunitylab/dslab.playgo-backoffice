@@ -119,6 +119,7 @@ export class CampaignAddFormComponent implements OnInit {
   @Input() type: string; // can be add or modify
   quillContent = "";
   meansSelected: string[] = [];
+  periods: any[] = [];
   selectedLimits: SelectedLimits;
   validatingForm: FormGroup;
   campaignCreated: CampaignClass;
@@ -198,6 +199,7 @@ export class CampaignAddFormComponent implements OnInit {
     this.languageDefault = this.translate.currentLang;
     this.campaignCreated = new CampaignClass();
     this.campaignCreated.validationData = new ValidationData();
+    this.campaignCreated.specificData = {};
     const keysWebHook = Object.keys(CampaignWebhook.EventsEnum);
     keysWebHook.forEach((item) => {
       this.weebHooksEventsList.push(CampaignWebhook.EventsEnum[item]);
@@ -227,6 +229,8 @@ export class CampaignAddFormComponent implements OnInit {
         active: false,
       });
       this.expandableDescription = false;
+      this.campaignCreated.specificData.periods = [];
+      this.periods = this.campaignCreated.specificData.periods;
     } else {
       this.validatingForm.patchValue({
         means: this.campaignUpdated.validationData.means,
@@ -249,6 +253,10 @@ export class CampaignAddFormComponent implements OnInit {
 
       });
       this.meansSelected = this.campaignUpdated.validationData.means;
+      if(!this.campaignUpdated.specificData.periods) {
+        this.campaignUpdated.specificData.periods = [];
+      }
+      this.periods = this.campaignUpdated.specificData.periods;
       this.selectedLimits = {};
       for(let mean of this.meansSelected){
         this.selectedLimits[mean] = {};
@@ -386,6 +394,8 @@ export class CampaignAddFormComponent implements OnInit {
         dailyLimitTripsNumber: new FormControl("",),
         weeklyLimitTripsNumber: new FormControl("",),
         monthlyLimitTripsNumber: new FormControl("",),
+        periodFrom: new FormControl("",),
+        periodTo: new FormControl("",),
       });
     } else {
       this.validatingForm = this.formBuilder.group({
@@ -413,6 +423,8 @@ export class CampaignAddFormComponent implements OnInit {
         dailyLimitTripsNumber: new FormControl("",),
         weeklyLimitTripsNumber: new FormControl("",),
         monthlyLimitTripsNumber: new FormControl("",),
+        periodFrom: new FormControl("",),
+        periodTo: new FormControl("",),
       });
     }
   }
@@ -783,7 +795,6 @@ export class CampaignAddFormComponent implements OnInit {
     }
     this.campaignCreated.communications =
       this.validatingForm.get("sendWeaklyEmail").value;
-    this.campaignCreated.specificData = {};
     if (this.type === "modify") {
       const specificDataKeys = Object.keys(this.campaignUpdated.specificData);
       for (let key of specificDataKeys) {
@@ -1313,6 +1324,35 @@ export class CampaignAddFormComponent implements OnInit {
     }
   }
 
+  addPeriod() {
+    if(this.validatingForm.get("periodFrom") && this.validatingForm.get("periodTo")) {
+      const dFrom = this.validatingForm.get("periodFrom").value;
+      const dTo = this.validatingForm.get("periodTo").value;
+      if(dFrom && dTo) {
+        const pFrom = moment(dFrom + " 00:00:00", 'YYYY-MM-DD HH:mm:ss');
+        const pTo = moment(dTo + " 23:59:59", 'YYYY-MM-DD HH:mm:ss');
+        let period = {
+          start: pFrom.format('x'), 
+          end: pTo.format('x')
+        };
+        if (this.type === "add") {
+          this.campaignCreated.specificData.periods.push(period);
+          this.campaignCreated.specificData.periods.sort((a, b) => b.start - a.start);
+        } else {
+          this.campaignUpdated.specificData.periods.push(period);
+          this.campaignUpdated.specificData.periods.sort((a, b) => b.start - a.start);  
+        }  
+      }  
+    }
+  }
+
+  removePeriod(index: any) {
+    if (this.type === "add") {
+      this.campaignCreated.specificData.periods.splice(index, 1);
+    } else {
+      this.campaignUpdated.specificData.periods.splice(index, 1);
+    }
+  }
 
 
 }

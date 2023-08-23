@@ -333,6 +333,7 @@
 "COMPUTED":"Valutato",
 "UNASSIGNED":"Non assegnato",
 "indicator":"Indicatore",
+"periods": "Periodi di retribuzione",
 "labelAddModifyCampaign":"Label",
 "labelAddModifyCampaignPlaceholder": "Denominazione indicatore per la APP (Default ecoLeaves)",
 "metricEvaluation":"Metrica",
