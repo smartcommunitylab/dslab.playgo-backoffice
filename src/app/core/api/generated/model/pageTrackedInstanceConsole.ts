@@ -21,6 +21,7 @@ export interface PageTrackedInstanceConsole {
   number?: number;
   numberOfElements?: number;
   pageable?: SwaggerPageable;
+  multimodalId?: string;
   size?: number;
   sort?: Sort;
   totalElements?: number;

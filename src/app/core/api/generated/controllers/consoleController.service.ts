@@ -295,10 +295,7 @@ export class ConsoleControllerService {
    * @param toCheck toCheck
    */
   public searchTrackedInstanceUsingGET(args: {
-    page: number;
-    size: number;
     territoryId: string;
-    sort?: string;
     trackId?: string;
     playerId?: string;
     modeType?: string;
@@ -306,14 +303,15 @@ export class ConsoleControllerService {
     dateTo?: number;
     campaignId?: string;
     status?: string;
-    toCheck?: boolean;
     scoreStatus?: string;
+    toCheck?: boolean;
+    multimodalId?: string;
+    page?: number;
+    size?: number;
+    sort?: string;
   }): Observable<PageTrackedInstanceConsole> {
     const {
-      page,
-      size,
       territoryId,
-      sort,
       trackId,
       playerId,
       modeType,
@@ -321,17 +319,18 @@ export class ConsoleControllerService {
       dateTo,
       campaignId,
       status,
-      toCheck,
       scoreStatus,
+      toCheck,
+      multimodalId,
+      page,
+      size,
+      sort,
     } = args;
     return this.http.request<PageTrackedInstanceConsole>(
       "get",
       environment.serverUrl.api + `/playandgo/api/console/track/search`,
       {
         params: removeNullOrUndefined({
-          page,
-          size,
-          sort,
           territoryId,
           trackId,
           playerId,
@@ -340,8 +339,12 @@ export class ConsoleControllerService {
           dateTo,
           campaignId,
           status,
+          scoreStatus,
           toCheck,
-          scoreStatus
+          multimodalId,
+          page,
+          size,
+          sort,
         }),
       }
     );

@@ -41,6 +41,18 @@
                             </mat-select>
                         </mat-form-field>
                     </mat-grid-tile>
+                    <div *ngIf="validatingForm.get('playerId').value">
+                        <mat-grid-tile></mat-grid-tile>
+                        <mat-grid-tile></mat-grid-tile>
+                        <mat-grid-tile>
+                            <mat-form-field appearance="fill" class="full-width margin-form">
+                                <mat-label>{{'modalTrackId' | translate}}</mat-label>
+                                <input matInput id="modalTrackId" formControlName="modalTrackId"
+                                (ngModelChange)="resetPageNumber()">
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile></mat-grid-tile>
+                    </div>
                     <mat-grid-tile>
                         <mat-form-field appearance="fill" class="full-width margin-form">
                             <mat-label>{{'dateTo' | translate}}</mat-label>
@@ -314,6 +326,17 @@
                                             </span>
                                         </span>
                                     </mat-grid-tile>
+                                    <mat-grid-tile [colspan]="10">
+                                        <span class=" left-text full-width">
+                                            <span class="bold">
+                                                {{'modalTrackId' | translate}}:
+                                            </span>
+                                            <a (click)="serachByMultimodal(element)" class="text-center full-width decoration-underline">
+                                                {{element.trackedInstance.multimodalId}}
+                                            </a>
+                                        </span>
+                                    </mat-grid-tile>
+                                    <!-- multimodalId -->
                                     <!-- <mat-grid-tile [colspan]="1">
                                         <mat-checkbox [checked]="!valueOfCheck(element.trackedInstance.toCheck)"
                                             (change)="changeToCheck($event.checked,element)" [color]="'primary'">
@@ -407,6 +430,16 @@
                                                 <span>
                                                     {{selectedTrack.playerInfo.nickname}}
                                                 </span>
+                                            </span>
+                                        </div>
+                                    </mat-grid-tile>
+                                    <mat-grid-tile [colspan]="3">
+                                        <div class="wrapper">
+                                            <span class="info-title">
+                                                <span class="bold">{{'modalTrackId' | translate}}:</span> <br />
+                                                <a (click)="serachByMultimodal(selectedTrack)" class="decoration-underline">
+                                                    {{selectedTrack.trackedInstance.multimodalId}}
+                                                </a>
                                             </span>
                                         </div>
                                     </mat-grid-tile>
