@@ -332,6 +332,7 @@
   "COMPUTED":"Computed",
   "UNASSIGNED":"Unassigned",
   "indicator":"Indicator",
+  "periods":"Pay periods",
   "labelAddModifyCampaign":"Label",
   "labelAddModifyCampaignPlaceholder": "Indicator denomitation for the APP (Default ecoLeaves)",
   "metricEvaluation":"Metric",
