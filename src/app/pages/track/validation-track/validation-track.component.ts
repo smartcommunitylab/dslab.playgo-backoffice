@@ -442,13 +442,16 @@ export class ValidationTrackComponent implements OnInit {
                 this.validatingForm.get("toCheck").value === true
               ? this.validatingForm.get("toCheck").value
               : undefined,
-          scoreStatus: this.validatingForm.get("scoreStatus") &&
+          scoreStatus:
+            this.validatingForm.get("scoreStatus") &&
             this.validatingForm.get("scoreStatus").value !== "empty"
               ? this.validatingForm.get("scoreStatus").value
-              :  undefined,
-          multimodalId: this.validatingForm.get("modalTrackId") && this.validatingForm.get("modalTrackId").value
-            ? this.validatingForm.get("modalTrackId").value
-            : undefined,
+              : undefined,
+          multimodalId:
+            this.validatingForm.get("modalTrackId") &&
+            this.validatingForm.get("modalTrackId").value
+              ? this.validatingForm.get("modalTrackId").value
+              : undefined,
         })
         .subscribe((res) => {
           this.paginatorData = res;
@@ -1478,9 +1481,10 @@ export class ValidationTrackComponent implements OnInit {
               ? this.validatingForm.get("toCheck").value
               : undefined,
           scoreStatus:
-            this.validatingForm.get("scoreStatus").value === "empty"
-              ? undefined
-              : this.validatingForm.get("scoreStatus").value,
+            this.validatingForm.get("scoreStatus") &&
+            this.validatingForm.get("scoreStatus").value !== "empty"
+              ? this.validatingForm.get("scoreStatus").value
+              : undefined,
           multimodalId: element.trackedInstance.multimodalId,
         })
         .subscribe((res) => {
