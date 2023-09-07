@@ -633,6 +633,12 @@
                                                             translate}}:
                                                             {{campaign.score}},
                                                         </span>
+                                                        <span
+                                                            *ngIf="campaign.type==='company'">
+                                                            {{'virtualScore' |
+                                                            translate}}:
+                                                            {{campaign.virtualScore}},
+                                                        </span>
                                                         {{'distance' | translate}}: {{campaign.distance |
                                                         round}} (m)
                                                     </p>
