@@ -225,6 +225,7 @@
   "bonusPoint":"Bonus type",
   "bonusScore":"Point acquired",
   "score":"Points",
+  "virtualScore":"Indicator",
   "prizes":"Prizes",
   "dowloadExampleWeekCsv":"Weeks CSV example",
   "dowloadExampleRewardsCsv":"Prizes CSV example",
