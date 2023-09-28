@@ -637,7 +637,7 @@
                                                             *ngIf="campaign.type==='company'">
                                                             {{'virtualScore' |
                                                             translate}}:
-                                                            {{campaign.virtualScore}},
+                                                            {{campaign.virtualScore | number:'1.0-2'}},
                                                         </span>
                                                         {{'distance' | translate}}: {{campaign.distance |
                                                         round}} (m)
