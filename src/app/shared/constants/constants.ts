@@ -73,3 +73,5 @@ export const MONTHLY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE= "scoreMonthlyLimit";
 export const DAILY_LIMIT_TRIPS_NUMBER_SPEC_LABLE= "trackDailyLimit";
 export const WEEKLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE= "trackWeeklyLimit";
 export const MONTHLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE= "trackMonthlyLimit";
+export const USE_MULTI_LOCATION= "useMultiLocation";
+export const USE_EMPLOYEE_LOCATION= "useEmployeeLocation";

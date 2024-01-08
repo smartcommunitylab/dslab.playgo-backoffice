@@ -57,7 +57,9 @@ import {
   MONTHLY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE,
   DAILY_LIMIT_TRIPS_NUMBER_SPEC_LABLE,
   WEEKLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE,
-  MONTHLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE
+  MONTHLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE,
+  USE_MULTI_LOCATION,
+  USE_EMPLOYEE_LOCATION
 } from "src/app/shared/constants/constants";
 import {
   trigger,
@@ -227,6 +229,8 @@ export class CampaignAddFormComponent implements OnInit {
       this.validatingForm.patchValue({
         territoryId: localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY),
         active: false,
+        useMultiLocation: false,
+        useEmployeeLocation: false,
       });
       this.expandableDescription = false;
       this.campaignCreated.specificData.periods = [];
@@ -329,6 +333,25 @@ export class CampaignAddFormComponent implements OnInit {
           labelAddModifyCampaign: this.campaignUpdated.specificData[VIRTUAL_SCORE][LABEL],
         });
        }
+       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[USE_MULTI_LOCATION]){
+        this.validatingForm.patchValue({
+          useMultiLocation: this.campaignUpdated.specificData[USE_MULTI_LOCATION],
+        });
+       } else {
+        this.validatingForm.patchValue({
+          useMultiLocation: false,
+        });
+       }
+       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[USE_EMPLOYEE_LOCATION]){
+        this.validatingForm.patchValue({
+          useEmployeeLocation: this.campaignUpdated.specificData[USE_EMPLOYEE_LOCATION],
+        });
+       } else {
+        this.validatingForm.patchValue({
+          useEmployeeLocation: false,
+        });
+       }
+
       // if (
       //   !this.campaignUpdated.specificData || !this.campaignUpdated.specificData[VIRTUAL_SCORE] ||
       //   Object.keys(this.campaignUpdated.specificData[VIRTUAL_SCORE]).length <= 0
@@ -396,6 +419,8 @@ export class CampaignAddFormComponent implements OnInit {
         monthlyLimitTripsNumber: new FormControl("",),
         periodFrom: new FormControl("",),
         periodTo: new FormControl("",),
+        useMultiLocation: new FormControl("", [Validators.required]),
+        useEmployeeLocation: new FormControl("", [Validators.required]),
       });
     } else {
       this.validatingForm = this.formBuilder.group({
@@ -425,6 +450,8 @@ export class CampaignAddFormComponent implements OnInit {
         monthlyLimitTripsNumber: new FormControl("",),
         periodFrom: new FormControl("",),
         periodTo: new FormControl("",),
+        useMultiLocation: new FormControl("", [Validators.required]),
+        useEmployeeLocation: new FormControl("", [Validators.required]),
       });
     }
   }
@@ -869,6 +896,16 @@ export class CampaignAddFormComponent implements OnInit {
         this.campaignCreated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE] =  this.validatingForm.get(MONTHLY_LIMIT_TRIPS_NUMBER).value;
       }else{
         this.campaignCreated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE] =  undefined;
+      }
+      if(this.validatingForm.get(USE_MULTI_LOCATION).value!==null){
+        this.campaignCreated.specificData[USE_MULTI_LOCATION] =  this.validatingForm.get(USE_MULTI_LOCATION).value;
+      }else{
+        this.campaignCreated.specificData[USE_MULTI_LOCATION] =  false;
+      }
+      if(this.validatingForm.get(USE_EMPLOYEE_LOCATION).value!==null){
+        this.campaignCreated.specificData[USE_EMPLOYEE_LOCATION] =  this.validatingForm.get(USE_EMPLOYEE_LOCATION).value;
+      }else{
+        this.campaignCreated.specificData[USE_EMPLOYEE_LOCATION] =  false;
       }
     }
     if(this.campaignCreated.type === "city" || this.campaignCreated.type === "school"){
