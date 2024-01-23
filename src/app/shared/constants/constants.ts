@@ -75,3 +75,6 @@ export const WEEKLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE= "trackWeeklyLimit";
 export const MONTHLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE= "trackMonthlyLimit";
 export const USE_MULTI_LOCATION= "useMultiLocation";
 export const USE_EMPLOYEE_LOCATION= "useEmployeeLocation";
+export const HIDE_COMPANY_DESC= "hideCompanyDesc";
+export const REGISTRATION_COMPANY_DESC= "registrationCompanyDesc";
+export const LIMIT_COMPANY_DESC= "limitCompanyDesc";
