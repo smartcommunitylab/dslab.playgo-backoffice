@@ -59,7 +59,10 @@ import {
   WEEKLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE,
   MONTHLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE,
   USE_MULTI_LOCATION,
-  USE_EMPLOYEE_LOCATION
+  USE_EMPLOYEE_LOCATION,
+  HIDE_COMPANY_DESC,
+  REGISTRATION_COMPANY_DESC,
+  LIMIT_COMPANY_DESC
 } from "src/app/shared/constants/constants";
 import {
   trigger,
@@ -231,6 +234,7 @@ export class CampaignAddFormComponent implements OnInit {
         active: false,
         useMultiLocation: false,
         useEmployeeLocation: false,
+        hideCompanyDesc: false,
       });
       this.expandableDescription = false;
       this.campaignCreated.specificData.periods = [];
@@ -351,6 +355,16 @@ export class CampaignAddFormComponent implements OnInit {
           useEmployeeLocation: false,
         });
        }
+       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[HIDE_COMPANY_DESC]){
+        this.validatingForm.patchValue({
+          hideCompanyDesc: this.campaignUpdated.specificData[HIDE_COMPANY_DESC],
+        });
+       } else {
+        this.validatingForm.patchValue({
+          hideCompanyDesc: false,
+        });
+       }
+
 
       // if (
       //   !this.campaignUpdated.specificData || !this.campaignUpdated.specificData[VIRTUAL_SCORE] ||
@@ -421,6 +435,7 @@ export class CampaignAddFormComponent implements OnInit {
         periodTo: new FormControl("",),
         useMultiLocation: new FormControl("", [Validators.required]),
         useEmployeeLocation: new FormControl("", [Validators.required]),
+        hideCompanyDesc: new FormControl("", [Validators.required]),
       });
     } else {
       this.validatingForm = this.formBuilder.group({
@@ -452,6 +467,7 @@ export class CampaignAddFormComponent implements OnInit {
         periodTo: new FormControl("",),
         useMultiLocation: new FormControl("", [Validators.required]),
         useEmployeeLocation: new FormControl("", [Validators.required]),
+        hideCompanyDesc: new FormControl("", [Validators.required]),
       });
     }
   }
@@ -631,7 +647,7 @@ export class CampaignAddFormComponent implements OnInit {
             }
           );
       } else if (this.type === "modify") {
-        this.campaignCreated.name = this.campaignUpdated.name;
+        //this.campaignCreated.name = this.campaignUpdated.name;
         this.campaignCreated.territoryId = this.campaignUpdated.territoryId;
         this.campaignCreated.campaignId = this.campaignUpdated.campaignId;
         this.campaignService
@@ -906,6 +922,25 @@ export class CampaignAddFormComponent implements OnInit {
         this.campaignCreated.specificData[USE_EMPLOYEE_LOCATION] =  this.validatingForm.get(USE_EMPLOYEE_LOCATION).value;
       }else{
         this.campaignCreated.specificData[USE_EMPLOYEE_LOCATION] =  false;
+      }
+      if(this.validatingForm.get(HIDE_COMPANY_DESC).value!==null){
+        this.campaignCreated.specificData[HIDE_COMPANY_DESC] =  this.validatingForm.get(HIDE_COMPANY_DESC).value;
+      }else{
+        this.campaignCreated.specificData[HIDE_COMPANY_DESC] =  false;
+      }
+      this.campaignCreated.specificData[REGISTRATION_COMPANY_DESC] = {};
+      this.campaignCreated.specificData[LIMIT_COMPANY_DESC] = {};
+      for (let l of this.languagesSupported) {
+        if(this.validatingForm.get(REGISTRATION_COMPANY_DESC+l).value!==null){
+          this.campaignCreated.specificData[REGISTRATION_COMPANY_DESC][l] =  this.validatingForm.get(REGISTRATION_COMPANY_DESC+l).value;
+        }else{
+          this.campaignCreated.specificData[REGISTRATION_COMPANY_DESC][l] = "";
+        }  
+        if(this.validatingForm.get(LIMIT_COMPANY_DESC+l).value!==null){
+          this.campaignCreated.specificData[LIMIT_COMPANY_DESC][l] =  this.validatingForm.get(LIMIT_COMPANY_DESC+l).value;
+        }else{
+          this.campaignCreated.specificData[LIMIT_COMPANY_DESC][l] = "";
+        }  
       }
     }
     if(this.campaignCreated.type === "city" || this.campaignCreated.type === "school"){
@@ -1322,12 +1357,22 @@ export class CampaignAddFormComponent implements OnInit {
       }
       this.validatingForm.addControl(nameName, controlName);
       this.validatingForm.addControl(nameDescription, controlDescription);
+      this.validatingForm.addControl(REGISTRATION_COMPANY_DESC+l, new FormControl(""));
+      this.validatingForm.addControl(LIMIT_COMPANY_DESC+l, new FormControl(""));
       if (this.type !== "add") {
         var obj = {};
         obj[nameName] = this.campaignUpdated.name[l];
-        obj[nameDescription] = this.campaignUpdated.description[l]
-          ? this.campaignUpdated.description[l]
-          : "";
+        obj[nameDescription] = this.campaignUpdated.description[l] ? this.campaignUpdated.description[l] : "";
+        if(this.campaignUpdated.specificData[REGISTRATION_COMPANY_DESC]) {
+          obj[REGISTRATION_COMPANY_DESC+l] = this.campaignUpdated.specificData[REGISTRATION_COMPANY_DESC][l] ? this.campaignUpdated.specificData[REGISTRATION_COMPANY_DESC][l] : "";
+        } else {
+          obj[REGISTRATION_COMPANY_DESC+l] = "";
+        }
+        if(this.campaignUpdated.specificData[LIMIT_COMPANY_DESC]) {
+          obj[LIMIT_COMPANY_DESC+l] = this.campaignUpdated.specificData[LIMIT_COMPANY_DESC][l] ? this.campaignUpdated.specificData[LIMIT_COMPANY_DESC][l] : "";
+        } else {
+          obj[LIMIT_COMPANY_DESC+l] = "";
+        }
         this.validatingForm.patchValue(obj);
       }
     }

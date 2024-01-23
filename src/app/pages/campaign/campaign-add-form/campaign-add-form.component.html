@@ -93,20 +93,31 @@
                     <mat-card-header style="border-bottom: 1px black solid; font-weight: bold;">
                         {{"modality" | translate}}
                     </mat-card-header>
-                    <mat-form-field appearance="fill" class="input-half-left">
-                        <mat-label>{{'useMultiLocation' | translate}}</mat-label>
-                        <mat-select id="useMultiLocation" formControlName="useMultiLocation">
-                            <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val)
-                                |translate}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <mat-form-field appearance="fill" class="input-half-right">
-                        <mat-label>{{'useEmployeeLocation' | translate}}</mat-label>
-                        <mat-select id="useEmployeeLocation" formControlName="useEmployeeLocation">
-                            <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val)
-                                |translate}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
+                    <div class="in-line-forms" style="margin-top: 20px">
+                        <mat-form-field appearance="fill" class="input-half-left">
+                            <mat-label>{{'useMultiLocation' | translate}}</mat-label>
+                            <mat-select id="useMultiLocation" formControlName="useMultiLocation">
+                                <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val)
+                                    |translate}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class="input-half-right">
+                            <mat-label>{{'useEmployeeLocation' | translate}}</mat-label>
+                            <mat-select id="useEmployeeLocation" formControlName="useEmployeeLocation">
+                                <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val)
+                                    |translate}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="in-line-forms" style="margin-top: 20px">
+                        <mat-form-field appearance="fill" class="input-half-left">
+                            <mat-label>{{'hideCompanyDesc' | translate}}</mat-label>
+                            <mat-select id="hideCompanyDesc" formControlName="hideCompanyDesc">
+                                <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val)
+                                    |translate}}</mat-option>
+                            </mat-select>    
+                        </mat-form-field>
+                    </div>
                     <mat-card-header style="border-bottom: 1px black solid; font-weight: bold;">
                         {{"indicator" | translate}}
                     </mat-card-header>
@@ -349,7 +360,18 @@
                             <input matInput id="{{'name'+languageSelected}}"
                                 formControlName="{{'name'+languageSelected}}">
                         </mat-form-field>
-
+                        <div class="in-line-forms" style="margin-top: 20px" *ngIf="!!validatingForm && !!validatingForm.get('type').value && validatingForm.get('type').value==='company'">
+                            <mat-form-field appearance="fill" *ngIf="l===languageSelected" class="input-half-left">
+                                <mat-label>{{'registrationCompanyDesc' | translate}} - {{l | translate}}</mat-label>
+                                <input matInput id="{{'registrationCompanyDesc' + languageSelected}}"
+                                    formControlName="{{'registrationCompanyDesc' + languageSelected}}">
+                            </mat-form-field>
+                            <mat-form-field appearance="fill" *ngIf="l===languageSelected" class="input-half-right">
+                                <mat-label>{{'limitCompanyDesc' | translate}} - {{l | translate}}</mat-label>
+                                <input matInput id="{{'limitCompanyDesc' + languageSelected}}"
+                                    formControlName="{{'limitCompanyDesc' + languageSelected}}">
+                            </mat-form-field>                                
+                        </div>
                         <mat-card class="card" *ngIf="l===languageSelected">
                             <mat-card-title class="cursor-pointer card-expandable"
                                 (click)="expandableDescription = ! expandableDescription">
@@ -565,20 +587,31 @@
                     <mat-card-header style="border-bottom: 1px black solid; font-weight: bold;">
                         {{"modality" | translate}}
                     </mat-card-header>
-                    <mat-form-field appearance="fill" class="input-half-left">
-                        <mat-label>{{'useMultiLocation' | translate}}</mat-label>
-                        <mat-select id="useMultiLocation" formControlName="useMultiLocation">
-                            <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val)
-                                |translate}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <mat-form-field appearance="fill" class="input-half-right">
-                        <mat-label>{{'useEmployeeLocation' | translate}}</mat-label>
-                        <mat-select id="useEmployeeLocation" formControlName="useEmployeeLocation">
-                            <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val)
-                                |translate}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
+                    <div class="in-line-forms" style="margin-top: 20px">
+                        <mat-form-field appearance="fill" class="input-half-left">
+                            <mat-label>{{'useMultiLocation' | translate}}</mat-label>
+                            <mat-select id="useMultiLocation" formControlName="useMultiLocation">
+                                <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val)
+                                    |translate}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class="input-half-right">
+                            <mat-label>{{'useEmployeeLocation' | translate}}</mat-label>
+                            <mat-select id="useEmployeeLocation" formControlName="useEmployeeLocation">
+                                <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val)
+                                    |translate}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>                        
+                    </div>
+                    <div class="in-line-forms" style="margin-top: 20px">
+                        <mat-form-field appearance="fill" class="input-half-left">
+                            <mat-label>{{'hideCompanyDesc' | translate}}</mat-label>
+                            <mat-select id="hideCompanyDesc" formControlName="hideCompanyDesc">
+                                <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val)
+                                    |translate}}</mat-option>
+                            </mat-select>    
+                        </mat-form-field>
+                    </div>
                     <mat-card-header style="border-bottom: 1px black solid; font-weight: bold;">
                         {{"indicator" | translate}}
                     </mat-card-header>
@@ -822,6 +855,23 @@
                     </mat-form-field>
                     <p class="warning">{{'warningTextBoxesSelectedLanguage' | translate}}</p>
                     <div *ngFor="let l of languagesSupported">
+                        <mat-form-field appearance="fill" *ngIf="l===languageSelected" class="input-half-left">
+                            <mat-label>{{'nameCampaign' | translate}} - {{l | translate}}</mat-label>
+                            <input matInput id="{{'name'+languageSelected}}"
+                                formControlName="{{'name'+languageSelected}}">
+                        </mat-form-field>
+                        <div class="in-line-forms" style="margin-top: 20px" *ngIf="!!validatingForm && !!validatingForm.get('type').value && validatingForm.get('type').value==='company'">
+                            <mat-form-field appearance="fill" *ngIf="l===languageSelected" class="input-half-left">
+                                <mat-label>{{'registrationCompanyDesc' | translate}} - {{l | translate}}</mat-label>
+                                <input matInput id="{{'registrationCompanyDesc' + languageSelected}}"
+                                    formControlName="{{'registrationCompanyDesc' + languageSelected}}">
+                            </mat-form-field>
+                            <mat-form-field appearance="fill" *ngIf="l===languageSelected" class="input-half-right">
+                                <mat-label>{{'limitCompanyDesc' | translate}} - {{l | translate}}</mat-label>
+                                <input matInput id="{{'limitCompanyDesc' + languageSelected}}"
+                                    formControlName="{{'limitCompanyDesc' + languageSelected}}">
+                            </mat-form-field>                                
+                        </div>    
                         <mat-card class="card" *ngIf="l===languageSelected">
                             <mat-card-title class="cursor-pointer card-expandable"
                                 (click)="expandableDescription = ! expandableDescription">
