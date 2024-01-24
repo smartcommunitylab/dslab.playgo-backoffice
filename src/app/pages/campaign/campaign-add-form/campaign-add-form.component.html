@@ -360,17 +360,52 @@
                             <input matInput id="{{'name'+languageSelected}}"
                                 formControlName="{{'name'+languageSelected}}">
                         </mat-form-field>
-                        <div class="in-line-forms" style="margin-top: 20px" *ngIf="!!validatingForm && !!validatingForm.get('type').value && validatingForm.get('type').value==='company'">
-                            <mat-form-field appearance="fill" *ngIf="l===languageSelected" class="input-half-left">
-                                <mat-label>{{'registrationCompanyDesc' | translate}} - {{l | translate}}</mat-label>
-                                <input matInput id="{{'registrationCompanyDesc' + languageSelected}}"
-                                    formControlName="{{'registrationCompanyDesc' + languageSelected}}">
-                            </mat-form-field>
-                            <mat-form-field appearance="fill" *ngIf="l===languageSelected" class="input-half-right">
-                                <mat-label>{{'limitCompanyDesc' | translate}} - {{l | translate}}</mat-label>
-                                <input matInput id="{{'limitCompanyDesc' + languageSelected}}"
-                                    formControlName="{{'limitCompanyDesc' + languageSelected}}">
-                            </mat-form-field>                                
+                        <div class="in-line-forms" style="margin-top: 20px" 
+                            *ngIf="!!validatingForm && !!validatingForm.get('type').value && validatingForm.get('type').value==='company'">
+                            <mat-card class="input-half-left" *ngIf="l===languageSelected" style="display: inline-block; vertical-align: top;">
+                                <mat-card-title class="cursor-pointer card-expandable"
+                                (click)="expandableRegistrationCompanyDesc = ! expandableRegistrationCompanyDesc">
+                                {{'registrationCompanyDesc' | translate}} - {{l | translate}}
+                                    <mat-card-actions class="right-button top-button">
+                                        <mat-icon *ngIf="expandableRegistrationCompanyDesc">
+                                            <span class="material-symbols-outlined">
+                                                expand_more
+                                            </span>
+                                        </mat-icon>
+                                        <mat-icon *ngIf="!expandableRegistrationCompanyDesc">
+                                            <span class="material-symbols-outlined">
+                                                expand_less
+                                            </span>
+                                        </mat-icon>
+                                    </mat-card-actions>
+                                </mat-card-title>
+                                <mat-card-content [@bodyExpansion]="expandableRegistrationCompanyDesc ? 'collapsed': 'expanded' "
+                                    class="expandable-content">
+                                    <rich-text-editor [control]="registrationCompanyDescControl"></rich-text-editor>
+                                </mat-card-content>
+                            </mat-card>
+                            <mat-card class="input-half-right" *ngIf="l===languageSelected" style="display: inline-block; vertical-align: top;">
+                                <mat-card-title class="cursor-pointer card-expandable"
+                                (click)="expandableLimitCompanyDesc = ! expandableLimitCompanyDesc">
+                                {{'limitCompanyDesc' | translate}} - {{l | translate}}
+                                    <mat-card-actions class="right-button top-button">
+                                        <mat-icon *ngIf="expandableLimitCompanyDesc">
+                                            <span class="material-symbols-outlined">
+                                                expand_more
+                                            </span>
+                                        </mat-icon>
+                                        <mat-icon *ngIf="!expandableLimitCompanyDesc">
+                                            <span class="material-symbols-outlined">
+                                                expand_less
+                                            </span>
+                                        </mat-icon>
+                                    </mat-card-actions>
+                                </mat-card-title>
+                                <mat-card-content [@bodyExpansion]="expandableLimitCompanyDesc ? 'collapsed': 'expanded' "
+                                    class="expandable-content">
+                                    <rich-text-editor [control]="limitCompanyDescControl"></rich-text-editor>
+                                </mat-card-content>
+                            </mat-card>
                         </div>
                         <mat-card class="card" *ngIf="l===languageSelected">
                             <mat-card-title class="cursor-pointer card-expandable"
@@ -860,17 +895,62 @@
                             <input matInput id="{{'name'+languageSelected}}"
                                 formControlName="{{'name'+languageSelected}}">
                         </mat-form-field>
-                        <div class="in-line-forms" style="margin-top: 20px" *ngIf="!!validatingForm && !!validatingForm.get('type').value && validatingForm.get('type').value==='company'">
-                            <mat-form-field appearance="fill" *ngIf="l===languageSelected" class="input-half-left">
+                        <div class="in-line-forms" style="margin-top: 20px" 
+                            *ngIf="!!validatingForm && !!validatingForm.get('type').value && validatingForm.get('type').value==='company'">
+                            <mat-card class="input-half-left" *ngIf="l===languageSelected" style="display: inline-block; vertical-align: top;">
+                                <mat-card-title class="cursor-pointer card-expandable"
+                                (click)="expandableRegistrationCompanyDesc = ! expandableRegistrationCompanyDesc">
+                                {{'registrationCompanyDesc' | translate}} - {{l | translate}}
+                                    <mat-card-actions class="right-button top-button">
+                                        <mat-icon *ngIf="expandableRegistrationCompanyDesc">
+                                            <span class="material-symbols-outlined">
+                                                expand_more
+                                            </span>
+                                        </mat-icon>
+                                        <mat-icon *ngIf="!expandableRegistrationCompanyDesc">
+                                            <span class="material-symbols-outlined">
+                                                expand_less
+                                            </span>
+                                        </mat-icon>
+                                    </mat-card-actions>
+                                </mat-card-title>
+                                <mat-card-content [@bodyExpansion]="expandableRegistrationCompanyDesc ? 'collapsed': 'expanded' "
+                                    class="expandable-content">
+                                    <rich-text-editor [control]="registrationCompanyDescControl"></rich-text-editor>
+                                </mat-card-content>
+                            </mat-card>
+                            <!--mat-form-field appearance="fill" *ngIf="l===languageSelected" class="input-half-left">
                                 <mat-label>{{'registrationCompanyDesc' | translate}} - {{l | translate}}</mat-label>
                                 <input matInput id="{{'registrationCompanyDesc' + languageSelected}}"
                                     formControlName="{{'registrationCompanyDesc' + languageSelected}}">
-                            </mat-form-field>
-                            <mat-form-field appearance="fill" *ngIf="l===languageSelected" class="input-half-right">
+                            </mat-form-field-->
+                            <mat-card class="input-half-right" *ngIf="l===languageSelected" style="display: inline-block; vertical-align: top;">
+                                <mat-card-title class="cursor-pointer card-expandable"
+                                (click)="expandableLimitCompanyDesc = ! expandableLimitCompanyDesc">
+                                {{'limitCompanyDesc' | translate}} - {{l | translate}}
+                                    <mat-card-actions class="right-button top-button">
+                                        <mat-icon *ngIf="expandableLimitCompanyDesc">
+                                            <span class="material-symbols-outlined">
+                                                expand_more
+                                            </span>
+                                        </mat-icon>
+                                        <mat-icon *ngIf="!expandableLimitCompanyDesc">
+                                            <span class="material-symbols-outlined">
+                                                expand_less
+                                            </span>
+                                        </mat-icon>
+                                    </mat-card-actions>
+                                </mat-card-title>
+                                <mat-card-content [@bodyExpansion]="expandableLimitCompanyDesc ? 'collapsed': 'expanded' "
+                                    class="expandable-content">
+                                    <rich-text-editor [control]="limitCompanyDescControl"></rich-text-editor>
+                                </mat-card-content>
+                            </mat-card>
+                            <!--mat-form-field appearance="fill" *ngIf="l===languageSelected" class="input-half-right">
                                 <mat-label>{{'limitCompanyDesc' | translate}} - {{l | translate}}</mat-label>
                                 <input matInput id="{{'limitCompanyDesc' + languageSelected}}"
                                     formControlName="{{'limitCompanyDesc' + languageSelected}}">
-                            </mat-form-field>                                
+                            </mat-form-field-->                                
                         </div>    
                         <mat-card class="card" *ngIf="l===languageSelected">
                             <mat-card-title class="cursor-pointer card-expandable"

@@ -137,6 +137,8 @@ export class CampaignAddFormComponent implements OnInit {
   errorMsgValidation: string;
   stateDescription: string = "collapsed";
   expandableDescription: boolean = true; 
+  expandableRegistrationCompanyDesc: boolean = true; 
+  expandableLimitCompanyDesc: boolean = true;
   details: DetailsForAddModifyModule[] = [];
   detailsType: any[];
   // stateRules: string = "collapsed";
@@ -237,6 +239,8 @@ export class CampaignAddFormComponent implements OnInit {
         hideCompanyDesc: false,
       });
       this.expandableDescription = false;
+      this.expandableLimitCompanyDesc = false;
+      this.expandableRegistrationCompanyDesc = false;
       this.campaignCreated.specificData.periods = [];
       this.periods = this.campaignCreated.specificData.periods;
     } else {
@@ -1043,6 +1047,16 @@ export class CampaignAddFormComponent implements OnInit {
     // var obj = {};
     // obj[name] = this.campaignUpdated.description[this.languageSelected] ?  this.campaignUpdated.description[this.languageSelected] : '';
     // this.validatingForm.patchValue(obj);
+    return this.validatingForm.controls[name] as FormControl;
+  }
+
+  get registrationCompanyDescControl() {
+    const name = REGISTRATION_COMPANY_DESC + this.languageSelected;
+    return this.validatingForm.controls[name] as FormControl;
+  }
+
+  get limitCompanyDescControl() {
+    const name = LIMIT_COMPANY_DESC + this.languageSelected;
     return this.validatingForm.controls[name] as FormControl;
   }
 
