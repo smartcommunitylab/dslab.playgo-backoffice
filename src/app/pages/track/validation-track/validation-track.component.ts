@@ -210,7 +210,7 @@ export class ValidationTrackComponent implements OnInit {
           : undefined,
         status: this.validatingForm.get("status").value
           ? this.validatingForm.get("status").value.toUpperCase()
-          : undefined, 
+          : undefined,
         toCheck: undefined,
       })
       .subscribe((res) => {
@@ -232,10 +232,23 @@ export class ValidationTrackComponent implements OnInit {
       .subscribe((campaigns) => {
         campaigns.forEach((item) => {
           this.selectedLanguage = this.translate.currentLang;
-          this.listCampaings.push([item.campaignId,item.name[this.selectedLanguage]?item.name[this.selectedLanguage] : item.name[LANGUAGE_DEFAULT] ]);
-          this.listCampaingsClean.push([item.campaignId,item.name[this.selectedLanguage]?item.name[this.selectedLanguage] : item.name[LANGUAGE_DEFAULT]]);
+          this.listCampaings.push([
+            item.campaignId,
+            item.name[this.selectedLanguage]
+              ? item.name[this.selectedLanguage]
+              : item.name[LANGUAGE_DEFAULT],
+          ]);
+          this.listCampaingsClean.push([
+            item.campaignId,
+            item.name[this.selectedLanguage]
+              ? item.name[this.selectedLanguage]
+              : item.name[LANGUAGE_DEFAULT],
+          ]);
         });
-        this.listCampaings.push([VALUE_EMPTY_SELECT_LIST,VALUE_EMPTY_SELECT_LIST]);
+        this.listCampaings.push([
+          VALUE_EMPTY_SELECT_LIST,
+          VALUE_EMPTY_SELECT_LIST,
+        ]);
       });
     this.selectedLanguage = this.translate.currentLang;
   }
@@ -252,6 +265,7 @@ export class ValidationTrackComponent implements OnInit {
       status: new FormControl(""),
       toCheck: new FormControl(""),
       scoreStatus: new FormControl(""),
+      modalTrackId: new FormControl(""),
     });
     const monday = this.getPreviousMonday();
     const sunday = this.getNextSunday();
@@ -398,7 +412,8 @@ export class ValidationTrackComponent implements OnInit {
             ? this.validatingForm.get("playerId").value
             : undefined,
           modeType: this.validatingForm.get("modeType").value
-            ? this.validatingForm.get("modeType").value === VALUE_EMPTY_SELECT_LIST
+            ? this.validatingForm.get("modeType").value ===
+              VALUE_EMPTY_SELECT_LIST
               ? undefined
               : this.validatingForm.get("modeType").value
             : undefined,
@@ -409,24 +424,34 @@ export class ValidationTrackComponent implements OnInit {
             ? this.validatingForm.get("dateTo").value.valueOf() + this.day
             : today,
           campaignId: this.validatingForm.get("campaignId").value
-            ? this.validatingForm.get("campaignId").value === VALUE_EMPTY_SELECT_LIST
+            ? this.validatingForm.get("campaignId").value ===
+              VALUE_EMPTY_SELECT_LIST
               ? undefined
               : this.validatingForm.get("campaignId").value
             : undefined,
           status: this.validatingForm.get("status").value
-            ? this.validatingForm.get("status").value === VALUE_EMPTY_SELECT_LIST
+            ? this.validatingForm.get("status").value ===
+              VALUE_EMPTY_SELECT_LIST
               ? undefined
               : this.validatingForm.get("status").value.toUpperCase()
             : undefined,
           toCheck:
-            this.validatingForm.get("toCheck").value === VALUE_EMPTY_SELECT_LIST ? 
-            undefined : 
-            this.validatingForm.get("toCheck").value === false ||
-            this.validatingForm.get("toCheck").value === true
+            this.validatingForm.get("toCheck").value === VALUE_EMPTY_SELECT_LIST
+              ? undefined
+              : this.validatingForm.get("toCheck").value === false ||
+                this.validatingForm.get("toCheck").value === true
               ? this.validatingForm.get("toCheck").value
               : undefined,
-          scoreStatus: this.validatingForm.get("scoreStatus").value === "empty" ?
-          undefined: this.validatingForm.get("scoreStatus").value
+          scoreStatus:
+            this.validatingForm.get("scoreStatus") &&
+            this.validatingForm.get("scoreStatus").value !== "empty"
+              ? this.validatingForm.get("scoreStatus").value
+              : undefined,
+          multimodalId:
+            this.validatingForm.get("modalTrackId") &&
+            this.validatingForm.get("modalTrackId").value
+              ? this.validatingForm.get("modalTrackId").value
+              : undefined,
         })
         .subscribe((res) => {
           this.paginatorData = res;
@@ -752,10 +777,11 @@ export class ValidationTrackComponent implements OnInit {
               ? this.validatingForm.get("status").value.toUpperCase()
               : undefined,
             toCheck:
-            this.validatingForm.get("toCheck").value === VALUE_EMPTY_SELECT_LIST ? 
-            undefined : 
-              this.validatingForm.get("toCheck").value === false ||
-              this.validatingForm.get("toCheck").value === true
+              this.validatingForm.get("toCheck").value ===
+              VALUE_EMPTY_SELECT_LIST
+                ? undefined
+                : this.validatingForm.get("toCheck").value === false ||
+                  this.validatingForm.get("toCheck").value === true
                 ? this.validatingForm.get("toCheck").value
                 : undefined,
           })
@@ -1069,7 +1095,7 @@ export class ValidationTrackComponent implements OnInit {
     });
   }
 
-  valueOfCheck(value):boolean{
+  valueOfCheck(value): boolean {
     if (value === null) {
       return true;
     }
@@ -1080,25 +1106,25 @@ export class ValidationTrackComponent implements OnInit {
     }
   }
 
-  changeToCheck(checked:boolean,track: TrackedInstanceConsoleClass) {
-    if(checked){
+  changeToCheck(checked: boolean, track: TrackedInstanceConsoleClass) {
+    if (checked) {
       this.trackingService
-      .modifyToCheckUsingPUT({
-        toCheck: false,
-        trackId: track.trackedInstance.id,
-      })
-      .subscribe(() => {
-        this.selectedTrack.trackedInstance.toCheck = false;
-      })
-    }else{
+        .modifyToCheckUsingPUT({
+          toCheck: false,
+          trackId: track.trackedInstance.id,
+        })
+        .subscribe(() => {
+          this.selectedTrack.trackedInstance.toCheck = false;
+        });
+    } else {
       this.trackingService
-      .modifyToCheckUsingPUT({
-        toCheck: true,
-        trackId: track.trackedInstance.id,
-      })
-      .subscribe(() => {
-        this.selectedTrack.trackedInstance.toCheck = true;
-      })
+        .modifyToCheckUsingPUT({
+          toCheck: true,
+          trackId: track.trackedInstance.id,
+        })
+        .subscribe(() => {
+          this.selectedTrack.trackedInstance.toCheck = true;
+        });
     }
   }
 
@@ -1403,9 +1429,90 @@ export class ValidationTrackComponent implements OnInit {
       });
   }
 
-  isCampaignIdSelected(){
-    if(!!this.validatingForm.get("campaignId").value){
-      if(this.validatingForm.get("campaignId").value =="all"){
+  serachByMultimodal(element) {
+    //todo search by element.trackedInstance.userId, element.trackedInstance.multimodalId
+    console.log(element.trackedInstance);
+    this.selectedRowIndex = undefined;
+    if (this.validatingForm.valid) {
+      if (this.resetSearchFieldsComponents) {
+        this.allowResetOnsearch();
+        this.resetSearchFieldsComponents = false;
+      }
+      const today: number = new Date().getTime();
+      this.trackingServiceInternal
+        .searchTrackedInstanceUsingGET({
+          page: this.currentPageNumber,
+          size: this.size[0],
+          territoryId: this.territoryId,
+          sort: this.SORTING,
+          trackId: this.validatingForm.get("trackId").value
+            ? this.validatingForm.get("trackId").value
+            : undefined,
+          playerId: element.trackedInstance.userId,
+          modeType: this.validatingForm.get("modeType").value
+            ? this.validatingForm.get("modeType").value ===
+              VALUE_EMPTY_SELECT_LIST
+              ? undefined
+              : this.validatingForm.get("modeType").value
+            : undefined,
+          dateFrom: this.validatingForm.get("dateFrom").value
+            ? this.validatingForm.get("dateFrom").value.valueOf()
+            : undefined,
+          dateTo: this.validatingForm.get("dateTo").value
+            ? this.validatingForm.get("dateTo").value.valueOf() + this.day
+            : today,
+          campaignId: this.validatingForm.get("campaignId").value
+            ? this.validatingForm.get("campaignId").value ===
+              VALUE_EMPTY_SELECT_LIST
+              ? undefined
+              : this.validatingForm.get("campaignId").value
+            : undefined,
+          status: this.validatingForm.get("status").value
+            ? this.validatingForm.get("status").value ===
+              VALUE_EMPTY_SELECT_LIST
+              ? undefined
+              : this.validatingForm.get("status").value.toUpperCase()
+            : undefined,
+          toCheck:
+            this.validatingForm.get("toCheck").value === VALUE_EMPTY_SELECT_LIST
+              ? undefined
+              : this.validatingForm.get("toCheck").value === false ||
+                this.validatingForm.get("toCheck").value === true
+              ? this.validatingForm.get("toCheck").value
+              : undefined,
+          scoreStatus:
+            this.validatingForm.get("scoreStatus") &&
+            this.validatingForm.get("scoreStatus").value !== "empty"
+              ? this.validatingForm.get("scoreStatus").value
+              : undefined,
+          multimodalId: element.trackedInstance.multimodalId,
+        })
+        .subscribe((res) => {
+          this.paginatorData = res;
+          this.listTrack = res.content;
+          this.selectedTrack = undefined;
+          try {
+            if (this.layerGroup) {
+              this.map.removeLayer(this.layerGroup);
+              this.map.removeLayer(this.startMarker);
+              this.map.removeLayer(this.stopMarker);
+              this.map.flyTo(latLng(DEFAULT_LATITUDE, DEFAULT_LONGITUDE), 7);
+              this.layerGroup = undefined;
+              this.markerLayers.forEach((item) => {
+                if (!!item) this.map.removeLayer(item["layer"]);
+              });
+            }
+          } catch (error) {}
+
+          this.setTableData();
+          //this.dataSource.paginator = this.paginator;
+        });
+    }
+  }
+
+  isCampaignIdSelected() {
+    if (!!this.validatingForm.get("campaignId").value) {
+      if (this.validatingForm.get("campaignId").value == "all") {
         return false;
       }
       return true;
@@ -1428,7 +1535,6 @@ interface SelectedTrackStatistic {
   avrgSpeed?: number;
   maxSpeed?: number;
 }
-
 
 class GeolocationEventsClass implements GeoLocationEvent {
   accuracy?: number;

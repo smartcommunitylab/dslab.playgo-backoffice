@@ -36,8 +36,33 @@ import {
   END_YEAR_FIXED,
   CHALLENGE_PLAYER_PROPOSER,
   CHALLENGE_PLAYER_ASSIGNED,
+  LIST_TYPE_EVALUATION_FOR_MEANS,
   HOURS_CONST,
   DAY_WEEK_KEY_VALUE,
+  METRIC,
+  COEFFICIENT,
+  VIRTUAL_SCORE,
+  METRIC_EVALUATION,
+  POINTS,
+  LABEL_ADD_MODIFY_CAMPIGN,
+  LABEL,
+  DAILY_LIMIT_VIRTUAL_POINTS,
+  WEEKLY_LIMIT_VIRTUAL_POINTS,
+  MONTHLY_LIMIT_VIRTUAL_POINTS,
+  MONTHLY_LIMIT_TRIPS_NUMBER,
+  WEEKLY_LIMIT_TRIPS_NUMBER,
+  DAILY_LIMIT_TRIPS_NUMBER,
+  DAILY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE,
+  WEEKLY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE,
+  MONTHLY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE,
+  DAILY_LIMIT_TRIPS_NUMBER_SPEC_LABLE,
+  WEEKLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE,
+  MONTHLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE,
+  USE_MULTI_LOCATION,
+  USE_EMPLOYEE_LOCATION,
+  HIDE_COMPANY_DESC,
+  REGISTRATION_COMPANY_DESC,
+  LIMIT_COMPANY_DESC
 } from "src/app/shared/constants/constants";
 import {
   trigger,
@@ -99,6 +124,7 @@ export class CampaignAddFormComponent implements OnInit {
   @Input() type: string; // can be add or modify
   quillContent = "";
   meansSelected: string[] = [];
+  periods: any[] = [];
   selectedLimits: SelectedLimits;
   validatingForm: FormGroup;
   campaignCreated: CampaignClass;
@@ -111,6 +137,8 @@ export class CampaignAddFormComponent implements OnInit {
   errorMsgValidation: string;
   stateDescription: string = "collapsed";
   expandableDescription: boolean = true; 
+  expandableRegistrationCompanyDesc: boolean = true; 
+  expandableLimitCompanyDesc: boolean = true;
   details: DetailsForAddModifyModule[] = [];
   detailsType: any[];
   // stateRules: string = "collapsed";
@@ -129,6 +157,8 @@ export class CampaignAddFormComponent implements OnInit {
   hours_const = HOURS_CONST;
   day_week_const =  DAY_WEEK_KEY_VALUE;
   disabledControl = true;
+  list_evaluation_types = LIST_TYPE_EVALUATION_FOR_MEANS;
+  customselectedLimits: any = "co2";
 
   @Input() set formTerritory(value: CampaignClass) {
     this.campaignUpdated = value;
@@ -176,6 +206,7 @@ export class CampaignAddFormComponent implements OnInit {
     this.languageDefault = this.translate.currentLang;
     this.campaignCreated = new CampaignClass();
     this.campaignCreated.validationData = new ValidationData();
+    this.campaignCreated.specificData = {};
     const keysWebHook = Object.keys(CampaignWebhook.EventsEnum);
     keysWebHook.forEach((item) => {
       this.weebHooksEventsList.push(CampaignWebhook.EventsEnum[item]);
@@ -203,8 +234,15 @@ export class CampaignAddFormComponent implements OnInit {
       this.validatingForm.patchValue({
         territoryId: localStorage.getItem(TERRITORY_ID_LOCAL_STORAGE_KEY),
         active: false,
+        useMultiLocation: false,
+        useEmployeeLocation: false,
+        hideCompanyDesc: false,
       });
       this.expandableDescription = false;
+      this.expandableLimitCompanyDesc = false;
+      this.expandableRegistrationCompanyDesc = false;
+      this.campaignCreated.specificData.periods = [];
+      this.periods = this.campaignCreated.specificData.periods;
     } else {
       this.validatingForm.patchValue({
         means: this.campaignUpdated.validationData.means,
@@ -224,9 +262,38 @@ export class CampaignAddFormComponent implements OnInit {
         gameId: !!this.campaignUpdated.gameId ? this.campaignUpdated.gameId : "" ,
         startDayOfWeek: this.campaignUpdated.startDayOfWeek,
         sendWeaklyEmail: this.campaignUpdated.communications,
+
       });
       this.meansSelected = this.campaignUpdated.validationData.means;
-      // console.log(this.campaignUpdated.specificData[CHALLENGE_PLAYER_PROPOSER].split(";")[1])
+      if(!this.campaignUpdated.specificData.periods) {
+        this.campaignUpdated.specificData.periods = [];
+      }
+      this.periods = this.campaignUpdated.specificData.periods;
+      this.selectedLimits = {};
+      for(let mean of this.meansSelected){
+        this.selectedLimits[mean] = {};
+        this.selectedLimits[mean][POINTS] = undefined;
+        this.selectedLimits[mean][METRIC_EVALUATION] = undefined;
+        if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE][mean] && this.campaignUpdated.specificData[VIRTUAL_SCORE][mean][METRIC]){
+          this.selectedLimits[mean][METRIC_EVALUATION] = this.campaignUpdated.specificData[VIRTUAL_SCORE][mean][METRIC];
+          const name_metric = 'metricEvaluation'+mean;
+          this.validatingForm.addControl(name_metric,new FormControl('', []))
+          let value_to_add = {};
+          value_to_add[name_metric] = this.selectedLimits[mean][METRIC_EVALUATION];
+          this.validatingForm.patchValue(value_to_add);
+          if(this.selectedLimits[mean][METRIC_EVALUATION] == "time"){
+            //saved in seconds in the backend
+            this.selectedLimits[mean][POINTS] = this.campaignUpdated.specificData[VIRTUAL_SCORE][mean][COEFFICIENT]*60;
+          }
+          else if(this.selectedLimits[mean][METRIC_EVALUATION] == "distance"){
+            this.selectedLimits[mean][POINTS] = this.campaignUpdated.specificData[VIRTUAL_SCORE][mean][COEFFICIENT]*1000;
+          }else{
+            this.selectedLimits[mean][POINTS] = this.campaignUpdated.specificData[VIRTUAL_SCORE][mean][COEFFICIENT];
+          }
+          
+        }
+      }
+      console.log("SELECTED LIMITS: ", this.selectedLimits);
       if(!!this.campaignUpdated.specificData && this.campaignUpdated.specificData[CHALLENGE_PLAYER_PROPOSER]){
         this.validatingForm.patchValue({
           challengePlayerProposedDay: this.campaignUpdated.specificData[CHALLENGE_PLAYER_PROPOSER].split(";")[1],
@@ -240,20 +307,85 @@ export class CampaignAddFormComponent implements OnInit {
           challengePlayerAssignedHour: this.campaignUpdated.specificData[CHALLENGE_PLAYER_ASSIGNED].split(";")[0],
         });
       }
-      if (
-        !this.campaignUpdated.specificData ||
-        Object.keys(this.campaignUpdated.specificData).length <= 0
-      ) {
-        //do other operation on specificData always before of the means which reset the specificData
-        this.campaignUpdated.specificData = {};
-        for (let mean of this.meansSelected) {
-          this.campaignUpdated.specificData[mean] = new LimitsClass();
-          this.campaignUpdated.specificData[mean][DAILY_LIMIT] = null;
-          this.campaignUpdated.specificData[mean][WEEKLY_LIMIT] = null;
-          this.campaignUpdated.specificData[mean][MONTHLY_LIMIT] = null;
-        }
-      }
-      this.selectedLimits = this.campaignUpdated.specificData;
+      if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE]){
+        this.validatingForm.patchValue({
+          dailyLimitvirtualPoints: this.campaignUpdated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE]});
+       }
+       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE][WEEKLY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE]){
+        this.validatingForm.patchValue({
+          weeklyLimitvirtualPoints: this.campaignUpdated.specificData[VIRTUAL_SCORE][WEEKLY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE],
+        });
+       }
+       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE]){
+        this.validatingForm.patchValue({
+          monthlyLimitvirtualPoints: this.campaignUpdated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE],
+        });
+       }
+       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_TRIPS_NUMBER_SPEC_LABLE]){
+        this.validatingForm.patchValue({
+          dailyLimitTripsNumber: this.campaignUpdated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_TRIPS_NUMBER_SPEC_LABLE],
+        });
+       }
+       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE][WEEKLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE]){
+        this.validatingForm.patchValue({
+          weeklyLimitTripsNumber: this.campaignUpdated.specificData[VIRTUAL_SCORE][WEEKLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE],
+        });
+       }
+       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE]){
+        this.validatingForm.patchValue({
+          monthlyLimitTripsNumber: this.campaignUpdated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE],
+        });
+       }
+       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE][LABEL]){
+        this.validatingForm.patchValue({
+          labelAddModifyCampaign: this.campaignUpdated.specificData[VIRTUAL_SCORE][LABEL],
+        });
+       }
+       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[USE_MULTI_LOCATION]){
+        this.validatingForm.patchValue({
+          useMultiLocation: this.campaignUpdated.specificData[USE_MULTI_LOCATION],
+        });
+       } else {
+        this.validatingForm.patchValue({
+          useMultiLocation: false,
+        });
+       }
+       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[USE_EMPLOYEE_LOCATION]){
+        this.validatingForm.patchValue({
+          useEmployeeLocation: this.campaignUpdated.specificData[USE_EMPLOYEE_LOCATION],
+        });
+       } else {
+        this.validatingForm.patchValue({
+          useEmployeeLocation: false,
+        });
+       }
+       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[HIDE_COMPANY_DESC]){
+        this.validatingForm.patchValue({
+          hideCompanyDesc: this.campaignUpdated.specificData[HIDE_COMPANY_DESC],
+        });
+       } else {
+        this.validatingForm.patchValue({
+          hideCompanyDesc: false,
+        });
+       }
+
+
+      // if (
+      //   !this.campaignUpdated.specificData || !this.campaignUpdated.specificData[VIRTUAL_SCORE] ||
+      //   Object.keys(this.campaignUpdated.specificData[VIRTUAL_SCORE]).length <= 0
+      // ) {
+      //   //do other operation on specificData always before of the means which reset the specificData
+      //   this.campaignUpdated.specificData = {};
+      //   for (let mean of this.meansSelected) {
+      //     this.campaignUpdated.specificData[VIRTUAL_SCORE] = {}
+      //     this.campaignUpdated.specificData[VIRTUAL_SCORE][mean] = {};
+      //     this.campaignUpdated.specificData[VIRTUAL_SCORE][mean][POINTS] = null;
+      //     this.campaignUpdated.specificData[VIRTUAL_SCORE][mean][METRIC_EVALUATION] = null;
+      //   }
+      //   this.selectedLimits = this.campaignUpdated.specificData[VIRTUAL_SCORE];
+      //   console.log("SDASDSDSADASDSADASDDSADSADSASADSADSADSADSAD", this.selectedLimits);
+      // }
+      // this.selectedLimits = this.campaignUpdated.specificData[VIRTUAL_SCORE];
       this.campaignService
         .getWebhookUsingGET(this.campaignUpdated.campaignId)
         .subscribe((res) => {
@@ -292,10 +424,22 @@ export class CampaignAddFormComponent implements OnInit {
         startDayOfWeek: new FormControl("", [Validators.pattern("^[1-7]")]),
         webHookEvents: new FormControl(""),
         endPointCongWebHook: new FormControl(""),
+        labelAddModifyCampaign: new FormControl(""),
         challengePlayerAssignedDay: new FormControl("",),
         challengePlayerAssignedHour: new FormControl("",),
         challengePlayerProposedDay: new FormControl("",),
         challengePlayerProposedHour: new FormControl("",),
+        dailyLimitvirtualPoints: new FormControl("",),
+        weeklyLimitvirtualPoints: new FormControl("",),
+        monthlyLimitvirtualPoints: new FormControl("",),
+        dailyLimitTripsNumber: new FormControl("",),
+        weeklyLimitTripsNumber: new FormControl("",),
+        monthlyLimitTripsNumber: new FormControl("",),
+        periodFrom: new FormControl("",),
+        periodTo: new FormControl("",),
+        useMultiLocation: new FormControl("", [Validators.required]),
+        useEmployeeLocation: new FormControl("", [Validators.required]),
+        hideCompanyDesc: new FormControl("", [Validators.required]),
       });
     } else {
       this.validatingForm = this.formBuilder.group({
@@ -312,10 +456,22 @@ export class CampaignAddFormComponent implements OnInit {
         startDayOfWeek: new FormControl(""),
         webHookEvents: new FormControl(""),
         endPointCongWebHook: new FormControl(""),
+        labelAddModifyCampaign: new FormControl(""),
         challengePlayerAssignedDay: new FormControl("",),
         challengePlayerAssignedHour: new FormControl("",),
         challengePlayerProposedDay: new FormControl("",),
         challengePlayerProposedHour: new FormControl("",),
+        dailyLimitvirtualPoints: new FormControl("",),
+        weeklyLimitvirtualPoints: new FormControl("",),
+        monthlyLimitvirtualPoints: new FormControl("",),
+        dailyLimitTripsNumber: new FormControl("",),
+        weeklyLimitTripsNumber: new FormControl("",),
+        monthlyLimitTripsNumber: new FormControl("",),
+        periodFrom: new FormControl("",),
+        periodTo: new FormControl("",),
+        useMultiLocation: new FormControl("", [Validators.required]),
+        useEmployeeLocation: new FormControl("", [Validators.required]),
+        hideCompanyDesc: new FormControl("", [Validators.required]),
       });
     }
   }
@@ -495,7 +651,7 @@ export class CampaignAddFormComponent implements OnInit {
             }
           );
       } else if (this.type === "modify") {
-        this.campaignCreated.name = this.campaignUpdated.name;
+        //this.campaignCreated.name = this.campaignUpdated.name;
         this.campaignCreated.territoryId = this.campaignUpdated.territoryId;
         this.campaignCreated.campaignId = this.campaignUpdated.campaignId;
         this.campaignService
@@ -647,6 +803,7 @@ export class CampaignAddFormComponent implements OnInit {
   }
 
   fillCampaingCreated() {
+    console.log("Selected limits: ",this.selectedLimits);
     this.campaignCreated.active = this.validatingForm.get("active").value;
     //const dataFrom: Moment = this.validatingForm.get("dateFrom").value;
     this.campaignCreated.dateFrom = this.fromDateTimeToLong(
@@ -685,28 +842,110 @@ export class CampaignAddFormComponent implements OnInit {
     }
     this.campaignCreated.communications =
       this.validatingForm.get("sendWeaklyEmail").value;
-    this.campaignCreated.specificData = {};
     if (this.type === "modify") {
       const specificDataKeys = Object.keys(this.campaignUpdated.specificData);
       for (let key of specificDataKeys) {
         // mantains all the other keys present in specificData, like survey and periods
         this.campaignCreated.specificData[key] =
           this.campaignUpdated.specificData[key];
-        const meansUsed: string[] = this.validatingForm.get("means").value;
-        if (this.means.find((item) => item === key)) {
-          //reset means that are restored with the next for loop, enter here when a delete of a mean is made
-          delete this.campaignCreated.specificData[key];
-        }
+        // const meansUsed: string[] = this.validatingForm.get("means").value;
+        // if (this.means.find((item) => item === this.selectedLimits[key] )) {
+        //   //reset means that are restored with the next for loop, enter here when a delete of a mean is made
+        //   delete this.campaignCreated.specificData[key];
+        // }
       }
     }
-    for (let mean of this.validatingForm.get("means").value) {
-      this.campaignCreated.specificData[mean] = new LimitsClass();
-      this.campaignCreated.specificData[mean][DAILY_LIMIT] =
-        this.selectedLimits[mean][DAILY_LIMIT];
-      this.campaignCreated.specificData[mean][WEEKLY_LIMIT] =
-        this.selectedLimits[mean][WEEKLY_LIMIT];
-      this.campaignCreated.specificData[mean][MONTHLY_LIMIT] =
-        this.selectedLimits[mean][MONTHLY_LIMIT];
+    if(this.campaignCreated.type === "company"){
+      //company type
+      console.log("CAmpaign created: ",this.campaignCreated.specificData);
+      this.campaignCreated.specificData[VIRTUAL_SCORE] = {};
+      
+      for (let mean of this.validatingForm.get("means").value) {
+        if(this.selectedLimits[mean][METRIC_EVALUATION]!= undefined && this.selectedLimits[mean][POINTS]!= undefined){
+        this.campaignCreated.specificData[VIRTUAL_SCORE][mean] = {};
+        
+          this.campaignCreated.specificData[VIRTUAL_SCORE][mean][METRIC] =
+          this.selectedLimits[mean][METRIC_EVALUATION];
+        if(this.selectedLimits[mean][METRIC_EVALUATION] =="time"){
+          //convert in seconds
+          this.campaignCreated.specificData[VIRTUAL_SCORE][mean][COEFFICIENT] =
+          this.selectedLimits[mean][POINTS]/60;
+        }else if(this.selectedLimits[mean][METRIC_EVALUATION] =="distance"){
+          // convert in meters
+          this.campaignCreated.specificData[VIRTUAL_SCORE][mean][COEFFICIENT] =
+          this.selectedLimits[mean][POINTS]/1000;
+        }else{
+          this.campaignCreated.specificData[VIRTUAL_SCORE][mean][COEFFICIENT] =
+          this.selectedLimits[mean][POINTS];
+        }
+
+        }
+
+      }
+      if(this.validatingForm.get(LABEL_ADD_MODIFY_CAMPIGN).value!==null && this.validatingForm.get(LABEL_ADD_MODIFY_CAMPIGN).value!==null){
+        this.campaignCreated.specificData[VIRTUAL_SCORE][LABEL] =  this.validatingForm.get(LABEL_ADD_MODIFY_CAMPIGN).value;
+      }else{
+        this.campaignCreated.specificData[VIRTUAL_SCORE][LABEL] =  undefined;
+      }
+      if(this.validatingForm.get(DAILY_LIMIT_VIRTUAL_POINTS).value!==null && this.validatingForm.get(DAILY_LIMIT_VIRTUAL_POINTS).value!==null){
+        this.campaignCreated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE] =  this.validatingForm.get(DAILY_LIMIT_VIRTUAL_POINTS).value;
+      }else{
+        this.campaignCreated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE] =  undefined;
+      }
+      if(this.validatingForm.get(WEEKLY_LIMIT_VIRTUAL_POINTS).value!==null && this.validatingForm.get(WEEKLY_LIMIT_VIRTUAL_POINTS).value!==null){
+        this.campaignCreated.specificData[VIRTUAL_SCORE][WEEKLY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE] =  this.validatingForm.get(WEEKLY_LIMIT_VIRTUAL_POINTS).value;
+      }else{
+        this.campaignCreated.specificData[VIRTUAL_SCORE][WEEKLY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE] =  undefined;
+      }
+      if(this.validatingForm.get(MONTHLY_LIMIT_VIRTUAL_POINTS).value!==null && this.validatingForm.get(MONTHLY_LIMIT_VIRTUAL_POINTS).value!==null){
+        this.campaignCreated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE] =  this.validatingForm.get(MONTHLY_LIMIT_VIRTUAL_POINTS).value;
+      }else{
+        this.campaignCreated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE] =  undefined;
+      }
+      if(this.validatingForm.get(DAILY_LIMIT_TRIPS_NUMBER).value!==null && this.validatingForm.get(DAILY_LIMIT_TRIPS_NUMBER).value!==null){
+        this.campaignCreated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_TRIPS_NUMBER_SPEC_LABLE] =  this.validatingForm.get(DAILY_LIMIT_TRIPS_NUMBER).value;
+      }else{
+        this.campaignCreated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_TRIPS_NUMBER_SPEC_LABLE] =  undefined;
+      }
+      if(this.validatingForm.get(WEEKLY_LIMIT_TRIPS_NUMBER).value!==null && this.validatingForm.get(WEEKLY_LIMIT_TRIPS_NUMBER).value!==null){
+        this.campaignCreated.specificData[VIRTUAL_SCORE][WEEKLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE] =  this.validatingForm.get(WEEKLY_LIMIT_TRIPS_NUMBER).value;
+      }else{
+        this.campaignCreated.specificData[VIRTUAL_SCORE][WEEKLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE] =  undefined;
+      }
+      if(this.validatingForm.get(MONTHLY_LIMIT_TRIPS_NUMBER).value!==null && this.validatingForm.get(MONTHLY_LIMIT_TRIPS_NUMBER).value!==null){
+        this.campaignCreated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE] =  this.validatingForm.get(MONTHLY_LIMIT_TRIPS_NUMBER).value;
+      }else{
+        this.campaignCreated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE] =  undefined;
+      }
+      if(this.validatingForm.get(USE_MULTI_LOCATION).value!==null){
+        this.campaignCreated.specificData[USE_MULTI_LOCATION] =  this.validatingForm.get(USE_MULTI_LOCATION).value;
+      }else{
+        this.campaignCreated.specificData[USE_MULTI_LOCATION] =  false;
+      }
+      if(this.validatingForm.get(USE_EMPLOYEE_LOCATION).value!==null){
+        this.campaignCreated.specificData[USE_EMPLOYEE_LOCATION] =  this.validatingForm.get(USE_EMPLOYEE_LOCATION).value;
+      }else{
+        this.campaignCreated.specificData[USE_EMPLOYEE_LOCATION] =  false;
+      }
+      if(this.validatingForm.get(HIDE_COMPANY_DESC).value!==null){
+        this.campaignCreated.specificData[HIDE_COMPANY_DESC] =  this.validatingForm.get(HIDE_COMPANY_DESC).value;
+      }else{
+        this.campaignCreated.specificData[HIDE_COMPANY_DESC] =  false;
+      }
+      this.campaignCreated.specificData[REGISTRATION_COMPANY_DESC] = {};
+      this.campaignCreated.specificData[LIMIT_COMPANY_DESC] = {};
+      for (let l of this.languagesSupported) {
+        if(this.validatingForm.get(REGISTRATION_COMPANY_DESC+l).value!==null){
+          this.campaignCreated.specificData[REGISTRATION_COMPANY_DESC][l] =  this.validatingForm.get(REGISTRATION_COMPANY_DESC+l).value;
+        }else{
+          this.campaignCreated.specificData[REGISTRATION_COMPANY_DESC][l] = "";
+        }  
+        if(this.validatingForm.get(LIMIT_COMPANY_DESC+l).value!==null){
+          this.campaignCreated.specificData[LIMIT_COMPANY_DESC][l] =  this.validatingForm.get(LIMIT_COMPANY_DESC+l).value;
+        }else{
+          this.campaignCreated.specificData[LIMIT_COMPANY_DESC][l] = "";
+        }  
+      }
     }
     if(this.campaignCreated.type === "city" || this.campaignCreated.type === "school"){
       if(this.validatingForm.get("challengePlayerProposedHour").value!==null && this.validatingForm.get("challengePlayerProposedDay").value!==null){
@@ -808,6 +1047,16 @@ export class CampaignAddFormComponent implements OnInit {
     // var obj = {};
     // obj[name] = this.campaignUpdated.description[this.languageSelected] ?  this.campaignUpdated.description[this.languageSelected] : '';
     // this.validatingForm.patchValue(obj);
+    return this.validatingForm.controls[name] as FormControl;
+  }
+
+  get registrationCompanyDescControl() {
+    const name = REGISTRATION_COMPANY_DESC + this.languageSelected;
+    return this.validatingForm.controls[name] as FormControl;
+  }
+
+  get limitCompanyDescControl() {
+    const name = LIMIT_COMPANY_DESC + this.languageSelected;
     return this.validatingForm.controls[name] as FormControl;
   }
 
@@ -1075,6 +1324,11 @@ export class CampaignAddFormComponent implements OnInit {
     });
   }
 
+  setLimitsMetric(mean: string,event: any){
+    this.selectedLimits[mean].metricEvaluation =event.value;
+    //console.log("LIMITS SETTED: ",mean,event.value,this.selectedLimits);
+  }
+
   initDetailsType() {
     this.detailsType = [];
     for (var enumMember in CampaignDetail.TypeEnum) {
@@ -1083,6 +1337,22 @@ export class CampaignAddFormComponent implements OnInit {
         used: false,
       });
     }
+  }
+
+  convert_metrics(value: string){
+    if(value=="distance"){
+      return "km";
+    }
+    if(value=="co2"){
+      return "co2";
+    }
+    if(value=="tracks"){
+      return "trip";
+    }
+    if(value=="time"){
+      return "minutes";
+    }
+    return "";
   }
 
   addFormControlMultilanguage() {
@@ -1101,12 +1371,22 @@ export class CampaignAddFormComponent implements OnInit {
       }
       this.validatingForm.addControl(nameName, controlName);
       this.validatingForm.addControl(nameDescription, controlDescription);
+      this.validatingForm.addControl(REGISTRATION_COMPANY_DESC+l, new FormControl(""));
+      this.validatingForm.addControl(LIMIT_COMPANY_DESC+l, new FormControl(""));
       if (this.type !== "add") {
         var obj = {};
         obj[nameName] = this.campaignUpdated.name[l];
-        obj[nameDescription] = this.campaignUpdated.description[l]
-          ? this.campaignUpdated.description[l]
-          : "";
+        obj[nameDescription] = this.campaignUpdated.description[l] ? this.campaignUpdated.description[l] : "";
+        if(this.campaignUpdated.specificData[REGISTRATION_COMPANY_DESC]) {
+          obj[REGISTRATION_COMPANY_DESC+l] = this.campaignUpdated.specificData[REGISTRATION_COMPANY_DESC][l] ? this.campaignUpdated.specificData[REGISTRATION_COMPANY_DESC][l] : "";
+        } else {
+          obj[REGISTRATION_COMPANY_DESC+l] = "";
+        }
+        if(this.campaignUpdated.specificData[LIMIT_COMPANY_DESC]) {
+          obj[LIMIT_COMPANY_DESC+l] = this.campaignUpdated.specificData[LIMIT_COMPANY_DESC][l] ? this.campaignUpdated.specificData[LIMIT_COMPANY_DESC][l] : "";
+        } else {
+          obj[LIMIT_COMPANY_DESC+l] = "";
+        }
         this.validatingForm.patchValue(obj);
       }
     }
@@ -1139,6 +1419,38 @@ export class CampaignAddFormComponent implements OnInit {
       return "notVisible";
     }
   }
+
+  addPeriod() {
+    if(this.validatingForm.get("periodFrom") && this.validatingForm.get("periodTo")) {
+      const dFrom = this.validatingForm.get("periodFrom").value;
+      const dTo = this.validatingForm.get("periodTo").value;
+      if(dFrom && dTo) {
+        const pFrom = moment(dFrom + " 00:00:00", 'YYYY-MM-DD HH:mm:ss');
+        const pTo = moment(dTo + " 23:59:59", 'YYYY-MM-DD HH:mm:ss');
+        let period = {
+          start: pFrom.format('x'), 
+          end: pTo.format('x')
+        };
+        if (this.type === "add") {
+          this.campaignCreated.specificData.periods.push(period);
+          this.campaignCreated.specificData.periods.sort((a, b) => b.start - a.start);
+        } else {
+          this.campaignUpdated.specificData.periods.push(period);
+          this.campaignUpdated.specificData.periods.sort((a, b) => b.start - a.start);  
+        }  
+      }  
+    }
+  }
+
+  removePeriod(index: any) {
+    if (this.type === "add") {
+      this.campaignCreated.specificData.periods.splice(index, 1);
+    } else {
+      this.campaignUpdated.specificData.periods.splice(index, 1);
+    }
+  }
+
+
 }
 
 export class SelectedLimits {
@@ -1151,7 +1463,6 @@ export class SelectedLimits {
 }
 
 export class LimitsClass {
-  dailyLimit?: number;
-  weeklyLimit?: number;
-  monthlyLimit?: number;
+  metricEvaluation?: string;
+  points?: number;
 }
