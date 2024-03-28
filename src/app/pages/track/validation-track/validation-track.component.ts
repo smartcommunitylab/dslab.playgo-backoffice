@@ -1095,6 +1095,24 @@ export class ValidationTrackComponent implements OnInit {
     });
   }
 
+  revalidateSoft() {
+    var check = confirm("Confermi?");
+    if(check) {
+      this.trackingServiceInternal.revalidateSoftTrackUsingGET({
+        trackedInstanceId: this.selectedTrack.trackedInstance.id,
+      })
+      .subscribe((res) => {
+        this._snackBar.open(
+          this.translate.instant("rivalidationInProgress"),
+          this.translate.instant("close"),
+          {
+            duration: 7500,
+          }
+        );
+      });
+    }
+  }
+
   valueOfCheck(value): boolean {
     if (value === null) {
       return true;
@@ -1248,7 +1266,9 @@ export class ValidationTrackComponent implements OnInit {
       campaign.campaignId,
       this.selectedTrack.trackedInstance.id
     );
-    this.trackingServiceInternal
+    var check = confirm("Confermi?");
+    if(check) {
+      this.trackingServiceInternal
       .revalidateTrackUsingGET({
         territoryId: this.territoryId,
         campaignId: campaign.campaignId,
@@ -1263,6 +1283,7 @@ export class ValidationTrackComponent implements OnInit {
           }
         );
       });
+    }
   }
 
   createDate(timestamp: number, secondsDisplay = true): string {
