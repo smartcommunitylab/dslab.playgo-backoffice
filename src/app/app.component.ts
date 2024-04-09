@@ -198,18 +198,7 @@ export class AppComponent implements OnInit {
     this.authService.logout();
   }
 privacy(event:any) {
-  window.open("https://www.smartcommunitylab.it/playandgo-privacy-policy/", "_blank");
+  window.open("https://playngo.it/privacy-cookies/", "_blank");
 }
-
-//   waitForRoles() {
-//     if (typeof Worker !== 'undefined') {
-//        //
-//        const worker = new Worker('../src/app/shared/workers/role.worker.ts', { type: 'module' });
-//        worker.onmessage = ({ data }) => {
-//        this.roles = data;
-//        };
-//     } else {
-//     }
-//  }
 
 }
