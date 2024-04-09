@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { LoadingService } from "./shared/services/loading.service";
 import { delay } from "rxjs/operators";
@@ -32,6 +32,8 @@ export interface Tile {
   styleUrls: ["./app.component.scss"],
 })
 export class AppComponent implements OnInit {
+  @ViewChild("footer") footer: ElementRef;
+
   title = "backOfficeConsolePlayGo";
   loading: boolean = false;
   territories: TerritoryClass[];
@@ -195,7 +197,9 @@ export class AppComponent implements OnInit {
   logout(event: any){
     this.authService.logout();
   }
-
+privacy(event:any) {
+  window.open("https://www.smartcommunitylab.it/playandgo-privacy-policy/", "_blank");
+}
 
 //   waitForRoles() {
 //     if (typeof Worker !== 'undefined') {
