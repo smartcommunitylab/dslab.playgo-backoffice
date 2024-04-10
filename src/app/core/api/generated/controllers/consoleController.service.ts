@@ -246,6 +246,21 @@ export class ConsoleControllerService {
     );
   }
 
+  public revalidateSoftTrackUsingGET(args: {
+    trackedInstanceId: string;
+  }): Observable<any> {
+    const { trackedInstanceId } = args;
+    return this.http.request<any>(
+      "get",
+      environment.serverUrl.api + `/playandgo/api/console/track/validate`,
+      {
+        params: removeNullOrUndefined({
+          trackedInstanceId,
+        }),
+      }
+    );
+  }
+
   /**
    * searchPlayersByTerritory
    *

@@ -44,6 +44,10 @@
             <h2 style="margin-left: 20px;">{{'loading' | translate}}...</h2>
         </div>
     </div>
+    <div class="footer" #footer>
+        <button mat-button  (click)="privacy($event)">{{"privacy" | translate}}</button>
+
+        </div>
 </div>
 <mat-menu #menu="matMenu">
     <div style="padding: 5px;">
