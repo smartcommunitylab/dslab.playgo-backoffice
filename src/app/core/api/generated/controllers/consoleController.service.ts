@@ -12,7 +12,7 @@
 
 import { environment } from "src/environments/environment";
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpEvent, HttpParams, HttpResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 import { PagePlayerInfoConsole } from "../model/pagePlayerInfoConsole";
@@ -403,6 +403,24 @@ export class ConsoleControllerService {
       }
     );
   }
+
+  /**
+   * getTerritoryManager
+   *
+   * @param territoryId territoryId
+   */
+  public getPlayerIdentityUsingGET(campaignId: string): Observable<any>  {
+    const params = new HttpParams().set('campaignId', campaignId);
+    return this.http.request(
+      'get',
+      environment.serverUrl.api + `/playandgo/api/console/player/identity`,
+      {
+        observe: 'response',
+        responseType: 'blob', 
+        params: params,
+      }
+    );
+  }  
 }
 
 function removeNullOrUndefined(obj: any) {

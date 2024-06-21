@@ -187,6 +187,7 @@
   "errorNotFound":"error not found",
   "survey":"Survey",
   "surveys":"Surveys",
+  "surveyIdentity": "Identity (survey)",
   "link":"Link",
   "surveyId":"Survay Id",
   "assign":"Assign",
