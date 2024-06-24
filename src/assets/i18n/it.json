@@ -188,6 +188,7 @@
 "errorNotFound":"errore non trovato",
 "survey":"Questionario",
 "surveys":"Questionari",
+"surveyIdentity": "Identità (questionari)",
 "link":"Link",
 "surveyId":"Id questionario",
 "assign":"Assegna",

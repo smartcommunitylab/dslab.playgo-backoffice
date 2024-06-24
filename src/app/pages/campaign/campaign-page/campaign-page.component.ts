@@ -284,6 +284,17 @@ export class CampaignPageComponent implements OnInit {
     });
   }
 
+  identities() {
+    this.managerService.getPlayerIdentityUsingGET(this.selectedCampaign.campaignId).subscribe((response)=>{
+      const downloadLink = document.createElement('a');
+      downloadLink.href = URL.createObjectURL(new Blob([response.body], { type: response.body.type }));
+      const contentDisposition = response.headers.get('content-disposition');
+      const fileName = contentDisposition.split(';')[1].split('filename')[1].split('=')[1].trim();
+      downloadLink.download = fileName;
+      downloadLink.click();
+    });
+  }
+
 
   setClassWithourError(element: CampaignClass) : CampaignClass{
     const nullString = "valueNotProvided";
