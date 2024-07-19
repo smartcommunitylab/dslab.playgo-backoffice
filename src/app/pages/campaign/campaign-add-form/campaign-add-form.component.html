@@ -91,6 +91,28 @@
                 <div
                     *ngIf="!!validatingForm && !!validatingForm.get('type').value && validatingForm.get('type').value==='company'">
                     <mat-card-header style="border-bottom: 1px black solid; font-weight: bold;">
+                        {{"placement" | translate}}
+                    </mat-card-header>
+                    <div class="in-line-forms" style="margin-top: 20px">
+                        <mat-form-field appearance="fill" class="input-half-left">
+                            <mat-label>{{'placementActive' | translate}}</mat-label>
+                            <mat-select id="placementActive" formControlName="placementActive">
+                                <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val)
+                                    |translate}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="in-line-forms">
+                        <mat-form-field appearance="fill" class="input-half-left">
+                            <mat-label>{{'placementTitleIt' | translate}}</mat-label>
+                            <input matInput id="placementTitleIt" formControlName="placementTitleIt" type="text" [placeholder]="'placementTitleItPlaceholder' | translate">
+                        </mat-form-field>                        
+                        <mat-form-field appearance="fill" class="input-half-right">
+                            <mat-label>{{'placementTitleEn' | translate}}</mat-label>
+                            <input matInput id="placementTitleEn" formControlName="placementTitleEn" type="text" [placeholder]="'placementTitleEnPlaceholder' | translate">
+                        </mat-form-field>      
+                    </div>
+                    <mat-card-header style="border-bottom: 1px black solid; font-weight: bold;">
                         {{"modality" | translate}}
                     </mat-card-header>
                     <div class="in-line-forms" style="margin-top: 20px">
@@ -619,6 +641,28 @@
                 </div>
                 <div
                     *ngIf="!!validatingForm && !!validatingForm.get('type').value && validatingForm.get('type').value==='company'">
+                    <mat-card-header style="border-bottom: 1px black solid; font-weight: bold;">
+                        {{"placement" | translate}}
+                    </mat-card-header>
+                    <div class="in-line-forms" style="margin-top: 20px">
+                        <mat-form-field appearance="fill" class="input-half-left">
+                            <mat-label>{{'placementActive' | translate}}</mat-label>
+                            <mat-select id="placementActive" formControlName="placementActive">
+                                <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val)
+                                    |translate}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="in-line-forms">
+                        <mat-form-field appearance="fill" class="input-half-left">
+                            <mat-label>{{'placementTitleIt' | translate}}</mat-label>
+                            <input matInput id="placementTitleIt" formControlName="placementTitleIt" type="text" [placeholder]="'placementTitleItPlaceholder' | translate">
+                        </mat-form-field>                        
+                        <mat-form-field appearance="fill" class="input-half-right">
+                            <mat-label>{{'placementTitleEn' | translate}}</mat-label>
+                            <input matInput id="placementTitleEn" formControlName="placementTitleEn" type="text" [placeholder]="'placementTitleEnPlaceholder' | translate">
+                        </mat-form-field>      
+                    </div>
                     <mat-card-header style="border-bottom: 1px black solid; font-weight: bold;">
                         {{"modality" | translate}}
                     </mat-card-header>
