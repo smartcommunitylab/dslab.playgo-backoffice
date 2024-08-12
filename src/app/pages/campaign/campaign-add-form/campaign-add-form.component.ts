@@ -207,6 +207,10 @@ export class CampaignAddFormComponent implements OnInit {
     this.campaignCreated = new CampaignClass();
     this.campaignCreated.validationData = new ValidationData();
     this.campaignCreated.specificData = {};
+    this.campaignCreated.campaignPlacement = {
+      active: false,
+      title: {},
+    };
     const keysWebHook = Object.keys(CampaignWebhook.EventsEnum);
     keysWebHook.forEach((item) => {
       this.weebHooksEventsList.push(CampaignWebhook.EventsEnum[item]);
@@ -237,6 +241,7 @@ export class CampaignAddFormComponent implements OnInit {
         useMultiLocation: false,
         useEmployeeLocation: false,
         hideCompanyDesc: false,
+        placementActive: false,
       });
       this.expandableDescription = false;
       this.expandableLimitCompanyDesc = false;
@@ -341,6 +346,27 @@ export class CampaignAddFormComponent implements OnInit {
           labelAddModifyCampaign: this.campaignUpdated.specificData[VIRTUAL_SCORE][LABEL],
         });
        }
+       if(!!this.campaignUpdated.campaignPlacement){
+        this.validatingForm.patchValue({
+          placementActive: this.campaignUpdated.campaignPlacement.active,
+        });
+        this.validatingForm.patchValue({
+          placementTitleIt: this.campaignUpdated.campaignPlacement.title["it"],
+        });
+        this.validatingForm.patchValue({
+          placementTitleEn: this.campaignUpdated.campaignPlacement.title["en"],
+        });
+       } else {
+        this.validatingForm.patchValue({
+          placementActive: false,
+        });
+        this.validatingForm.patchValue({
+          placementTitleIt: "Clasifiche azienda",
+        });
+        this.validatingForm.patchValue({
+          placementTitleEn: "Company standings",
+        });
+       }
        if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[USE_MULTI_LOCATION]){
         this.validatingForm.patchValue({
           useMultiLocation: this.campaignUpdated.specificData[USE_MULTI_LOCATION],
@@ -440,6 +466,9 @@ export class CampaignAddFormComponent implements OnInit {
         useMultiLocation: new FormControl("", [Validators.required]),
         useEmployeeLocation: new FormControl("", [Validators.required]),
         hideCompanyDesc: new FormControl("", [Validators.required]),
+        placementActive: new FormControl("", [Validators.required]),
+        placementTitleIt: new FormControl("", [Validators.required]),
+        placementTitleEn: new FormControl("", [Validators.required]),
       });
     } else {
       this.validatingForm = this.formBuilder.group({
@@ -472,6 +501,9 @@ export class CampaignAddFormComponent implements OnInit {
         useMultiLocation: new FormControl("", [Validators.required]),
         useEmployeeLocation: new FormControl("", [Validators.required]),
         hideCompanyDesc: new FormControl("", [Validators.required]),
+        placementActive: new FormControl("", [Validators.required]),
+        placementTitleIt: new FormControl("", [Validators.required]),
+        placementTitleEn: new FormControl("", [Validators.required]),
       });
     }
   }
@@ -916,6 +948,21 @@ export class CampaignAddFormComponent implements OnInit {
         this.campaignCreated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE] =  this.validatingForm.get(MONTHLY_LIMIT_TRIPS_NUMBER).value;
       }else{
         this.campaignCreated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE] =  undefined;
+      }
+      if(this.validatingForm.get("placementActive")) {
+        this.campaignCreated.campaignPlacement.active = this.validatingForm.get("placementActive").value;
+      } else {
+        this.campaignCreated.campaignPlacement.active = false;
+      }
+      if(this.validatingForm.get("placementTitleIt")) {
+        this.campaignCreated.campaignPlacement.title["it"] = this.validatingForm.get("placementTitleIt").value;
+      } else {
+        this.campaignCreated.campaignPlacement.title["it"] = "";
+      }
+      if(this.validatingForm.get("placementTitleEn")) {
+        this.campaignCreated.campaignPlacement.title["en"] = this.validatingForm.get("placementTitleEn").value;
+      } else {
+        this.campaignCreated.campaignPlacement.title["en"] = "";
       }
       if(this.validatingForm.get(USE_MULTI_LOCATION).value!==null){
         this.campaignCreated.specificData[USE_MULTI_LOCATION] =  this.validatingForm.get(USE_MULTI_LOCATION).value;

@@ -3,6 +3,7 @@ import { CampaignDetail } from "src/app/core/api/generated/model/campaignDetail"
 import { CampaignWeekConf } from "src/app/core/api/generated/model/campaignWeekConf";
 import { Image } from "src/app/core/api/generated/model/image";
 import { SurveyRequest } from "src/app/core/api/generated/model/surveyRequest";
+import { CampaignPlacement } from "src/app/core/api/generated/model/campaignPlacement";
 
 export interface CampaignTypeInterface{
     weekStart?: string;
@@ -49,6 +50,7 @@ export class CampaignClass implements Campaign {
     validationData?: any;
     weekConfs?: Array<CampaignWeekConf>;
     visible?: boolean;
+    campaignPlacement?: CampaignPlacement;
 }
 
 export class ImageClass implements Image {
