@@ -466,9 +466,9 @@ export class CampaignAddFormComponent implements OnInit {
         useMultiLocation: new FormControl("", [Validators.required]),
         useEmployeeLocation: new FormControl("", [Validators.required]),
         hideCompanyDesc: new FormControl("", [Validators.required]),
-        placementActive: new FormControl("", [Validators.required]),
-        placementTitleIt: new FormControl("", [Validators.required]),
-        placementTitleEn: new FormControl("", [Validators.required]),
+        placementActive: new FormControl("",),
+        placementTitleIt: new FormControl("",),
+        placementTitleEn: new FormControl("",),
       });
     } else {
       this.validatingForm = this.formBuilder.group({
@@ -501,9 +501,9 @@ export class CampaignAddFormComponent implements OnInit {
         useMultiLocation: new FormControl("", [Validators.required]),
         useEmployeeLocation: new FormControl("", [Validators.required]),
         hideCompanyDesc: new FormControl("", [Validators.required]),
-        placementActive: new FormControl("", [Validators.required]),
-        placementTitleIt: new FormControl("", [Validators.required]),
-        placementTitleEn: new FormControl("", [Validators.required]),
+        placementActive: new FormControl("",),
+        placementTitleIt: new FormControl("",),
+        placementTitleEn: new FormControl("",),
       });
     }
   }
