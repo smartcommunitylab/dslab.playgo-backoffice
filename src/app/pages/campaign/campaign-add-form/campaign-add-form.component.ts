@@ -210,6 +210,7 @@ export class CampaignAddFormComponent implements OnInit {
     this.campaignCreated.campaignPlacement = {
       active: false,
       title: {},
+      configuration: {},
     };
     const keysWebHook = Object.keys(CampaignWebhook.EventsEnum);
     keysWebHook.forEach((item) => {
@@ -356,6 +357,15 @@ export class CampaignAddFormComponent implements OnInit {
         this.validatingForm.patchValue({
           placementTitleEn: this.campaignUpdated.campaignPlacement.title["en"],
         });
+        const periods = [];
+        for(let key of this.getCampaignPlacementPeriods()) {
+          if(this.campaignUpdated.campaignPlacement.configuration[key] && (this.campaignUpdated.campaignPlacement.configuration[key] == true)) {
+            periods.push(key);
+          }
+        }
+        this.validatingForm.patchValue({
+          campaignPlacementPeriods: periods,
+        });
        } else {
         this.validatingForm.patchValue({
           placementActive: false,
@@ -365,6 +375,9 @@ export class CampaignAddFormComponent implements OnInit {
         });
         this.validatingForm.patchValue({
           placementTitleEn: "Company standings",
+        });
+        this.validatingForm.patchValue({
+          campaignPlacementPeriods: [],
         });
        }
        if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[USE_MULTI_LOCATION]){
@@ -469,6 +482,7 @@ export class CampaignAddFormComponent implements OnInit {
         placementActive: new FormControl("",),
         placementTitleIt: new FormControl("",),
         placementTitleEn: new FormControl("",),
+        campaignPlacementPeriods: new FormControl("",),
       });
     } else {
       this.validatingForm = this.formBuilder.group({
@@ -504,6 +518,7 @@ export class CampaignAddFormComponent implements OnInit {
         placementActive: new FormControl("",),
         placementTitleIt: new FormControl("",),
         placementTitleEn: new FormControl("",),
+        campaignPlacementPeriods: new FormControl("",),
       });
     }
   }
@@ -963,6 +978,14 @@ export class CampaignAddFormComponent implements OnInit {
         this.campaignCreated.campaignPlacement.title["en"] = this.validatingForm.get("placementTitleEn").value;
       } else {
         this.campaignCreated.campaignPlacement.title["en"] = "";
+      }
+      if(this.validatingForm.get("campaignPlacementPeriods")) {
+        for (let p of this.getCampaignPlacementPeriods()) {
+          this.campaignCreated.campaignPlacement.configuration[p] = false;
+        }
+        for (let p of this.validatingForm.get("campaignPlacementPeriods").value) {
+          this.campaignCreated.campaignPlacement.configuration[p] = true;
+        }
       }
       if(this.validatingForm.get(USE_MULTI_LOCATION).value!==null){
         this.campaignCreated.specificData[USE_MULTI_LOCATION] =  this.validatingForm.get(USE_MULTI_LOCATION).value;
@@ -1495,6 +1518,11 @@ export class CampaignAddFormComponent implements OnInit {
     } else {
       this.campaignUpdated.specificData.periods.splice(index, 1);
     }
+  }
+
+  getCampaignPlacementPeriods() {
+    const vals = ['periodToday', 'periodCurrentWeek', 'periodLastWeek', 'periodCurrentMonth', 'periodGeneral'];
+    return vals;
   }
 
 

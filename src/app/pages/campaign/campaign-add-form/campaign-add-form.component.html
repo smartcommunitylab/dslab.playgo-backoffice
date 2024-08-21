@@ -101,6 +101,12 @@
                                     |translate}}</mat-option>
                             </mat-select>
                         </mat-form-field>
+                        <mat-form-field appearance="fill" class="input-half-right">
+                            <mat-label>{{'campaignPlacementPeriods' | translate}}</mat-label>
+                            <mat-select id="campaignPlacementPeriods" formControlName="campaignPlacementPeriods" multiple>
+                                <mat-option *ngFor="let value of getCampaignPlacementPeriods()" [value]="value">{{value |translate}}</mat-option>
+                            </mat-select>    
+                        </mat-form-field>
                     </div>
                     <div class="in-line-forms">
                         <mat-form-field appearance="fill" class="input-half-left">
@@ -651,6 +657,12 @@
                                 <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val)
                                     |translate}}</mat-option>
                             </mat-select>
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class="input-half-right">
+                            <mat-label>{{'campaignPlacementPeriods' | translate}}</mat-label>
+                            <mat-select id="campaignPlacementPeriods" formControlName="campaignPlacementPeriods" multiple>
+                                <mat-option *ngFor="let value of getCampaignPlacementPeriods()" [value]="value">{{value |translate}}</mat-option>
+                            </mat-select>    
                         </mat-form-field>
                     </div>
                     <div class="in-line-forms">
