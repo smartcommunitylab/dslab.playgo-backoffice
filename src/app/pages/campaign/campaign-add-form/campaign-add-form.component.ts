@@ -366,6 +366,21 @@ export class CampaignAddFormComponent implements OnInit {
         this.validatingForm.patchValue({
           campaignPlacementPeriods: periods,
         });
+        const metrics = [];
+        for(let key of this.getCampaignPlacementMetrics()) {
+          if(this.campaignUpdated.campaignPlacement.configuration[key] && (this.campaignUpdated.campaignPlacement.configuration[key] == true)) {
+            metrics.push(key);
+          }
+        }
+        if(!metrics.includes("metricVirtualScore")){
+          metrics.push("metricVirtualScore");
+        }
+        this.validatingForm.patchValue({
+          campaignPlacementMetrics: metrics,
+        });
+        this.validatingForm.patchValue({
+          campaignDefaultPlacementPeriod: this.campaignUpdated.campaignPlacement.configuration["periodDefault"],
+        })
        } else {
         this.validatingForm.patchValue({
           placementActive: false,
@@ -378,6 +393,9 @@ export class CampaignAddFormComponent implements OnInit {
         });
         this.validatingForm.patchValue({
           campaignPlacementPeriods: [],
+        });
+        this.validatingForm.patchValue({
+          campaignPlacementMetrics: ["metricVirtualScore"],
         });
        }
        if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[USE_MULTI_LOCATION]){
@@ -483,6 +501,8 @@ export class CampaignAddFormComponent implements OnInit {
         placementTitleIt: new FormControl("",),
         placementTitleEn: new FormControl("",),
         campaignPlacementPeriods: new FormControl("",),
+        campaignDefaultPlacementPeriod: new FormControl("",),
+        campaignPlacementMetrics: new FormControl("",),
       });
     } else {
       this.validatingForm = this.formBuilder.group({
@@ -519,6 +539,8 @@ export class CampaignAddFormComponent implements OnInit {
         placementTitleIt: new FormControl("",),
         placementTitleEn: new FormControl("",),
         campaignPlacementPeriods: new FormControl("",),
+        campaignDefaultPlacementPeriod: new FormControl("",),
+        campaignPlacementMetrics: new FormControl("",),
       });
     }
   }
@@ -986,6 +1008,18 @@ export class CampaignAddFormComponent implements OnInit {
         for (let p of this.validatingForm.get("campaignPlacementPeriods").value) {
           this.campaignCreated.campaignPlacement.configuration[p] = true;
         }
+      }
+      if(this.validatingForm.get("campaignDefaultPlacementPeriod")) {
+        this.campaignCreated.campaignPlacement.configuration["periodDefault"] = this.validatingForm.get("campaignDefaultPlacementPeriod").value;
+      }
+      if(this.validatingForm.get("campaignPlacementMetrics")) {
+        for (let p of this.getCampaignPlacementMetrics()) {
+          this.campaignCreated.campaignPlacement.configuration[p] = false;
+        }
+        for (let p of this.validatingForm.get("campaignPlacementMetrics").value) {
+          this.campaignCreated.campaignPlacement.configuration[p] = true;
+        }
+        this.campaignCreated.campaignPlacement.configuration["metricVirtualScore"] = true;
       }
       if(this.validatingForm.get(USE_MULTI_LOCATION).value!==null){
         this.campaignCreated.specificData[USE_MULTI_LOCATION] =  this.validatingForm.get(USE_MULTI_LOCATION).value;
@@ -1525,6 +1559,20 @@ export class CampaignAddFormComponent implements OnInit {
     return vals;
   }
 
+  getSelectedCampaignPlacementPeriods() {
+    const values = [];
+    if(this.validatingForm.get("campaignPlacementPeriods")) {
+      for (let p of this.validatingForm.get("campaignPlacementPeriods").value) {
+        values.push(p);
+      }  
+    }
+    return values;
+  }
+
+  getCampaignPlacementMetrics() {
+    const vals = ['metricCo2', 'metricDistance', 'metricDuration', 'metricTrackNumber', 'metricVirtualScore', 'metricVirtualTrack'];
+    return vals;
+  }
 
 }
 

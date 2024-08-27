@@ -371,7 +371,12 @@
 "periodCurrentMonth":"Questo mese",
 "periodGeneral":"Generale",
 "campaignPlacementPeriods":"Periodi",
-"":"",
-"":"",
-"":""
+"defaultPlacementPeriod": "Periodo di default",
+"campaignPlacementMetrics":"Indicatori",
+"metricCo2":"CO2",
+"metricTrackNumber":"Num. tracce",
+"metricDistance":"Distanza",
+"metricDuration":"Durata",
+"metricVirtualScore":"Punti virtuali",
+"metricVirtualTrack":"Num. viaggi"
 }
