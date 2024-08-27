@@ -347,6 +347,16 @@ export class CampaignAddFormComponent implements OnInit {
           labelAddModifyCampaign: this.campaignUpdated.specificData[VIRTUAL_SCORE][LABEL],
         });
        }
+       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE]['firstLimitBar']){
+        this.validatingForm.patchValue({
+          firstLimitBar: this.campaignUpdated.specificData[VIRTUAL_SCORE]['firstLimitBar'],
+        });
+       }
+       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE]['secondLimitBar']){
+        this.validatingForm.patchValue({
+          secondLimitBar: this.campaignUpdated.specificData[VIRTUAL_SCORE]['secondLimitBar'],
+        });
+       }
        if(!!this.campaignUpdated.campaignPlacement){
         this.validatingForm.patchValue({
           placementActive: this.campaignUpdated.campaignPlacement.active,
@@ -503,6 +513,8 @@ export class CampaignAddFormComponent implements OnInit {
         campaignPlacementPeriods: new FormControl("",),
         campaignDefaultPlacementPeriod: new FormControl("",),
         campaignPlacementMetrics: new FormControl("",),
+        firstLimitBar: new FormControl("",),
+        secondLimitBar: new FormControl("",)
       });
     } else {
       this.validatingForm = this.formBuilder.group({
@@ -541,6 +553,8 @@ export class CampaignAddFormComponent implements OnInit {
         campaignPlacementPeriods: new FormControl("",),
         campaignDefaultPlacementPeriod: new FormControl("",),
         campaignPlacementMetrics: new FormControl("",),
+        firstLimitBar: new FormControl("",),
+        secondLimitBar: new FormControl("",)
       });
     }
   }
@@ -985,6 +999,16 @@ export class CampaignAddFormComponent implements OnInit {
         this.campaignCreated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE] =  this.validatingForm.get(MONTHLY_LIMIT_TRIPS_NUMBER).value;
       }else{
         this.campaignCreated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE] =  undefined;
+      }
+      if(this.validatingForm.get("firstLimitBar")) {
+        this.campaignCreated.specificData[VIRTUAL_SCORE]['firstLimitBar'] = this.validatingForm.get("firstLimitBar").value;
+      } else {
+        this.campaignCreated.specificData[VIRTUAL_SCORE]['firstLimitBar'] = undefined;
+      }
+      if(this.validatingForm.get("secondLimitBar")) {
+        this.campaignCreated.specificData[VIRTUAL_SCORE]['secondLimitBar'] = this.validatingForm.get("secondLimitBar").value;
+      } else {
+        this.campaignCreated.specificData[VIRTUAL_SCORE]['secondLimitBar'] = undefined;
       }
       if(this.validatingForm.get("placementActive")) {
         this.campaignCreated.campaignPlacement.active = this.validatingForm.get("placementActive").value;
@@ -1571,6 +1595,11 @@ export class CampaignAddFormComponent implements OnInit {
 
   getCampaignPlacementMetrics() {
     const vals = ['metricCo2', 'metricDistance', 'metricDuration', 'metricTrackNumber', 'metricVirtualScore', 'metricVirtualTrack'];
+    return vals;
+  }
+
+  getLimits() {
+    const vals = ['scoreDailyLimit', 'scoreWeeklyLimit', 'scoreMonthlyLimit', 'trackDailyLimit', 'trackWeeklyLimit', 'trackMonthlyLimit'];
     return vals;
   }
 

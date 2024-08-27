@@ -374,6 +374,14 @@
   "metricDistance":"Distanza",
   "metricDuration":"Durata",
   "metricVirtualScore":"Punti virtuali",
-  "metricVirtualTrack":"Num. viaggi"
+  "metricVirtualTrack":"Num. viaggi",
+  "firstLimitBar": "Primo limite",
+  "secondLimitBar": "Secondo limite",
+  "scoreDailyLimit": "Punti virtuali - limite giornaliero",
+  "scoreWeeklyLimit": "Punti virtuali - limite settimanale",
+  "scoreMonthlyLimit": "Punti virtuali - limite mensile",
+  "trackDailyLimit": "Numero viaggi - limite giornaliero",
+  "trackWeeklyLimit": "Numero viaggi - limite settimanale",
+  "trackMonthlyLimit": "Numero viaggi - limite mensile"    
 }
   

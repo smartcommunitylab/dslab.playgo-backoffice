@@ -260,6 +260,26 @@
                                     <input matInput id="monthlyLimitTripsNumber" formControlName="monthlyLimitTripsNumber" type="text">
                                 </mat-form-field>
                             </mat-grid-tile>
+                            <mat-grid-tile>
+                                {{"firstLimitBar" | translate}} 
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-select id="firstLimitBar" formControlName="firstLimitBar">
+                                        <mat-option *ngFor="let value of getLimits()" [value]="value">{{value |translate}}</mat-option>
+                                    </mat-select>    
+                                </mat-form-field>        
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                {{"secondLimitBar" | translate}} 
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-select id="secondLimitBar" formControlName="secondLimitBar">
+                                        <mat-option *ngFor="let value of getLimits()" [value]="value">{{value |translate}}</mat-option>
+                                    </mat-select>    
+                                </mat-form-field>        
+                            </mat-grid-tile>
                         </mat-grid-list>
                     </div>
                 </div>
@@ -834,6 +854,26 @@
                                     </mat-label>
                                     <input matInput id="monthlyLimitTripsNumber" formControlName="monthlyLimitTripsNumber" type="text">
                                 </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                {{"firstLimitBar" | translate}} 
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-select id="firstLimitBar" formControlName="firstLimitBar">
+                                        <mat-option *ngFor="let value of getLimits()" [value]="value">{{value |translate}}</mat-option>
+                                    </mat-select>    
+                                </mat-form-field>        
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                {{"secondLimitBar" | translate}} 
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-select id="secondLimitBar" formControlName="secondLimitBar">
+                                        <mat-option *ngFor="let value of getLimits()" [value]="value">{{value |translate}}</mat-option>
+                                    </mat-select>    
+                                </mat-form-field>        
                             </mat-grid-tile>
                         </mat-grid-list>
                     </div>
