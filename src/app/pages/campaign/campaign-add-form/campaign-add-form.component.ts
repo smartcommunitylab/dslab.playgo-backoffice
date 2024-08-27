@@ -391,6 +391,15 @@ export class CampaignAddFormComponent implements OnInit {
         this.validatingForm.patchValue({
           campaignDefaultPlacementPeriod: this.campaignUpdated.campaignPlacement.configuration["periodDefault"],
         })
+        if(!!this.campaignUpdated.campaignPlacement.configuration["meansShow"]){
+          this.validatingForm.patchValue({
+            campaignPlacementMeans: this.campaignUpdated.campaignPlacement.configuration["meansShow"],
+          });
+        } else {
+          this.validatingForm.patchValue({
+            campaignPlacementMeans: false,
+          });
+        }
        } else {
         this.validatingForm.patchValue({
           placementActive: false,
@@ -407,6 +416,9 @@ export class CampaignAddFormComponent implements OnInit {
         this.validatingForm.patchValue({
           campaignPlacementMetrics: ["metricVirtualScore"],
         });
+        this.validatingForm.patchValue({
+          campaignPlacementMeans: false,
+        })
        }
        if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[USE_MULTI_LOCATION]){
         this.validatingForm.patchValue({
@@ -513,6 +525,7 @@ export class CampaignAddFormComponent implements OnInit {
         campaignPlacementPeriods: new FormControl("",),
         campaignDefaultPlacementPeriod: new FormControl("",),
         campaignPlacementMetrics: new FormControl("",),
+        campaignPlacementMeans: new FormControl("",),
         firstLimitBar: new FormControl("",),
         secondLimitBar: new FormControl("",)
       });
@@ -553,6 +566,7 @@ export class CampaignAddFormComponent implements OnInit {
         campaignPlacementPeriods: new FormControl("",),
         campaignDefaultPlacementPeriod: new FormControl("",),
         campaignPlacementMetrics: new FormControl("",),
+        campaignPlacementMeans: new FormControl("",),
         firstLimitBar: new FormControl("",),
         secondLimitBar: new FormControl("",)
       });
@@ -1014,6 +1028,11 @@ export class CampaignAddFormComponent implements OnInit {
         this.campaignCreated.campaignPlacement.active = this.validatingForm.get("placementActive").value;
       } else {
         this.campaignCreated.campaignPlacement.active = false;
+      }
+      if(this.validatingForm.get("campaignPlacementMeans")) {
+        this.campaignCreated.campaignPlacement.configuration['meansShow'] = this.validatingForm.get("campaignPlacementMeans").value;
+      } else {
+        this.campaignCreated.campaignPlacement.configuration['meansShow'] = false;
       }
       if(this.validatingForm.get("placementTitleIt")) {
         this.campaignCreated.campaignPlacement.title["it"] = this.validatingForm.get("placementTitleIt").value;

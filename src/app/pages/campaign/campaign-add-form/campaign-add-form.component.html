@@ -101,11 +101,20 @@
                                     |translate}}</mat-option>
                             </mat-select>
                         </mat-form-field>
-                        <mat-form-field appearance="fill" class="input-half-right">
+                    </div>
+                    <div class="in-line-forms">
+                        <mat-form-field appearance="fill" class="input-half-left">
                             <mat-label>{{'campaignPlacementMetrics' | translate}}</mat-label>
                             <mat-select id="campaignPlacementMetrics" formControlName="campaignPlacementMetrics" multiple>
                                 <mat-option *ngFor="let value of getCampaignPlacementMetrics()" [value]="value">{{value |translate}}</mat-option>
                             </mat-select>    
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class="input-half-right">
+                            <mat-label>{{'campaignPlacementMeans' | translate}}</mat-label>
+                            <mat-select id="campaignPlacementMeans" formControlName="campaignPlacementMeans">
+                                <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val)
+                                    |translate}}</mat-option>
+                            </mat-select>
                         </mat-form-field>
                     </div>
                     <div class="in-line-forms">
@@ -692,11 +701,20 @@
                                     |translate}}</mat-option>
                             </mat-select>
                         </mat-form-field>
-                        <mat-form-field appearance="fill" class="input-half-right">
+                    </div>
+                    <div class="in-line-forms">
+                        <mat-form-field appearance="fill" class="input-half-left">
                             <mat-label>{{'campaignPlacementMetrics' | translate}}</mat-label>
                             <mat-select id="campaignPlacementMetrics" formControlName="campaignPlacementMetrics" multiple>
                                 <mat-option *ngFor="let value of getCampaignPlacementMetrics()" [value]="value">{{value |translate}}</mat-option>
                             </mat-select>    
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class="input-half-right">
+                            <mat-label>{{'campaignPlacementMeans' | translate}}</mat-label>
+                            <mat-select id="campaignPlacementMeans" formControlName="campaignPlacementMeans">
+                                <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val)
+                                    |translate}}</mat-option>
+                            </mat-select>
                         </mat-form-field>
                     </div>
                     <div class="in-line-forms">
