@@ -347,6 +347,16 @@ export class CampaignAddFormComponent implements OnInit {
           labelAddModifyCampaign: this.campaignUpdated.specificData[VIRTUAL_SCORE][LABEL],
         });
        }
+       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE]['firstLimitBar']){
+        this.validatingForm.patchValue({
+          firstLimitBar: this.campaignUpdated.specificData[VIRTUAL_SCORE]['firstLimitBar'],
+        });
+       }
+       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE]['secondLimitBar']){
+        this.validatingForm.patchValue({
+          secondLimitBar: this.campaignUpdated.specificData[VIRTUAL_SCORE]['secondLimitBar'],
+        });
+       }
        if(!!this.campaignUpdated.campaignPlacement){
         this.validatingForm.patchValue({
           placementActive: this.campaignUpdated.campaignPlacement.active,
@@ -366,6 +376,30 @@ export class CampaignAddFormComponent implements OnInit {
         this.validatingForm.patchValue({
           campaignPlacementPeriods: periods,
         });
+        const metrics = [];
+        for(let key of this.getCampaignPlacementMetrics()) {
+          if(this.campaignUpdated.campaignPlacement.configuration[key] && (this.campaignUpdated.campaignPlacement.configuration[key] == true)) {
+            metrics.push(key);
+          }
+        }
+        if(!metrics.includes("metricVirtualScore")){
+          metrics.push("metricVirtualScore");
+        }
+        this.validatingForm.patchValue({
+          campaignPlacementMetrics: metrics,
+        });
+        this.validatingForm.patchValue({
+          campaignDefaultPlacementPeriod: this.campaignUpdated.campaignPlacement.configuration["periodDefault"],
+        })
+        if(!!this.campaignUpdated.campaignPlacement.configuration["meansShow"]){
+          this.validatingForm.patchValue({
+            campaignPlacementMeans: this.campaignUpdated.campaignPlacement.configuration["meansShow"],
+          });
+        } else {
+          this.validatingForm.patchValue({
+            campaignPlacementMeans: false,
+          });
+        }
        } else {
         this.validatingForm.patchValue({
           placementActive: false,
@@ -379,6 +413,12 @@ export class CampaignAddFormComponent implements OnInit {
         this.validatingForm.patchValue({
           campaignPlacementPeriods: [],
         });
+        this.validatingForm.patchValue({
+          campaignPlacementMetrics: ["metricVirtualScore"],
+        });
+        this.validatingForm.patchValue({
+          campaignPlacementMeans: false,
+        })
        }
        if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[USE_MULTI_LOCATION]){
         this.validatingForm.patchValue({
@@ -483,6 +523,11 @@ export class CampaignAddFormComponent implements OnInit {
         placementTitleIt: new FormControl("",),
         placementTitleEn: new FormControl("",),
         campaignPlacementPeriods: new FormControl("",),
+        campaignDefaultPlacementPeriod: new FormControl("",),
+        campaignPlacementMetrics: new FormControl("",),
+        campaignPlacementMeans: new FormControl("",),
+        firstLimitBar: new FormControl("",),
+        secondLimitBar: new FormControl("",)
       });
     } else {
       this.validatingForm = this.formBuilder.group({
@@ -519,6 +564,11 @@ export class CampaignAddFormComponent implements OnInit {
         placementTitleIt: new FormControl("",),
         placementTitleEn: new FormControl("",),
         campaignPlacementPeriods: new FormControl("",),
+        campaignDefaultPlacementPeriod: new FormControl("",),
+        campaignPlacementMetrics: new FormControl("",),
+        campaignPlacementMeans: new FormControl("",),
+        firstLimitBar: new FormControl("",),
+        secondLimitBar: new FormControl("",)
       });
     }
   }
@@ -964,10 +1014,25 @@ export class CampaignAddFormComponent implements OnInit {
       }else{
         this.campaignCreated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE] =  undefined;
       }
+      if(this.validatingForm.get("firstLimitBar")) {
+        this.campaignCreated.specificData[VIRTUAL_SCORE]['firstLimitBar'] = this.validatingForm.get("firstLimitBar").value;
+      } else {
+        this.campaignCreated.specificData[VIRTUAL_SCORE]['firstLimitBar'] = undefined;
+      }
+      if(this.validatingForm.get("secondLimitBar")) {
+        this.campaignCreated.specificData[VIRTUAL_SCORE]['secondLimitBar'] = this.validatingForm.get("secondLimitBar").value;
+      } else {
+        this.campaignCreated.specificData[VIRTUAL_SCORE]['secondLimitBar'] = undefined;
+      }
       if(this.validatingForm.get("placementActive")) {
         this.campaignCreated.campaignPlacement.active = this.validatingForm.get("placementActive").value;
       } else {
         this.campaignCreated.campaignPlacement.active = false;
+      }
+      if(this.validatingForm.get("campaignPlacementMeans")) {
+        this.campaignCreated.campaignPlacement.configuration['meansShow'] = this.validatingForm.get("campaignPlacementMeans").value;
+      } else {
+        this.campaignCreated.campaignPlacement.configuration['meansShow'] = false;
       }
       if(this.validatingForm.get("placementTitleIt")) {
         this.campaignCreated.campaignPlacement.title["it"] = this.validatingForm.get("placementTitleIt").value;
@@ -986,6 +1051,18 @@ export class CampaignAddFormComponent implements OnInit {
         for (let p of this.validatingForm.get("campaignPlacementPeriods").value) {
           this.campaignCreated.campaignPlacement.configuration[p] = true;
         }
+      }
+      if(this.validatingForm.get("campaignDefaultPlacementPeriod")) {
+        this.campaignCreated.campaignPlacement.configuration["periodDefault"] = this.validatingForm.get("campaignDefaultPlacementPeriod").value;
+      }
+      if(this.validatingForm.get("campaignPlacementMetrics")) {
+        for (let p of this.getCampaignPlacementMetrics()) {
+          this.campaignCreated.campaignPlacement.configuration[p] = false;
+        }
+        for (let p of this.validatingForm.get("campaignPlacementMetrics").value) {
+          this.campaignCreated.campaignPlacement.configuration[p] = true;
+        }
+        this.campaignCreated.campaignPlacement.configuration["metricVirtualScore"] = true;
       }
       if(this.validatingForm.get(USE_MULTI_LOCATION).value!==null){
         this.campaignCreated.specificData[USE_MULTI_LOCATION] =  this.validatingForm.get(USE_MULTI_LOCATION).value;
@@ -1525,6 +1602,25 @@ export class CampaignAddFormComponent implements OnInit {
     return vals;
   }
 
+  getSelectedCampaignPlacementPeriods() {
+    const values = [];
+    if(this.validatingForm.get("campaignPlacementPeriods")) {
+      for (let p of this.validatingForm.get("campaignPlacementPeriods").value) {
+        values.push(p);
+      }  
+    }
+    return values;
+  }
+
+  getCampaignPlacementMetrics() {
+    const vals = ['metricCo2', 'metricDistance', 'metricDuration', 'metricTrackNumber', 'metricVirtualScore', 'metricVirtualTrack'];
+    return vals;
+  }
+
+  getLimits() {
+    const vals = ['scoreDailyLimit', 'scoreWeeklyLimit', 'scoreMonthlyLimit', 'trackDailyLimit', 'trackWeeklyLimit', 'trackMonthlyLimit'];
+    return vals;
+  }
 
 }
 

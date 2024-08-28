@@ -101,10 +101,33 @@
                                     |translate}}</mat-option>
                             </mat-select>
                         </mat-form-field>
+                    </div>
+                    <div class="in-line-forms">
+                        <mat-form-field appearance="fill" class="input-half-left">
+                            <mat-label>{{'campaignPlacementMetrics' | translate}}</mat-label>
+                            <mat-select id="campaignPlacementMetrics" formControlName="campaignPlacementMetrics" multiple>
+                                <mat-option *ngFor="let value of getCampaignPlacementMetrics()" [value]="value">{{value |translate}}</mat-option>
+                            </mat-select>    
+                        </mat-form-field>
                         <mat-form-field appearance="fill" class="input-half-right">
+                            <mat-label>{{'campaignPlacementMeans' | translate}}</mat-label>
+                            <mat-select id="campaignPlacementMeans" formControlName="campaignPlacementMeans">
+                                <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val)
+                                    |translate}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="in-line-forms">
+                        <mat-form-field appearance="fill" class="input-half-left">
                             <mat-label>{{'campaignPlacementPeriods' | translate}}</mat-label>
                             <mat-select id="campaignPlacementPeriods" formControlName="campaignPlacementPeriods" multiple>
                                 <mat-option *ngFor="let value of getCampaignPlacementPeriods()" [value]="value">{{value |translate}}</mat-option>
+                            </mat-select>    
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class="input-half-right">
+                            <mat-label>{{'defaultPlacementPeriod' | translate}}</mat-label>
+                            <mat-select id="campaignDefaultPlacementPeriod" formControlName="campaignDefaultPlacementPeriod">
+                                <mat-option *ngFor="let value of getSelectedCampaignPlacementPeriods()" [value]="value">{{value |translate}}</mat-option>
                             </mat-select>    
                         </mat-form-field>
                     </div>
@@ -245,6 +268,26 @@
                                     </mat-label>
                                     <input matInput id="monthlyLimitTripsNumber" formControlName="monthlyLimitTripsNumber" type="text">
                                 </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                {{"firstLimitBar" | translate}} 
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-select id="firstLimitBar" formControlName="firstLimitBar">
+                                        <mat-option *ngFor="let value of getLimits()" [value]="value">{{value |translate}}</mat-option>
+                                    </mat-select>    
+                                </mat-form-field>        
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                {{"secondLimitBar" | translate}} 
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-select id="secondLimitBar" formControlName="secondLimitBar">
+                                        <mat-option *ngFor="let value of getLimits()" [value]="value">{{value |translate}}</mat-option>
+                                    </mat-select>    
+                                </mat-form-field>        
                             </mat-grid-tile>
                         </mat-grid-list>
                     </div>
@@ -658,10 +701,33 @@
                                     |translate}}</mat-option>
                             </mat-select>
                         </mat-form-field>
+                    </div>
+                    <div class="in-line-forms">
+                        <mat-form-field appearance="fill" class="input-half-left">
+                            <mat-label>{{'campaignPlacementMetrics' | translate}}</mat-label>
+                            <mat-select id="campaignPlacementMetrics" formControlName="campaignPlacementMetrics" multiple>
+                                <mat-option *ngFor="let value of getCampaignPlacementMetrics()" [value]="value">{{value |translate}}</mat-option>
+                            </mat-select>    
+                        </mat-form-field>
                         <mat-form-field appearance="fill" class="input-half-right">
+                            <mat-label>{{'campaignPlacementMeans' | translate}}</mat-label>
+                            <mat-select id="campaignPlacementMeans" formControlName="campaignPlacementMeans">
+                                <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val)
+                                    |translate}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="in-line-forms">
+                        <mat-form-field appearance="fill" class="input-half-left">
                             <mat-label>{{'campaignPlacementPeriods' | translate}}</mat-label>
                             <mat-select id="campaignPlacementPeriods" formControlName="campaignPlacementPeriods" multiple>
                                 <mat-option *ngFor="let value of getCampaignPlacementPeriods()" [value]="value">{{value |translate}}</mat-option>
+                            </mat-select>    
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class="input-half-right">
+                            <mat-label>{{'defaultPlacementPeriod' | translate}}</mat-label>
+                            <mat-select id="campaignDefaultPlacementPeriod" formControlName="campaignDefaultPlacementPeriod">
+                                <mat-option *ngFor="let value of getSelectedCampaignPlacementPeriods()" [value]="value">{{value |translate}}</mat-option>
                             </mat-select>    
                         </mat-form-field>
                     </div>
@@ -806,6 +872,26 @@
                                     </mat-label>
                                     <input matInput id="monthlyLimitTripsNumber" formControlName="monthlyLimitTripsNumber" type="text">
                                 </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                {{"firstLimitBar" | translate}} 
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-select id="firstLimitBar" formControlName="firstLimitBar">
+                                        <mat-option *ngFor="let value of getLimits()" [value]="value">{{value |translate}}</mat-option>
+                                    </mat-select>    
+                                </mat-form-field>        
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                {{"secondLimitBar" | translate}} 
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-select id="secondLimitBar" formControlName="secondLimitBar">
+                                        <mat-option *ngFor="let value of getLimits()" [value]="value">{{value |translate}}</mat-option>
+                                    </mat-select>    
+                                </mat-form-field>        
                             </mat-grid-tile>
                         </mat-grid-list>
                     </div>
