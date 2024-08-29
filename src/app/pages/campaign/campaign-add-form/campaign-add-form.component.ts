@@ -390,7 +390,10 @@ export class CampaignAddFormComponent implements OnInit {
         });
         this.validatingForm.patchValue({
           campaignDefaultPlacementPeriod: this.campaignUpdated.campaignPlacement.configuration["periodDefault"],
-        })
+        });
+        this.validatingForm.patchValue({
+          campaignDefaultPlacementMetric: this.campaignUpdated.campaignPlacement.configuration["metricDefault"],
+        });
         if(!!this.campaignUpdated.campaignPlacement.configuration["meansShow"]){
           this.validatingForm.patchValue({
             campaignPlacementMeans: this.campaignUpdated.campaignPlacement.configuration["meansShow"],
@@ -525,6 +528,7 @@ export class CampaignAddFormComponent implements OnInit {
         campaignPlacementPeriods: new FormControl("",),
         campaignDefaultPlacementPeriod: new FormControl("",),
         campaignPlacementMetrics: new FormControl("",),
+        campaignDefaultPlacementMetric: new FormControl("",),
         campaignPlacementMeans: new FormControl("",),
         firstLimitBar: new FormControl("",),
         secondLimitBar: new FormControl("",)
@@ -566,6 +570,7 @@ export class CampaignAddFormComponent implements OnInit {
         campaignPlacementPeriods: new FormControl("",),
         campaignDefaultPlacementPeriod: new FormControl("",),
         campaignPlacementMetrics: new FormControl("",),
+        campaignDefaultPlacementMetric: new FormControl("",),
         campaignPlacementMeans: new FormControl("",),
         firstLimitBar: new FormControl("",),
         secondLimitBar: new FormControl("",)
@@ -1063,6 +1068,9 @@ export class CampaignAddFormComponent implements OnInit {
           this.campaignCreated.campaignPlacement.configuration[p] = true;
         }
         this.campaignCreated.campaignPlacement.configuration["metricVirtualScore"] = true;
+      }
+      if(this.validatingForm.get("campaignDefaultPlacementMetric")) {
+        this.campaignCreated.campaignPlacement.configuration["metricDefault"] = this.validatingForm.get("campaignDefaultPlacementMetric").value;
       }
       if(this.validatingForm.get(USE_MULTI_LOCATION).value!==null){
         this.campaignCreated.specificData[USE_MULTI_LOCATION] =  this.validatingForm.get(USE_MULTI_LOCATION).value;
@@ -1606,6 +1614,16 @@ export class CampaignAddFormComponent implements OnInit {
     const values = [];
     if(this.validatingForm.get("campaignPlacementPeriods")) {
       for (let p of this.validatingForm.get("campaignPlacementPeriods").value) {
+        values.push(p);
+      }  
+    }
+    return values;
+  }
+
+  getSelectedCampaignPlacementMetrics() {
+    const values = [];
+    if(this.validatingForm.get("campaignPlacementMetrics")) {
+      for (let p of this.validatingForm.get("campaignPlacementMetrics").value) {
         values.push(p);
       }  
     }
