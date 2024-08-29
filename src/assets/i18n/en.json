@@ -369,6 +369,7 @@
   "campaignPlacementPeriods":"Periods",
   "defaultPlacementPeriod": "Default period",
   "campaignPlacementMetrics":"Indicatori",
+  "defaultPlacementMetric":"Indicatore di default",
   "campaignPlacementMeans":"Mostra dettaglio mezzi", 
   "metricCo2":"CO2",
   "metricTrackNumber":"Num. tracce",
