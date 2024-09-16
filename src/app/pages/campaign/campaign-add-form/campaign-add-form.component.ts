@@ -1020,12 +1020,20 @@ export class CampaignAddFormComponent implements OnInit {
         this.campaignCreated.specificData[VIRTUAL_SCORE][MONTHLY_LIMIT_TRIPS_NUMBER_SPEC_LABLE] =  undefined;
       }
       if(this.validatingForm.get("firstLimitBar")) {
-        this.campaignCreated.specificData[VIRTUAL_SCORE]['firstLimitBar'] = this.validatingForm.get("firstLimitBar").value;
+        if((this.validatingForm.get("firstLimitBar").value == "noLimitBar") || (this.validatingForm.get("firstLimitBar").value == "")) {
+          this.campaignCreated.specificData[VIRTUAL_SCORE]['firstLimitBar'] = undefined;
+        } else {
+          this.campaignCreated.specificData[VIRTUAL_SCORE]['firstLimitBar'] = this.validatingForm.get("firstLimitBar").value;
+        }
       } else {
         this.campaignCreated.specificData[VIRTUAL_SCORE]['firstLimitBar'] = undefined;
       }
       if(this.validatingForm.get("secondLimitBar")) {
-        this.campaignCreated.specificData[VIRTUAL_SCORE]['secondLimitBar'] = this.validatingForm.get("secondLimitBar").value;
+        if((this.validatingForm.get("secondLimitBar").value == "noLimitBar") || (this.validatingForm.get("secondLimitBar").value == "")) {
+          this.campaignCreated.specificData[VIRTUAL_SCORE]['secondLimitBar'] = undefined;  
+        } else {
+          this.campaignCreated.specificData[VIRTUAL_SCORE]['secondLimitBar'] = this.validatingForm.get("secondLimitBar").value;
+        }
       } else {
         this.campaignCreated.specificData[VIRTUAL_SCORE]['secondLimitBar'] = undefined;
       }
