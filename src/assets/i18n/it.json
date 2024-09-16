@@ -388,5 +388,6 @@
 "scoreMonthlyLimit": "Punti virtuali - limite mensile",
 "trackDailyLimit": "Numero viaggi - limite giornaliero",
 "trackWeeklyLimit": "Numero viaggi - limite settimanale",
-"trackMonthlyLimit": "Numero viaggi - limite mensile"
+"trackMonthlyLimit": "Numero viaggi - limite mensile",
+"noLimitBar": "Nessun limite"
 }
