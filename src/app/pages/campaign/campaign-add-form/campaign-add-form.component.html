@@ -91,6 +91,63 @@
                 <div
                     *ngIf="!!validatingForm && !!validatingForm.get('type').value && validatingForm.get('type').value==='company'">
                     <mat-card-header style="border-bottom: 1px black solid; font-weight: bold;">
+                        {{"placement" | translate}}
+                    </mat-card-header>
+                    <div class="in-line-forms" style="margin-top: 20px">
+                        <mat-form-field appearance="fill" class="input-half-left">
+                            <mat-label>{{'placementActive' | translate}}</mat-label>
+                            <mat-select id="placementActive" formControlName="placementActive">
+                                <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val)
+                                    |translate}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class="input-half-right">
+                            <mat-label>{{'campaignPlacementMeans' | translate}}</mat-label>
+                            <mat-select id="campaignPlacementMeans" formControlName="campaignPlacementMeans">
+                                <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val)
+                                    |translate}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="in-line-forms">
+                        <mat-form-field appearance="fill" class="input-half-left">
+                            <mat-label>{{'campaignPlacementMetrics' | translate}}</mat-label>
+                            <mat-select id="campaignPlacementMetrics" formControlName="campaignPlacementMetrics" multiple>
+                                <mat-option *ngFor="let value of getCampaignPlacementMetrics()" [value]="value">{{value |translate}}</mat-option>
+                            </mat-select>    
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class="input-half-right">
+                            <mat-label>{{'defaultPlacementMetric' | translate}}</mat-label>
+                            <mat-select id="campaignDefaultPlacementMetric" formControlName="campaignDefaultPlacementMetric">
+                                <mat-option *ngFor="let value of getSelectedCampaignPlacementMetrics()" [value]="value">{{value |translate}}</mat-option>
+                            </mat-select>    
+                        </mat-form-field>
+                    </div>
+                    <div class="in-line-forms">
+                        <mat-form-field appearance="fill" class="input-half-left">
+                            <mat-label>{{'campaignPlacementPeriods' | translate}}</mat-label>
+                            <mat-select id="campaignPlacementPeriods" formControlName="campaignPlacementPeriods" multiple>
+                                <mat-option *ngFor="let value of getCampaignPlacementPeriods()" [value]="value">{{value |translate}}</mat-option>
+                            </mat-select>    
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class="input-half-right">
+                            <mat-label>{{'defaultPlacementPeriod' | translate}}</mat-label>
+                            <mat-select id="campaignDefaultPlacementPeriod" formControlName="campaignDefaultPlacementPeriod">
+                                <mat-option *ngFor="let value of getSelectedCampaignPlacementPeriods()" [value]="value">{{value |translate}}</mat-option>
+                            </mat-select>    
+                        </mat-form-field>
+                    </div>
+                    <div class="in-line-forms">
+                        <mat-form-field appearance="fill" class="input-half-left">
+                            <mat-label>{{'placementTitleIt' | translate}}</mat-label>
+                            <input matInput id="placementTitleIt" formControlName="placementTitleIt" type="text" [placeholder]="'placementTitleItPlaceholder' | translate">
+                        </mat-form-field>                        
+                        <mat-form-field appearance="fill" class="input-half-right">
+                            <mat-label>{{'placementTitleEn' | translate}}</mat-label>
+                            <input matInput id="placementTitleEn" formControlName="placementTitleEn" type="text" [placeholder]="'placementTitleEnPlaceholder' | translate">
+                        </mat-form-field>      
+                    </div>
+                    <mat-card-header style="border-bottom: 1px black solid; font-weight: bold;">
                         {{"modality" | translate}}
                     </mat-card-header>
                     <div class="in-line-forms" style="margin-top: 20px">
@@ -217,6 +274,28 @@
                                     </mat-label>
                                     <input matInput id="monthlyLimitTripsNumber" formControlName="monthlyLimitTripsNumber" type="text">
                                 </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                {{"firstLimitBar" | translate}} 
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-select id="firstLimitBar" formControlName="firstLimitBar">
+                                        <mat-option value="noLimitBar">{{'noLimitBar' |translate}}</mat-option>
+                                        <mat-option *ngFor="let value of getLimits()" [value]="value">{{value |translate}}</mat-option>
+                                    </mat-select>    
+                                </mat-form-field>        
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                {{"secondLimitBar" | translate}} 
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-select id="secondLimitBar" formControlName="secondLimitBar">
+                                        <mat-option value="noLimitBar">{{'noLimitBar' |translate}}</mat-option>
+                                        <mat-option *ngFor="let value of getLimits()" [value]="value">{{value |translate}}</mat-option>
+                                    </mat-select>    
+                                </mat-form-field>        
                             </mat-grid-tile>
                         </mat-grid-list>
                     </div>
@@ -620,6 +699,63 @@
                 <div
                     *ngIf="!!validatingForm && !!validatingForm.get('type').value && validatingForm.get('type').value==='company'">
                     <mat-card-header style="border-bottom: 1px black solid; font-weight: bold;">
+                        {{"placement" | translate}}
+                    </mat-card-header>
+                    <div class="in-line-forms" style="margin-top: 20px">
+                        <mat-form-field appearance="fill" class="input-half-left">
+                            <mat-label>{{'placementActive' | translate}}</mat-label>
+                            <mat-select id="placementActive" formControlName="placementActive">
+                                <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val)
+                                    |translate}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class="input-half-right">
+                            <mat-label>{{'campaignPlacementMeans' | translate}}</mat-label>
+                            <mat-select id="campaignPlacementMeans" formControlName="campaignPlacementMeans">
+                                <mat-option *ngFor="let val of [true,false]" [value]="val">{{ transformActiveBoolean(val)
+                                    |translate}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="in-line-forms">
+                        <mat-form-field appearance="fill" class="input-half-left">
+                            <mat-label>{{'campaignPlacementMetrics' | translate}}</mat-label>
+                            <mat-select id="campaignPlacementMetrics" formControlName="campaignPlacementMetrics" multiple>
+                                <mat-option *ngFor="let value of getCampaignPlacementMetrics()" [value]="value">{{value |translate}}</mat-option>
+                            </mat-select>    
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class="input-half-right">
+                            <mat-label>{{'defaultPlacementMetric' | translate}}</mat-label>
+                            <mat-select id="campaignDefaultPlacementMetric" formControlName="campaignDefaultPlacementMetric">
+                                <mat-option *ngFor="let value of getSelectedCampaignPlacementMetrics()" [value]="value">{{value |translate}}</mat-option>
+                            </mat-select>    
+                        </mat-form-field>
+                    </div>
+                    <div class="in-line-forms">
+                        <mat-form-field appearance="fill" class="input-half-left">
+                            <mat-label>{{'campaignPlacementPeriods' | translate}}</mat-label>
+                            <mat-select id="campaignPlacementPeriods" formControlName="campaignPlacementPeriods" multiple>
+                                <mat-option *ngFor="let value of getCampaignPlacementPeriods()" [value]="value">{{value |translate}}</mat-option>
+                            </mat-select>    
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class="input-half-right">
+                            <mat-label>{{'defaultPlacementPeriod' | translate}}</mat-label>
+                            <mat-select id="campaignDefaultPlacementPeriod" formControlName="campaignDefaultPlacementPeriod">
+                                <mat-option *ngFor="let value of getSelectedCampaignPlacementPeriods()" [value]="value">{{value |translate}}</mat-option>
+                            </mat-select>    
+                        </mat-form-field>
+                    </div>
+                    <div class="in-line-forms">
+                        <mat-form-field appearance="fill" class="input-half-left">
+                            <mat-label>{{'placementTitleIt' | translate}}</mat-label>
+                            <input matInput id="placementTitleIt" formControlName="placementTitleIt" type="text" [placeholder]="'placementTitleItPlaceholder' | translate">
+                        </mat-form-field>                        
+                        <mat-form-field appearance="fill" class="input-half-right">
+                            <mat-label>{{'placementTitleEn' | translate}}</mat-label>
+                            <input matInput id="placementTitleEn" formControlName="placementTitleEn" type="text" [placeholder]="'placementTitleEnPlaceholder' | translate">
+                        </mat-form-field>      
+                    </div>
+                    <mat-card-header style="border-bottom: 1px black solid; font-weight: bold;">
                         {{"modality" | translate}}
                     </mat-card-header>
                     <div class="in-line-forms" style="margin-top: 20px">
@@ -750,6 +886,28 @@
                                     </mat-label>
                                     <input matInput id="monthlyLimitTripsNumber" formControlName="monthlyLimitTripsNumber" type="text">
                                 </mat-form-field>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                {{"firstLimitBar" | translate}} 
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-select id="firstLimitBar" formControlName="firstLimitBar">
+                                        <mat-option value="noLimitBar">{{'noLimitBar' |translate}}</mat-option>
+                                        <mat-option *ngFor="let value of getLimits()" [value]="value">{{value |translate}}</mat-option>
+                                    </mat-select>    
+                                </mat-form-field>        
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                {{"secondLimitBar" | translate}} 
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <mat-form-field appearance="fill" class="grid-tile-limit" style="margin-right: 10px">
+                                    <mat-select id="secondLimitBar" formControlName="secondLimitBar">
+                                        <mat-option value="noLimitBar">{{'noLimitBar' |translate}}</mat-option>
+                                        <mat-option *ngFor="let value of getLimits()" [value]="value">{{value |translate}}</mat-option>
+                                    </mat-select>    
+                                </mat-form-field>        
                             </mat-grid-tile>
                         </mat-grid-list>
                     </div>
