@@ -55,6 +55,9 @@ export class SurveyComponentComponent implements OnInit {
   validatingForm: FormGroup;
   listActions: ActionSurveyClass[] = [];
 
+  oneWeekLong: number = 7 * 24 * 60 * 60 * 1000;
+  twoWeekLong: number = 14 * 24 * 60 * 60 * 1000;
+
   constructor(
     public dialogRef: MatDialogRef<SurveyComponentComponent>,
     private formBuilder: FormBuilder,
@@ -71,11 +74,15 @@ export class SurveyComponentComponent implements OnInit {
       surveyName: new FormControl("", [Validators.required]),
       surveyLink: new FormControl("", [Validators.required]),
       defaultSurvey: new FormControl(""),
+      defaultSurveyDuration: new FormControl(""),
       bonusPoint: new FormControl("", [Validators.required]),
       bonusScore: new FormControl("", [Validators.required]),
     });
     this.validatingForm.patchValue({
       defaultSurvey: "-",
+    });
+    this.validatingForm.patchValue({
+      defaultSurveyDuration: 0,
     });
     this.campaignService.getCampaignUsingGET(this.campaignId).subscribe((result)=>{
       this.surveys = result.surveys;
@@ -214,6 +221,7 @@ export class SurveyComponentComponent implements OnInit {
           bonusScore: this.validatingForm.get("bonusScore").value ? this.validatingForm.get("bonusScore").value : undefined,
         },
         defaultSurvey: this.defaultSurveyCheck,
+        defaultSurveyDuration: this.validatingForm.get("defaultSurveyDuration").value,
         end: undefined,
         start: undefined,
         surveyLink: this.validatingForm.get("surveyLink").value,
@@ -271,5 +279,14 @@ export class SurveyComponentComponent implements OnInit {
     return time;
   }
 
-
+  getDefaultSurveyDurationLabel(survey) {
+    if(survey.defaultSurveyDuration) {
+      if(survey.defaultSurveyDuration == this.oneWeekLong) {
+        return 'oneWeek'
+      }  
+      if(survey.defaultSurveyDuration == this.twoWeekLong) {
+        return 'twoWeek'
+      }  
+    }
+  }
 }
