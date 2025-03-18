@@ -385,6 +385,9 @@
   "trackDailyLimit": "Numero viaggi - limite giornaliero",
   "trackWeeklyLimit": "Numero viaggi - limite settimanale",
   "trackMonthlyLimit": "Numero viaggi - limite mensile",
-  "noLimitBar": "Nessun limite"    
+  "noLimitBar": "Nessun limite",
+  "defaultSurveyDuration": "Scadenza questionario di base",
+  "oneWeek": "Una settimana",
+  "twoWeek": "Due settimane"
 }
   
