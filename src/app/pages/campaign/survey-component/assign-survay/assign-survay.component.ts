@@ -55,10 +55,18 @@ export class AssignSurvayComponent implements OnInit {
 
   assign(){
     this.msgError = undefined;
+    let startDate = this.validatingForm.get("dateFrom").value ? this.validatingForm.get("dateFrom").value : undefined;
+    let endDate = this.validatingForm.get("dateTo").value ? this.validatingForm.get("dateTo").value : undefined; 
+    startDate.hour(0).minute(0).second(0);
+    endDate.hour(23).minute(59).second(59);
+    if(!startDate || !endDate){
+      this.msgError = 'dateNotValid';
+      return
+    } 
     if(this.validatingForm.valid){
       const body:SurveyRequest = {
-        start: this.validatingForm.get("dateFrom").value ? this.validatingForm.get("dateFrom").value.valueOf() : undefined,
-        end: this.validatingForm.get("dateTo").value ? this.validatingForm.get("dateTo").value.valueOf() : undefined,
+        start: startDate.valueOf(),
+        end: endDate.valueOf(),
         data:{
           bonusPointType: this.survey.data.bonusPointType,
           bonusScore: this.survey.data.bonusScore,
