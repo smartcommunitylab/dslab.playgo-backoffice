@@ -320,6 +320,7 @@ export class ConsoleControllerService {
     status?: string;
     scoreStatus?: string;
     toCheck?: boolean;
+		campaignValidity: boolean;
     multimodalId?: string;
     page?: number;
     size?: number;
@@ -336,6 +337,7 @@ export class ConsoleControllerService {
       status,
       scoreStatus,
       toCheck,
+			campaignValidity,
       multimodalId,
       page,
       size,
@@ -356,6 +358,7 @@ export class ConsoleControllerService {
           status,
           scoreStatus,
           toCheck,
+					campaignValidity,
           multimodalId,
           page,
           size,

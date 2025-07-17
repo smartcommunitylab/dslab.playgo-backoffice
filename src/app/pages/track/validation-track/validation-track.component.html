@@ -101,6 +101,16 @@
                             </mat-select>
                         </mat-form-field>
                     </mat-grid-tile>
+                    <mat-grid-tile *ngIf="isCampaignIdSelected()">
+                        <mat-form-field appearance="fill" class="full-width margin-form">
+														<mat-label>{{'campaignValidity' | translate}}</mat-label>
+                            <mat-select id="campaignValidity" formControlName="campaignValidity">
+																<mat-option [value]="true">{{"VALID" | translate}}</mat-option>
+																<mat-option [value]="false">{{"INVALID" | translate}}</mat-option>
+																<mat-option [value]="'all'">{{"all" | translate}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </mat-grid-tile>
                     <mat-grid-tile [colspan]="3" *ngIf="isCampaignIdSelected()"></mat-grid-tile>
                     <mat-grid-tile [colspan]="2">
                         <div class="search-container">
