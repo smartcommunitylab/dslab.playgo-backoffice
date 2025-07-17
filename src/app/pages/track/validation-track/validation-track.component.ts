@@ -118,7 +118,7 @@ export class ValidationTrackComponent implements OnInit {
   ];
   dataSource: TableVirtualScrollDataSource<any>; //TrackedInstanceConsoleClass
   displayedColumns: string[] = ["tracks"];
-  selectedTrack: TrackedInstanceConsoleClass;
+		selectedTrack: TrackedInstanceConsoleClass;
   selectedRowIndex: string;
   currentPageNumber: number = 0;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -212,6 +212,7 @@ export class ValidationTrackComponent implements OnInit {
           ? this.validatingForm.get("status").value.toUpperCase()
           : undefined,
         toCheck: undefined,
+				campaignValidity: undefined,
       })
       .subscribe((res) => {
         this.paginatorData = res;
@@ -265,6 +266,7 @@ export class ValidationTrackComponent implements OnInit {
       status: new FormControl(""),
       toCheck: new FormControl(""),
       scoreStatus: new FormControl(""),
+			campaignValidity: new FormControl(""),
       modalTrackId: new FormControl(""),
     });
     const monday = this.getPreviousMonday();
@@ -446,6 +448,13 @@ export class ValidationTrackComponent implements OnInit {
             this.validatingForm.get("scoreStatus") &&
             this.validatingForm.get("scoreStatus").value !== "empty"
               ? this.validatingForm.get("scoreStatus").value
+              : undefined,
+					campaignValidity:
+            this.validatingForm.get("campaignValidity").value === VALUE_EMPTY_SELECT_LIST
+              ? undefined
+              : this.validatingForm.get("campaignValidity").value === false ||
+                this.validatingForm.get("campaignValidity").value === true
+              ? this.validatingForm.get("campaignValidity").value
               : undefined,
           multimodalId:
             this.validatingForm.get("modalTrackId") &&
@@ -700,6 +709,7 @@ export class ValidationTrackComponent implements OnInit {
       campaignId: new FormControl(""),
       status: new FormControl(""),
       toCheck: new FormControl(""),
+			campaignValidity: new FormControl(""),
     });
     this.validatingForm.patchValue({
       sort: "",
@@ -711,6 +721,7 @@ export class ValidationTrackComponent implements OnInit {
       campaignId: "",
       status: "",
       toCheck: null,
+			campaignValidity: null,
     });
     this.resetPageNumber();
   }
@@ -784,6 +795,13 @@ export class ValidationTrackComponent implements OnInit {
                   this.validatingForm.get("toCheck").value === true
                 ? this.validatingForm.get("toCheck").value
                 : undefined,
+						campaignValidity:
+							this.validatingForm.get("campaignValidity").value === VALUE_EMPTY_SELECT_LIST
+								? undefined
+								: this.validatingForm.get("campaignValidity").value === false ||
+									this.validatingForm.get("campaignValidity").value === true
+								? this.validatingForm.get("campaignValidity").value
+								: undefined,
           })
           .subscribe((res) => {
             this.listTrack = res.content;
@@ -1234,6 +1252,7 @@ export class ValidationTrackComponent implements OnInit {
       campaignId: undefined,
       status: undefined,
       toCheck: undefined,
+			campaignValidity: undefined,
     });
     this.selectedTrack = undefined;
     const monday = this.getPreviousMonday();
@@ -1507,6 +1526,13 @@ export class ValidationTrackComponent implements OnInit {
               ? this.validatingForm.get("scoreStatus").value
               : undefined,
           multimodalId: element.trackedInstance.multimodalId,
+					campaignValidity:
+            this.validatingForm.get("campaignValidity").value === VALUE_EMPTY_SELECT_LIST
+              ? undefined
+              : this.validatingForm.get("campaignValidity").value === false ||
+                this.validatingForm.get("campaignValidity").value === true
+              ? this.validatingForm.get("campaignValidity").value
+              : undefined,
         })
         .subscribe((res) => {
           this.paginatorData = res;
