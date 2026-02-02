@@ -29,6 +29,8 @@
   "campaigns":"Campaigns",
   "dateFrom":"Start date",
   "dateTo":"End date",
+  "registrationFrom":"Registration start date",
+  "registrationTo":"Registration end date",
   "typology":"Typology",
   "type":"Type",
   "active":"Active",
@@ -61,6 +63,7 @@
   "city":"City",
   "school":"School",
   "company":"Company",
+  "group":"Group",
   "dateNotValid":"Change one of the two dates inserted so end date it's after start date",
   "currentLogo":"Used loge",
   "newLogo":"New logo",
@@ -389,6 +392,11 @@
   "noLimitBar": "Nessun limite",
   "defaultSurveyDuration": "Scadenza questionario di base",
   "oneWeek": "Una settimana",
-  "twoWeek": "Due settimane"
+  "twoWeek": "Due settimane",
+  "groupSettings":"Group settings",
+  "jwksEndpoint":"Endpoint JWKS",
+  "authUrl":"Authentication URL",
+  "clientId":"OAuth2 Client ID",
+  "claimName":"Claim name"
 }
   

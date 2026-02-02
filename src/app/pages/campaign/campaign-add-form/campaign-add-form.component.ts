@@ -264,6 +264,16 @@ export class CampaignAddFormComponent implements OnInit {
             ? END_YEAR_FIXED
             : this.campaignUpdated.dateTo
         ), //moment(this.campaignUpdated.dateTo), //moment(this.campaignUpdated.dateTo, "YYYY-MM-DD"),
+        registrationFrom: this.createDate(
+          !this.campaignUpdated.registrationFrom
+            ? START_YEAR_FIXED
+            : this.campaignUpdated.registrationFrom
+        ), //moment(this.campaignUpdated.registrationFrom), //moment(this.campaignUpdated.registrationFrom, "YYYY-MM-DD"),
+        registrationTo: this.createDate(
+          !this.campaignUpdated.registrationTo
+            ? END_YEAR_FIXED
+            : this.campaignUpdated.registrationTo
+        ), //moment(this.campaignUpdated.registrationTo), //moment(this.campaignUpdated.registrationTo, "YYYY-MM-DD"),
         type: this.campaignUpdated.type,
         gameId: !!this.campaignUpdated.gameId ? this.campaignUpdated.gameId : "" ,
         startDayOfWeek: this.campaignUpdated.startDayOfWeek,
@@ -298,6 +308,15 @@ export class CampaignAddFormComponent implements OnInit {
           }
           
         }
+      }
+      console.log("GROUP CONF");
+      if(this.campaignUpdated.type === "group" && !!this.campaignUpdated.specificData) {
+        this.validatingForm.patchValue({
+          jwksEndpoint: this.campaignUpdated.specificData["jwksEndpoint"],
+          claimName: this.campaignUpdated.specificData["claimName"],
+          authUrl: this.campaignUpdated.specificData["authUrl"],
+          clientId: this.campaignUpdated.specificData["clientId"],
+        });
       }
       console.log("SELECTED LIMITS: ", this.selectedLimits);
       if(!!this.campaignUpdated.specificData && this.campaignUpdated.specificData[CHALLENGE_PLAYER_PROPOSER]){
@@ -500,6 +519,8 @@ export class CampaignAddFormComponent implements OnInit {
         visible: new FormControl("", [Validators.required]),
         dateFrom: new FormControl("", [Validators.required]),
         dateTo: new FormControl("", [Validators.required]),
+        registrationFrom: new FormControl("",),
+        registrationTo: new FormControl("",),
         type: new FormControl("", [Validators.required]),
         sendWeaklyEmail: new FormControl("", [Validators.required]),
         gameId: new FormControl(""),
@@ -531,7 +552,11 @@ export class CampaignAddFormComponent implements OnInit {
         campaignDefaultPlacementMetric: new FormControl("",),
         campaignPlacementMeans: new FormControl("",),
         firstLimitBar: new FormControl("",),
-        secondLimitBar: new FormControl("",)
+        secondLimitBar: new FormControl("",),
+        jwksEndpoint: new FormControl("",),
+        authUrl: new FormControl("",),
+        clientId: new FormControl("",),
+        claimName: new FormControl("",),
       });
     } else {
       this.validatingForm = this.formBuilder.group({
@@ -542,6 +567,8 @@ export class CampaignAddFormComponent implements OnInit {
         visible: new FormControl("", [Validators.required]),
         dateFrom: new FormControl("", [Validators.required]),
         dateTo: new FormControl("", [Validators.required]),
+        registrationFrom: new FormControl("",),
+        registrationTo: new FormControl("",),
         type: new FormControl(""),
         sendWeaklyEmail: new FormControl("", [Validators.required]),
         gameId: new FormControl(""),
@@ -573,7 +600,11 @@ export class CampaignAddFormComponent implements OnInit {
         campaignDefaultPlacementMetric: new FormControl("",),
         campaignPlacementMeans: new FormControl("",),
         firstLimitBar: new FormControl("",),
-        secondLimitBar: new FormControl("",)
+        secondLimitBar: new FormControl("",),
+        jwksEndpoint: new FormControl("",),
+        authUrl: new FormControl("",),
+        clientId: new FormControl("",),
+        claimName: new FormControl("",),
       });
     }
   }
@@ -633,7 +664,7 @@ export class CampaignAddFormComponent implements OnInit {
   }
 
   isGameIdMandatory(campaignType: string){
-    if(campaignType=== "school" || campaignType ==="city"){
+    if(campaignType=== "school" || campaignType ==="city" || campaignType ==="group"){
       return true;
     }else{
       return false;
@@ -915,6 +946,12 @@ export class CampaignAddFormComponent implements OnInit {
     this.campaignCreated.dateTo = this.fromDateTimeToLong(
       this.validatingForm.get("dateTo").value
     ); //dataTo.toDate();//this.formatDate(dataTo); //
+    this.campaignCreated.registrationFrom = this.fromDateTimeToLong(
+      this.validatingForm.get("registrationFrom").value
+    );
+    this.campaignCreated.registrationTo = this.fromDateTimeToLong(
+      this.validatingForm.get("registrationTo").value
+    );
     this.campaignCreated.logo = new ImageClass();
     if (!!this.selectedLogo) {
       this.campaignCreated.logo.contentType = this.selectedLogo.contentType;
@@ -956,6 +993,12 @@ export class CampaignAddFormComponent implements OnInit {
         //   delete this.campaignCreated.specificData[key];
         // }
       }
+    }
+    if(this.campaignCreated.type === "group"){
+      this.campaignCreated.specificData["jwksEndpoint"] = this.validatingForm.get("jwksEndpoint").value;
+      this.campaignCreated.specificData["claimName"] = this.validatingForm.get("claimName").value;
+      this.campaignCreated.specificData["authUrl"] = this.validatingForm.get("authUrl").value;
+      this.campaignCreated.specificData["clientId"] = this.validatingForm.get("clientId").value;
     }
     if(this.campaignCreated.type === "company"){
       //company type
@@ -1110,7 +1153,7 @@ export class CampaignAddFormComponent implements OnInit {
         }  
       }
     }
-    if(this.campaignCreated.type === "city" || this.campaignCreated.type === "school"){
+    if(this.campaignCreated.type === "city" || this.campaignCreated.type === "school" || this.campaignCreated.type === "group"){
       if(this.validatingForm.get("challengePlayerProposedHour").value!==null && this.validatingForm.get("challengePlayerProposedDay").value!==null){
         this.campaignCreated.specificData[CHALLENGE_PLAYER_PROPOSER] = this.validatingForm.get("challengePlayerProposedHour").value + ";"+ this.validatingForm.get("challengePlayerProposedDay").value;
       }else{

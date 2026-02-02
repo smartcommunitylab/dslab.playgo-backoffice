@@ -36,6 +36,8 @@ export class CampaignClass implements Campaign {
     communications?: boolean;
     dateFrom?: number;
     dateTo?: number;
+    registrationFrom?: number;
+    registrationTo?: number;
     defaultSurvey?: SurveyRequest;
     description?: { [key: string]: string };
     details?: { [key: string]: Array<CampaignDetail> };

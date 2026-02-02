@@ -74,6 +74,16 @@
                 </div>
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-half-left">
+                        <mat-label>{{'registrationFrom' | translate}}</mat-label>
+                        <input matInput id="registrationFrom" formControlName="registrationFrom" type="datetime-local">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-half-right">
+                        <mat-label>{{'registrationTo' | translate}}</mat-label>
+                        <input matInput id="registrationTo" formControlName="registrationTo" type="datetime-local">
+                    </mat-form-field>
+                </div>
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'means' | translate}}</mat-label>
                         <mat-select id="means" formControlName="means" multiple
                             (selectionChange)="chengeSelectedMeans($event)">
@@ -88,6 +98,32 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
+                <div
+                    *ngIf="!!validatingForm && !!validatingForm.get('type').value && validatingForm.get('type').value==='group'">
+                    <mat-card-header style="border-bottom: 1px black solid; font-weight: bold;">
+                        {{"groupSettings" | translate}}
+                    </mat-card-header>
+                    <div class="in-line-forms" style="margin-top: 20px">
+                        <mat-form-field appearance="fill" class="input-half-left">
+                            <mat-label>{{'jwksEndpoint' | translate}}</mat-label>
+                            <input matInput id="jwksEndpoint" formControlName="jwksEndpoint" type="text" [placeholder]="'jwksEndpoint' | translate">
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class="input-half-right">
+                            <mat-label>{{'claimName' | translate}}</mat-label>
+                            <input matInput id="claimName" formControlName="claimName" type="text" [placeholder]="'claimName' | translate">
+                        </mat-form-field>
+                    </div>
+                    <div class="in-line-forms" style="margin-top: 20px">
+                        <mat-form-field appearance="fill" class="input-half-left">
+                            <mat-label>{{'authUrl' | translate}}</mat-label>
+                            <input matInput id="authUrl" formControlName="authUrl" type="text" [placeholder]="'authUrl' | translate">
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class="input-half-right">
+                            <mat-label>{{'clientId' | translate}}</mat-label>
+                            <input matInput id="clientId" formControlName="clientId" type="text" [placeholder]="'clientId' | translate">
+                        </mat-form-field>
+                    </div>
+                </div>                
                 <div
                     *ngIf="!!validatingForm && !!validatingForm.get('type').value && validatingForm.get('type').value==='company'">
                     <mat-card-header style="border-bottom: 1px black solid; font-weight: bold;">
@@ -363,7 +399,7 @@
                     </mat-form-field>
                 </div>
                 <div class="in-line-forms"
-                    *ngIf="!!validatingForm && !!validatingForm.get('type').value && (validatingForm.get('type').value==='city' || validatingForm.get('type').value==='school' ) ">
+                    *ngIf="!!validatingForm && !!validatingForm.get('type').value && (validatingForm.get('type').value==='city' || validatingForm.get('type').value==='school' || validatingForm.get('type').value==='group') ">
                     <mat-grid-list [cols]="5" rowHeight="50px" style="margin-bottom: 10px">
                         <mat-grid-tile [colspan]="2">
                             {{"challengeProposed" | translate}}
@@ -682,6 +718,16 @@
                 </div>
                 <div class="in-line-forms">
                     <mat-form-field appearance="fill" class="input-half-left">
+                        <mat-label>{{'registrationFrom' | translate}}</mat-label>
+                        <input matInput id="registrationFrom" formControlName="registrationFrom" type="datetime-local">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="input-half-right">
+                        <mat-label>{{'registrationTo' | translate}}</mat-label>
+                        <input matInput id="registrationTo" formControlName="registrationTo" type="datetime-local">
+                    </mat-form-field>
+                </div>
+                <div class="in-line-forms">
+                    <mat-form-field appearance="fill" class="input-half-left">
                         <mat-label>{{'means' | translate}}</mat-label>
                         <mat-select id="means" formControlName="means" multiple
                             (selectionChange)="chengeSelectedMeans($event)">
@@ -696,6 +742,32 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
+                <div
+                    *ngIf="!!validatingForm && !!validatingForm.get('type').value && validatingForm.get('type').value==='group'">
+                    <mat-card-header style="border-bottom: 1px black solid; font-weight: bold;">
+                        {{"groupSettings" | translate}}
+                    </mat-card-header>
+                    <div class="in-line-forms" style="margin-top: 20px">
+                        <mat-form-field appearance="fill" class="input-half-left">
+                            <mat-label>{{'jwksEndpoint' | translate}}</mat-label>
+                            <input matInput id="jwksEndpoint" formControlName="jwksEndpoint" type="text" [placeholder]="'jwksEndpoint' | translate">
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class="input-half-right">
+                            <mat-label>{{'claimName' | translate}}</mat-label>
+                            <input matInput id="claimName" formControlName="claimName" type="text" [placeholder]="'claimName' | translate">
+                        </mat-form-field>
+                    </div>
+                    <div class="in-line-forms" style="margin-top: 20px">
+                        <mat-form-field appearance="fill" class="input-half-left">
+                            <mat-label>{{'authUrl' | translate}}</mat-label>
+                            <input matInput id="authUrl" formControlName="authUrl" type="text" [placeholder]="'authUrl' | translate">
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class="input-half-right">
+                            <mat-label>{{'clientId' | translate}}</mat-label>
+                            <input matInput id="clientId" formControlName="clientId" type="text" [placeholder]="'clientId' | translate">
+                        </mat-form-field>
+                    </div>
+                </div>                
                 <div
                     *ngIf="!!validatingForm && !!validatingForm.get('type').value && validatingForm.get('type').value==='company'">
                     <mat-card-header style="border-bottom: 1px black solid; font-weight: bold;">
@@ -977,7 +1049,7 @@
                     </mat-form-field>
                 </div>
                 <div class="in-line-forms"
-                    *ngIf="!!validatingForm && !!validatingForm.get('type').value && (validatingForm.get('type').value==='city' || validatingForm.get('type').value==='school' ) ">
+                    *ngIf="!!validatingForm && !!validatingForm.get('type').value && (validatingForm.get('type').value==='city' || validatingForm.get('type').value==='school' || validatingForm.get('type').value==='group') ">
                     <mat-grid-list [cols]="5" rowHeight="50px" style="margin-bottom: 10px">
                         <mat-grid-tile [colspan]="2">
                             {{"challengeProposed" | translate}}
