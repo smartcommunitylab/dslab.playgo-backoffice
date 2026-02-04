@@ -85,6 +85,7 @@ import { CampaignControllerService } from "src/app/core/api/generated/controller
 import {
   CampaignDetailClass,
   DetailsForAddModifyModule,
+  GroupItem
 } from "src/app/shared/classes/campaign-details-class";
 import { CampaignDetail } from "src/app/core/api/generated/model/campaignDetail";
 import { Image } from "src/app/core/api/generated/model/image";
@@ -159,6 +160,13 @@ export class CampaignAddFormComponent implements OnInit {
   disabledControl = true;
   list_evaluation_types = LIST_TYPE_EVALUATION_FOR_MEANS;
   customselectedLimits: any = "co2";
+  groupList: GroupItem[] = [];
+  
+  // Proprietà per la gestione inline della lista di gruppi
+  groupForm: FormGroup;
+  editingGroupIndex: number | null = null;
+  displayedGroupColumns: string[] = [];
+  groupFormError: string = "";
 
   @Input() set formTerritory(value: CampaignClass) {
     this.campaignUpdated = value;
@@ -175,6 +183,7 @@ export class CampaignAddFormComponent implements OnInit {
     // this.selectedBanner.image = value.banner.image;
     // this.selectedBanner.url = value.banner.url;
     this.details = this.setDetails(value.details);
+    this.loadGroupsIntoForm(value);
     this.initializaValidatingForm();
     this.territoryService
       .getTerritoryUsingGET(
@@ -232,6 +241,131 @@ export class CampaignAddFormComponent implements OnInit {
         }
       });
     this.initDetailsType();
+    this.initializeGroupForm();
+  }
+
+  onGroupListChange(updatedList: GroupItem[]): void {
+    this.groupList = updatedList;
+    console.log('Group list updated:', this.groupList);
+  }
+
+  // Metodi per la gestione inline della lista di gruppi
+  initializeGroupForm(): void {
+    const labelControls: any = {};
+    this.languagesSupported.forEach(lang => {
+      labelControls[lang] = ['', Validators.required];
+    });
+
+    this.groupForm = new FormGroup({
+      value: new FormControl('', [Validators.required, Validators.minLength(3)]),
+      ...Object.keys(labelControls).reduce((acc, key) => {
+        acc[key] = new FormControl('',);
+        return acc;
+      }, {})
+    });
+
+    this.updateDisplayedGroupColumns();
+  }
+
+  updateDisplayedGroupColumns(): void {
+    this.displayedGroupColumns = ['value', ...this.languagesSupported.map(l => 'label_' + l), 'actions'];
+  }
+
+  loadGroupsIntoForm(campaign: CampaignClass): void {
+    if (campaign.specificData && campaign.specificData.groupList) {
+      this.groupList = campaign.specificData.groupList.map((group: any) => {
+        const labelObj: { [key: string]: string } = {};
+        this.languagesSupported.forEach(lang => {
+          labelObj[lang] = group.label[lang] || '';
+        });
+        return {
+          value: group.value,
+          label: labelObj
+        };
+      });
+    }
+  }
+
+  convertGroupListToSpecificData(campaign: CampaignClass): void {
+    if (this.groupList && this.groupList.length > 0) {
+      campaign.specificData.groupList = this.groupList;
+    } else {
+      campaign.specificData.groupList = [];
+    }
+  }
+
+  addGroup(): void {
+    if (!this.groupForm || this.groupForm.invalid) {
+      this.groupFormError = "Compila tutti i campi";
+      return;
+    }
+
+    this.groupFormError = "";
+    const formValue = this.groupForm.value;
+    const newGroup: GroupItem = {
+      value: formValue.value,
+      label: {}
+    };
+
+    this.languagesSupported.forEach(lang => {
+      newGroup.label[lang] = formValue[lang];
+    });
+
+    this.groupList = [...this.groupList, newGroup];
+    this.groupForm.reset();
+    this.editingGroupIndex = null;
+  }
+
+  editGroup(index: number): void {
+    const group = this.groupList[index];
+    const formValue: any = {
+      value: group.value
+    };
+
+    this.languagesSupported.forEach(lang => {
+      formValue[lang] = group.label[lang];
+    });
+
+    this.groupForm.patchValue(formValue);
+    this.editingGroupIndex = index;
+    this.groupFormError = "";
+  }
+
+  updateGroup(): void {
+    if (!this.groupForm || this.groupForm.invalid || this.editingGroupIndex === null) {
+      this.groupFormError = "Compila tutti i campi";
+      return;
+    }
+
+    this.groupFormError = "";
+    const formValue = this.groupForm.value;
+    const updatedGroup: GroupItem = {
+      value: formValue.value,
+      label: {}
+    };
+
+    this.languagesSupported.forEach(lang => {
+      updatedGroup.label[lang] = formValue[lang];
+    });
+
+    this.groupList[this.editingGroupIndex] = updatedGroup;
+    this.groupList = [...this.groupList];
+    this.groupForm.reset();
+    this.editingGroupIndex = null;
+  }
+
+  deleteGroup(index: number): void {
+    this.groupList = this.groupList.filter((_, i) => i !== index);
+    if (this.editingGroupIndex === index) {
+      this.groupForm.reset();
+      this.editingGroupIndex = null;
+    }
+  }
+
+  cancelEditGroup(): void {
+    this.groupForm.reset();
+    this.editingGroupIndex = null;
+    this.groupFormError = "";
   }
 
   setValuesValidatingForm(){
@@ -715,7 +849,7 @@ export class CampaignAddFormComponent implements OnInit {
         this.errorMsgValidation = "dateNotValid";
         return;
       }
-      if((this.campaignCreated.type === "city" || this.campaignCreated.type === "school") && !this.assignedProposedValid()){
+      if((this.campaignCreated.type === "city" || this.campaignCreated.type === "school" || this.campaignCreated.type === "group") && !this.assignedProposedValid()){
         this.errorMsgValidation = "assignedProposedNotValid";
         return;
       }
@@ -999,6 +1133,7 @@ export class CampaignAddFormComponent implements OnInit {
       this.campaignCreated.specificData["claimName"] = this.validatingForm.get("claimName").value;
       this.campaignCreated.specificData["authUrl"] = this.validatingForm.get("authUrl").value;
       this.campaignCreated.specificData["clientId"] = this.validatingForm.get("clientId").value;
+      this.convertGroupListToSpecificData(this.campaignCreated);
     }
     if(this.campaignCreated.type === "company"){
       //company type

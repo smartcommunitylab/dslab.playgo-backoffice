@@ -123,6 +123,110 @@
                             <input matInput id="clientId" formControlName="clientId" type="text" [placeholder]="'clientId' | translate">
                         </mat-form-field>
                     </div>
+                    <mat-card-header style="border-bottom: 1px black solid; font-weight: bold; margin-top: 30px;">
+                        {{"groupListTitle" | translate}}
+                    </mat-card-header>
+                    <div style="margin-top: 20px; margin-bottom: 30px;">
+                        <!-- Group List Management -->
+                        <!-- Form per aggiungere/modificare gruppi -->
+                        <div [formGroup]="groupForm" class="in-line-forms" style="margin-bottom: 20px;">
+                            <mat-form-field appearance="fill" class="input-half-left">
+                                <mat-label>{{'groupListValue' | translate}}</mat-label>
+                                <input matInput formControlName="value" type="text" [placeholder]="'groupListValue' | translate">
+                                <mat-error *ngIf="groupForm.get('value')?.hasError('required')">
+                                    {{'required' | translate}}
+                                </mat-error>
+                            </mat-form-field>
+
+                            <!-- Dynamic language-specific label fields -->
+                            <mat-form-field 
+                                *ngFor="let lang of languagesSupported" 
+                                appearance="fill" 
+                                [ngClass]="languagesSupported.length === 1 ? 'input-half-right' : 'input-full'"
+                                style="margin-left: 10px;">
+                                <mat-label>{{'groupListLabel' | translate}} ({{ lang | uppercase }})</mat-label>
+                                <input matInput [formControlName]="lang" type="text" [placeholder]="'groupListLabel' | translate">
+                            </mat-form-field>
+
+                            <!-- Action Buttons -->
+                            <div style="margin-top: 15px;">
+                                <button 
+                                    *ngIf="editingGroupIndex === null"
+                                    mat-raised-button 
+                                    color="primary" 
+                                    (click)="addGroup()"
+                                    style="margin-right: 10px;">
+                                    {{'groupListAddButton' | translate}}
+                                </button>
+                                <button 
+                                    *ngIf="editingGroupIndex !== null"
+                                    mat-raised-button 
+                                    color="primary" 
+                                    (click)="updateGroup()"
+                                    style="margin-right: 10px;">
+                                    {{'groupListModifyButton' | translate}}
+                                </button>
+                                <button 
+                                    *ngIf="editingGroupIndex !== null"
+                                    mat-raised-button 
+                                    (click)="cancelEditGroup()">
+                                    {{'groupListCancelButton' | translate}}
+                                </button>
+                            </div>
+
+                            <!-- Error Message -->
+                            <div *ngIf="groupFormError" style="color: red; margin-top: 10px; font-size: 12px;">
+                                {{ groupFormError }}
+                            </div>
+                        </div>
+
+                        <!-- Table showing all groups -->
+                        <div *ngIf="groupList.length > 0" style="margin-top: 20px; overflow-x: auto;">
+                            <table mat-table [dataSource]="groupList" class="mat-elevation-z8" style="width: 100%;">
+
+                                <!-- Value Column -->
+                                <ng-container matColumnDef="value">
+                                    <th mat-header-cell *matHeaderCellDef style="padding-right: 20px;">{{'groupListValue' | translate}}</th>
+                                    <td mat-cell *matCellDef="let element" style="padding-right: 20px;">{{ element.value }}</td>
+                                </ng-container>
+
+                                <!-- Language Label Columns (dynamic) -->
+                                <ng-container *ngFor="let lang of languagesSupported" [matColumnDef]="'label_' + lang">
+                                    <th mat-header-cell *matHeaderCellDef style="padding-right: 20px;">{{'groupListLabel' | translate}} ({{ lang | uppercase }})</th>
+                                    <td mat-cell *matCellDef="let element" style="padding-right: 20px;">{{ element.label[lang] }}</td>
+                                </ng-container>
+
+                                <!-- Actions Column -->
+                                <ng-container matColumnDef="actions">
+                                    <th mat-header-cell *matHeaderCellDef style="width: 120px;">{{'groupListActions' | translate}}</th>
+                                    <td mat-cell *matCellDef="let element; let index = index" style="width: 120px;">
+                                        <button 
+                                            mat-icon-button 
+                                            (click)="editGroup(index)" 
+                                            matTooltip="{{'groupListModifyButton' | translate}}"
+                                            style="margin-right: 5px;">
+                                            <mat-icon>edit</mat-icon>
+                                        </button>
+                                        <button 
+                                            mat-icon-button 
+                                            color="warn"
+                                            (click)="deleteGroup(index)" 
+                                            matTooltip="{{'groupListDeleteButton' | translate}}">
+                                            <mat-icon>delete</mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedGroupColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedGroupColumns;"></tr>
+                            </table>
+                        </div>
+
+                        <!-- Empty State Message -->
+                        <div *ngIf="groupList.length === 0" style="text-align: center; color: #999; margin-top: 20px; padding: 20px;">
+                            {{'groupListEmpty' | translate}}
+                        </div>
+                    </div>
                 </div>                
                 <div
                     *ngIf="!!validatingForm && !!validatingForm.get('type').value && validatingForm.get('type').value==='company'">
@@ -766,6 +870,110 @@
                             <mat-label>{{'clientId' | translate}}</mat-label>
                             <input matInput id="clientId" formControlName="clientId" type="text" [placeholder]="'clientId' | translate">
                         </mat-form-field>
+                    </div>
+                    <mat-card-header style="border-bottom: 1px black solid; font-weight: bold; margin-top: 30px;">
+                        {{"groupListTitle" | translate}}
+                    </mat-card-header>
+                    <div style="margin-top: 20px; margin-bottom: 30px;">
+                        <!-- Group List Management -->
+                        <!-- Form per aggiungere/modificare gruppi -->
+                        <div [formGroup]="groupForm" class="in-line-forms" style="margin-bottom: 20px;">
+                            <mat-form-field appearance="fill" class="input-half-left">
+                                <mat-label>{{'groupListValue' | translate}}</mat-label>
+                                <input matInput formControlName="value" type="text" [placeholder]="'groupListValue' | translate">
+                                <mat-error *ngIf="groupForm.get('value')?.hasError('required')">
+                                    {{'required' | translate}}
+                                </mat-error>
+                            </mat-form-field>
+
+                            <!-- Dynamic language-specific label fields -->
+                            <mat-form-field 
+                                *ngFor="let lang of languagesSupported" 
+                                appearance="fill" 
+                                [ngClass]="languagesSupported.length === 1 ? 'input-half-right' : 'input-full'"
+                                style="margin-left: 10px;">
+                                <mat-label>{{'groupListLabel' | translate}} ({{ lang | uppercase }})</mat-label>
+                                <input matInput [formControlName]="lang" type="text" [placeholder]="'groupListLabel' | translate">
+                            </mat-form-field>
+
+                            <!-- Action Buttons -->
+                            <div style="margin-top: 15px;">
+                                <button 
+                                    *ngIf="editingGroupIndex === null"
+                                    mat-raised-button 
+                                    color="primary" 
+                                    (click)="addGroup()"
+                                    style="margin-right: 10px;">
+                                    {{'groupListAddButton' | translate}}
+                                </button>
+                                <button 
+                                    *ngIf="editingGroupIndex !== null"
+                                    mat-raised-button 
+                                    color="primary" 
+                                    (click)="updateGroup()"
+                                    style="margin-right: 10px;">
+                                    {{'groupListModifyButton' | translate}}
+                                </button>
+                                <button 
+                                    *ngIf="editingGroupIndex !== null"
+                                    mat-raised-button 
+                                    (click)="cancelEditGroup()">
+                                    {{'groupListCancelButton' | translate}}
+                                </button>
+                            </div>
+
+                            <!-- Error Message -->
+                            <div *ngIf="groupFormError" style="color: red; margin-top: 10px; font-size: 12px;">
+                                {{ groupFormError }}
+                            </div>
+                        </div>
+
+                        <!-- Table showing all groups -->
+                        <div *ngIf="groupList.length > 0" style="margin-top: 20px; overflow-x: auto;">
+                            <table mat-table [dataSource]="groupList" class="mat-elevation-z8" style="width: 100%;">
+
+                                <!-- Value Column -->
+                                <ng-container matColumnDef="value">
+                                    <th mat-header-cell *matHeaderCellDef style="padding-right: 20px;">{{'groupListValue' | translate}}</th>
+                                    <td mat-cell *matCellDef="let element" style="padding-right: 20px;">{{ element.value }}</td>
+                                </ng-container>
+
+                                <!-- Language Label Columns (dynamic) -->
+                                <ng-container *ngFor="let lang of languagesSupported" [matColumnDef]="'label_' + lang">
+                                    <th mat-header-cell *matHeaderCellDef style="padding-right: 20px;">{{'groupListLabel' | translate}} ({{ lang | uppercase }})</th>
+                                    <td mat-cell *matCellDef="let element" style="padding-right: 20px;">{{ element.label[lang] }}</td>
+                                </ng-container>
+
+                                <!-- Actions Column -->
+                                <ng-container matColumnDef="actions">
+                                    <th mat-header-cell *matHeaderCellDef style="width: 120px;">{{'groupListActions' | translate}}</th>
+                                    <td mat-cell *matCellDef="let element; let index = index" style="width: 120px;">
+                                        <button 
+                                            mat-icon-button 
+                                            (click)="editGroup(index)" 
+                                            matTooltip="{{'groupListModifyButton' | translate}}"
+                                            style="margin-right: 5px;">
+                                            <mat-icon>edit</mat-icon>
+                                        </button>
+                                        <button 
+                                            mat-icon-button 
+                                            color="warn"
+                                            (click)="deleteGroup(index)" 
+                                            matTooltip="{{'groupListDeleteButton' | translate}}">
+                                            <mat-icon>delete</mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedGroupColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedGroupColumns;"></tr>
+                            </table>
+                        </div>
+
+                        <!-- Empty State Message -->
+                        <div *ngIf="groupList.length === 0" style="text-align: center; color: #999; margin-top: 20px; padding: 20px;">
+                            {{'groupListEmpty' | translate}}
+                        </div>
                     </div>
                 </div>                
                 <div

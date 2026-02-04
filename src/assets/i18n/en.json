@@ -393,10 +393,19 @@
   "defaultSurveyDuration": "Scadenza questionario di base",
   "oneWeek": "Una settimana",
   "twoWeek": "Due settimane",
-  "groupSettings":"Group settings",
+  "groupSettings":"Group authentication settings",
   "jwksEndpoint":"Endpoint JWKS",
   "authUrl":"Authentication URL",
   "clientId":"OAuth2 Client ID",
-  "claimName":"Claim name"
+  "claimName":"Claim name",
+  "groupListTitle":"Group list management",
+  "groupListValue":"Group identifier",
+  "groupListLabel":"Group label",
+  "groupListAddButton":"Add",
+  "groupListDeleteButton":"Delete",
+  "groupListModifyButton":"Modify",
+  "groupListCancelButton":"Cancel",
+  "groupListActions":"Actions",
+  "groupListEmpty":"No groups added yet"
 }
   
