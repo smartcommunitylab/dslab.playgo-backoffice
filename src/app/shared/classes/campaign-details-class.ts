@@ -14,3 +14,8 @@ export class DetailsForAddModifyModule{
     languageDataForm : { [key: string]: FormGroup};
     staticTypeForm: FormGroup;
 }
+
+export interface GroupItem {
+  value: string;
+  label: { [key: string]: string };
+}
