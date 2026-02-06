@@ -1,5 +1,5 @@
-settimana,data inizio,data fine,desc_it,desc_en
-1,"2022-07-04","2022-07-10","desc it","desc en"
-2,"2022-07-11","2022-07-17","desc it","desc en"
-3,"2022-07-18","2022-07-24","desc it","desc en"
-4,"2022-07-25","2022-07-31","desc it","desc en"
+group_id, settimana,data inizio,data fine,desc_it,desc_en
+"group1",1,"2022-07-04","2022-07-10","desc it","desc en"
+"group1",2,"2022-07-11","2022-07-17","desc it","desc en"
+"group1",3,"2022-07-18","2022-07-24","desc it","desc en"
+"group1",4,"2022-07-25","2022-07-31","desc it","desc en"
