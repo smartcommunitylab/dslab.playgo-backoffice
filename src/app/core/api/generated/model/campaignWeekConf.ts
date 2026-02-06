@@ -13,6 +13,7 @@ import { CampaignReward } from "./campaignReward";
 
 export interface CampaignWeekConf {
   campaignId?: string;
+  groupId?: string;
   dateFrom?: number;
   dateTo?: number;
   rewards?: Array<CampaignReward>;

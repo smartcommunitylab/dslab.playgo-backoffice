@@ -410,5 +410,6 @@
 "groupListModifyButton":"Modifica",
 "groupListCancelButton":"Annulla",
 "groupListActions":"Azioni",
-"groupListEmpty":"Ancora nessun gruppo registrato"
+"groupListEmpty":"Ancora nessun gruppo registrato",
+"groupId":"Id Gruppo"
 }

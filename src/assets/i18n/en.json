@@ -406,6 +406,7 @@
   "groupListModifyButton":"Modify",
   "groupListCancelButton":"Cancel",
   "groupListActions":"Actions",
-  "groupListEmpty":"No groups added yet"
+  "groupListEmpty":"No groups added yet",
+  "groupId": "Group Id"
 }
   
