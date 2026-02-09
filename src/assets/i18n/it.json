@@ -411,5 +411,8 @@
 "groupListCancelButton":"Annulla",
 "groupListActions":"Azioni",
 "groupListEmpty":"Ancora nessun gruppo registrato",
-"groupId":"Id Gruppo"
+"groupId":"Id Gruppo",
+"validationArea": "Valida con controllo area",
+"yes": "Sì",   
+"no": "No"
 }
