@@ -407,6 +407,9 @@
   "groupListCancelButton":"Cancel",
   "groupListActions":"Actions",
   "groupListEmpty":"No groups added yet",
-  "groupId": "Group Id"
+  "groupId": "Group Id",
+  "validationArea": "Validate with area control",
+  "yes": "Yes",
+  "no": "No"
 }
   
