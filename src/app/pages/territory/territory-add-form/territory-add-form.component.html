@@ -87,13 +87,13 @@
                     <div class="full-width">
                         <mat-form-field appearance="fill" class="full-width">
                             <mat-label>{{'latitude' | translate}}</mat-label>
-                            <input matInput id="lat" formControlName="lat" value="{{myPoint.latitude}}">
+                            <input type="number" matInput id="lat" formControlName="lat" value="{{myPoint.latitude}}">
                         </mat-form-field>
                     </div>
                     <div class="full-width">
                         <mat-form-field appearance="fill" class="full-width">
                             <mat-label>{{'longitude' | translate}}</mat-label>
-                            <input matInput id="long" formControlName="long" value="{{myPoint.longitude}}">
+                            <input type="number" matInput id="long" formControlName="long" value="{{myPoint.longitude}}">
                         </mat-form-field>
                     </div>
                     <div class="full-width" *ngIf="unlockRaySelector">
@@ -107,7 +107,7 @@
                         <div>
                             <mat-form-field appearance="fill" class="full-width">
                                 <mat-label>{{'radius' | translate}} ({{'meters' | translate}})</mat-label>
-                                <input matInput disabled id="ray" formControlName="ray">
+                                <input type="number" matInput disabled id="ray" formControlName="ray">
                             </mat-form-field>
                         </div>
                     </div>
@@ -201,13 +201,13 @@
                     <div class="full-width">
                         <mat-form-field appearance="fill" class="full-width">
                             <mat-label>{{'latitude' | translate}}</mat-label>
-                            <input matInput id="lat" formControlName="lat">
+                            <input type="number" matInput id="lat" formControlName="lat">
                         </mat-form-field>
                     </div>
                     <div class="full-width">
                         <mat-form-field appearance="fill" class="full-width">
                             <mat-label>{{'longitude' | translate}}</mat-label>
-                            <input matInput id="long" formControlName="long">
+                            <input type="number" matInput id="long" formControlName="long">
                         </mat-form-field>
                     </div>
                     <div class="full-width" *ngIf="unlockRaySelector">
@@ -221,7 +221,7 @@
                         <div>
                             <mat-form-field appearance="fill" class="full-width">
                                 <mat-label>{{'radius' | translate}} ({{'meters' | translate}})</mat-label>
-                                <input matInput disabled id="ray" formControlName="ray">
+                                <input type="number" matInput disabled id="ray" formControlName="ray">
                             </mat-form-field>
                         </div>
                     </div>
