@@ -466,6 +466,18 @@ export class CampaignAddFormComponent implements OnInit {
           challengePlayerAssignedHour: this.campaignUpdated.specificData[CHALLENGE_PLAYER_ASSIGNED].split(";")[0],
         });
       }
+      // Load point names for multiple languages
+      if(!!this.campaignUpdated.specificData && this.campaignUpdated.specificData["pointName"]){
+        for (let lang of this.languagesSupported) {
+          const controlName = 'pointName_' + lang;
+          const pointNameValue = this.campaignUpdated.specificData["pointName"][lang];
+          if (pointNameValue) {
+            const patchObj = {};
+            patchObj[controlName] = pointNameValue;
+            this.validatingForm.patchValue(patchObj);
+          }
+        }
+      }
       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE]){
         this.validatingForm.patchValue({
           dailyLimitvirtualPoints: this.campaignUpdated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE]});
@@ -691,6 +703,8 @@ export class CampaignAddFormComponent implements OnInit {
         authUrl: new FormControl("",),
         clientId: new FormControl("",),
         claimName: new FormControl("",),
+        pointName_it: new FormControl("",),
+        pointName_en: new FormControl("",),
       });
     } else {
       this.validatingForm = this.formBuilder.group({
@@ -739,6 +753,8 @@ export class CampaignAddFormComponent implements OnInit {
         authUrl: new FormControl("",),
         clientId: new FormControl("",),
         claimName: new FormControl("",),
+        pointName_it: new FormControl("",),
+        pointName_en: new FormControl("",),
       });
     }
   }
@@ -1298,6 +1314,16 @@ export class CampaignAddFormComponent implements OnInit {
         this.campaignCreated.specificData[CHALLENGE_PLAYER_ASSIGNED] = this.validatingForm.get("challengePlayerAssignedHour").value + ";"+ this.validatingForm.get("challengePlayerAssignedDay").value;
       }else{
         this.campaignCreated.specificData[CHALLENGE_PLAYER_ASSIGNED] = null;
+      }
+      
+      // Handle point names for multiple languages
+      this.campaignCreated.specificData["pointName"] = {};
+      for (let lang of this.languagesSupported) {
+        const controlName = 'pointName_' + lang;
+        const pointNameValue = this.validatingForm.get(controlName)?.value;
+        if (pointNameValue !== null && pointNameValue !== undefined && pointNameValue !== "") {
+          this.campaignCreated.specificData["pointName"][lang] = pointNameValue;
+        }
       }
     }
 

@@ -414,5 +414,6 @@
 "groupId":"Id Gruppo",
 "validationArea": "Valida con controllo area",
 "yes": "Sì",   
-"no": "No"
+"no": "No",
+"pointName": "Nome punteggio"
 }
