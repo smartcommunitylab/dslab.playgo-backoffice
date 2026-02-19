@@ -1257,6 +1257,19 @@
                     </mat-form-field>
                 </div>
                 <div class="in-line-forms"
+                    *ngIf="!!validatingForm && !!validatingForm.get('type').value && validatingForm.get('type').value!=='company'">
+                    <!-- point names -->
+                    <mat-form-field 
+                        *ngFor="let lang of languagesSupported" 
+                        appearance="fill"
+                        [ngClass]="languagesSupported.length === 1 ? 'input-half-left' : 'input-full'"
+                        style="margin-bottom: 10px; margin-right: 5px;">
+                        <mat-label>{{'pointName' | translate}} ({{ lang | uppercase }})</mat-label>
+                        <input matInput [formControlName]="'pointName_' + lang" type="text" [placeholder]="'pointName' | translate">
+                    </mat-form-field>
+                </div>
+
+                <div class="in-line-forms"
                     *ngIf="!!validatingForm && !!validatingForm.get('type').value && (validatingForm.get('type').value==='city' || validatingForm.get('type').value==='school' || validatingForm.get('type').value==='group') ">
                     <mat-grid-list [cols]="5" rowHeight="50px" style="margin-bottom: 10px">
                         <mat-grid-tile [colspan]="2">

@@ -410,6 +410,7 @@
   "groupId": "Group Id",
   "validationArea": "Validate with area control",
   "yes": "Yes",
-  "no": "No"
+  "no": "No",
+  "pointName": "Point name"
 }
   
