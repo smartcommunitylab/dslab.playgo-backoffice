@@ -398,16 +398,8 @@ export class CampaignAddFormComponent implements OnInit {
             ? END_YEAR_FIXED
             : this.campaignUpdated.dateTo
         ), //moment(this.campaignUpdated.dateTo), //moment(this.campaignUpdated.dateTo, "YYYY-MM-DD"),
-        registrationFrom: this.createDate(
-          !this.campaignUpdated.registrationFrom
-            ? START_YEAR_FIXED
-            : this.campaignUpdated.registrationFrom
-        ), //moment(this.campaignUpdated.registrationFrom), //moment(this.campaignUpdated.registrationFrom, "YYYY-MM-DD"),
-        registrationTo: this.createDate(
-          !this.campaignUpdated.registrationTo
-            ? END_YEAR_FIXED
-            : this.campaignUpdated.registrationTo
-        ), //moment(this.campaignUpdated.registrationTo), //moment(this.campaignUpdated.registrationTo, "YYYY-MM-DD"),
+        registrationFrom: this.getRegistrationDate(true),
+        registrationTo: this.getRegistrationDate(false),
         type: this.campaignUpdated.type,
         gameId: !!this.campaignUpdated.gameId ? this.campaignUpdated.gameId : "" ,
         startDayOfWeek: this.campaignUpdated.startDayOfWeek,
@@ -1407,6 +1399,30 @@ export class CampaignAddFormComponent implements OnInit {
       zone: this.territorySelected.timezone,
     });
     return date.toFormat("yyyy-MM-dd'T'HH:mm:ss");
+  }
+
+  getRegistrationDate(from:boolean): string {
+    if (from) {
+      if (this.campaignUpdated.registrationFrom) {
+        return this.createDate(this.campaignUpdated.registrationFrom);
+      } else {
+        if (this.campaignUpdated.dateFrom) {
+          return this.createDate(this.campaignUpdated.dateFrom);
+        } else {
+          return null;
+        }
+      }
+    } else {
+      if (this.campaignUpdated.registrationTo) {
+        return this.createDate(this.campaignUpdated.registrationTo);
+      } else {
+        if (this.campaignUpdated.dateTo) {
+          return this.createDate(this.campaignUpdated.dateTo);
+        } else {
+          return null;
+        }
+      }
+    }
   }
 
   get descriptionRichControl() {
