@@ -66,6 +66,12 @@
     </mat-grid-list>
 </form>
 <table mat-table [dataSource]="dataSource" class="full-width">
+    <ng-container matColumnDef="group">
+        <th mat-header-cell *matHeaderCellDef> {{
+            'groupId'| translate}} </th>
+        <td mat-cell *matCellDef="let element" class="bold"> {{element.groupId}} </td>
+    </ng-container>
+
     <ng-container matColumnDef="index">
         <th mat-header-cell *matHeaderCellDef> {{
             'index'| translate}} </th>

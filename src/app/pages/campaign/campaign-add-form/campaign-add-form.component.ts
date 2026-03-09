@@ -85,6 +85,7 @@ import { CampaignControllerService } from "src/app/core/api/generated/controller
 import {
   CampaignDetailClass,
   DetailsForAddModifyModule,
+  GroupItem
 } from "src/app/shared/classes/campaign-details-class";
 import { CampaignDetail } from "src/app/core/api/generated/model/campaignDetail";
 import { Image } from "src/app/core/api/generated/model/image";
@@ -159,6 +160,13 @@ export class CampaignAddFormComponent implements OnInit {
   disabledControl = true;
   list_evaluation_types = LIST_TYPE_EVALUATION_FOR_MEANS;
   customselectedLimits: any = "co2";
+  groupList: GroupItem[] = [];
+  
+  // Proprietà per la gestione inline della lista di gruppi
+  groupForm: FormGroup;
+  editingGroupIndex: number | null = null;
+  displayedGroupColumns: string[] = [];
+  groupFormError: string = "";
 
   @Input() set formTerritory(value: CampaignClass) {
     this.campaignUpdated = value;
@@ -175,6 +183,7 @@ export class CampaignAddFormComponent implements OnInit {
     // this.selectedBanner.image = value.banner.image;
     // this.selectedBanner.url = value.banner.url;
     this.details = this.setDetails(value.details);
+    this.loadGroupsIntoForm(value);
     this.initializaValidatingForm();
     this.territoryService
       .getTerritoryUsingGET(
@@ -232,6 +241,131 @@ export class CampaignAddFormComponent implements OnInit {
         }
       });
     this.initDetailsType();
+    this.initializeGroupForm();
+  }
+
+  onGroupListChange(updatedList: GroupItem[]): void {
+    this.groupList = updatedList;
+    console.log('Group list updated:', this.groupList);
+  }
+
+  // Metodi per la gestione inline della lista di gruppi
+  initializeGroupForm(): void {
+    const labelControls: any = {};
+    this.languagesSupported.forEach(lang => {
+      labelControls[lang] = ['', Validators.required];
+    });
+
+    this.groupForm = new FormGroup({
+      value: new FormControl('', [Validators.required, Validators.minLength(3)]),
+      ...Object.keys(labelControls).reduce((acc, key) => {
+        acc[key] = new FormControl('',);
+        return acc;
+      }, {})
+    });
+
+    this.updateDisplayedGroupColumns();
+  }
+
+  updateDisplayedGroupColumns(): void {
+    this.displayedGroupColumns = ['value', ...this.languagesSupported.map(l => 'label_' + l), 'actions'];
+  }
+
+  loadGroupsIntoForm(campaign: CampaignClass): void {
+    if (campaign.specificData && campaign.specificData.groupList) {
+      this.groupList = campaign.specificData.groupList.map((group: any) => {
+        const labelObj: { [key: string]: string } = {};
+        this.languagesSupported.forEach(lang => {
+          labelObj[lang] = group.label[lang] || '';
+        });
+        return {
+          value: group.value,
+          label: labelObj
+        };
+      });
+    }
+  }
+
+  convertGroupListToSpecificData(campaign: CampaignClass): void {
+    if (this.groupList && this.groupList.length > 0) {
+      campaign.specificData.groupList = this.groupList;
+    } else {
+      campaign.specificData.groupList = [];
+    }
+  }
+
+  addGroup(): void {
+    if (!this.groupForm || this.groupForm.invalid) {
+      this.groupFormError = "Compila tutti i campi";
+      return;
+    }
+
+    this.groupFormError = "";
+    const formValue = this.groupForm.value;
+    const newGroup: GroupItem = {
+      value: formValue.value,
+      label: {}
+    };
+
+    this.languagesSupported.forEach(lang => {
+      newGroup.label[lang] = formValue[lang];
+    });
+
+    this.groupList = [...this.groupList, newGroup];
+    this.groupForm.reset();
+    this.editingGroupIndex = null;
+  }
+
+  editGroup(index: number): void {
+    const group = this.groupList[index];
+    const formValue: any = {
+      value: group.value
+    };
+
+    this.languagesSupported.forEach(lang => {
+      formValue[lang] = group.label[lang];
+    });
+
+    this.groupForm.patchValue(formValue);
+    this.editingGroupIndex = index;
+    this.groupFormError = "";
+  }
+
+  updateGroup(): void {
+    if (!this.groupForm || this.groupForm.invalid || this.editingGroupIndex === null) {
+      this.groupFormError = "Compila tutti i campi";
+      return;
+    }
+
+    this.groupFormError = "";
+    const formValue = this.groupForm.value;
+    const updatedGroup: GroupItem = {
+      value: formValue.value,
+      label: {}
+    };
+
+    this.languagesSupported.forEach(lang => {
+      updatedGroup.label[lang] = formValue[lang];
+    });
+
+    this.groupList[this.editingGroupIndex] = updatedGroup;
+    this.groupList = [...this.groupList];
+    this.groupForm.reset();
+    this.editingGroupIndex = null;
+  }
+
+  deleteGroup(index: number): void {
+    this.groupList = this.groupList.filter((_, i) => i !== index);
+    if (this.editingGroupIndex === index) {
+      this.groupForm.reset();
+      this.editingGroupIndex = null;
+    }
+  }
+
+  cancelEditGroup(): void {
+    this.groupForm.reset();
+    this.editingGroupIndex = null;
+    this.groupFormError = "";
   }
 
   setValuesValidatingForm(){
@@ -264,6 +398,8 @@ export class CampaignAddFormComponent implements OnInit {
             ? END_YEAR_FIXED
             : this.campaignUpdated.dateTo
         ), //moment(this.campaignUpdated.dateTo), //moment(this.campaignUpdated.dateTo, "YYYY-MM-DD"),
+        registrationFrom: this.getRegistrationDate(true),
+        registrationTo: this.getRegistrationDate(false),
         type: this.campaignUpdated.type,
         gameId: !!this.campaignUpdated.gameId ? this.campaignUpdated.gameId : "" ,
         startDayOfWeek: this.campaignUpdated.startDayOfWeek,
@@ -299,6 +435,15 @@ export class CampaignAddFormComponent implements OnInit {
           
         }
       }
+      console.log("GROUP CONF");
+      if(this.campaignUpdated.type === "group" && !!this.campaignUpdated.specificData) {
+        this.validatingForm.patchValue({
+          jwksEndpoint: this.campaignUpdated.specificData["jwksEndpoint"],
+          claimName: this.campaignUpdated.specificData["claimName"],
+          authUrl: this.campaignUpdated.specificData["authUrl"],
+          clientId: this.campaignUpdated.specificData["clientId"],
+        });
+      }
       console.log("SELECTED LIMITS: ", this.selectedLimits);
       if(!!this.campaignUpdated.specificData && this.campaignUpdated.specificData[CHALLENGE_PLAYER_PROPOSER]){
         this.validatingForm.patchValue({
@@ -312,6 +457,18 @@ export class CampaignAddFormComponent implements OnInit {
           challengePlayerAssignedDay: this.campaignUpdated.specificData[CHALLENGE_PLAYER_ASSIGNED].split(";")[1],
           challengePlayerAssignedHour: this.campaignUpdated.specificData[CHALLENGE_PLAYER_ASSIGNED].split(";")[0],
         });
+      }
+      // Load point names for multiple languages
+      if(!!this.campaignUpdated.specificData && this.campaignUpdated.specificData["pointName"]){
+        for (let lang of this.languagesSupported) {
+          const controlName = 'pointName_' + lang;
+          const pointNameValue = this.campaignUpdated.specificData["pointName"][lang];
+          if (pointNameValue) {
+            const patchObj = {};
+            patchObj[controlName] = pointNameValue;
+            this.validatingForm.patchValue(patchObj);
+          }
+        }
       }
       if(!!this.campaignUpdated.specificData && !!this.campaignUpdated.specificData[VIRTUAL_SCORE] && this.campaignUpdated.specificData[VIRTUAL_SCORE][DAILY_LIMIT_VIRTUAL_POINTS_SPEC_LABLE]){
         this.validatingForm.patchValue({
@@ -500,6 +657,8 @@ export class CampaignAddFormComponent implements OnInit {
         visible: new FormControl("", [Validators.required]),
         dateFrom: new FormControl("", [Validators.required]),
         dateTo: new FormControl("", [Validators.required]),
+        registrationFrom: new FormControl("",),
+        registrationTo: new FormControl("",),
         type: new FormControl("", [Validators.required]),
         sendWeaklyEmail: new FormControl("", [Validators.required]),
         gameId: new FormControl(""),
@@ -531,7 +690,13 @@ export class CampaignAddFormComponent implements OnInit {
         campaignDefaultPlacementMetric: new FormControl("",),
         campaignPlacementMeans: new FormControl("",),
         firstLimitBar: new FormControl("",),
-        secondLimitBar: new FormControl("",)
+        secondLimitBar: new FormControl("",),
+        jwksEndpoint: new FormControl("",),
+        authUrl: new FormControl("",),
+        clientId: new FormControl("",),
+        claimName: new FormControl("",),
+        pointName_it: new FormControl("",),
+        pointName_en: new FormControl("",),
       });
     } else {
       this.validatingForm = this.formBuilder.group({
@@ -542,6 +707,8 @@ export class CampaignAddFormComponent implements OnInit {
         visible: new FormControl("", [Validators.required]),
         dateFrom: new FormControl("", [Validators.required]),
         dateTo: new FormControl("", [Validators.required]),
+        registrationFrom: new FormControl("",),
+        registrationTo: new FormControl("",),
         type: new FormControl(""),
         sendWeaklyEmail: new FormControl("", [Validators.required]),
         gameId: new FormControl(""),
@@ -573,7 +740,13 @@ export class CampaignAddFormComponent implements OnInit {
         campaignDefaultPlacementMetric: new FormControl("",),
         campaignPlacementMeans: new FormControl("",),
         firstLimitBar: new FormControl("",),
-        secondLimitBar: new FormControl("",)
+        secondLimitBar: new FormControl("",),
+        jwksEndpoint: new FormControl("",),
+        authUrl: new FormControl("",),
+        clientId: new FormControl("",),
+        claimName: new FormControl("",),
+        pointName_it: new FormControl("",),
+        pointName_en: new FormControl("",),
       });
     }
   }
@@ -633,7 +806,7 @@ export class CampaignAddFormComponent implements OnInit {
   }
 
   isGameIdMandatory(campaignType: string){
-    if(campaignType=== "school" || campaignType ==="city"){
+    if(campaignType=== "school" || campaignType ==="city" || campaignType ==="group"){
       return true;
     }else{
       return false;
@@ -684,7 +857,7 @@ export class CampaignAddFormComponent implements OnInit {
         this.errorMsgValidation = "dateNotValid";
         return;
       }
-      if((this.campaignCreated.type === "city" || this.campaignCreated.type === "school") && !this.assignedProposedValid()){
+      if((this.campaignCreated.type === "city" || this.campaignCreated.type === "school" || this.campaignCreated.type === "group") && !this.assignedProposedValid()){
         this.errorMsgValidation = "assignedProposedNotValid";
         return;
       }
@@ -915,6 +1088,12 @@ export class CampaignAddFormComponent implements OnInit {
     this.campaignCreated.dateTo = this.fromDateTimeToLong(
       this.validatingForm.get("dateTo").value
     ); //dataTo.toDate();//this.formatDate(dataTo); //
+    this.campaignCreated.registrationFrom = this.fromDateTimeToLong(
+      this.validatingForm.get("registrationFrom").value
+    );
+    this.campaignCreated.registrationTo = this.fromDateTimeToLong(
+      this.validatingForm.get("registrationTo").value
+    );
     this.campaignCreated.logo = new ImageClass();
     if (!!this.selectedLogo) {
       this.campaignCreated.logo.contentType = this.selectedLogo.contentType;
@@ -956,6 +1135,13 @@ export class CampaignAddFormComponent implements OnInit {
         //   delete this.campaignCreated.specificData[key];
         // }
       }
+    }
+    if(this.campaignCreated.type === "group"){
+      this.campaignCreated.specificData["jwksEndpoint"] = this.validatingForm.get("jwksEndpoint").value;
+      this.campaignCreated.specificData["claimName"] = this.validatingForm.get("claimName").value;
+      this.campaignCreated.specificData["authUrl"] = this.validatingForm.get("authUrl").value;
+      this.campaignCreated.specificData["clientId"] = this.validatingForm.get("clientId").value;
+      this.convertGroupListToSpecificData(this.campaignCreated);
     }
     if(this.campaignCreated.type === "company"){
       //company type
@@ -1110,7 +1296,7 @@ export class CampaignAddFormComponent implements OnInit {
         }  
       }
     }
-    if(this.campaignCreated.type === "city" || this.campaignCreated.type === "school"){
+    if(this.campaignCreated.type === "city" || this.campaignCreated.type === "school" || this.campaignCreated.type === "group"){
       if(this.validatingForm.get("challengePlayerProposedHour").value!==null && this.validatingForm.get("challengePlayerProposedDay").value!==null){
         this.campaignCreated.specificData[CHALLENGE_PLAYER_PROPOSER] = this.validatingForm.get("challengePlayerProposedHour").value + ";"+ this.validatingForm.get("challengePlayerProposedDay").value;
       }else{
@@ -1120,6 +1306,16 @@ export class CampaignAddFormComponent implements OnInit {
         this.campaignCreated.specificData[CHALLENGE_PLAYER_ASSIGNED] = this.validatingForm.get("challengePlayerAssignedHour").value + ";"+ this.validatingForm.get("challengePlayerAssignedDay").value;
       }else{
         this.campaignCreated.specificData[CHALLENGE_PLAYER_ASSIGNED] = null;
+      }
+      
+      // Handle point names for multiple languages
+      this.campaignCreated.specificData["pointName"] = {};
+      for (let lang of this.languagesSupported) {
+        const controlName = 'pointName_' + lang;
+        const pointNameValue = this.validatingForm.get(controlName)?.value;
+        if (pointNameValue !== null && pointNameValue !== undefined && pointNameValue !== "") {
+          this.campaignCreated.specificData["pointName"][lang] = pointNameValue;
+        }
       }
     }
 
@@ -1203,6 +1399,30 @@ export class CampaignAddFormComponent implements OnInit {
       zone: this.territorySelected.timezone,
     });
     return date.toFormat("yyyy-MM-dd'T'HH:mm:ss");
+  }
+
+  getRegistrationDate(from:boolean): string {
+    if (from) {
+      if (this.campaignUpdated.registrationFrom) {
+        return this.createDate(this.campaignUpdated.registrationFrom);
+      } else {
+        if (this.campaignUpdated.dateFrom) {
+          return this.createDate(this.campaignUpdated.dateFrom);
+        } else {
+          return null;
+        }
+      }
+    } else {
+      if (this.campaignUpdated.registrationTo) {
+        return this.createDate(this.campaignUpdated.registrationTo);
+      } else {
+        if (this.campaignUpdated.dateTo) {
+          return this.createDate(this.campaignUpdated.dateTo);
+        } else {
+          return null;
+        }
+      }
+    }
   }
 
   get descriptionRichControl() {

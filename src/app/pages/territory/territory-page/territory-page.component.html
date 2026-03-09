@@ -70,14 +70,22 @@
                 </mat-card-subtitle>
                 <mat-card-content>
                     <div>
-                        <p>
+                        <div class="in-line-forms">
                             <span>{{'means' | translate}}: </span>
                             <span *ngFor="let mean of selectedTerritory.territoryData.means;let i=index">
                                 {{mean | translate}}
                             <span *ngIf="i!=selectedTerritory.territoryData.means.length-1">,</span>
                             </span>
-                        </p>
-                        <mat-grid-list cols="7" rowHeight="40px" style="margin-bottom: 10px;">
+                        </div>
+                        <div class="in-line-forms">
+                            <span>{{'timezone' | translate}}: </span>
+                            <span>{{selectedTerritory.timezone | translate}}</span>
+                        </div>
+                        <div class="in-line-forms">
+                            <span>{{'validationArea' | translate}}: </span>
+                            <span>{{selectedTerritory.territoryData.validation ? ('yes' | translate) : ('no' | translate)}}</span>
+                        </div>
+                        <mat-grid-list cols="7" rowHeight="40px" style="margin-bottom: 10px; margin-top: 10px;">
                             <mat-grid-tile [colspan]="2">
                                 <button color="primary" class='action-button' mat-raised-button type="button"
                                 (click)="updateTerritory()">

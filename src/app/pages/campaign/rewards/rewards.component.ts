@@ -21,7 +21,7 @@ export class RewardsComponent implements OnInit {
   selectedLang: string;
   campaign: CampaignClass;
   dataSource: MatTableDataSource<any>;
-  displayedColumns: string[] = ["index", "dateFrom", "dateTo", "prizes"];
+  displayedColumns: string[] = ["group", "index", "dateFrom", "dateTo", "prizes"];
   newItem: any;
   msgError: string;
   validatingForm: FormGroup;

@@ -10,7 +10,7 @@ export const ROLE_BASE_PATH = BACKEND_BASE_PATH+'playandgo/api/console/role/my';
 export const PLAYER_BASE_PATH = BACKEND_BASE_PATH+'playandgo/api/console/player/search';
 export const TRAKING_BASE_PATH = BACKEND_BASE_PATH+'playandgo/api/console/track/search';
 
-export const TYPE_CAMPAIGN = ["personal","city","school","company"];
+export const TYPE_CAMPAIGN = ["personal","city","school","company","group"];
 export const MY_DATE_FORMATS = {
     parse: {
       dateInput: 'LL',

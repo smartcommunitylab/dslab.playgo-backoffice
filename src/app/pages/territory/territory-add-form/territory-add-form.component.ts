@@ -39,18 +39,18 @@ export class TerritoryAddFormComponent implements OnInit {
   means: string[] = means;
   validationParam: string[] = ["param1", "param2"];
   raySelected = 0;
-  terrotyCreated: TerritoryClass;
+  territoryCreated: TerritoryClass;
   settedLat = false;
   settedLong = false;
   unlockRaySelector = false;
-  terrytoryUpdate: TerritoryClass;
+  territoryUpdated: TerritoryClass;
   errorMsgValidation: string;
   languageDefault:any;
   languagesSupported= CONST_LANGUAGES_SUPPORTED;
   languageSelected: string;
   timezones= CONST_TIMEZONES_SUPPORTED;
   @Input() set formTerritory(value: TerritoryClass) {
-    this.terrytoryUpdate = value;
+    this.territoryUpdated = value;
 
   }
 
@@ -71,9 +71,9 @@ export class TerritoryAddFormComponent implements OnInit {
   ngOnInit(): void {
     this.languageDefault= this.translate.currentLang;
     this.myPoint = new MapPoint();
-    this.terrotyCreated = new TerritoryClass();
-    this.terrotyCreated.territoryData = new TerritoryData();
-    this.terrotyCreated.territoryData.area = [new TerritoryArea()];
+    this.territoryCreated = new TerritoryClass();
+    this.territoryCreated.territoryData = new TerritoryData();
+    this.territoryCreated.territoryData.area = [new TerritoryArea()];
     this.initializaValidatingForm();
   }
 
@@ -97,9 +97,9 @@ export class TerritoryAddFormComponent implements OnInit {
           Validators.required,
           Validators.pattern("^[0-9]+.?[0-9]*"),
         ]),
-        validation: new FormControl(""),
+        validation: new FormControl("", [Validators.required]),
         languages: new FormControl(""),
-        timezone: new FormControl(""),
+        timezone: new FormControl("", [Validators.required]),
       });
       this.addFormControlMultilanguage();
       this.validatingForm.patchValue({
@@ -121,9 +121,9 @@ export class TerritoryAddFormComponent implements OnInit {
           Validators.required,
           Validators.pattern("^[0-9]+.?[0-9]*"),
         ]),
-        validation: new FormControl(""),
+        validation: new FormControl("", [Validators.required]),
         languages: new FormControl(""),
-        timezone: new FormControl(""),
+        timezone: new FormControl("", [Validators.required]),
       });
       this.addFormControlMultilanguage();
     }
@@ -166,17 +166,17 @@ export class TerritoryAddFormComponent implements OnInit {
     });
     if (this.type === "modify") {
       this.validatingForm.patchValue({
-        territoryId: this.terrytoryUpdate.territoryId,
-        name: this.terrytoryUpdate.name,
-        description: this.terrytoryUpdate.description,
-        means: this.terrytoryUpdate.territoryData.means,
-        lat: this.terrytoryUpdate.territoryData.area[0].lat,
-        long: this.terrytoryUpdate.territoryData.area[0].long,
-        ray: this.terrytoryUpdate.territoryData.area[0].radius,
-        validation: this.terrytoryUpdate.territoryData.validation,
-        timezone : this.terrytoryUpdate.timezone
+        territoryId: this.territoryUpdated.territoryId,
+        name: this.territoryUpdated.name,
+        description: this.territoryUpdated.description,
+        means: this.territoryUpdated.territoryData.means,
+        lat: this.territoryUpdated.territoryData.area[0].lat,
+        long: this.territoryUpdated.territoryData.area[0].long,
+        ray: this.territoryUpdated.territoryData.area[0].radius,
+        validation: this.territoryUpdated.territoryData.validation,
+        timezone : this.territoryUpdated.timezone
       });
-      this.patchValuedMultilanguageOnModify(this.terrytoryUpdate.name,this.terrytoryUpdate.description);
+      this.patchValuedMultilanguageOnModify(this.territoryUpdated.name,this.territoryUpdated.description);
     }
   }
 
@@ -205,27 +205,28 @@ export class TerritoryAddFormComponent implements OnInit {
   validate() {
     this.errorMsgValidation = "";
     if (this.validatingForm.valid) {
-      this.terrotyCreated.territoryId =
+      this.territoryCreated.territoryId =
         this.validatingForm.get("territoryId").value;
       this.addNameAndDescriptionToTerritoryCreated();
-      this.terrotyCreated.territoryData.means =
+      this.territoryCreated.territoryData.means =
         this.validatingForm.get("means").value;
-      this.terrotyCreated.territoryData.validation =
+      this.territoryCreated.territoryData.validation =
         this.validatingForm.get("validation").value;
-      this.terrotyCreated.territoryData.area[0].lat =
+      this.territoryCreated.territoryData.area[0].lat =
         this.validatingForm.get("lat").value;
-      this.terrotyCreated.territoryData.area[0].long =
+      this.territoryCreated.territoryData.area[0].long =
         this.validatingForm.get("long").value;
-      this.terrotyCreated.territoryData.area[0].radius =
+      this.territoryCreated.territoryData.area[0].radius =
         this.validatingForm.get("ray").value;
-      this.terrotyCreated.timezone = this.validatingForm.get("timezone").value;
+      this.territoryCreated.timezone = this.validatingForm.get("timezone").value;
+      this.territoryCreated.territoryData.validation = this.validatingForm.get("validation").value;
       if (this.type === "add") {
         this.territoryService
-          .saveTerritoryUsingPOST(this.terrotyCreated)
+          .saveTerritoryUsingPOST(this.territoryCreated)
           .subscribe(
             () => {
               this.updateTerritoryList.uploadList();
-              this.onNoClick("", this.terrotyCreated);
+              this.onNoClick("", this.territoryCreated);
             this._snackBar.openFromComponent(SnackbarSavedComponent,
               {
                data:{displayText: "savedData"},
@@ -245,13 +246,13 @@ export class TerritoryAddFormComponent implements OnInit {
           );
       }
       if (this.type === "modify") {
-        this.terrotyCreated.name = this.terrytoryUpdate.name;
-        this.terrotyCreated.territoryId = this.terrytoryUpdate.territoryId;
+        this.territoryCreated.name = this.territoryUpdated.name;
+        this.territoryCreated.territoryId = this.territoryUpdated.territoryId;
         this.territoryService
-          .updateTerritoryUsingPUT(this.terrotyCreated)
+          .updateTerritoryUsingPUT(this.territoryCreated)
           .subscribe(
             () => {
-              this.onNoClick("", this.terrotyCreated);
+              this.onNoClick("", this.territoryCreated);
               this._snackBar.openFromComponent(SnackbarSavedComponent,
                 {
                  data:{displayText: "updatedData"},
@@ -324,8 +325,8 @@ export class TerritoryAddFormComponent implements OnInit {
       nameObj[l] = this.validatingForm.get(nameName).value ? this.validatingForm.get(nameName).value : '';
       descriptionObj[l]= this.validatingForm.get(nameDescription).value ? this.validatingForm.get(nameDescription).value : '';
     }
-    this.terrotyCreated.name = nameObj;
-    this.terrotyCreated.description = descriptionObj;
+    this.territoryCreated.name = nameObj;
+    this.territoryCreated.description = descriptionObj;
   }
 
 }
