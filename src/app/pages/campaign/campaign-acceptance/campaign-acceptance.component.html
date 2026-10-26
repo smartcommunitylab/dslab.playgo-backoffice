@@ -1,0 +1,54 @@
+<div class="header-bar-stick">
+    <mat-grid-list cols="8" rowHeight="50px">
+        <mat-grid-tile [colspan]="6" [rowspan]="1">
+            <h1 class="header-div">{{ 'rulesPrivacyAcceptance'| translate}}</h1>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="1" [rowspan]="1">
+            <button class="grey-background" type="button" mat-flat-button (click)="onNoClick($event)">
+                {{'cancel'|translate}}
+            </button>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="1" [rowspan]="1">
+            <button color="primary" type="button" mat-flat-button [disabled]="saving" (click)="saveData()">
+                <mat-icon>
+                    <span class="material-symbols-outlined">
+                        save
+                    </span>
+                </mat-icon>
+                {{'save' |translate}}
+            </button>
+        </mat-grid-tile>
+    </mat-grid-list>
+    <p *ngIf="errorMsg" class="error">{{errorMsg}}</p>
+</div>
+<div class="black-box">
+    <p class="campaign-name">
+        {{'campaign' | translate}}: <span class="bold">{{name}}</span>
+        <span *ngIf="campaignId"> ({{campaignId}})</span>
+    </p>
+    <form [formGroup]="validatingForm">
+        <mat-grid-list cols="8" rowHeight="70px">
+            <mat-grid-tile [colspan]="8" [rowspan]="1">
+                <p class="full-width">{{'rulesPrivacyAcceptanceDescription' | translate}}</p>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field appearance="fill" class="full-width" style="margin-right:5px">
+                    <mat-label>{{'privacyAcceptance' | translate}}</mat-label>
+                    <mat-select id="privacyAcceptance" formControlName="privacyAcceptance" required>
+                        <mat-option [value]="true">{{'yes' | translate}}</mat-option>
+                        <mat-option [value]="false">{{'no' | translate}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="4" [rowspan]="1">
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>{{'rulesAcceptance' | translate}}</mat-label>
+                    <mat-select id="rulesAcceptance" formControlName="rulesAcceptance" required>
+                        <mat-option [value]="true">{{'yes' | translate}}</mat-option>
+                        <mat-option [value]="false">{{'no' | translate}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
+        </mat-grid-list>
+    </form>
+</div>

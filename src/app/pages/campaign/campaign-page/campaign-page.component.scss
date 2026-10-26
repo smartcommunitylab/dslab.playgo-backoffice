@@ -92,3 +92,18 @@
   min-width: 150px;
   max-width: 200px;
 }
+
+.action-button.multiline-button{
+  white-space: normal;
+  line-height: 15px;
+  min-height: 36px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+.multiline-button ::ng-deep .mat-button-wrapper{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
