@@ -1,0 +1,44 @@
+.full-width {
+  width: 100%;
+}
+
+.error {
+  color: red;
+}
+
+.header-bar-stick {
+  background-color: white;
+  position: sticky;
+  z-index: 1000;
+  top: 0px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.116);
+  margin-top: 10px;
+}
+
+.header-div {
+  top: -5px;
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 0px;
+  position: absolute;
+}
+
+.grey-background {
+  background-color: rgb(197, 197, 197);
+}
+
+.black-box {
+  border: black solid 1px;
+  padding: 7px;
+  margin-top: 10px;
+}
+
+.campaign-name {
+  margin: 5px 0 0 0;
+  font-size: 16px;
+  word-break: break-word;
+}
+
+.bold {
+  font-weight: bold;
+}

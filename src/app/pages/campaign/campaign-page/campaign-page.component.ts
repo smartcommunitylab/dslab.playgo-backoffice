@@ -17,6 +17,7 @@ import { Campaign } from "src/app/core/api/generated/model/campaign";
 import { SurveyComponentComponent } from "../survey-component/survey-component.component";
 import { DEFAULT_LANGUAGE, TranslateService } from "@ngx-translate/core";
 import { RewardsComponent } from "../rewards/rewards.component";
+import { CampaignAcceptanceComponent } from "../campaign-acceptance/campaign-acceptance.component";
 import { ConsoleControllerService } from "src/app/core/api/generated/controllers/consoleController.service";
 import { DateTime, Settings } from "luxon";
 import { Territory } from "src/app/core/api/generated/model/territory";
@@ -266,6 +267,18 @@ export class CampaignPageComponent implements OnInit {
       if (result !== undefined) {
       }
     });
+  }
+
+  rulesPrivacyAcceptance(){
+    const dialogRef = this.dialogUpdate.open(CampaignAcceptanceComponent, {
+      width: "60%",
+      minHeight: '250px',
+      maxHeight:'700px',
+      panelClass: 'custom-dialog-container' 
+    });
+    let instance = dialogRef.componentInstance;
+    instance.name = this.selectedCampaign.name[this.translate.currentLang] || this.selectedCampaign.name[this.languageDefault];
+    instance.campaignId = this.selectedCampaign.campaignId;
   }
 
   rewards(){

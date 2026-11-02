@@ -12,6 +12,7 @@ import { DeleteSurvayComponent } from "../survey-component/delete-survay/delete-
 import { ConfirmCancelComponent } from "../campaign-add-form/confirm-cancel/confirm-cancel.component";
 import { RewardsComponent } from "../rewards/rewards.component";
 import { ConfirmCloseComponent } from "../manager-handler/confirm-close/confirm-close.component";
+import { CampaignAcceptanceComponent } from "../campaign-acceptance/campaign-acceptance.component";
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import { ConfirmCloseComponent } from "../manager-handler/confirm-close/confirm-
     ConfirmCancelComponent,
     RewardsComponent,
     ConfirmCloseComponent,
+    CampaignAcceptanceComponent,
   ],
 })
 export class CampaignPageModule {}

@@ -206,6 +206,17 @@
                             </mat-icon>
                         </button>
                     </mat-grid-tile>
+                    <mat-grid-tile [colspan]="1">
+                        <button color="primary" class='action-button multiline-button' mat-raised-button type="submit"
+                            (click)="rulesPrivacyAcceptance()">
+                            <span>{{'rulesPrivacyAcceptance' | translate}}</span>
+                            <mat-icon>
+                                <span class="material-icons-outlined">
+                                    gavel
+                                </span>
+                            </mat-icon>
+                        </button>
+                    </mat-grid-tile>
                 </mat-grid-list>
                 <!-- old <img class="img-logo" src="{{PREFIX_SRC_IMG_C + selectedCampaign.banner.contentType + BASE64_SRC_IMG_C + selectedCampaign.banner.image}}"> -->
                 <mat-card-content>
